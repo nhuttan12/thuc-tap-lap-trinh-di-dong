@@ -14,8 +14,11 @@ import com.example.e_commerce.Adapter.BrandsAdapter
 import com.example.e_commerce.Adapter.PopularAdapter
 import com.example.e_commerce.Adapter.SliderAdapter
 import com.example.e_commerce.Model.SliderModel
+import com.example.e_commerce.R
 import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Runnable
 
 class DashboardActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by lazy {
