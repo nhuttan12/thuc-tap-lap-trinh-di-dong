@@ -217,7 +217,7 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/homeBtn"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
@@ -226,7 +226,7 @@
                     app:srcCompat="@drawable/btn_1" />
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/cartBtn"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
@@ -235,7 +235,7 @@
                     app:srcCompat="@drawable/btn_2" />
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/wishlistBtn"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
@@ -244,7 +244,7 @@
                     app:srcCompat="@drawable/btn_3" />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/profileBtn"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"

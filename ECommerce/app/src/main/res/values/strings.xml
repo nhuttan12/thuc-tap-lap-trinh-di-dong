@@ -21,4 +21,13 @@
     <string name="loading">Loading</string>
     <string name="add_to_wishlist">Add to wishlist</string>
     <string name="star_rating">Star rating</string>
+    <string name="text_size">0</string>
+    <string name="your_cart_is_empty">Your cart is empty</string>
+    <string name="order_detail">Order detail</string>
+    <string name="checkout">Check out</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="free_delivery">Free Delivery</string>
+    <string name="total_tax">Total Tax</string>
+    <string name="total">Total</string>
+    <string name="money">$-</string>
 </resources>

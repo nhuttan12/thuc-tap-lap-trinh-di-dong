@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.e_commerce.Adapter.ColorAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
+import com.example.e_commerce.Adapter.SizeAdapter
 import com.example.e_commerce.Helper.ManagmentCart
 import com.example.e_commerce.Model.ItemModel
 import com.example.e_commerce.databinding.ActivityDetailBinding
@@ -29,6 +30,15 @@ class DetailActivity : AppCompatActivity() {
         setupViews()
         setupPicsList()
         setupColorsList()
+        setupSizeList()
+    }
+
+    private fun setupSizeList() {
+        val sizeList = item.size.map { it }
+        binding.sizeList.apply {
+            adapter = SizeAdapter(sizeList as MutableList<String>)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
     }
 
     private fun setupColorsList() {
