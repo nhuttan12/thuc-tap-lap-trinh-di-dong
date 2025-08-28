@@ -71,6 +71,7 @@ class MainRepository {
                     "https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/0_3_focgpi.png",
                 ),
                 size = arrayListOf("7", "8", "9", "10", "11"),
+                color = arrayListOf("#9e0404", "#FFA500"),
                 price = 180.0,
                 oldPrice = 200.0,
                 rating = 4.8,
@@ -84,6 +85,7 @@ class MainRepository {
                     "https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053804/0_4_enoarr.png"
                 ),
                 size = arrayListOf("8", "8.5", "9.5", "10"),
+                color = arrayListOf("#000000", "#FFFFFF"),
                 price = 150.0,
                 oldPrice = 180.0,
                 rating = 4.5,
@@ -97,6 +99,7 @@ class MainRepository {
                     "https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053804/0_5_d229ls.png"
                 ),
                 size = arrayListOf("S", "M", "L", "XL"),
+                color = arrayListOf("#808080", "#0000FF", "#008000"),
                 price = 25.0,
                 oldPrice = 30.0,
                 rating = 4.2,
@@ -109,6 +112,7 @@ class MainRepository {
                     "https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/shoes_1_zwbdam.png"
                 ),
                 size = arrayListOf("30", "32", "34", "36"),
+                color = arrayListOf("#0000FF"),
                 price = 60.0,
                 oldPrice = 0.0, // Set to 0.0 if there's no old price
                 rating = 4.7,
