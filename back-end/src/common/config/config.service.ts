@@ -1,16 +1,18 @@
-import { DatabaseConfig } from './interface/database.interface';
-import { ConfigService as NestConfigService } from '@nestjs/config';
-import { ConflictException } from '@nestjs/common';
-import { HttpConfig } from './interface/http.interface';
-
 /*
  * @description: A service to retrieve typed application configurations.
  * This service provides a type-safe way to access configuration
  * from the NestJS ConfigModule.
  * @author: Nhut Tan
  * @date: 2025-08-30
+ * @modifies: 2025-09-01
  * @version: 1.0.0
  * */
+
+import { DatabaseConfig } from './interface/database.interface';
+import { ConfigService as NestConfigService } from '@nestjs/config';
+import { ConflictException } from '@nestjs/common';
+import { HttpConfig } from './interface/http.interface';
+
 export class ConfigService {
   /*
    * @param config - The NestJS ConfigService injected via dependency injection.

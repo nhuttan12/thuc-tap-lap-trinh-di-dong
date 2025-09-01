@@ -1,15 +1,18 @@
-import { ConfigService as NestConfigService } from '@nestjs/config';
-import { ConfigService } from '../config.service';
-import { DatabaseConfig } from '../interface/database.interface';
-import { HttpConfig } from '../interface/http.interface';
-import { ConflictException } from '@nestjs/common';
-
 /*
  * @description: Test file for ConfigService class to retrieve the database configuration from environment variables.
  * @author: Nhut Tan
  * @date: 2025-08-31
  * @version: 1.0.0
+ * @modifies: 2025-09-01
  * */
+
+import { ConfigService as NestConfigService } from '@nestjs/config';
+import { ConfigService } from '../config.service';
+import { DatabaseConfig } from '../interface/database.interface';
+import { HttpConfig } from '../interface/http.interface';
+import { ConflictException } from '@nestjs/common';
+import { DatabaseType } from 'typeorm';
+
 describe('ConfigService', () => {
   let configService: ConfigService;
   let mockNestConfigService: Partial<NestConfigService>;
@@ -29,10 +32,11 @@ describe('ConfigService', () => {
      * Define the mock database config
      * */
     const mockDatabaseConfig: DatabaseConfig = {
+      type: 'postgres' as DatabaseType,
       host: 'localhost',
       port: 5432,
-      username: 'root',
-      password: 'password',
+      username: 'postgres',
+      password: '123123',
       database: 'tt-mobile',
     };
 

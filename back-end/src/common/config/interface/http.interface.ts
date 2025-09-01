@@ -2,6 +2,7 @@
  * @description: HttpConfig interface for parsed configuration and get data
  * @author: Nhut Tan
  * @date: 2025-08-30
+ * @version: 1.0.0
  * */
 export interface HttpConfig {
   /*

@@ -2,8 +2,15 @@
  * @description: DatabaseConfig interface for parsed configuration and get data
  * @author: Nhut Tan
  * @date: 2025-08-30
+ * @modifies: 2025-09-01
+ * @version: 1.0.1
  * */
 export interface DatabaseConfig {
+  /*
+   * The type of database to connect to.
+   * */
+  type: string;
+
   /*
    * The hostname or IP address of the database server.
    * */

@@ -1,3 +1,10 @@
+/**
+ * @description: Create logger for project
+ * @author: Nhut Tan
+ * @date: 2025-08-30
+ * @version: 1.0.0
+ * */
+
 import { format, transports } from 'winston';
 import { Module } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
