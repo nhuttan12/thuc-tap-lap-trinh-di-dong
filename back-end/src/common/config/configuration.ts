@@ -11,11 +11,23 @@ import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { join } from 'path';
 import { AppConfig } from './interface/app.interface';
+import { Logger } from '@nestjs/common';
+import { cwd } from 'process';
 
+/*
+ * Config file to load environment variable
+ * */
 const YAML_CONFIG_FILENAME = 'config.env.yaml';
 
+/*
+ * Import logger from NestJS
+ * */
+const logger: Logger = new Logger();
+
 export default (): AppConfig => {
-  return load(
-    readFileSync(join(__dirname, YAML_CONFIG_FILENAME), 'utf8'),
-  ) as AppConfig;
+  const filePath: string = join(cwd(), YAML_CONFIG_FILENAME);
+
+  logger.debug(`File path: ${filePath}`);
+
+  return load(readFileSync(filePath, 'utf8')) as AppConfig;
 };

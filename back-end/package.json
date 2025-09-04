@@ -18,7 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-esm"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:run": "npm run typeorm migration:run -- -d src/common/config/database/typeorm.config.ts",
+    "migration:revert": "npm run typeorm migration:revert -- -d src/common/config/database/typeorm.config.ts",
+    "migration:create": "typeorm migration:create"
   },
   "dependencies": {
     "@nestjs/class-transformer": "0.4.0",
@@ -33,12 +36,10 @@
     "joi": "17.13.3",
     "js-yaml": "4.1.0",
     "liquibase": "4.28.1",
-    "nest-winston": "1.10.2",
     "pg": "8.16.3",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
-    "typeorm": "0.3.26",
-    "winston": "3.17.0"
+    "typeorm": "0.3.26"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",

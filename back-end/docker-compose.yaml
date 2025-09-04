@@ -1,3 +1,4 @@
+name: tt-mobile
 services:
   postgres:
     image: postgres:17-alpine
@@ -10,4 +11,9 @@ services:
       - "5432:5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
+    networks:
+      - tt_mobile
 
+networks:
+  tt_mobile:
+    name: tt_mobile

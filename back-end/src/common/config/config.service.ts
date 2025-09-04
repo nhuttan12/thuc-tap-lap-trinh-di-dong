@@ -10,10 +10,13 @@
 
 import { DatabaseConfig } from './interface/database.interface';
 import { ConfigService as NestConfigService } from '@nestjs/config';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { HttpConfig } from './interface/http.interface';
 
+@Injectable()
 export class ConfigService {
+  private readonly logger: Logger = new Logger(ConfigService.name);
+
   /*
    * @param config - The NestJS ConfigService injected via dependency injection.
    * */
@@ -30,6 +33,7 @@ export class ConfigService {
      * */
     const databaseConfig: DatabaseConfig | undefined =
       this.config.get<DatabaseConfig>('database');
+    this.logger.debug(`Database config: ${JSON.stringify(databaseConfig)}`);
 
     /*
      * Check the object exist, if not, throw Conflict exception
@@ -55,6 +59,7 @@ export class ConfigService {
      * */
     const httpConfig: HttpConfig | undefined =
       this.config.get<HttpConfig>('http');
+    this.logger.debug(`Http config: ${JSON.stringify(httpConfig)}`);
 
     /*
      * Check the object exist, if not, throw Conflict exception

@@ -9,7 +9,6 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import configuration from './common/config/configuration';
-import { LoggerModule } from './common/logger/winston.logger';
 import { DatabaseModule } from './modules/database/database.module';
 import { ConfigModule } from './common/config/config.module';
 
@@ -17,8 +16,8 @@ import { ConfigModule } from './common/config/config.module';
   imports: [
     NestConfigModule.forRoot({
       load: [configuration],
+      isGlobal: true,
     }),
-    LoggerModule,
     DatabaseModule,
     ConfigModule,
   ],
