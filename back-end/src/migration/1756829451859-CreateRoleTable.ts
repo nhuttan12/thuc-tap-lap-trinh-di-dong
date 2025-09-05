@@ -4,7 +4,7 @@
  * @date: 2025/09/02
  * @modified: 2025/09/04
  * @modifiedBy: Nhut Tan
- * @version: 1.0.2
+ * @version: 1.0.3
  * */
 
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
@@ -16,7 +16,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
    * @date: 2025/09/02
    * @modified: 2025/09/04
    * @modifiedBy: Nhut Tan
-   * @version: 1.0.2
+   * @version: 1.0.3
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -64,7 +64,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
     /*
      * Get all existing index in `roles` table
      * */
-    const existingIndexs: TableIndex[] = await queryRunner
+    const tableIndices: TableIndex[] = await queryRunner
       .getTable('roles')
       .then((t: Table | undefined): TableIndex[] => t?.indices || []);
 
@@ -72,7 +72,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
      * Create index for `id` column named `idx_roles_id` if not exists
      * */
     if (
-      !existingIndexs.find((i: TableIndex): string => (i.name = 'idx_roles_id'))
+      !tableIndices.find((i: TableIndex): string => (i.name = 'idx_roles_id'))
     ) {
       await queryRunner.createIndex(
         'roles',
@@ -87,7 +87,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
      * Create index for `name` column named `idx_roles_name` if not exists
      * */
     if (
-      !existingIndexs.find(
+      !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_roles_name'),
       )
     ) {

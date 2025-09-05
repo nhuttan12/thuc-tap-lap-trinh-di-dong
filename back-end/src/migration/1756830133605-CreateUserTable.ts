@@ -4,7 +4,7 @@
  * @date: 2025/09/02
  * @modified: 2025/09/04
  * @modifiedBy: Nhut Tan
- * @version: 1.0.2
+ * @version: 1.0.3
  * */
 
 import {
@@ -22,7 +22,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
    * @date: 2025/09/02
    * @modified: 2025/09/04
    * @modifiedBy: Nhut Tan
-   * @version: 1.0.2
+   * @version: 1.0.3
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -118,14 +118,14 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
     /*
      * Get all existing index in `users` table
      * */
-    const existingIndexs: TableIndex[] =
+    const tableIndices: TableIndex[] =
       (await queryRunner.getTable('users'))?.indices || [];
 
     /*
      * Create index for `id` column named `idx_user_id` if not exists
      * */
     if (
-      !existingIndexs.find((i: TableIndex): string => (i.name = 'idx_user_id'))
+      !tableIndices.find((i: TableIndex): string => (i.name = 'idx_user_id'))
     ) {
       await queryRunner.createIndex(
         'users',
@@ -140,7 +140,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
      * Create index for `username` column named `idx_user_username` if not exists
      * */
     if (
-      !existingIndexs.find(
+      !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_username'),
       )
     ) {
@@ -157,7 +157,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
      * Create index for `password` column named `idx_user_password` if not exists
      * */
     if (
-      !existingIndexs.find(
+      !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_password'),
       )
     ) {
@@ -174,7 +174,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
      * Create index for `email` column named `idx_user_email` if not exists
      * */
     if (
-      !existingIndexs.find(
+      !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_email'),
       )
     ) {

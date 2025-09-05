@@ -4,7 +4,7 @@
  * @date: 2025/09/02
  * @modified: 2025/09/04
  * @modifiedBy: Nhut Tan
- * @version: 1.0.2
+ * @version: 1.0.3
  * */
 
 import {
@@ -22,7 +22,7 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
    * @date: 2025/09/02
    * @modified: 2025/09/04
    * @modifiedBy: Nhut Tan
-   * @version: 1.0.2
+   * @version: 1.0.3
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -107,14 +107,14 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
     /*
      * Get all existing index in `users` table
      * */
-    const existingIndexs: TableIndex[] =
+    const tableIndices: TableIndex[] =
       (await queryRunner.getTable('user_details'))?.indices || [];
 
     /*
      * Create index for `id` column named `idx_user_details_id` if not exists
      * */
     if (
-      !existingIndexs.find(
+      !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_details_id'),
       )
     ) {

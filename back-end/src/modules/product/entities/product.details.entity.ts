@@ -1,0 +1,47 @@
+import {
+  Column,
+  Entity,
+  JoinColumn, ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { CategoryEntity } from '../../category/entities/category.entity';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductEntity } from './product.entity';
+
+@Entity()
+export class ProductDetailsEntity extends TimestampField {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  size: string;
+
+  @Column()
+  color: string;
+
+  @Column()
+  description: string;
+
+  @ManyToOne(
+    (): typeof CategoryEntity => CategoryEntity,
+    (categoryEntity: CategoryEntity): ProductDetailsEntity[] =>
+      categoryEntity.productDetails,
+    {
+      eager: true,
+    },
+  )
+  @JoinColumn({ name: 'category_id' })
+  categoryEntity: CategoryEntity;
+
+  @OneToOne(
+    (): typeof ProductEntity => ProductEntity,
+    (productEntity: ProductEntity): ProductDetailsEntity =>
+      productEntity.productDetailsEntity,
+    {
+      eager: true,
+    },
+  )
+  @JoinColumn({ name: 'id' })
+  productEntity: ProductEntity;
+}
