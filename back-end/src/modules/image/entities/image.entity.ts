@@ -2,7 +2,6 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ImageTypeEnum } from '../enums/image.type.enum';
 import { ImageStatusEnum } from '../enums/image.status.enum';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { ProductEntity } from '../../product/entities/product.entity';
 
 @Entity('images')
 export class ImageEntity extends TimestampField {
