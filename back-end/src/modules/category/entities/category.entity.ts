@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+/*
+ * @description: Category entity
+ * @author: Nhut Tan
+ * @date: 2025-09-06
+ * @modified: 2025-09-07
+ * @version: 1.0.0
+ * */
+
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CategoryStatusEnum } from '../enums/category.status.enum';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { ProductDetailsEntity } from '../../product/entities/product.details.entity';

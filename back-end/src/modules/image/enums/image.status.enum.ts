@@ -1,5 +1,5 @@
 /*
- * @description: image status enum
+ * @description: Image status enum
  * @author: Nhut Tan
  * @date: 2025-09-05
  * @version: 1.0.0

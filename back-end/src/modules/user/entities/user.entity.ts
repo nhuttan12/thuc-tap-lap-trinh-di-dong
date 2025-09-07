@@ -9,7 +9,8 @@
 import {
   Column,
   Entity,
-  JoinColumn, ManyToOne,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -19,6 +20,8 @@ import { RoleEntity } from '../../role/entities/role.entity';
 import { UserDetailEntity } from './user.detail.entity';
 import { UserStatus } from '../enums/user.status.enum';
 import { CartEntity } from '../../cart/entities/cart.entity';
+import { OrderEntity } from '../../orders/entities/order.entity';
+import { UserImageEntity } from './user.image.entity';
 
 @Entity('users')
 export class UserEntity extends TimestampField {
@@ -31,6 +34,9 @@ export class UserEntity extends TimestampField {
   @Column()
   password: string;
 
+  @Column({ name: 'full_name' })
+  fullName: string;
+
   @Column()
   email: string;
 
@@ -40,9 +46,6 @@ export class UserEntity extends TimestampField {
     default: UserStatus.ACTIVE,
   })
   status: UserStatus;
-
-  @Column({ name: 'full_name' })
-  fullName: string;
 
   @ManyToOne(
     (): typeof RoleEntity => RoleEntity,
@@ -62,7 +65,19 @@ export class UserEntity extends TimestampField {
 
   @OneToMany(
     (): typeof CartEntity => CartEntity,
-    (cart: CartEntity): number => cart.user,
+    (cart: CartEntity): UserEntity => cart.user,
   )
   cart: CartEntity[];
+
+  @OneToMany(
+    (): typeof OrderEntity => OrderEntity,
+    (order: OrderEntity): UserEntity => order.user,
+  )
+  order: OrderEntity[];
+
+  @OneToMany(
+    (): typeof UserImageEntity => UserImageEntity,
+    (userImage: UserImageEntity): UserEntity => userImage.user,
+  )
+  userImages: UserImageEntity[];
 }

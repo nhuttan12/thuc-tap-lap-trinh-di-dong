@@ -1,14 +1,24 @@
+/*
+ * @description: Product entity
+ * @author: Nhut Tan
+ * @date: 2025-09-06
+ * @modified: 2025-09-07
+ * @version: 1.0.1
+ * */
+
 import {
   Column,
   Entity,
-  JoinColumn, OneToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { ImageEntity } from '../../image/entities/image.entity';
 import { ProductStatusEnum } from '../enums/product.status.enum';
 import { ProductDetailsEntity } from './product.details.entity';
+import { CartDetailEntity } from '../../cart/entities/cart.detail.entity';
+import { OrderDetailEntity } from '../../orders/entities/order.detail.entity';
+import { ProductImageEntity } from './product.image.entity';
 
 @Entity('products')
 export class ProductEntity extends TimestampField {
@@ -32,16 +42,6 @@ export class ProductEntity extends TimestampField {
   })
   status: ProductStatusEnum;
 
-  @OneToMany(
-    (): typeof ImageEntity => ImageEntity,
-    (image: ImageEntity): number => image,
-    {
-      eager: true,
-    },
-  )
-  @JoinColumn({ name: 'image_id' })
-  image: ImageEntity;
-
   @OneToOne(
     (): typeof ProductDetailsEntity => ProductDetailsEntity,
     (productDetailsEntity: ProductDetailsEntity): ProductEntity =>
@@ -51,4 +51,31 @@ export class ProductEntity extends TimestampField {
     },
   )
   productDetailsEntity: ProductDetailsEntity;
+
+  @OneToMany(
+    (): typeof CartDetailEntity => CartDetailEntity,
+    (cartDetail: CartDetailEntity): ProductEntity => cartDetail.product,
+    {
+      eager: true,
+    },
+  )
+  cartDetail: CartDetailEntity[];
+
+  @OneToMany(
+    (): typeof OrderDetailEntity => OrderDetailEntity,
+    (orderDetail: OrderDetailEntity): ProductEntity => orderDetail.product,
+    {
+      eager: true,
+    },
+  )
+  orderDetails: OrderDetailEntity[];
+
+  @OneToMany(
+    (): typeof ProductImageEntity => ProductImageEntity,
+    (productImage: ProductImageEntity): ProductEntity => productImage.product,
+    {
+      eager: true,
+    },
+  )
+  productImages: ProductImageEntity[];
 }

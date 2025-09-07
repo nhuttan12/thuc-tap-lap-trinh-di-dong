@@ -1,3 +1,10 @@
+/*
+ * @description: User detail entity
+ * @author: Nhut Tan
+ * @date: 2025-09-05
+ * @version: 1.0.0
+ * */
+
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { Column, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';

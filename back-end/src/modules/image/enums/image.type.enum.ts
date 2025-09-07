@@ -1,5 +1,5 @@
 /*
- * @description: image type enum
+ * @description: Image type enum
  * @author: Nhut Tan
  * @date: 2025-09-07
  * @version: 1.0.1

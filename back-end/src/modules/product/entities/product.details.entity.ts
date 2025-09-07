@@ -1,7 +1,15 @@
+/*
+ * @description: Product detail entity
+ * @author: Nhut Tan
+ * @date: 2025-09-05
+ * @version: 1.0.0
+ * */
+
 import {
   Column,
   Entity,
-  JoinColumn, ManyToOne,
+  JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';

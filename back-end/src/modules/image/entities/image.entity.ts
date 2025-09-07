@@ -1,7 +1,16 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ImageTypeEnum } from '../enums/image.type.enum';
+/*
+ * @description: Image entity
+ * @author: Nhut Tan
+ * @date: 2025-09-06
+ * @modified: 2025-09-07
+ * @version: 1.0.1
+ * */
+
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ImageStatusEnum } from '../enums/image.status.enum';
 import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductImageEntity } from '../../product/entities/product.image.entity';
+import { UserImageEntity } from '../../user/entities/user.image.entity';
 
 @Entity('images')
 export class ImageEntity extends TimestampField {
@@ -16,20 +25,27 @@ export class ImageEntity extends TimestampField {
 
   @Column({
     type: 'enum',
-    enum: ImageTypeEnum,
-    nullable: false,
-  })
-  type: ImageTypeEnum;
-
-  @Column({
-    type: 'enum',
     enum: ImageStatusEnum,
     nullable: false,
   })
   status: ImageStatusEnum;
 
-  // @ManyToOne(
-  //   (): typeof ProductEntity => ProductEntity,
-  //   (productEntity: ProductEntity): ImageEntity[] => productEntity.image,)
-  //
+  @OneToOne(
+    (): typeof ProductImageEntity => ProductImageEntity,
+    (productImageEntity: ProductImageEntity): ImageEntity =>
+      productImageEntity.image,
+    {
+      eager: true,
+    },
+  )
+  productImage: ProductImageEntity;
+
+  @OneToOne(
+    (): typeof UserImageEntity => UserImageEntity,
+    (userImageEntity: UserImageEntity): ImageEntity => userImageEntity.image,
+    {
+      eager: true,
+    },
+  )
+  userImage: UserImageEntity;
 }

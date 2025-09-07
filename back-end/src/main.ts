@@ -1,3 +1,10 @@
+/*
+ * @description: Main file
+ * @author: Nhut Tan
+ * @date: 2025-08-29
+ * @version: 1.0.0
+ * */
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
