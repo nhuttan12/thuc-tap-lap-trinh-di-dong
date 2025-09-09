@@ -14,4 +14,14 @@ export interface HttpConfig {
    * Environment of the application.
    * */
   environment: string;
+
+  /*
+   * Secret key for JWT to decode.
+   * */
+  jwtSecret: string;
+
+  /*
+   * Expiration time for JWT.
+   * */
+  expireTime: string;
 }

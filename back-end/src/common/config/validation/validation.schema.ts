@@ -20,5 +20,8 @@ export const validationSchema: ObjectSchema = object({
   }).required(),
   http: object({
     port: number().required(),
+    environment: string().required(),
+    jwtSecret: string().required(),
+    expireTime: string().required(),
   }).required(),
 }).required();
