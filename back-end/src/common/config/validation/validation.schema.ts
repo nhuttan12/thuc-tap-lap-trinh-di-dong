@@ -9,19 +9,16 @@
 
 import { number, object, ObjectSchema, string } from 'joi';
 
-export const validationSchema: ObjectSchema = object({
-  database: object({
-    type: string().required(),
-    host: string().required(),
-    port: number().required(),
-    username: string().required(),
-    password: string().required(),
-    database: string().required(),
-  }).required(),
-  http: object({
-    port: number().required(),
-    environment: string().required(),
-    jwtSecret: string().required(),
-    expireTime: string().required(),
-  }).required(),
-}).required();
+export const envValidationSchema: ObjectSchema = object({
+  DATABASE_TYPE: string().required(),
+  DATABASE_HOST: string().required(),
+  DATABASE_PORT: number().required(),
+  DATABASE_USERNAME: string().required(),
+  DATABASE_PASSWORD: string().required(),
+  DATABASE_NAME: string().required(),
+
+  HTTP_PORT: number().required(),
+  HTTP_ENVIRONMENT: string().required(),
+  HTTP_JWT_SECRET: string().required(),
+  HTTP_EXPIRE_TIME: string().required(),
+});

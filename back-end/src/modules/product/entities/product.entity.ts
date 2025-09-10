@@ -18,7 +18,7 @@ import { ProductStatusEnum } from '../enums/product.status.enum';
 import { ProductDetailsEntity } from './product.details.entity';
 import { CartDetailEntity } from '../../cart/entities/cart.detail.entity';
 import { OrderDetailEntity } from '../../orders/entities/order.detail.entity';
-import { ProductImageEntity } from './product.image.entity';
+import { ProductImageEntity } from '../../image/entities/product.image.entity';
 
 @Entity('products')
 export class ProductEntity extends TimestampField {

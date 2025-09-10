@@ -4,14 +4,15 @@
  * from the NestJS ConfigModule.
  * @author: Nhut Tan
  * @date: 2025-08-30
- * @modifies: 2025-09-01
- * @version: 1.0.0
+ * @modifies: 2025-09-10
+ * @version: 1.0.1
  * */
 
 import { DatabaseConfig } from './interface/database.interface';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { HttpConfig } from './interface/http.interface';
+import { GoogleConfig } from './interface/googleConfig';
 
 @Injectable()
 export class ConfigService {
@@ -23,7 +24,7 @@ export class ConfigService {
   constructor(private readonly config: NestConfigService) {}
 
   /*
-   * @description: Retrieve the database configuration object.
+   * @description: Retrieve database configuration object.
    * Throw ConflictException if the configuration is not found.
    * @returns {DatabaseConfig} The database configuration object.
    * */
@@ -31,8 +32,14 @@ export class ConfigService {
     /*
      * Retrieve the database configuration object.
      * */
-    const databaseConfig: DatabaseConfig | undefined =
-      this.config.get<DatabaseConfig>('database');
+    const databaseConfig: DatabaseConfig = {
+      type: this.config.get<string>('DATABASE_TYPE')!,
+      host: this.config.get<string>('DATABASE_HOST')!,
+      port: Number(this.config.get<number>('DATABASE_PORT')),
+      username: this.config.get<string>('DATABASE_USERNAME')!,
+      password: this.config.get<string>('DATABASE_PASSWORD')!,
+      database: this.config.get<string>('DATABASE_NAME')!,
+    };
     this.logger.debug(`Database config: ${JSON.stringify(databaseConfig)}`);
 
     /*
@@ -49,7 +56,7 @@ export class ConfigService {
   }
 
   /*
-   * @description: Retrieve the http configuration object.
+   * @description: Retrieve http configuration object.
    * Throw ConflictException if the configuration is not found.
    * @returns {HttpConfig} The http configuration object.
    * */
@@ -57,8 +64,12 @@ export class ConfigService {
     /*
      * Retrieve the http configuration object.
      * */
-    const httpConfig: HttpConfig | undefined =
-      this.config.get<HttpConfig>('http');
+    const httpConfig: HttpConfig | undefined = {
+      port: Number(this.config.get<number>('HTTP_PORT')),
+      environment: this.config.get<string>('HTTP_ENVIRONMENT')!,
+      jwtSecret: this.config.get<string>('HTTP_JWT_SECRET')!,
+      expireTime: this.config.get<string>('HTTP_EXPIRE_TIME')!,
+    };
     this.logger.debug(`Http config: ${JSON.stringify(httpConfig)}`);
 
     /*
@@ -72,5 +83,35 @@ export class ConfigService {
      * Return the object
      * */
     return httpConfig;
+  }
+
+  /*
+   * @description: Retrieve google configuration object.
+   * Throw ConflictException if the configuration is not found.
+   * @returns {GoogleConfig} The http configuration object.
+   * */
+  get googleConfig(): GoogleConfig {
+    /*
+     * Retrieve google configuration object.
+     * */
+    const googleConfig: GoogleConfig | undefined = {
+      clientID: this.config.get<string>('GOOGLE_CLIENT_ID')!,
+      clientSecret: this.config.get<string>('GOOGLE_CLIENT_SECRET')!,
+      callbackURL: this.config.get<string>('GOOGLE_CALLBACK_URL')!,
+      accessType: this.config.get<string>('GOOGLE_ACCESS_TYPE')!,
+    };
+    this.logger.debug(`Http config: ${JSON.stringify(googleConfig)}`);
+
+    /*
+     * Check the object exist, if not, throw Conflict exception
+     * */
+    if (!googleConfig) {
+      throw new ConflictException('Http configuration is not found');
+    }
+
+    /*
+     * Return the object
+     * */
+    return googleConfig;
   }
 }

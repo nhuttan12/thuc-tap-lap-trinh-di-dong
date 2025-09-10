@@ -9,8 +9,8 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ImageStatusEnum } from '../enums/image.status.enum';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { ProductImageEntity } from '../../product/entities/product.image.entity';
-import { UserImageEntity } from '../../user/entities/user.image.entity';
+import { ProductImageEntity } from './product.image.entity';
+import { UserImageEntity } from './user.image.entity';
 
 @Entity('images')
 export class ImageEntity extends TimestampField {

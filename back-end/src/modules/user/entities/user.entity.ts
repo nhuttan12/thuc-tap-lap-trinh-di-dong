@@ -21,7 +21,7 @@ import { UserDetailEntity } from './user.detail.entity';
 import { UserStatus } from '../enums/user.status.enum';
 import { CartEntity } from '../../cart/entities/cart.entity';
 import { OrderEntity } from '../../orders/entities/order.entity';
-import { UserImageEntity } from './user.image.entity';
+import { UserImageEntity } from '../../image/entities/user.image.entity';
 
 @Entity('users')
 export class UserEntity extends TimestampField {
