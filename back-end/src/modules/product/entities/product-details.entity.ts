@@ -2,7 +2,8 @@
  * @description: Product detail entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @version: 1.0.0
+ * @modified: 2025-09-12
+ * @version: 1.0.1
  * */
 
 import {
@@ -37,6 +38,7 @@ export class ProductDetailsEntity extends TimestampField {
       categoryEntity.productDetails,
     {
       eager: true,
+      cascade: true,
     },
   )
   @JoinColumn({ name: 'category_id' })
@@ -48,6 +50,7 @@ export class ProductDetailsEntity extends TimestampField {
       productEntity.productDetailsEntity,
     {
       eager: true,
+      cascade: true,
     },
   )
   @JoinColumn({ name: 'id' })

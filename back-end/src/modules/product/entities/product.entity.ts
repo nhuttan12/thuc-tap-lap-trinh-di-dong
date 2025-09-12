@@ -2,8 +2,8 @@
  * @description: Product entity
  * @author: Nhut Tan
  * @date: 2025-09-06
- * @modified: 2025-09-07
- * @version: 1.0.1
+ * @modified: 2025-09-12
+ * @version: 1.0.2
  * */
 
 import {
@@ -14,11 +14,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { ProductStatusEnum } from '../enums/product.status.enum';
-import { ProductDetailsEntity } from './product.details.entity';
-import { CartDetailEntity } from '../../cart/entities/cart.detail.entity';
-import { OrderDetailEntity } from '../../orders/entities/order.detail.entity';
-import { ProductImageEntity } from '../../image/entities/product.image.entity';
+import { ProductStatusEnum } from '../enums/product-status.enum';
+import { ProductDetailsEntity } from './product-details.entity';
+import { CartDetailEntity } from '../../cart/entities/cart-detail.entity';
+import { OrderDetailEntity } from '../../orders/entities/order-detail.entity';
+import { ProductImageEntity } from '../../image/entities/product-image.entity';
 
 @Entity('products')
 export class ProductEntity extends TimestampField {
@@ -48,6 +48,7 @@ export class ProductEntity extends TimestampField {
       productDetailsEntity.productEntity,
     {
       eager: true,
+      cascade: true,
     },
   )
   productDetailsEntity: ProductDetailsEntity;
@@ -57,6 +58,7 @@ export class ProductEntity extends TimestampField {
     (cartDetail: CartDetailEntity): ProductEntity => cartDetail.product,
     {
       eager: true,
+      cascade: true,
     },
   )
   cartDetail: CartDetailEntity[];
@@ -66,6 +68,7 @@ export class ProductEntity extends TimestampField {
     (orderDetail: OrderDetailEntity): ProductEntity => orderDetail.product,
     {
       eager: true,
+      cascade: true,
     },
   )
   orderDetails: OrderDetailEntity[];
@@ -75,6 +78,7 @@ export class ProductEntity extends TimestampField {
     (productImage: ProductImageEntity): ProductEntity => productImage.product,
     {
       eager: true,
+      cascade: true,
     },
   )
   productImages: ProductImageEntity[];

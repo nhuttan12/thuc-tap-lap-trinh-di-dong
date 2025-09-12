@@ -2,8 +2,8 @@
  * @description: Cart entity
  * @author: Nhut Tan
  * @date: 2025-09-06
- * @modified: 2025-09-07
- * @version: 1.0.1
+ * @modified: 2025-09-12
+ * @version: 1.0.2
  * */
 
 import {
@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { UserEntity } from '../../user/entities/user.entity';
-import { CartDetailEntity } from './cart.detail.entity';
+import { CartDetailEntity } from './cart-detail.entity';
 
 @Entity('carts')
 export class CartEntity extends TimestampField {
@@ -27,6 +27,7 @@ export class CartEntity extends TimestampField {
     (user: UserEntity): CartEntity[] => user.cart,
     {
       eager: true,
+      cascade: true,
     },
   )
   @JoinColumn({ name: 'user_id' })
@@ -37,6 +38,7 @@ export class CartEntity extends TimestampField {
     (cartDetail: CartDetailEntity): CartEntity => cartDetail.cart,
     {
       eager: true,
+      cascade: true,
     },
   )
   cartDetail: CartDetailEntity[];

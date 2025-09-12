@@ -2,7 +2,8 @@
  * @description: User detail entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @version: 1.0.0
+ * @modified: 2025-09-12
+ * @version: 1.0.1
  * */
 
 import { TimestampField } from '../../../common/database/timestamp.field';
@@ -27,6 +28,7 @@ export class UserDetailEntity extends TimestampField {
     (user: UserEntity): number => user.id,
     {
       eager: true,
+      cascade: true,
     },
   )
   @JoinColumn({ name: 'id' })

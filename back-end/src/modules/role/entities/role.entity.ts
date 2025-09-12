@@ -2,14 +2,14 @@
  * @description: role entity
  * @author: Nhut Tan
  * @date: 2025-09-03
- * @modified: 2025-09-05
- * @version: 1.0.0
+ * @modified: 2025-09-12
+ * @version: 1.0.1
  * */
 
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { UserEntity } from '../../user/entities/user.entity';
-import { RoleStatus } from '../enums/role.status.enum';
+import { RoleStatus } from '../enums/role-status.enum';
 
 @Entity('roles')
 export class RoleEntity extends TimestampField {
@@ -31,6 +31,7 @@ export class RoleEntity extends TimestampField {
     (user: UserEntity): RoleEntity => user.role,
     {
       eager: true,
+      cascade: true,
     },
   )
   user: UserEntity[];

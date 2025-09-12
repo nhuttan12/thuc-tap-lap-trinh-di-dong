@@ -2,7 +2,8 @@
  * @description: Order detail entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @version: 1.0.0
+ * @modified: 2025-09-12
+ * @version: 1.0.1
  * */
 
 import {
@@ -24,6 +25,10 @@ export class OrderDetailEntity extends TimestampField {
   @ManyToOne(
     (): typeof OrderEntity => OrderEntity,
     (orderEntity: OrderEntity): OrderDetailEntity[] => orderEntity.orderDetails,
+    {
+      eager: true,
+      cascade: true,
+    },
   )
   @JoinColumn({ name: 'order_id' })
   order: OrderEntity;
@@ -32,6 +37,10 @@ export class OrderDetailEntity extends TimestampField {
     (): typeof ProductEntity => ProductEntity,
     (productEntity: ProductEntity): OrderDetailEntity[] =>
       productEntity.orderDetails,
+    {
+      eager: true,
+      cascade: true,
+    },
   )
   @JoinColumn({ name: 'product_id' })
   product: ProductEntity;

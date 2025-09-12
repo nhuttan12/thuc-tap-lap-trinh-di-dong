@@ -2,6 +2,7 @@
  * @description: Product image entity
  * @author: Nhut Tan
  * @date: 2025-09-07
+ * @modified: 2025-09-12
  * @version: 1.0.1
  * */
 
@@ -16,7 +17,7 @@ import {
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { ImageEntity } from './image.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
-import { ProductImageTypeEnum } from '../../product/enums/product.image.type.enum';
+import { ProductImageTypeEnum } from '../../product/enums/product-image.type.enum';
 
 @Entity('product_images')
 export class ProductImageEntity extends TimestampField {
@@ -26,6 +27,10 @@ export class ProductImageEntity extends TimestampField {
   @OneToOne(
     (): typeof ImageEntity => ImageEntity,
     (imageEntity: ImageEntity) => imageEntity.productImage,
+    {
+      eager: true,
+      cascade: true,
+    },
   )
   @JoinColumn({ name: 'image_id' })
   image: ImageEntity;
@@ -34,6 +39,10 @@ export class ProductImageEntity extends TimestampField {
     (): typeof ProductEntity => ProductEntity,
     (productEntity: ProductEntity): ProductImageEntity[] =>
       productEntity.productImages,
+    {
+      eager: true,
+      cascade: true,
+    },
   )
   @JoinColumn({ name: 'product_id' })
   product: ProductEntity;

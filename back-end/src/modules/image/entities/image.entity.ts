@@ -2,23 +2,20 @@
  * @description: Image entity
  * @author: Nhut Tan
  * @date: 2025-09-06
- * @modified: 2025-09-07
- * @version: 1.0.1
+ * @modified: 2025-09-12
+ * @version: 1.0.2
  * */
 
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ImageStatusEnum } from '../enums/image.status.enum';
+import { ImageStatusEnum } from '../enums/image-status.enum';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { ProductImageEntity } from './product.image.entity';
-import { UserImageEntity } from './user.image.entity';
+import { ProductImageEntity } from './product-image.entity';
+import { UserImageEntity } from './user-image.entity';
 
 @Entity('images')
 export class ImageEntity extends TimestampField {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  name: string;
 
   @Column()
   url: string;
@@ -36,6 +33,7 @@ export class ImageEntity extends TimestampField {
       productImageEntity.image,
     {
       eager: true,
+      cascade: true,
     },
   )
   productImage: ProductImageEntity;
@@ -45,6 +43,7 @@ export class ImageEntity extends TimestampField {
     (userImageEntity: UserImageEntity): ImageEntity => userImageEntity.image,
     {
       eager: true,
+      cascade: true,
     },
   )
   userImage: UserImageEntity;

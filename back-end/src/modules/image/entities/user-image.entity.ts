@@ -2,7 +2,8 @@
  * @description: User image entity
  * @author: Nhut Tan
  * @date: 2025-09-07
- * @version: 1.0.1
+ * @modified: 2025-09-12
+ * @version: 1.0.2
  * */
 
 import {
@@ -33,6 +34,7 @@ export class UserImageEntity extends TimestampField {
     (imageEntity: ImageEntity): UserImageEntity => imageEntity.userImage,
     {
       eager: true,
+      cascade: true,
     },
   )
   image: ImageEntity;

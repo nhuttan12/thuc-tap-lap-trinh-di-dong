@@ -2,7 +2,8 @@
  * @description: Order entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @version: 1.0.0
+ * @modified: 2025-09-12
+ * @version: 1.0.1
  * */
 
 import {
@@ -13,9 +14,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { OrderStatusEnum } from '../enums/order.status.enum';
+import { OrderStatusEnum } from '../enums/order-status.enum';
 import { UserEntity } from '../../user/entities/user.entity';
-import { OrderDetailEntity } from './order.detail.entity';
+import { OrderDetailEntity } from './order-detail.entity';
 
 @Entity('orders')
 export class OrderEntity extends TimestampField {
@@ -27,6 +28,7 @@ export class OrderEntity extends TimestampField {
     (userEntity: UserEntity): OrderEntity[] => userEntity.order,
     {
       eager: true,
+      cascade: true,
     },
   )
   @JoinColumn({ name: 'user_id' })
@@ -44,6 +46,7 @@ export class OrderEntity extends TimestampField {
       orderDetailEntity.order,
     {
       eager: true,
+      cascade: true,
     },
   )
   orderDetails: OrderDetailEntity[];
