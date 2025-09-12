@@ -10,10 +10,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImageEntity } from './entities/image.entity';
 import { UserRepository } from '../user/repositories/user.repository';
 import { ImageService } from './image.service';
+import { ImageMapper } from './mappers/image.mapper';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ImageEntity])],
-  providers: [UserRepository, ImageService],
+  providers: [UserRepository, ImageService, ImageMapper],
   exports: [ImageService],
 })
 export class ImageModule {}

@@ -1,9 +1,9 @@
 import { ImageStatusEnum } from '../enums/image-status.enum';
 
-export class UserImageEntityResponse {
+export class ImageEntityResponse {
   id: number;
   url: string;
   status: ImageStatusEnum;
-  createAt: Date;
-  updateAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
