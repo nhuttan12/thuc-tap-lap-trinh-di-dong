@@ -6,8 +6,8 @@
  * */
 
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
-import { ImageTypeEnum } from '../modules/image/enums/image.type.enum';
-import { ImageStatusEnum } from '../modules/image/enums/image.status.enum';
+import { ImageTypeEnum } from '../modules/image/enums/image-type.enum';
+import { ImageStatusEnum } from '../modules/image/enums/image-status.enum';
 
 export class CreateImagesTable1757061268543 implements MigrationInterface {
   /*

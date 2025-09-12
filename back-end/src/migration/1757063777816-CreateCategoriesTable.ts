@@ -6,8 +6,8 @@
  * */
 
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { CategoryStatusEnum } from '../modules/category/enums/category.status.enum';
-import { ImageStatusEnum } from '../modules/image/enums/image.status.enum';
+import { CategoryStatusEnum } from '../modules/category/enums/category-status.enum';
+import { ImageStatusEnum } from '../modules/image/enums/image-status.enum';
 
 export class CreateCategoriesTable1757063777816 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

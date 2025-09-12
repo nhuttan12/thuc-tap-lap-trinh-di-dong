@@ -12,7 +12,7 @@ import {
   TableForeignKey,
   TableIndex,
 } from 'typeorm';
-import { OrderStatusEnum } from '../modules/orders/enums/order.status.enum';
+import { OrderStatusEnum } from '../modules/orders/enums/order-status.enum';
 
 export class CreateOrdersTable1757153969179 implements MigrationInterface {
   /*

@@ -12,7 +12,7 @@ import {
   TableForeignKey,
   TableIndex,
 } from 'typeorm';
-import { ProductImageTypeEnum } from '../modules/product/enums/product.image.type.enum';
+import { ProductImageTypeEnum } from '../modules/product/enums/product-image.type.enum';
 
 export class CreateProductImagesTable1757177326850
   implements MigrationInterface

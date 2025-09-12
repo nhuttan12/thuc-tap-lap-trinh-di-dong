@@ -12,7 +12,7 @@ import {
   TableForeignKey,
   TableIndex,
 } from 'typeorm';
-import { CartDetailsStatusEnum } from '../modules/cart/enums/cart.details.status.enum';
+import { CartDetailsStatusEnum } from '../modules/cart/enums/cart-details.status.enum';
 
 export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
   /*

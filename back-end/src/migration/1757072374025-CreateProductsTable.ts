@@ -12,7 +12,7 @@ import {
   TableForeignKey,
   TableIndex,
 } from 'typeorm';
-import { ProductStatusEnum } from '../modules/product/enums/product.status.enum';
+import { ProductStatusEnum } from '../modules/product/enums/product-status.enum';
 
 export class CreateProductsTable1757072374025 implements MigrationInterface {
   /*

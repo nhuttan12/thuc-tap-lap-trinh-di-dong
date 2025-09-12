@@ -6,8 +6,8 @@
  * */
 
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
-import { UserStatus } from '../modules/user/enums/user.status.enum';
-import { RoleStatus } from '../modules/role/enums/role.status.enum';
+import { UserStatus } from '../modules/user/enums/user-status.enum';
+import { RoleStatus } from '../modules/role/enums/role-status.enum';
 
 export class AddingStatusToUsersAndRolesTable1757059294386
   implements MigrationInterface
