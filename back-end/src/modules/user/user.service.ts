@@ -2,28 +2,34 @@
  * @description: user service
  * @author: Nhut Tan
  * @date: 2025-09-08
- * @modified: 2025-09-10
- * @version: 1.0.1
+ * @modified: 2025-09-12
+ * @version: 1.0.2
  * */
 
 import {
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserEntity } from './entities/user.entity';
-import { UserResponseDto } from './dtos/user.response.dto';
+import { UserResponseDto } from './dtos/user-response.dto';
 import { UserMapper } from './mappers/user.mapper';
-import { UserStatusCode } from './status-code/user.status.code';
-import { UserStatus } from './enums/user.status.enum';
+import { UserStatusCode } from './status-code/user.status-code';
+import { UserStatus } from './enums/user-status.enum';
+import { ImageService } from '../image/image.service';
+import { ImageEntityResponse } from '../image/dtos/image-entity.response';
 
 @Injectable()
 export class UserService {
   private readonly logger: Logger = new Logger(UserService.name);
 
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userMapper: UserMapper,
+    private readonly imageService: ImageService,
+  ) {}
 
   /*
    * @description: Get user by username and password for login
@@ -61,6 +67,7 @@ export class UserService {
         throw new NotFoundException({
           statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
           customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+          message: UserStatusCode.USER_NOT_FOUND.message,
         });
       }
 
@@ -68,7 +75,7 @@ export class UserService {
        * Convert user entity to user response dto
        * */
       const userResponseDto: UserResponseDto =
-        UserMapper.toUserResponseDto(user);
+        this.userMapper.toUserResponseDto(user);
       this.logger.debug(
         `Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`,
       );
@@ -111,6 +118,7 @@ export class UserService {
         throw new NotFoundException({
           statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
           customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+          message: UserStatusCode.USER_NOT_FOUND.message,
         });
       }
 
@@ -118,7 +126,7 @@ export class UserService {
        * Convert user entity to user response dto
        * */
       const userResponseDto: UserResponseDto =
-        UserMapper.toUserResponseDto(user);
+        this.userMapper.toUserResponseDto(user);
       this.logger.debug(
         `Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`,
       );
@@ -165,10 +173,11 @@ export class UserService {
       /*
        * Validate status user if user banned
        * */
-      if (user.status === UserStatus.BANNED) {
-        throw new UnauthorizedException({
+      if (user.status === (UserStatus.BANNED as UserStatus)) {
+        throw new ForbiddenException({
           statusCode: UserStatusCode.USER_BANNED.statusCode,
           customCode: UserStatusCode.USER_BANNED.customCode,
+          message: UserStatusCode.USER_BANNED.message,
         });
       }
 
@@ -176,7 +185,7 @@ export class UserService {
        * Convert user entity to user response dto
        * */
       const userResponseDto: UserResponseDto =
-        UserMapper.toUserResponseDto(user);
+        this.userMapper.toUserResponseDto(user);
       this.logger.debug(
         `Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`,
       );
@@ -191,14 +200,14 @@ export class UserService {
     }
   }
 
-  async createNewUserGoole(
+  async createNewUserGoogle(
     email: string,
     name: string,
-    photos: string,
+    imageUrl: string,
   ): Promise<UserResponseDto> {
     try {
       /*
-       * Create new user with google information
+       * Create new user with Google information
        * */
       const user: UserEntity = await this.userRepository.createNewUserGoogle(
         name,
@@ -209,14 +218,21 @@ export class UserService {
       );
 
       /*
-       * Call create image in image service
+       * Call `create image` in image service
        * */
+      const image: ImageEntityResponse = await this.imageService.createImage(
+        imageUrl,
+        user.id,
+      );
+      this.logger.debug(
+        `Call \`createImage\` function from image service: ${JSON.stringify(image)}`,
+      );
 
       /*
        * Convert user to user response dto
        * */
       const userResponseDto: UserResponseDto =
-        UserMapper.toUserResponseDto(user);
+        this.userMapper.toUserResponseDto(user);
       this.logger.debug(
         `Convert user to user response dto: ${JSON.stringify(user)}`,
       );

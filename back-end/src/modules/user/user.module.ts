@@ -11,10 +11,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UserService } from './user.service';
+import { UserMapper } from './mappers/user.mapper';
+import { ImageModule } from '../image/image.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  providers: [UserRepository, UserService],
+  imports: [TypeOrmModule.forFeature([UserEntity]), ImageModule],
+  providers: [UserRepository, UserService, UserMapper],
   controllers: [],
   exports: [UserService],
 })

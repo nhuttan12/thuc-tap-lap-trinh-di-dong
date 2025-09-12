@@ -12,7 +12,7 @@ import { DatabaseConfig } from './interface/database.interface';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { HttpConfig } from './interface/http.interface';
-import { GoogleConfig } from './interface/googleConfig';
+import { GoogleConfig } from './interface/google.config';
 
 @Injectable()
 export class ConfigService {
@@ -88,7 +88,7 @@ export class ConfigService {
   /*
    * @description: Retrieve google configuration object.
    * Throw ConflictException if the configuration is not found.
-   * @returns {GoogleConfig} The http configuration object.
+   * @returns {GoogleConfigInterface} The http configuration object.
    * */
   get googleConfig(): GoogleConfig {
     /*
