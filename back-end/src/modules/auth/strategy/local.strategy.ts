@@ -10,8 +10,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { UserLoginRequestDto } from '../dtos/user.login.request.dto';
-import { JwtPayloadInterface } from '../interface/jwt.payload.interface';
+import { UserLoginRequestDto } from '../dtos/user-login-request.dto';
+import { JwtPayload } from '../interface/jwt-payload.interface';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -33,11 +33,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate({
     username,
     password,
-  }: UserLoginRequestDto): Promise<JwtPayloadInterface> {
+  }: UserLoginRequestDto): Promise<JwtPayload> {
     /*
      * Get user by username and password
      * */
-    const user: JwtPayloadInterface = await this.authService.validateUserLogin(
+    const user: JwtPayload = await this.authService.userLogin(
       username,
       password,
     );

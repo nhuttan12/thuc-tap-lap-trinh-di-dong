@@ -5,15 +5,14 @@
  * @version: 1.0.0
  * */
 
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserResponseDto } from '../user/dtos/user.response.dto';
-import { JwtPayloadInterface } from './interface/jwt.payload.interface';
+import { UserResponseDto } from '../user/dtos/user-response.dto';
+import { JwtPayload } from './interface/jwt-payload.interface';
 import { AuthMapper } from './mapper/auth.mapper';
 import { JwtService } from '@nestjs/jwt';
-import { UserStatus } from '../user/enums/user.status.enum';
-import { UserStatusCode } from '../user/status-code/user.status.code';
-import { UserEntity } from '../user/entities/user.entity';
+import { UserStatus } from '../user/enums/user-status.enum';
+import { UserStatusCode } from '../user/status-code/user.status-code';
 
 @Injectable()
 export class AuthService {
@@ -22,15 +21,19 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly authMapper: AuthMapper,
   ) {}
 
   /*
-   * Validate user by calling `getUserByUserNameAndPasswordForLogin` function from user service
+   * @description: Validate user by calling `getUserByUserNameAndPasswordForLogin` function from user service
+   * @param username: string
+   * @param pass: string
+   * @returns: Promise<JwtPayloadInterface>
+   * @author: Nhut Tan
+   * @date: 2025-09-08
+   * @version: 1.0.0
    * */
-  async validateUserLogin(
-    username: string,
-    pass: string,
-  ): Promise<JwtPayloadInterface> {
+  async userLogin(username: string, pass: string): Promise<JwtPayload> {
     try {
       /*
        * Get `getUserByUserNameAndPasswordForLogin` function from user service
@@ -48,16 +51,17 @@ export class AuthService {
        * Validate status user if user banned
        * */
       if (user.status === UserStatus.BANNED.toString()) {
-        throw new UnauthorizedException({
+        throw new ForbiddenException({
           statusCode: UserStatusCode.USER_BANNED.statusCode,
           customCode: UserStatusCode.USER_BANNED.customCode,
+          message: UserStatusCode.USER_BANNED.message,
         });
       }
 
       /*
        * Mapping user response to jwt payload
        * */
-      const payload: JwtPayloadInterface = AuthMapper.toJwtPayload(user);
+      const payload: JwtPayload = this.authMapper.toJwtPayload(user);
       this.logger.debug(
         `Mapping user response to jwt payload: ${JSON.stringify(payload)}`,
       );
@@ -81,18 +85,28 @@ export class AuthService {
     }
   }
 
-  async validateUserGoole(
+  /*
+   * @description: login with Google
+   * @param: email: string
+   * @param: name: string
+   * @param: photo: string
+   * @return: Promise<JwtPayloadInterface>
+   * @author: Nhut Tan
+   * @date: 2025-09-12
+   * @version: 1.0.0
+   * */
+  async googleLogin(
     email: string,
     name: string,
     photo: string,
-    accessToken: string,
-  ): Promise<JwtPayloadInterface> {
+  ): Promise<JwtPayload> {
     try {
       /*
        * Call `getUserByEmail` function from user service
        * */
-      let user: UserResponseDto | null =
-        await this.userService.getUserByEmail(email);
+      let user: UserResponseDto | null = await this.userService.getUserByEmail(
+        email[0],
+      );
       this.logger.debug(
         `Call \`getUserByEmail\` function from user service: ${JSON.stringify(user)}`,
       );
@@ -104,17 +118,13 @@ export class AuthService {
         /*
          * Create user by google
          * */
-        user = await this.userService.createNewUserGoole(
-          email,
-          name,
-          photo,
-        );
+        user = await this.userService.createNewUserGoogle(email, name, photo);
       }
 
       /*
        * Mapping user response to jwt payload
        * */
-      const payload: JwtPayloadInterface = AuthMapper.toJwtPayload(user);
+      const payload: JwtPayload = this.authMapper.toJwtPayload(user);
       this.logger.debug(
         `Mapping user response to jwt payload: ${JSON.stringify(payload)}`,
       );

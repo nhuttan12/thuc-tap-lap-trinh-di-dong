@@ -6,8 +6,8 @@
  * */
 
 import { Request as ExpressRequest } from 'express';
-import { JwtPayloadInterface } from './jwt.payload.interface';
+import { JwtPayload } from './jwt-payload.interface';
 
 export interface AuthRequest extends ExpressRequest {
-  user: JwtPayloadInterface;
+  user: JwtPayload;
 }

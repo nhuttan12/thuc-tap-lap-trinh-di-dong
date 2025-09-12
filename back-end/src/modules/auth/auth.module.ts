@@ -2,6 +2,7 @@
  * @description: auth module
  * @author: Nhut Tan
  * @date: 2025-09-08
+ * @last modified: 2025-09-12
  * @version: 1.0.0
  * */
 
@@ -15,6 +16,8 @@ import { ConfigModule } from '../../common/config/config.module';
 import { ConfigService } from '../../common/config/config.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { GoogleStrategy } from './strategy/google.strategy';
+import { AuthController } from './auth.controller';
+import { AuthMapper } from './mapper/auth.mapper';
 
 @Module({
   imports: [
@@ -31,7 +34,14 @@ import { GoogleStrategy } from './strategy/google.strategy';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+  controllers: [AuthController],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+    AuthMapper,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

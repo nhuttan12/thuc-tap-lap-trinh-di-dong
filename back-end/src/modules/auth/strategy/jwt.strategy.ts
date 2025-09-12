@@ -2,19 +2,19 @@
  * @description: jwt strategy passport
  * @author: Nhut Tan
  * @date: 2025-09-08
- * @modified: 2025-09-10
+ * @modified: 2025-09-12
  * @version: 1.0.1
  * */
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '../../../common/config/config.service';
-import { JwtPayloadInterface } from '../interface/jwt.payload.interface';
+import { JwtPayload } from '../interface/jwt-payload.interface';
 import { UserService } from '../../user/user.service';
-import { UserResponseDto } from '../../user/dtos/user.response.dto';
-import { UserStatus } from '../../user/enums/user.status.enum';
-import { UserStatusCode } from '../../user/status-code/user.status.code';
+import { UserResponseDto } from '../../user/dtos/user-response.dto';
+import { UserStatus } from '../../user/enums/user-status.enum';
+import { UserStatusCode } from '../../user/status-code/user.status-code';
 import { AuthMapper } from '../mapper/auth.mapper';
 
 @Injectable()
@@ -22,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
     private readonly userService: UserService,
+    private readonly authMapper: AuthMapper,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -40,7 +41,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @modified: 2025-09-10
    * @version: 1.0.0
    * */
-  async validate(payload: JwtPayloadInterface): Promise<JwtPayloadInterface> {
+  async validate(payload: JwtPayload): Promise<JwtPayload> {
     /*
      * Get user by calling `getUserByUserID` function from user service
      * */
@@ -52,16 +53,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
      * Validate status user if user banned
      * */
     if (user.status === UserStatus.BANNED.toString()) {
-      throw new UnauthorizedException({
+      throw new ForbiddenException({
         statusCode: UserStatusCode.USER_BANNED.statusCode,
         customCode: UserStatusCode.USER_BANNED.customCode,
+        message: UserStatusCode.USER_BANNED.message,
       });
     }
 
     /*
      * Convert user response to jwt payload
      * */
-    const jwtPayload: JwtPayloadInterface = AuthMapper.toJwtPayload(user);
+    const jwtPayload: JwtPayload = this.authMapper.toJwtPayload(user);
 
     return jwtPayload;
   }

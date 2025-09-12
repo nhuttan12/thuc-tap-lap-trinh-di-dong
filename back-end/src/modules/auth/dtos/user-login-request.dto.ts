@@ -6,7 +6,7 @@
  * */
 
 import { IsNotEmpty, IsString } from '@nestjs/class-validator';
-import { UserStatusCode } from '../../user/status-code/user.status.code';
+import { UserStatusCode } from '../../user/status-code/user.status-code';
 
 export class UserLoginRequestDto {
   @IsString({ message: UserStatusCode.USERNAME_NOT_STRING.customCode })

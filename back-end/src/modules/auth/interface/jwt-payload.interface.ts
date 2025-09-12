@@ -5,7 +5,7 @@
  * @version: 1.0.0
  * */
 
-export interface JwtPayloadInterface {
+export interface JwtPayload {
   id: number;
   email: string;
   role: string;
