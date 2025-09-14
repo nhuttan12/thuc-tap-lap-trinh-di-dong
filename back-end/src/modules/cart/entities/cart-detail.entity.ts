@@ -2,8 +2,8 @@
  * @description: Cart detail entity
  * @author: Nhut Tan
  * @date: 2025-09-07
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -20,8 +20,7 @@ export class CartDetailEntity extends TimestampField {
     (): typeof CartEntity => CartEntity,
     (cart: CartEntity): CartDetailEntity[] => cart.cartDetail,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'cart_id' })
@@ -32,8 +31,7 @@ export class CartDetailEntity extends TimestampField {
     (productEntity: ProductEntity): CartDetailEntity[] =>
       productEntity.cartDetail,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'cart_id' })

@@ -2,8 +2,8 @@
  * @description: Product entity
  * @author: Nhut Tan
  * @date: 2025-09-06
- * @modified: 2025-09-12
- * @version: 1.0.2
+ * @modified: 2025-09-14
+ * @version: 1.0.3
  * */
 
 import {
@@ -47,8 +47,7 @@ export class ProductEntity extends TimestampField {
     (productDetailsEntity: ProductDetailsEntity): ProductEntity =>
       productDetailsEntity.productEntity,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   productDetailsEntity: ProductDetailsEntity;
@@ -57,8 +56,7 @@ export class ProductEntity extends TimestampField {
     (): typeof CartDetailEntity => CartDetailEntity,
     (cartDetail: CartDetailEntity): ProductEntity => cartDetail.product,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   cartDetail: CartDetailEntity[];
@@ -67,8 +65,7 @@ export class ProductEntity extends TimestampField {
     (): typeof OrderDetailEntity => OrderDetailEntity,
     (orderDetail: OrderDetailEntity): ProductEntity => orderDetail.product,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   orderDetails: OrderDetailEntity[];
@@ -77,8 +74,7 @@ export class ProductEntity extends TimestampField {
     (): typeof ProductImageEntity => ProductImageEntity,
     (productImage: ProductImageEntity): ProductEntity => productImage.product,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   productImages: ProductImageEntity[];

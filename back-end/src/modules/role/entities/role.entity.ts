@@ -2,8 +2,8 @@
  * @description: role entity
  * @author: Nhut Tan
  * @date: 2025-09-03
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
@@ -30,8 +30,7 @@ export class RoleEntity extends TimestampField {
     (): typeof UserEntity => UserEntity,
     (user: UserEntity): RoleEntity => user.role,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   user: UserEntity[];

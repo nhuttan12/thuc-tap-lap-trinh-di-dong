@@ -2,8 +2,8 @@
  * @description: Product image entity
  * @author: Nhut Tan
  * @date: 2025-09-07
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import {
@@ -26,10 +26,9 @@ export class ProductImageEntity extends TimestampField {
 
   @OneToOne(
     (): typeof ImageEntity => ImageEntity,
-    (imageEntity: ImageEntity) => imageEntity.productImage,
+    (imageEntity: ImageEntity): ProductImageEntity => imageEntity.productImage,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'image_id' })
@@ -40,8 +39,7 @@ export class ProductImageEntity extends TimestampField {
     (productEntity: ProductEntity): ProductImageEntity[] =>
       productEntity.productImages,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'product_id' })

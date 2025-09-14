@@ -2,8 +2,8 @@
  * @description: Cart entity
  * @author: Nhut Tan
  * @date: 2025-09-06
- * @modified: 2025-09-12
- * @version: 1.0.2
+ * @modified: 2025-09-14
+ * @version: 1.0.3
  * */
 
 import {
@@ -26,8 +26,7 @@ export class CartEntity extends TimestampField {
     (): typeof UserEntity => UserEntity,
     (user: UserEntity): CartEntity[] => user.cart,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'user_id' })
@@ -37,8 +36,7 @@ export class CartEntity extends TimestampField {
     (): typeof CartDetailEntity => CartDetailEntity,
     (cartDetail: CartDetailEntity): CartEntity => cartDetail.cart,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   cartDetail: CartDetailEntity[];

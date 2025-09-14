@@ -2,8 +2,8 @@
  * @description: Order detail entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import {
@@ -26,8 +26,7 @@ export class OrderDetailEntity extends TimestampField {
     (): typeof OrderEntity => OrderEntity,
     (orderEntity: OrderEntity): OrderDetailEntity[] => orderEntity.orderDetails,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'order_id' })
@@ -38,8 +37,7 @@ export class OrderDetailEntity extends TimestampField {
     (productEntity: ProductEntity): OrderDetailEntity[] =>
       productEntity.orderDetails,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'product_id' })

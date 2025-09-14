@@ -2,8 +2,8 @@
  * @description: user entity
  * @author: Nhut Tan
  * @date: 2025-09-03
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import {
@@ -51,8 +51,7 @@ export class UserEntity extends TimestampField {
     (): typeof RoleEntity => RoleEntity,
     (role: RoleEntity): UserEntity[] => role.user,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'role_id' })
@@ -62,8 +61,7 @@ export class UserEntity extends TimestampField {
     (): typeof UserDetailEntity => UserDetailEntity,
     (detail: UserDetailEntity): UserEntity => detail.user,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   userDetail: UserDetailEntity;
@@ -72,8 +70,7 @@ export class UserEntity extends TimestampField {
     (): typeof CartEntity => CartEntity,
     (cart: CartEntity): UserEntity => cart.user,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   cart: CartEntity[];
@@ -82,8 +79,7 @@ export class UserEntity extends TimestampField {
     (): typeof OrderEntity => OrderEntity,
     (order: OrderEntity): UserEntity => order.user,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   order: OrderEntity[];
@@ -92,8 +88,7 @@ export class UserEntity extends TimestampField {
     (): typeof UserImageEntity => UserImageEntity,
     (userImage: UserImageEntity): UserEntity => userImage.user,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   userImages: UserImageEntity[];

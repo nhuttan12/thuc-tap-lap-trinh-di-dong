@@ -2,14 +2,21 @@
  * @description: User detail entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { Column, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from './user.entity';
 
+@Entity()
 export class UserDetailEntity extends TimestampField {
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,10 +32,9 @@ export class UserDetailEntity extends TimestampField {
 
   @OneToOne(
     (): typeof UserEntity => UserEntity,
-    (user: UserEntity): number => user.id,
+    (user: UserEntity): UserDetailEntity => user.userDetail,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'id' })

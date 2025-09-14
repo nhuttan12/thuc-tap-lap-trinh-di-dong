@@ -2,8 +2,8 @@
  * @description: Product detail entity
  * @author: Nhut Tan
  * @date: 2025-09-05
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import {
@@ -37,8 +37,7 @@ export class ProductDetailsEntity extends TimestampField {
     (categoryEntity: CategoryEntity): ProductDetailsEntity[] =>
       categoryEntity.productDetails,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'category_id' })
@@ -49,8 +48,7 @@ export class ProductDetailsEntity extends TimestampField {
     (productEntity: ProductEntity): ProductDetailsEntity =>
       productEntity.productDetailsEntity,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   @JoinColumn({ name: 'id' })

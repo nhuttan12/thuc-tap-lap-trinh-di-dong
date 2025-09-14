@@ -2,8 +2,8 @@
  * @description: Image entity
  * @author: Nhut Tan
  * @date: 2025-09-06
- * @modified: 2025-09-12
- * @version: 1.0.2
+ * @modified: 2025-09-14
+ * @version: 1.0.3
  * */
 
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -32,8 +32,7 @@ export class ImageEntity extends TimestampField {
     (productImageEntity: ProductImageEntity): ImageEntity =>
       productImageEntity.image,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   productImage: ProductImageEntity;
@@ -42,8 +41,7 @@ export class ImageEntity extends TimestampField {
     (): typeof UserImageEntity => UserImageEntity,
     (userImageEntity: UserImageEntity): ImageEntity => userImageEntity.image,
     {
-      eager: true,
-      cascade: true,
+      cascade: ['insert', 'update', 'soft-remove'],
     },
   )
   userImage: UserImageEntity;
