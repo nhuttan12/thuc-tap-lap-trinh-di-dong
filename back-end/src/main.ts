@@ -5,10 +5,11 @@
  * @version: 1.0.0
  * */
 
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
+import { CatchEverythingFilter } from './common/filter/catch-everything.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -20,21 +21,27 @@ async function bootstrap() {
   });
 
   /*
-   * 2. Set global pipe with validation
+   * Set global pipe with validation
    * */
   app.useGlobalPipes(new ValidationPipe());
 
   /*
-   * 3. Get config service
+   * Set up global filter
+   * */
+  const httpAdapterHost: HttpAdapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new CatchEverythingFilter(httpAdapterHost));
+
+  /*
+   * Get config service
    * */
   const nestConfigService: NestConfigService = app.get(NestConfigService);
 
   /*
-   * 4. Get port from config service
+   * Get port from config service
    * */
   const port: number | undefined = nestConfigService.get<number>('http.port');
 
-  // 5. Listen to port
+  // Listen to port
   await app.listen(port ?? 3000);
 }
 

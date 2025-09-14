@@ -78,7 +78,7 @@ export class AuthService {
       return payload;
     } catch (e) {
       this.logger.error(
-        `Error in \`validateUser\`: ${(e as Error).message}`,
+        `Error in \`userLogin\`: ${(e as Error).message}`,
         (e as Error).stack,
       );
       throw e;
@@ -141,7 +141,7 @@ export class AuthService {
       return payload;
     } catch (e) {
       this.logger.error(
-        `Error in \`validateUserGoole\`: ${(e as Error).message}`,
+        `Error in \`googleLogin\`: ${(e as Error).message}`,
         (e as Error).stack,
       );
       throw e;

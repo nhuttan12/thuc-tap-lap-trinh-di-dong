@@ -2,8 +2,8 @@
  * @description: auth module
  * @author: Nhut Tan
  * @date: 2025-09-08
- * @last modified: 2025-09-12
- * @version: 1.0.0
+ * @last modified: 2025-09-14
+ * @version: 1.0.2
  * */
 
 import { Module } from '@nestjs/common';
@@ -25,7 +25,8 @@ import { AuthMapper } from './mapper/auth.mapper';
     PassportModule,
     ConfigModule,
     JwtModule.registerAsync({
-      inject: [ConfigModule],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.httpConfig.jwtSecret,
         signOptions: {

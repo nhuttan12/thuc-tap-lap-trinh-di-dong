@@ -5,15 +5,17 @@
  * @version: 1.0.0
  * */
 
-import { IsNotEmpty, IsString } from '@nestjs/class-validator';
-import { UserStatusCode } from '../../user/status-code/user.status-code';
+import { IsNotEmpty, IsString, NotContains } from '@nestjs/class-validator';
+import { AuthStatusCode } from '../status-code/auth.status-code';
 
 export class UserLoginRequestDto {
-  @IsString({ message: UserStatusCode.USERNAME_NOT_STRING.customCode })
-  @IsNotEmpty({ message: UserStatusCode.USERNAME_NOT_EMPTY.customCode })
+  @IsString({ message: AuthStatusCode.USERNAME_MUST_BE_STRING.customCode })
+  @IsNotEmpty({ message: AuthStatusCode.USERNAME_NOT_EMPTY.customCode })
+  @NotContains(' ', {
+    message: AuthStatusCode.USERNAME_NOT_CONTAINS_SPACE.customCode,
+  })
   username: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: AuthStatusCode.PASSWORD_NOT_EMPTY.customCode })
   password: string;
 }

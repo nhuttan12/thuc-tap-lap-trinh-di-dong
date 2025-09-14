@@ -15,6 +15,12 @@ import { ImageStatusEnum } from '../enums/image-status.enum';
 export class ImageRepository {
   private readonly logger: Logger = new Logger(ImageRepository.name);
 
+  /*
+   * @description: constructor of image repository class
+   * @author: Nhut Tan
+   * @date: 2025-09-12
+   * @version: 1.0.0
+   * */
   constructor(
     @InjectRepository(ImageEntity)
     private readonly imageRepository: Repository<ImageEntity>,

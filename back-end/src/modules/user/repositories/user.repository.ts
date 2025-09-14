@@ -2,6 +2,7 @@
  * @description: user repository
  * @author: Nhut Tan
  * @date: 2025-09-08
+ * @modified: 2025-09-12
  * @version: 1.0.1
  * */
 
@@ -79,6 +80,9 @@ export class UserRepository {
         where: {
           id: userID,
         },
+        relations: {
+          role: true,
+        },
       });
       this.logger.debug(`Get users from database ${JSON.stringify(user)}`);
 
@@ -112,6 +116,9 @@ export class UserRepository {
         where: {
           email: email,
         },
+        relations: {
+          role: true,
+        },
       });
       this.logger.debug(`Get users from database ${JSON.stringify(user)}`);
 
@@ -129,7 +136,7 @@ export class UserRepository {
   }
 
   /*
-   * @description: Create user with google information
+   * @description: Create user with Google information
    * @param {name: string, email: string, photos: string}
    * @return {UserEntity}
    * @author: Nhut Tan

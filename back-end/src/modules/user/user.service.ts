@@ -240,7 +240,7 @@ export class UserService {
       return userResponseDto;
     } catch (e) {
       this.logger.error(
-        `Error in \`getUserByEmail\`: ${(e as Error).message}`,
+        `Error in \`createNewUserGoogle\`: ${(e as Error).message}`,
         (e as Error).stack,
       );
       throw e;

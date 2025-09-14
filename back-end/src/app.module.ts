@@ -18,6 +18,11 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RoleModule } from './modules/role/role.module';
 import { envValidationSchema } from './common/config/validation/validation.schema';
+import { CartModule } from './modules/cart/cart.module';
+import { CategoryModule } from './modules/category/category.module';
+import { ImageModule } from './modules/image/image.module';
+import { OrderModule } from './modules/orders/order.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -31,6 +36,11 @@ import { envValidationSchema } from './common/config/validation/validation.schem
     UserModule,
     AuthModule,
     RoleModule,
+    CartModule,
+    CategoryModule,
+    ImageModule,
+    OrderModule,
+    ProductModule,
   ],
   providers: [Logger, ConfigService],
   exports: [Logger, ConfigService],
