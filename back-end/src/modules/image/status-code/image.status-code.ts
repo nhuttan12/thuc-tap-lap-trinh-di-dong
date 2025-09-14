@@ -1,15 +1,17 @@
-import { HttpStatus } from '@nestjs/common';
+/*
+ * @description: image status code
+ * @author: Nhut Tan
+ * @date: 2025-09-12
+ * @version: 1.0.0
+ * */
 
-export class ImageStatusCode {
+import { HttpStatus } from '@nestjs/common';
+import { BaseStatusCode } from '../../../common/status-code/base.status-code';
+
+export class ImageStatusCode extends BaseStatusCode {
   static readonly IMAGE_NOT_FOUND: ImageStatusCode = new ImageStatusCode(
     HttpStatus.NOT_FOUND,
-    'USR_001',
+    'IMG_001',
     'Image not found',
   );
-
-  public constructor(
-    public readonly statusCode: number,
-    public readonly customCode: string,
-    public readonly message: string,
-  ) {}
 }
