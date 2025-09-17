@@ -1,9 +1,9 @@
-/*
+/**
  * @description: Catch every thing exception
  * @author: Nhut Tan
  * @date: 2025-09-14
  * @version: 1.0.0
- * */
+ */
 
 import {
   ArgumentsHost,
