@@ -5,7 +5,7 @@
  * @version: 1.0.0
  * */
 
-import { BaseStatusCode } from '../../../common/status-code/base.status-code';
+import { BaseStatusCode } from '../../../common/dtos/status-code/base.status-code';
 import { HttpStatus } from '@nestjs/common';
 
 export class AuthStatusCode extends BaseStatusCode {

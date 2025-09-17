@@ -6,7 +6,7 @@
  * */
 
 import { HttpStatus } from '@nestjs/common';
-import { BaseStatusCode } from '../../../common/status-code/base.status-code';
+import { BaseStatusCode } from '../../../common/dtos/status-code/base.status-code';
 
 export class RoleStatusCode extends BaseStatusCode {
   static readonly ROLE_NOT_FOUND: RoleStatusCode = new RoleStatusCode(
