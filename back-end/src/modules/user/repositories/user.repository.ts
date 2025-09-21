@@ -1,15 +1,17 @@
-/*
+/**
  * @description: user repository
  * @author: Nhut Tan
  * @date: 2025-09-08
- * @modified: 2025-09-12
- * @version: 1.0.1
- * */
+ * @modified: 2025-09-17
+ * @version: 1.0.2
+ */
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { v4 as uuidv4 } from 'uuid';
 
 export class UserRepository {
   private readonly logger: Logger = new Logger(UserRepository.name);
@@ -162,6 +164,93 @@ export class UserRepository {
     } catch (e) {
       this.logger.error(
         `Error in \`createNewUserGoogle\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
+
+  /**
+   * @description: Get user by username
+   * @param username
+   */
+  async getUserByUsername(username: string): Promise<UserEntity | null> {
+    try {
+      /**
+       * Get user from database
+       */
+      const users: UserEntity | null = await this.userRepository.findOne({
+        where: {
+          username: username,
+        },
+      });
+      this.logger.debug(`Get user from database ${JSON.stringify(users)}`);
+
+      return users;
+    } catch (e) {
+      this.logger.error(
+        `Error in \`getUserByUsername\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
+
+  /**
+   * @description: Create user with username, email and password with default
+   * role is customer, full name is `Nguười dùng ${uuid}`, default image is
+   * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
+   * @param username
+   * @param email
+   * @param password
+   */
+  async createUserWithUsernameEmailPassword(
+    username: string,
+    email: string,
+    password: string,
+  ): Promise<UserEntity> {
+    try {
+      /**
+       * Declare uuidv4() and generating default full name
+       */
+      const uuid: string = uuidv4();
+      const defaultName: string = `Người dùng ${uuid}`;
+      const defaultImageUrl: string =
+        'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp';
+
+      return await this.dataSource.transaction(
+        async (tx: EntityManager): Promise<UserEntity> => {
+          /**
+           * Create user entity instance
+           */
+          const user: UserEntity = tx.create(UserEntity, {
+            username: username,
+            email: email,
+            password: password,
+            fullName: defaultName,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            role: {
+              name: RoleName.CUSTOMER,
+            },
+            userImages: [
+              {
+                image: {
+                  url: defaultImageUrl,
+                },
+              },
+            ],
+          });
+
+          /**
+           * Save user to database
+           */
+          return tx.save(user);
+        },
+      );
+    } catch (e) {
+      this.logger.error(
+        `Error in \`createUserWithUsernameEmailPassword\`: ${(e as Error).message}`,
         (e as Error).stack,
       );
       throw e;

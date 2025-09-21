@@ -1,9 +1,10 @@
-/*
+/**
  * @description: Product controller
  * @author: Nhut Tan
  * @date: 2025-09-16
- * @version: 1.0.0
- * */
+ * @modifies: 2025-09-17
+ * @version: 1.0.1
+ */
 
 import { Controller, Get, HttpCode, HttpStatus, Logger } from '@nestjs/common';
 import { ProductService } from './product.service';
@@ -11,6 +12,7 @@ import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
 import { GetProductsPagingRequest } from './dtos/get-products-paging-request';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
 import { ProductStatusCode } from './status-code/product.status-code';
+import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 
 @Controller('products')
 export class ProductController {
@@ -18,15 +20,22 @@ export class ProductController {
 
   constructor(private readonly productService: ProductService) {}
 
+  /**
+   * @description: Get products paging
+   * @param request
+   */
   @HttpCode(HttpStatus.OK)
   @Get()
   async getProducts(
     request: GetProductsPagingRequest,
-  ): Promise<SuccessResponseDto<ProductEntityResponseDto[]>> {
+  ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
     try {
       this.logger.debug(`Get products paging: ${JSON.stringify(request)}`);
 
-      const products: ProductEntityResponseDto[] =
+      /**
+       * Calling `getProductsPaging` from `ProductService`
+       */
+      const products: PagingResponseDto<ProductEntityResponseDto> =
         await this.productService.getProductsPaging(
           request.page,
           request.limit,

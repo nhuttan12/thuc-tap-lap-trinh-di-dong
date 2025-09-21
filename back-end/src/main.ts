@@ -1,18 +1,26 @@
-/*
+/**
  * @description: Main file
  * @author: Nhut Tan
  * @date: 2025-08-29
- * @version: 1.0.0
- * */
+ * @modifies: 2025-09-18
+ * @version: 1.0.1
+ */
 
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import { CatchEverythingFilter } from './common/filter/catch-everything.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  /**
+   * Create Nest application
+   */
+  const app: INestApplication = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger('Nest', {
       logLevels: ['log', 'fatal', 'error', 'warn', 'debug', 'verbose'],
       colors: true,
@@ -23,7 +31,13 @@ async function bootstrap() {
   /*
    * Set global pipe with validation
    * */
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   /*
    * Set up global filter
@@ -39,7 +53,7 @@ async function bootstrap() {
   /*
    * Get port from config service
    * */
-  const port: number | undefined = nestConfigService.get<number>('http.port');
+  const port: number | undefined = nestConfigService.get<number>('HTTP_PORT');
 
   // Listen to port
   await app.listen(port ?? 3000);

@@ -246,4 +246,96 @@ export class UserService {
       throw e;
     }
   }
+
+  /**
+   * @description: Get user by `username` for checking exist
+   * @author: Nhut Tan
+   * @date: 2025-09-17
+   * @version: 1.0.0
+   */
+  async getUserByUsername(username: string): Promise<UserResponseDto> {
+    try {
+      /**
+       * Call `getUserByUsername` function from repository
+       */
+      const user: UserEntity | null =
+        await this.userRepository.getUserByUsername(username);
+      this.logger.debug(
+        `Call \`getUserByUsername\` function from repository: ${JSON.stringify(user)}`,
+      );
+
+      /**
+       * Check user existence
+       */
+      if (!user) {
+        this.logger.warn(`User with username: ${username} not exist`);
+        throw new NotFoundException({
+          statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
+          customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+          message: UserStatusCode.USER_NOT_FOUND.message,
+        });
+      }
+
+      /**
+       * Convert user entity to user response dto
+       */
+      const userResponseDto: UserResponseDto =
+        this.userMapper.toUserResponseDto(user);
+      this.logger.debug(
+        `Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`,
+      );
+
+      return userResponseDto;
+    } catch (e) {
+      this.logger.error(
+        `Error in \`getUserByUserName\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
+
+  /**
+   * @description: Create user with username, email and password
+   * @param username
+   * @param email
+   * @param password
+   */
+  async createUserWithUsernameEmailPassword(
+    username: string,
+    email: string,
+    password: string,
+  ): Promise<UserResponseDto> {
+    try {
+      /**
+       * Call `createUserWithUsernameEmailPassword` function from repository
+       */
+      const user: UserEntity =
+        await this.userRepository.createUserWithUsernameEmailPassword(
+          username,
+          email,
+          password,
+        );
+      this.logger.debug(
+        `Call \`createUserWithUsernameEmailPassword\` function from repository: ${JSON.stringify(user)}`,
+      );
+
+      /**
+       * Convert user entity to user response dto
+       */
+      const userResponseDto: UserResponseDto =
+        this.userMapper.toUserResponseDto(user);
+      this.logger.debug(
+        `Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`,
+      );
+
+      return userResponseDto;
+    } catch (e) {
+      this.logger.error(
+        `Error in \`createUserWithUsernameEmailPassword\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
 }

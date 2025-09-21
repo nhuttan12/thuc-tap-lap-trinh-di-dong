@@ -13,6 +13,7 @@ import { AuthMapper } from './mapper/auth.mapper';
 import { JwtService } from '@nestjs/jwt';
 import { UserStatus } from '../user/enums/user-status.enum';
 import { UserStatusCode } from '../user/status-code/user.status-code';
+import { AuthStatusCode } from './status-code/auth.status-code';
 
 @Injectable()
 export class AuthService {
@@ -85,16 +86,94 @@ export class AuthService {
     }
   }
 
-  /*
-   * @description: login with Google
-   * @param: email: string
-   * @param: name: string
-   * @param: photo: string
-   * @return: Promise<JwtPayloadInterface>
+  /**
+   * @description: Sign up user
+   * @param username
+   * @param password
+   * @param email
+   * @param retypePassword
    * @author: Nhut Tan
-   * @date: 2025-09-12
-   * @version: 1.0.0
-   * */
+   * @date: 2025-09-17
+   */
+  async signUp(
+    username: string,
+    email: string,
+    password: string,
+    retypePassword: string,
+  ): Promise<UserResponseDto> {
+    try {
+      /**
+       * Check for similarities between `password` and `retypePassword`
+       */
+      if (password !== retypePassword) {
+        this.logger.warn(`Password and retypePassword are not the same`);
+        throw new ForbiddenException({
+          statusCode:
+            AuthStatusCode.PASSWORD_AND_RETYPE_PASSWORD_ARE_NOT_THE_SAME
+              .statusCode,
+          customCode:
+            AuthStatusCode.PASSWORD_AND_RETYPE_PASSWORD_ARE_NOT_THE_SAME
+              .customCode,
+          message:
+            AuthStatusCode.PASSWORD_AND_RETYPE_PASSWORD_ARE_NOT_THE_SAME
+              .message,
+        });
+      }
+
+      /**
+       * Get user by email
+       */
+      const user: UserResponseDto | null =
+        await this.userService.getUserByEmail(email);
+      this.logger.debug(`Get user by email: ${JSON.stringify(user)}`);
+
+      /**
+       * Check if user is null
+       */
+      if (user) {
+        this.logger.warn(`User with email ${email} already exists`);
+        throw new ForbiddenException({
+          statusCode: AuthStatusCode.EMAIL_ALREADY_EXISTS.statusCode,
+          customCode: AuthStatusCode.EMAIL_ALREADY_EXISTS.customCode,
+          message: AuthStatusCode.EMAIL_ALREADY_EXISTS.message,
+        });
+      }
+
+      /**
+       * Check user exist with username
+       */
+      const userByUsername: UserResponseDto =
+        await this.userService.getUserByUsername(username);
+      this.logger.debug(
+        `Get user by username: ${JSON.stringify(userByUsername)}`,
+      );
+
+      /**
+       * Create user with username, email, password
+       */
+      const userCreated: UserResponseDto =
+        await this.userService.createUserWithUsernameEmailPassword(
+          username,
+          email,
+          password,
+        );
+      this.logger.debug(
+        `Create user with username, email, password: ${JSON.stringify(userCreated)}`,
+      );
+
+      /**
+       * Return user created
+       */
+      return userCreated;
+    } catch (e) {
+      this.logger.error(
+        `Error in \`signUp\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
+
   async googleLogin(
     email: string,
     name: string,

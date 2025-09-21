@@ -1,9 +1,10 @@
-/*
+/**
  * @description: role guard used for checking role to access controller
  * @author: Nhut Tan
  * @date: 2025-09-09
- * @version: 1.0.0
- * */
+ * @modified: 2025-09-17
+ * @version: 1.0.1
+ */
 
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -31,19 +32,19 @@ export class RoleGuard implements CanActivate {
      * If role non-exist, allow access
      * */
     if (!roles) {
-      return true;
+      return false;
     }
 
-    /*
-     * Get request and cast to `AuthRequestInterface`
-     * */
+    /**
+     * Get request and cast to `AuthRequest`
+     */
     const request: AuthRequest = context
       .switchToHttp()
       .getRequest<AuthRequest>();
 
-    /*
-     * Get user from request and cast to `JwtPayloadInterface`
-     * */
+    /**
+     * Get user from request and cast to `JwtPayload`
+     */
     const user: JwtPayload = request.user;
 
     /*
