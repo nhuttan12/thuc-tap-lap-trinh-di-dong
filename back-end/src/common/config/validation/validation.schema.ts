@@ -21,4 +21,5 @@ export const envValidationSchema: Joi.ObjectSchema = Joi.object({
   HTTP_ENVIRONMENT: Joi.string().required(),
   HTTP_JWT_SECRET: Joi.string().required(),
   HTTP_EXPIRE_TIME: Joi.string().required(),
+  HTTP_SALT_ROUNDS_BCRYPT: Joi.string().required(),
 });
