@@ -7,7 +7,7 @@
 
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserResponseDto } from '../user/dtos/user-response.dto';
+import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
 import { JwtPayload } from './interface/jwt-payload.interface';
 import { AuthMapper } from './mapper/auth.mapper';
 import { JwtService } from '@nestjs/jwt';
@@ -39,7 +39,7 @@ export class AuthService {
       /*
        * Get `getUserByUserNameAndPasswordForLogin` function from user service
        * */
-      const user: UserResponseDto =
+      const user: UserEntityResponseDto =
         await this.userService.getUserByUserNameAndPasswordForLogin(
           username,
           pass,
@@ -100,7 +100,7 @@ export class AuthService {
     email: string,
     password: string,
     retypePassword: string,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserEntityResponseDto> {
     try {
       /**
        * Check for similarities between `password` and `retypePassword`
@@ -123,7 +123,7 @@ export class AuthService {
       /**
        * Get user by email
        */
-      const user: UserResponseDto | null =
+      const user: UserEntityResponseDto | null =
         await this.userService.getUserByEmail(email);
       this.logger.debug(`Get user by email: ${JSON.stringify(user)}`);
 
@@ -142,7 +142,7 @@ export class AuthService {
       /**
        * Check user exist with username
        */
-      const userByUsername: UserResponseDto | null =
+      const userByUsername: UserEntityResponseDto | null =
         await this.userService.getUserByUsername(username);
       this.logger.debug(
         `Get user by username: ${JSON.stringify(userByUsername)}`,
@@ -163,7 +163,7 @@ export class AuthService {
       /**
        * Create user with username, email, password
        */
-      const userCreated: UserResponseDto =
+      const userCreated: UserEntityResponseDto =
         await this.userService.createUserWithUsernameEmailPassword(
           username,
           email,
@@ -195,7 +195,7 @@ export class AuthService {
       /*
        * Call `getUserByEmail` function from user service
        * */
-      let user: UserResponseDto | null = await this.userService.getUserByEmail(
+      let user: UserEntityResponseDto | null = await this.userService.getUserByEmail(
         email[0],
       );
       this.logger.debug(

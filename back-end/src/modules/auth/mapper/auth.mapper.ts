@@ -6,13 +6,13 @@
  * @version: 1.0.1
  * */
 
-import { UserResponseDto } from '../../user/dtos/user-response.dto';
+import { UserEntityResponseDto } from '../../user/dtos/user-entity-response.dto';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthMapper {
-  toJwtPayload(user: UserResponseDto): JwtPayload {
+  toJwtPayload(user: UserEntityResponseDto): JwtPayload {
     return {
       id: user.id,
       email: user.email,

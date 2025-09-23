@@ -7,10 +7,9 @@
 
 import { TimestampResponseDto } from '../../../common/database/dtos/timestamp.response.dto';
 
-export class UserResponseDto extends TimestampResponseDto {
+export class UserEntityResponseDto extends TimestampResponseDto {
   id: number;
   username: string;
-  password: string;
   email: string;
   status: string;
   role: string;

@@ -2,8 +2,8 @@
  * @description: image service
  * @author: Nhut Tan
  * @date: 2025-09-11
- * @modified: 2025-09-12
- * @version: 1.0.1
+ * @modified: 2025-09-23
+ * @version: 1.0.2
  * */
 
 import { Logger } from '@nestjs/common';
@@ -66,6 +66,33 @@ export class ImageRepository {
     } catch (e) {
       this.logger.error(
         `Error in \`createImage\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
+
+  /**
+   * @description: Get image by url
+   * @param: {url}
+   * @return {ImageEntity | null}
+   * @author: Nhut Tan
+   * @date: 2025-09-23
+   * @version: 1.0.0
+   */
+  async getImageByUrl(url: string): Promise<ImageEntity | null> {
+    try {
+      return await this.imageRepository.findOne({
+        where: {
+          url,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    } catch (e) {
+      this.logger.error(
+        `Error in \`getImageByUrl\`: ${(e as Error).message}`,
         (e as Error).stack,
       );
       throw e;

@@ -12,7 +12,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '../../../common/config/config.service';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 import { UserService } from '../../user/user.service';
-import { UserResponseDto } from '../../user/dtos/user-response.dto';
+import { UserEntityResponseDto } from '../../user/dtos/user-entity-response.dto';
 import { UserStatus } from '../../user/enums/user-status.enum';
 import { UserStatusCode } from '../../user/status-code/user.status-code';
 import { AuthMapper } from '../mapper/auth.mapper';
@@ -45,7 +45,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     /*
      * Get user by calling `getUserByUserID` function from user service
      * */
-    const user: UserResponseDto = await this.userService.getUserByUserID(
+    const user: UserEntityResponseDto = await this.userService.getUserByUserID(
       payload.id,
     );
 

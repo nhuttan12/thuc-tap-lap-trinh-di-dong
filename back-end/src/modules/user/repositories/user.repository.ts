@@ -2,16 +2,18 @@
  * @description: user repository
  * @author: Nhut Tan
  * @date: 2025-09-08
- * @modified: 2025-09-17
- * @version: 1.0.2
+ * @modified: 2025-09-22
+ * @version: 1.0.3
  */
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
-import { RoleName } from '../../role/enums/role-name.enum';
 import { v4 as uuidv4 } from 'uuid';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { ImageEntity } from '../../image/entities/image.entity';
 
 export class UserRepository {
   private readonly logger: Logger = new Logger(UserRepository.name);
@@ -198,16 +200,23 @@ export class UserRepository {
 
   /**
    * @description: Create user with username, email and password with default
-   * role is customer, full name is `Nguười dùng ${uuid}`, default image is
+   * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
    * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
+   * and id is 1
    * @param username
    * @param email
    * @param password
+   * @author: Nhut Tan
+   * @date: 2025-09-17
+   * @modified: 2025-09-22
+   * @version: 1.0.3
    */
   async createUserWithUsernameEmailPassword(
     username: string,
     email: string,
     password: string,
+    roleID: number,
+    imageID: number,
   ): Promise<UserEntity> {
     try {
       /**
@@ -215,8 +224,6 @@ export class UserRepository {
        */
       const uuid: string = uuidv4();
       const defaultName: string = `Người dùng ${uuid}`;
-      const defaultImageUrl: string =
-        'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp';
 
       return await this.dataSource.transaction(
         async (tx: EntityManager): Promise<UserEntity> => {
@@ -231,12 +238,12 @@ export class UserRepository {
             createdAt: new Date(),
             updatedAt: new Date(),
             role: {
-              name: RoleName.CUSTOMER,
+              id: roleID,
             },
             userImages: [
               {
                 image: {
-                  url: defaultImageUrl,
+                  id: imageID,
                 },
               },
             ],

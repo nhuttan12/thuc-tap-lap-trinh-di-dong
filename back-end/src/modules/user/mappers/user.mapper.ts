@@ -7,17 +7,16 @@
  * */
 
 import { UserEntity } from '../entities/user.entity';
-import { UserResponseDto } from '../dtos/user-response.dto';
+import { UserEntityResponseDto } from '../dtos/user-entity-response.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserMapper {
-  toUserResponseDto(user: UserEntity): UserResponseDto {
+  toUserResponseDto(user: UserEntity): UserEntityResponseDto {
     return {
       id: user.id,
       username: user.username,
       email: user.email,
-      password: user.password,
       role: user.role.name,
       status: user.status.toString(),
       createdAt: user.createdAt.toString(),

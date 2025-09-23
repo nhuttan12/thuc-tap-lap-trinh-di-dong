@@ -1,10 +1,10 @@
-/*
+/**
  * @description: user entity
  * @author: Nhut Tan
  * @date: 2025-09-03
  * @modified: 2025-09-14
  * @version: 1.0.2
- * */
+ */
 
 import {
   Column,
