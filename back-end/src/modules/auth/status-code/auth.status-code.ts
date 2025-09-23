@@ -57,4 +57,9 @@ export class AuthStatusCode extends BaseStatusCode {
       'ATH_009',
       'Retype password must not be empty',
     );
+  static readonly USER_ALREADY_EXISTS: AuthStatusCode = new AuthStatusCode(
+    HttpStatus.FORBIDDEN,
+    'ATH_010',
+    'User already exists',
+  );
 }

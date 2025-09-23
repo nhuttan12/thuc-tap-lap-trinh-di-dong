@@ -142,11 +142,23 @@ export class AuthService {
       /**
        * Check user exist with username
        */
-      const userByUsername: UserResponseDto =
+      const userByUsername: UserResponseDto | null =
         await this.userService.getUserByUsername(username);
       this.logger.debug(
         `Get user by username: ${JSON.stringify(userByUsername)}`,
       );
+
+      /**
+       * Check if user is null
+       */
+      if (userByUsername) {
+        this.logger.warn(`User with username ${username} already exists`);
+        throw new ForbiddenException({
+          statusCode: AuthStatusCode.USER_ALREADY_EXISTS.statusCode,
+          customCode: AuthStatusCode.USER_ALREADY_EXISTS.customCode,
+          message: AuthStatusCode.USER_ALREADY_EXISTS.message,
+        });
+      }
 
       /**
        * Create user with username, email, password
