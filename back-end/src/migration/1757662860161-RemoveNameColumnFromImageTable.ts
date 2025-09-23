@@ -1,81 +1,84 @@
-/*
- * @description: Migration remove `name` column from `image` table
+/**
+ * @description: Migration remove `name` column from `images` table
  * @author: Nhut Tan
  * @date: 2025/09/07
- * @version: 1.0.0
- * */
+ * @modifies: 2025/09/22
+ * @version: 1.0.1
+ */
 
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 
 export class RemoveNameColumnFromImageTable1757662860161
   implements MigrationInterface
 {
-  /*
-   * @description: Migration run removing `name` column from `image` table
+  /**
+   * @description: Migration run removing `name` column from `images` table
    * @author: Nhut Tan
    * @date: 2025/09/07
-   * @version: 1.0.0
-   * */
+   * @modifies: 2025/09/22
+   * @version: 1.0.1
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
-     * Get `image` table if exist
+     * Get `images` table if exist
      * */
-    const imageTable: Table | undefined = await queryRunner.getTable('image');
+    const imageTable: Table | undefined = await queryRunner.getTable('images');
 
     /*
-     * Check `image` table existence
+     * Check `images` table existence
      * */
     if (!imageTable) return;
 
     /*
-     * Get `name` columns in `image` table if exist
+     * Get `name` columns in `images` table if exist
      * */
     const nameColumn: TableColumn | undefined = imageTable.columns.find(
       (column: TableColumn): boolean => column.name === 'name',
     );
 
     /*
-     * Check column `name` in `image` table existence
+     * Check column `name` in `images` table existence
      * */
     if (!nameColumn) return;
 
     /*
-     * Remove `name` column in `image` table
+     * Remove `name` column in `images` table
      * */
     await queryRunner.dropColumn(imageTable, nameColumn);
   }
 
-  /*
-   * @description: Migration revert removing `name` column from `image` table
+  /**
+   * @description: Migration revert removing `name` column from `images` table
    * @author: Nhut Tan
    * @date: 2025/09/07
-   * @version: 1.0.0
-   * */
+   * @modifies: 2025/09/22
+   * @version: 1.0.1
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
-     * Get `image` table if exist
+     * Get `images` table if exist
      * */
-    const imageTable: Table | undefined = await queryRunner.getTable('image');
+    const imageTable: Table | undefined = await queryRunner.getTable('images');
 
     /*
-     * Check `image` table existence
+     * Check `images` table existence
      * */
     if (!imageTable) return;
 
     /*
-     * Get `name` columns in `image` table if exist
+     * Get `name` columns in `images` table if exist
      * */
     const nameColumn: TableColumn | undefined = imageTable.columns.find(
       (column: TableColumn): boolean => column.name === 'name',
     );
 
     /*
-     * Check column `name` in `image` table existence
+     * Check column `name` in `images` table existence
      * */
     if (nameColumn) return;
 
     /*
-     * Create `name` column in `image` table
+     * Create `name` column in `images` table
      * */
     await queryRunner.addColumn(
       imageTable,
