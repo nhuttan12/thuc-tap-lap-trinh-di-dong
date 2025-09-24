@@ -1,8 +1,8 @@
 /*
- * @description: Migration create `product_images` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @description Migration create `product_images` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -18,10 +18,10 @@ export class CreateProductImagesTable1757177326850
   implements MigrationInterface
 {
   /*
-   * @description: Migration run create `product_images` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration run create `product_images` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -175,10 +175,10 @@ export class CreateProductImagesTable1757177326850
   }
 
   /*
-   * @description: Migration revert create `product_images` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration revert create `product_images` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

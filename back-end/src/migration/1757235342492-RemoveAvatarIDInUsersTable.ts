@@ -1,8 +1,8 @@
 /*
- * @description: Migration remove `avatar_id` in `users` table
- * @author: Nhut Tan
- * @date: 2025/09/07
- * @version: 1.0.0
+ * @description Migration remove `avatar_id` in `users` table
+ * @author Nhut Tan
+ * @since 2025/09/07
+ * @version 1.0.0
  * */
 
 import {
@@ -17,10 +17,10 @@ export class RemoveAvatarIDInUsersTable1757235342492
   implements MigrationInterface
 {
   /*
-   * @description: Migration run removing `avatar_id` in `users` table
-   * @author: Nhut Tan
-   * @date: 2025/09/07
-   * @version: 1.0.0
+   * @description Migration run removing `avatar_id` in `users` table
+   * @author Nhut Tan
+   * @since 2025/09/07
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -71,10 +71,10 @@ export class RemoveAvatarIDInUsersTable1757235342492
   }
 
   /*
-   * @description: Migration revert removing `avatar_id` in `users` table
-   * @author: Nhut Tan
-   * @date: 2025/09/07
-   * @version: 1.0.0
+   * @description Migration revert removing `avatar_id` in `users` table
+   * @author Nhut Tan
+   * @since 2025/09/07
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

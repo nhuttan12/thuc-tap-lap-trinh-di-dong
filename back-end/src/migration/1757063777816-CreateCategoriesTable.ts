@@ -1,8 +1,8 @@
 /*
- * @description: Migration to create categories table
- * @author: Nhut Tan
- * @date: 2025/09/05
- * @version: 1.0.0
+ * @description Migration to create categories table
+ * @author Nhut Tan
+ * @since 2025/09/05
+ * @version 1.0.0
  * */
 
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';

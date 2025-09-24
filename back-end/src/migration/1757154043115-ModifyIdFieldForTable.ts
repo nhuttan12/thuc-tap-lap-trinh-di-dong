@@ -1,9 +1,9 @@
 /*
- * @description: Migration updating id field for roles, users, images,
+ * @description Migration updating id field for roles, users, images,
  * categories, products, product_details, user_details table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -16,11 +16,11 @@ import {
 
 export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
   /*
-   * @description: Migration run updating id field for roles, users, images,
+   * @description Migration run updating id field for roles, users, images,
    * categories, products, product_details, user_details table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -72,11 +72,11 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert updating id field for roles, users, images,
+   * @description Migration revert updating id field for roles, users, images,
    * categories, products, product_details, user_details table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

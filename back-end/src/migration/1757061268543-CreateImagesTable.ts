@@ -1,8 +1,8 @@
 /*
- * @description: Migration to create images table
- * @author: Nhut Tan
- * @date: 2025/09/05
- * @version: 1.0.0
+ * @description Migration to create images table
+ * @author Nhut Tan
+ * @since 2025/09/05
+ * @version 1.0.0
  * */
 
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
@@ -11,10 +11,10 @@ import { ImageStatusEnum } from '../modules/image/enums/image-status.enum';
 
 export class CreateImagesTable1757061268543 implements MigrationInterface {
   /*
-   * @description: Migration up to create images table
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
+   * @description Migration up to create images table
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -105,10 +105,10 @@ export class CreateImagesTable1757061268543 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert to delete image table
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
+   * @description Migration revert to delete image table
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

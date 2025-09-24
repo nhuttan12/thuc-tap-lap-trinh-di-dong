@@ -1,10 +1,10 @@
 /*
- * @description: Migration file for create users table
- * @author: Nhut Tan
- * @date: 2025/09/02
+ * @description Migration file for create users table
+ * @author Nhut Tan
+ * @since 2025/09/02
  * @modified: 2025/09/04
  * @modifiedBy: Nhut Tan
- * @version: 1.0.3
+ * @version 1.0.3
  * */
 
 import {
@@ -17,12 +17,12 @@ import {
 
 export class CreateUserTable1756830133605 implements MigrationInterface {
   /*
-   * @description: Run migration
-   * @author: Nhut Tan
-   * @date: 2025/09/02
+   * @description Run migration
+   * @author Nhut Tan
+   * @since 2025/09/02
    * @modified: 2025/09/04
    * @modifiedBy: Nhut Tan
-   * @version: 1.0.3
+   * @version 1.0.3
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -189,10 +189,10 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
   }
 
   /*
-   * @description: Revert migration
-   * @author: Nhut Tan
-   * @date: 2025/09/02
-   * @version: 1.0.1
+   * @description Revert migration
+   * @author Nhut Tan
+   * @since 2025/09/02
+   * @version 1.0.1
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropIndex('users', 'idx_user');

@@ -1,9 +1,9 @@
 /**
- * @description: Migration remove `name` column from `images` table
- * @author: Nhut Tan
- * @date: 2025/09/07
- * @modifies: 2025/09/22
- * @version: 1.0.1
+ * @description Migration remove `name` column from `images` table
+ * @author Nhut Tan
+ * @since 2025/09/07
+ * @modifies 2025/09/22
+ * @version 1.0.1
  */
 
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
@@ -12,11 +12,11 @@ export class RemoveNameColumnFromImageTable1757662860161
   implements MigrationInterface
 {
   /**
-   * @description: Migration run removing `name` column from `images` table
-   * @author: Nhut Tan
-   * @date: 2025/09/07
-   * @modifies: 2025/09/22
-   * @version: 1.0.1
+   * @description Migration run removing `name` column from `images` table
+   * @author Nhut Tan
+   * @since 2025/09/07
+   * @modifies 2025/09/22
+   * @version 1.0.1
    */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -48,11 +48,11 @@ export class RemoveNameColumnFromImageTable1757662860161
   }
 
   /**
-   * @description: Migration revert removing `name` column from `images` table
-   * @author: Nhut Tan
-   * @date: 2025/09/07
-   * @modifies: 2025/09/22
-   * @version: 1.0.1
+   * @description Migration revert removing `name` column from `images` table
+   * @author Nhut Tan
+   * @since 2025/09/07
+   * @modifies 2025/09/22
+   * @version 1.0.1
    */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

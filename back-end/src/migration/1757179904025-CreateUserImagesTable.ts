@@ -1,8 +1,8 @@
 /*
- * @description: Migration create `user_images` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @description Migration create `user_images` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -14,10 +14,10 @@ import {
 
 export class CreateUserImagesTable1757179904025 implements MigrationInterface {
   /*
-   * @description: Migration run creating `user_images` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration run creating `user_images` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -139,10 +139,10 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert creating `user_images` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration revert creating `user_images` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

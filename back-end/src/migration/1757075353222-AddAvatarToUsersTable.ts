@@ -1,8 +1,8 @@
 /*
- * @description: Migration to add avatar to users table
- * @author: Nhut Tan
- * @date: 2025/09/05
- * @version: 1.0.0
+ * @description Migration to add avatar to users table
+ * @author Nhut Tan
+ * @since 2025/09/05
+ * @version 1.0.0
  * */
 
 import {
@@ -15,10 +15,10 @@ import {
 
 export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
   /*
-   * @description: Migration up add avatar to users table and create foreign key
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
+   * @description Migration up add avatar to users table and create foreign key
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -71,10 +71,10 @@ export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert adding avatar to users table and create foreign key
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
+   * @description Migration revert adding avatar to users table and create foreign key
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

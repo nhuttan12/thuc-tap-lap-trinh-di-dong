@@ -1,9 +1,9 @@
 /*
- * @description: Migration add fk to `id` in `user_details`
+ * @description Migration add fk to `id` in `user_details`
  * table references to `id` in `users` table
- * @author: Nhut Tan
- * @date: 2025/09/07
- * @version: 1.0.0
+ * @author Nhut Tan
+ * @since 2025/09/07
+ * @version 1.0.0
  * */
 
 import {
@@ -17,11 +17,11 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
   implements MigrationInterface
 {
   /*
-   * @description: Migration run adding fk to `user_details_id` in `user_details`
+   * @description Migration run adding fk to `user_details_id` in `user_details`
    * table references to `id` in `users` table
-   * @author: Nhut Tan
-   * @date: 2025/09/07
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025/09/07
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -69,11 +69,11 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
   }
 
   /*
-   * @description: Migration revert adding fk to `user_details_id` in `user_details`
+   * @description Migration revert adding fk to `user_details_id` in `user_details`
    * table references to `id` in `users` table
-   * @author: Nhut Tan
-   * @date: 2025/09/07
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025/09/07
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

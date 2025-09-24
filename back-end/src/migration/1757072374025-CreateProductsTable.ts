@@ -1,8 +1,8 @@
 /*
- * @description: Migration to create products table
- * @author: Nhut Tan
- * @date: 2025/09/05
- * @version: 1.0.0
+ * @description Migration to create products table
+ * @author Nhut Tan
+ * @since 2025/09/05
+ * @version 1.0.0
  * */
 
 import {
@@ -16,10 +16,10 @@ import { ProductStatusEnum } from '../modules/product/enums/product-status.enum'
 
 export class CreateProductsTable1757072374025 implements MigrationInterface {
   /*
-   * @description: Migration up create products table
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
+   * @description Migration up create products table
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -150,10 +150,10 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert create products table
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
+   * @description Migration revert create products table
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

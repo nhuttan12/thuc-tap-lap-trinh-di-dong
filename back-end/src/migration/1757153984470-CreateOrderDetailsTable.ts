@@ -1,8 +1,8 @@
 /*
- * @description: Migration creating `cart_details` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @description Migration creating `cart_details` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -17,10 +17,10 @@ export class CreateOrderDetailsTable1757153984470
   implements MigrationInterface
 {
   /*
-   * @description: Migration run creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration run creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -171,10 +171,10 @@ export class CreateOrderDetailsTable1757153984470
   }
 
   /*
-   * @description: Migration revert creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration revert creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

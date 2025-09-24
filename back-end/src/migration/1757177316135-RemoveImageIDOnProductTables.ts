@@ -1,8 +1,8 @@
 /*
- * @description: Migration remove image id on `products` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @description Migration remove image id on `products` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -17,10 +17,10 @@ export class RemoveImageIDOnProductTables1757177316135
   implements MigrationInterface
 {
   /*
-   * @description: Migration run removing `image_id` column on `products` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration run removing `image_id` column on `products` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -75,10 +75,10 @@ export class RemoveImageIDOnProductTables1757177316135
   }
 
   /*
-   * @description: Migration revert removing `image_id` column on `products` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration revert removing `image_id` column on `products` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

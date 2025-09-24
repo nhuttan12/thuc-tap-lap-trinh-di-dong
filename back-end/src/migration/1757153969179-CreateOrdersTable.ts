@@ -1,8 +1,8 @@
 /*
- * @description: Migration creating `cart_details` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @description Migration creating `cart_details` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -16,10 +16,10 @@ import { OrderStatusEnum } from '../modules/orders/enums/order-status.enum';
 
 export class CreateOrdersTable1757153969179 implements MigrationInterface {
   /*
-   * @description: Migration run creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration run creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -171,10 +171,10 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration revert creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

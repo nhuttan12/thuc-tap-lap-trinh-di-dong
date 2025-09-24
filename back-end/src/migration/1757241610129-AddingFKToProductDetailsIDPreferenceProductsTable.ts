@@ -1,9 +1,9 @@
 /*
- * @description: Migration add fk to `id` in `product_details`
+ * @description Migration add fk to `id` in `product_details`
  * table references to `id` in `products` table
- * @author: Nhut Tan
- * @date: 2025/09/07
- * @version: 1.0.0
+ * @author Nhut Tan
+ * @since 2025/09/07
+ * @version 1.0.0
  * */
 
 import {

@@ -1,8 +1,8 @@
 /**
- * @description: Migration remove `type` column from `images` table
- * @author: Nhut Tan
- * @date: 2025/09/22
- * @version: 1.0.0
+ * @description Migration remove `type` column from `images` table
+ * @author Nhut Tan
+ * @since 2025/09/22
+ * @version 1.0.0
  */
 
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
@@ -14,9 +14,9 @@ export class RemoveImageTypeFromImagesTable1758559684095
   /**
    * Migration run removing `type` column from `images` table
    * @param queryRunner
-   * @author: Nhut Tan
-   * @date: 2025/09/22
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025/09/22
+   * @version 1.0.0
    */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -50,9 +50,9 @@ export class RemoveImageTypeFromImagesTable1758559684095
   /**
    * Migration revert removing `type` column from `images` table
    * @param queryRunner
-   * @author: Nhut Tan
-   * @date: 2025/09/22
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025/09/22
+   * @version 1.0.0
    */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*

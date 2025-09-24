@@ -1,8 +1,8 @@
 /*
- * @description: Migration to create `cart_details` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
+ * @description Migration to create `cart_details` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
  * */
 
 import {
@@ -16,10 +16,10 @@ import { CartDetailsStatusEnum } from '../modules/cart/enums/cart-details.status
 
 export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
   /*
-   * @description: Migration run creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration run creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
@@ -171,10 +171,10 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
+   * @description Migration revert creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
    * */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
