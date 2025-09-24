@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-01
  * @version 1.0.0
- * */
+ */
 
 import { DatabaseConfig } from '../../../src/common/config/interface/database.interface';
 import { DatabaseType } from 'typeorm';
@@ -14,7 +14,7 @@ import { createTypeOrmModuleOptions } from '../../../src/modules/database/databa
 describe('create typeorm config options', (): void => {
   /*
    * Define mock data that our config service mock will return
-   * */
+   */
   const mockDatabaseConfig: DatabaseConfig = {
     type: 'postgres' as DatabaseType,
     host: 'localhost',
@@ -26,7 +26,7 @@ describe('create typeorm config options', (): void => {
 
   /*
    * Mock the ConfigService to return mock data
-   * */
+   */
   const mockConfigService: Partial<ConfigService> = {
     databaseConfig: mockDatabaseConfig,
   };

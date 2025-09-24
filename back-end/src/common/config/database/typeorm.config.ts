@@ -2,9 +2,9 @@
  * @description Configuration for TypeORM migration
  * @author Nhut Tan
  * @since 2025-09-03
- * @modified: 2025-09-12
+ * @modifies 2025-09-12
  * @version 1.0.1
- * */
+ */
 
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { join } from 'path';
@@ -14,7 +14,7 @@ import { config } from 'dotenv';
 
 /*
  * Load environment file before readding env
- * */
+ */
 config({ path: '.env.local' });
 
 const devPath: string = join(cwd(), 'src', 'migration', '*.ts');

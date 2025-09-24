@@ -2,9 +2,9 @@
  * @description mapper class used for convert a type to `JwtPayloadInterface`
  * @author Nhut Tan
  * @since 2025-09-10
- * @modified: 2025-09-12
+ * @modifies 2025-09-12
  * @version 1.0.1
- * */
+ */
 
 import { UserEntityResponseDto } from '../../user/dtos/user-entity-response.dto';
 import { JwtPayload } from '../interface/jwt-payload.interface';

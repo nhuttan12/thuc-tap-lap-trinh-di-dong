@@ -4,7 +4,7 @@
  * @since 2025-09-08
  * @last modified: 2025-09-14
  * @version 1.0.2
- * */
+ */
 
 import { Module } from '@nestjs/common';
 import { UserModule } from '../user/user.module';

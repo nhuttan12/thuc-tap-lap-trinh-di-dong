@@ -2,9 +2,9 @@
  * @description Image entity
  * @author Nhut Tan
  * @since 2025-09-06
- * @modified: 2025-09-14
+ * @modifies 2025-09-14
  * @version 1.0.3
- * */
+ */
 
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ImageStatusEnum } from '../enums/image-status.enum';

@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-13
  * @version 1.0.0
- * */
+ */
 
 import { HttpStatus } from '@nestjs/common';
 import { BaseStatusCode } from '../../../common/dtos/status-code/base.status-code';

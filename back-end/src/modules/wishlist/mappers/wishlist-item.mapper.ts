@@ -21,7 +21,7 @@ export class WishlistItemMapper {
         image: wishlistItem.product.productImages[0].image.url,
         price: wishlistItem.product.price,
         discount: wishlistItem.product.discount,
-        rating: wishlistItem.product.rating,
+        rating: wishlistItem.product.productDetailsEntity.rating,
         createdAt: wishlistItem.createdAt,
         updatedAt: wishlistItem.updatedAt,
       };

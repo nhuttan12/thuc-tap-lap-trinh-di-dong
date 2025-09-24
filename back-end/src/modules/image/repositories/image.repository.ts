@@ -2,9 +2,9 @@
  * @description image service
  * @author Nhut Tan
  * @since 2025-09-11
- * @modified: 2025-09-23
+ * @modifies 2025-09-23
  * @version 1.0.2
- * */
+ */
 
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,7 +20,7 @@ export class ImageRepository {
    * @author Nhut Tan
    * @since 2025-09-12
    * @version 1.0.0
-   * */
+   */
   constructor(
     @InjectRepository(ImageEntity)
     private readonly imageRepository: Repository<ImageEntity>,
@@ -34,14 +34,14 @@ export class ImageRepository {
    * @author Nhut Tan
    * @since 2025-09-12
    * @version 1.0.0
-   * */
+   */
   async createImage(imageUrl: string, userID: number): Promise<ImageEntity> {
     try {
       return await this.dataSource.transaction(
         async (tx: EntityManager): Promise<ImageEntity> => {
           /*
            * Use transaction to ensure data consistency
-           * */
+           */
           const imageEntity: ImageEntity = tx.create(ImageEntity, {
             url: imageUrl,
             status: ImageStatusEnum.ACTIVE,
@@ -59,7 +59,7 @@ export class ImageRepository {
 
           /*
            * Save image to database
-           * */
+           */
           return await tx.save(imageEntity);
         },
       );

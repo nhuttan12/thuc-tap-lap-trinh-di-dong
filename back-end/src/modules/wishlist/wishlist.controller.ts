@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get, Logger, Post } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
 import { GetWishlistItemRequestDto } from './dtos/get-wishlist-item-request.dto';
@@ -53,6 +53,63 @@ export class WishlistController {
       data: response,
       message: WishlistStatusCode.GetProductsInWishlistSuccess.message,
       statusCode: WishlistStatusCode.GetProductsInWishlistSuccess.customCode,
+    };
+  }
+
+  /**
+   * @description Add product to wishlist
+   * @param {JwtPayload} payload - Get user from token
+   * @param {number} productID - ID of product
+   * @return {boolean}
+   * @author Nhut Tan
+   * @since 2025-09-24
+   * @version 1.0.0
+   */
+  @Post()
+  async addProductToWishlist(
+    @User() payload: JwtPayload,
+    productID: number,
+  ): Promise<SuccessResponseDto<boolean>> {
+    /**
+     * Call `addToWishlist` in `WishlistService`
+     */
+    const response: boolean = await this.wishlistService.addToWishlist(
+      productID,
+      payload.id,
+    );
+
+    return {
+      data: response,
+      message: WishlistStatusCode.AddProductToWishlistSuccess.message,
+      statusCode: WishlistStatusCode.AddProductToWishlistSuccess.customCode,
+    };
+  }
+
+  /**
+   * @description Remove product from wishlist
+   * @param {JwtPayload} payload - Payload from token
+   * @param {number} productID - ID of product
+   * @return {boolean}
+   * @since 2025-09-25
+   * @version 1.0.0
+   */
+  @Post()
+  async removeWishlistItem(
+    @User() payload: JwtPayload,
+    productID: number,
+  ): Promise<SuccessResponseDto<boolean>> {
+    /**
+     * Call `removeWishlistItem` in `WishlistService`
+     */
+    const response: boolean = await this.wishlistService.removeWishlistItem(
+      productID,
+      payload.id,
+    );
+
+    return {
+      data: response,
+      message: WishlistStatusCode.RemoveWishlistItemSuccess.message,
+      statusCode: WishlistStatusCode.RemoveWishlistItemSuccess.customCode,
     };
   }
 }

@@ -2,10 +2,10 @@
  * @description Migration file for create users table
  * @author Nhut Tan
  * @since 2025/09/02
- * @modified: 2025/09/04
+ * @modifies 2025/09/04
  * @modifiedBy: Nhut Tan
  * @version 1.0.3
- * */
+ */
 
 import {
   MigrationInterface,
@@ -20,19 +20,19 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
    * @description Run migration
    * @author Nhut Tan
    * @since 2025/09/02
-   * @modified: 2025/09/04
+   * @modifies 2025/09/04
    * @modifiedBy: Nhut Tan
    * @version 1.0.3
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Check if users table exists
-     * */
+     */
     const usersTable: Table | undefined = await queryRunner.getTable('users');
 
     /*
      * Create new users table if not exists
-     * */
+     */
     if (!usersTable) {
       await queryRunner.createTable(
         new Table({
@@ -91,13 +91,13 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 
     /*
      * Get all foreign keys in `users` table
-     * */
+     */
     const existingFks: TableForeignKey[] =
       (await queryRunner.getTable('users'))?.foreignKeys || [];
 
     /*
      * Create foreign key for `role_id` named `fk_user_role_id_to_roles_id` column if not exists
-     * */
+     */
     if (
       !existingFks.find(
         (fk: TableForeignKey): boolean =>
@@ -117,13 +117,13 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 
     /*
      * Get all existing index in `users` table
-     * */
+     */
     const tableIndices: TableIndex[] =
       (await queryRunner.getTable('users'))?.indices || [];
 
     /*
      * Create index for `id` column named `idx_user_id` if not exists
-     * */
+     */
     if (
       !tableIndices.find((i: TableIndex): string => (i.name = 'idx_user_id'))
     ) {
@@ -138,7 +138,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 
     /*
      * Create index for `username` column named `idx_user_username` if not exists
-     * */
+     */
     if (
       !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_username'),
@@ -155,7 +155,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 
     /*
      * Create index for `password` column named `idx_user_password` if not exists
-     * */
+     */
     if (
       !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_password'),
@@ -172,7 +172,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 
     /*
      * Create index for `email` column named `idx_user_email` if not exists
-     * */
+     */
     if (
       !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_user_email'),
@@ -193,7 +193,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/02
    * @version 1.0.1
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropIndex('users', 'idx_user');
     await queryRunner.dropForeignKey('users', 'fk_user_role_id_to_roles_id');

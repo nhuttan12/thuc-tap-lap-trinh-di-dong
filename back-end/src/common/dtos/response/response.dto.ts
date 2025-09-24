@@ -9,17 +9,17 @@
 export class ResponseDto<T> {
   /*
    * statusCode: status code of response
-   * */
+   */
   statusCode: string;
 
   /*
    * message: message of response
-   * */
+   */
   message: string;
 
   /*
    * data: data of response
-   * */
+   */
   data: T;
 
   constructor(statusCode: string, message: string, data: T) {

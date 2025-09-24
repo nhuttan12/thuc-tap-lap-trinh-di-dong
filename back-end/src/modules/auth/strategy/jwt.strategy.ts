@@ -2,9 +2,9 @@
  * @description jwt strategy passport
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-12
+ * @modifies 2025-09-12
  * @version 1.0.1
- * */
+ */
 
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -38,20 +38,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @return: JwtPayloadInterface
    * @author Nhut Tan
    * @since 2025-09-09
-   * @modified: 2025-09-10
+   * @modifies 2025-09-10
    * @version 1.0.0
-   * */
+   */
   async validate(payload: JwtPayload): Promise<JwtPayload> {
     /*
      * Get user by calling `getUserByUserID` function from user service
-     * */
+     */
     const user: UserEntityResponseDto = await this.userService.getUserByUserID(
       payload.id,
     );
 
     /*
      * Validate status user if user banned
-     * */
+     */
     if (user.status === UserStatus.BANNED.toString()) {
       throw new ForbiddenException({
         statusCode: UserStatusCode.USER_BANNED.statusCode,
@@ -62,7 +62,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     /*
      * Convert user response to jwt payload
-     * */
+     */
     const jwtPayload: JwtPayload = this.authMapper.toJwtPayload(user);
 
     return jwtPayload;

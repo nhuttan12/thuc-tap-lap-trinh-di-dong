@@ -10,7 +10,7 @@ import { PagingMetaDto } from './page-meta.dto';
 export class PagingResponseDto<T> {
   /**
    * Metadata about pagination
-   * */
+   */
   meta: PagingMetaDto;
 
   /**

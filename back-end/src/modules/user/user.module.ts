@@ -4,7 +4,7 @@
  * @since 2025-09-03
  * @modifies 2025-09-14
  * @version 1.0.2
- * */
+ */
 
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

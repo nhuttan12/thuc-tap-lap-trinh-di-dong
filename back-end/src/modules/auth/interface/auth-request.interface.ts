@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-09
  * @version 1.0.0
- * */
+ */
 
 import { Request as ExpressRequest } from 'express';
 import { JwtPayload } from './jwt-payload.interface';

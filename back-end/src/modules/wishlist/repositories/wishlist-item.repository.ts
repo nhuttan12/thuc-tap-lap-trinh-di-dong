@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-23
  * @modifies 2025-09-24
- * @version 1.0.1
+ * @version 1.0.2
  */
 import { InjectRepository } from '@nestjs/typeorm';
 import { WishlistItemEntity } from '../entities/wishlist-item.entity';
@@ -30,7 +30,7 @@ export class WishlistItemRepository {
    * @author Nhut Tan
    * @date 2025-09-23
    * @modifies 2025-09-24
-   * @version 1.0.1
+   * @version 1.0.2
    */
   async getAllWishlistItems(
     userID: number,
@@ -56,6 +56,7 @@ export class WishlistItemRepository {
           },
           relations: {
             product: {
+              productDetailsEntity: true,
               productImages: {
                 image: true,
               },
@@ -81,6 +82,9 @@ export class WishlistItemRepository {
 
   /**
    * @description Create wishlist item
+   * @param {number} productID - ID of product
+   * @param {number} userID - ID of user
+   * @return {Promise<WishlistItemEntity>} - Wishlist item entity
    * @author Nhut Tan
    * @since 2025-09-23
    * @version 1.0.0
@@ -127,6 +131,9 @@ export class WishlistItemRepository {
 
   /**
    * @description Remove (soft delete) wishlist item
+   * @param {number} productID - ID of product
+   * @param {number} userID - ID of user
+   * @return {Promise<WishlistItemEntity>} - Wishlist item entity
    * @author Nhut Tan
    * @since 2025-09-23
    * @version 1.0.0

@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-08
  * @version 1.0.0
- * */
+ */
 
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
@@ -33,12 +33,12 @@ export class AuthService {
    * @author Nhut Tan
    * @since 2025-09-08
    * @version 1.0.0
-   * */
+   */
   async userLogin(username: string, pass: string): Promise<JwtPayload> {
     try {
       /*
        * Get `getUserByUserNameAndPasswordForLogin` function from user service
-       * */
+       */
       const user: UserEntityResponseDto =
         await this.userService.getUserByUserNameAndPasswordForLogin(
           username,
@@ -50,7 +50,7 @@ export class AuthService {
 
       /*
        * Validate status user if user banned
-       * */
+       */
       if (user.status === UserStatus.BANNED.toString()) {
         throw new ForbiddenException({
           statusCode: UserStatusCode.USER_BANNED.statusCode,
@@ -61,7 +61,7 @@ export class AuthService {
 
       /*
        * Mapping user response to jwt payload
-       * */
+       */
       const payload: JwtPayload = this.authMapper.toJwtPayload(user);
       this.logger.debug(
         `Mapping user response to jwt payload: ${JSON.stringify(payload)}`,
@@ -69,13 +69,13 @@ export class AuthService {
 
       /*
        * Sign token and declare to payload
-       * */
+       */
       payload.accessToken = this.jwtService.sign(payload);
       this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
 
       /*
        * Return jwt payload
-       * */
+       */
       return payload;
     } catch (e) {
       this.logger.error(
@@ -194,7 +194,7 @@ export class AuthService {
     try {
       /*
        * Call `getUserByEmail` function from user service
-       * */
+       */
       let user: UserEntityResponseDto | null = await this.userService.getUserByEmail(
         email[0],
       );
@@ -204,17 +204,17 @@ export class AuthService {
 
       /*
        * Check if user is null
-       * */
+       */
       if (user === null) {
         /*
          * Create user by google
-         * */
+         */
         user = await this.userService.createNewUserGoogle(email, name, photo);
       }
 
       /*
        * Mapping user response to jwt payload
-       * */
+       */
       const payload: JwtPayload = this.authMapper.toJwtPayload(user);
       this.logger.debug(
         `Mapping user response to jwt payload: ${JSON.stringify(payload)}`,
@@ -222,13 +222,13 @@ export class AuthService {
 
       /*
        * Sign token and declare to payload
-       * */
+       */
       payload.accessToken = this.jwtService.sign(payload);
       this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
 
       /*
        * Return jwt payload
-       * */
+       */
       return payload;
     } catch (e) {
       this.logger.error(

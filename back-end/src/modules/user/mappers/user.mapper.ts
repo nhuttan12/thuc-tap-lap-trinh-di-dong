@@ -2,9 +2,9 @@
  * @description user mapper
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-12
+ * @modifies 2025-09-12
  * @version 1.0.1
- * */
+ */
 
 import { UserEntity } from '../entities/user.entity';
 import { UserEntityResponseDto } from '../dtos/user-entity-response.dto';

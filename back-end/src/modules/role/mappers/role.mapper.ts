@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-13
  * @version 1.0.0
- * */
+ */
 
 import { Injectable } from '@nestjs/common';
 import { RoleEntity } from '../entities/role.entity';
@@ -16,7 +16,7 @@ export class RoleMapper {
    * @author Nhut Tan
    * @since 2025-09-13
    * @version 1.0.0
-   * */
+   */
   toRoleResponseDto(role: RoleEntity): RoleResponseDto {
     return {
       id: role.id,

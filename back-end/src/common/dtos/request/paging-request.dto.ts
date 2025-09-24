@@ -2,7 +2,7 @@
  * @description Paging request dto
  * @author Nhut Tan
  * @since 2025-09-15
- * @modified: 2025-09-17
+ * @modifies 2025-09-17
  * @version 1.0.1
  */
 

@@ -5,7 +5,7 @@
  * @since 2025-08-30
  * @modifies 2025-09-23
  * @version 1.0.3
- * */
+ */
 
 import * as Joi from 'joi';
 

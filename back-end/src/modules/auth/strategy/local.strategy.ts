@@ -2,9 +2,9 @@
  * @description local strategy passport
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-10
+ * @modifies 2025-09-10
  * @version 1.0.1
- * */
+ */
 
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
@@ -27,16 +27,16 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
    * @return: JwtPayloadInterface
    * @author Nhut Tan
    * @since 2025-09-08
-   * @modified: 2025-09-10
+   * @modifies 2025-09-10
    * @version 1.0.1
-   * */
+   */
   async validate({
     username,
     password,
   }: UserLoginRequestDto): Promise<JwtPayload> {
     /*
      * Get user by username and password
-     * */
+     */
     const user: JwtPayload = await this.authService.userLogin(
       username,
       password,
@@ -45,7 +45,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     /*
      * Return user
-     * */
+     */
     return user;
   }
 }

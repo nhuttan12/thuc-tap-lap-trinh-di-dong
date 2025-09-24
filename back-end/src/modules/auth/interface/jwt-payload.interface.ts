@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-10
  * @version 1.0.0
- * */
+ */
 
 export interface JwtPayload {
   id: number;

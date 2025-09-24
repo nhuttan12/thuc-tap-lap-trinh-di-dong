@@ -4,7 +4,7 @@
  * @author Nhut Tan
  * @since 2025/09/07
  * @version 1.0.0
- * */
+ */
 
 import {
   MigrationInterface,
@@ -22,23 +22,23 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
    * @author Nhut Tan
    * @since 2025/09/07
    * @version 1.0.0
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `user_details` table
-     * */
+     */
     const userDetailTable: Table | undefined =
       await queryRunner.getTable('user_details');
 
     /*
      * Check if `user_details` table not exists
-     * */
+     */
     if (!userDetailTable) return;
 
     /*
      * Get foreign keys of `user_details` table in `id` column preference
      * to `id` column in `users` table
-     * */
+     */
     const foreignKeys: boolean = userDetailTable.foreignKeys.some(
       (fk: TableForeignKey): boolean => {
         return (
@@ -51,12 +51,12 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 
     /*
      * Check if foreign key exists
-     * */
+     */
     if (foreignKeys) return;
 
     /*
      * Create foreign key named `fk_user_details_id_to_users_id`
-     * */
+     */
     await queryRunner.createForeignKey(
       userDetailTable,
       new TableForeignKey({
@@ -74,23 +74,23 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
    * @author Nhut Tan
    * @since 2025/09/07
    * @version 1.0.0
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `user_details` table
-     * */
+     */
     const userDetailTable: Table | undefined =
       await queryRunner.getTable('user_details');
 
     /*
      * Check if `user_details` table not exists
-     * */
+     */
     if (!userDetailTable) return;
 
     /*
      * Get foreign keys of `user_details` table in `id` column preference
      * to `id` column in `users` table
-     * */
+     */
     const foreignKeys: boolean = userDetailTable.foreignKeys.some(
       (fk: TableForeignKey): boolean => {
         return (
@@ -103,12 +103,12 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 
     /*
      * Check if foreign key not exists
-     * */
+     */
     if (!foreignKeys) return;
 
     /*
      * Drop foreign key named `fk_user_details_id_to_users_id`
-     * */
+     */
     await queryRunner.dropForeignKey(
       userDetailTable,
       'fk_user_details_id_to_users_id',

@@ -2,7 +2,7 @@
  * @description user entity
  * @author Nhut Tan
  * @since 2025-09-03
- * @modified: 2025-09-14
+ * @modifies 2025-09-14
  * @version 1.0.2
  */
 

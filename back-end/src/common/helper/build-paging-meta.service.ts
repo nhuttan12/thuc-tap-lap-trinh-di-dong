@@ -27,7 +27,7 @@ export class BuildPagingMetaService {
   ): PagingResponseDto<T> {
     /*
      * Pagination meta
-     * */
+     */
     const meta = new PagingMetaDto(page, limit, totalItems);
     return new PagingResponseDto(items, meta);
   }

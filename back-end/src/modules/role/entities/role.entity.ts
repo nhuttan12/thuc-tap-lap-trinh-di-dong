@@ -2,9 +2,9 @@
  * @description role entity
  * @author Nhut Tan
  * @since 2025-09-03
- * @modified: 2025-09-14
+ * @modifies 2025-09-14
  * @version 1.0.2
- * */
+ */
 
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';

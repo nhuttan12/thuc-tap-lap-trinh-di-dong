@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025/09/06
  * @version 1.0.0
- * */
+ */
 
 import {
   MigrationInterface,
@@ -20,20 +20,20 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/06
    * @version 1.0.0
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `orders` table if exist
-     * */
+     */
     const ordersTable: Table | undefined = await queryRunner.getTable('orders');
 
     /*
      * Check if `orders` table exists
-     * */
+     */
     if (!ordersTable) {
       /*
        * Create new `orders` table if not exists
-       * */
+       */
       await queryRunner.createTable(
         new Table({
           name: 'orders',
@@ -82,17 +82,17 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
     /*
      * Get `orders` table after created
-     * */
+     */
     const ordersTableCreated: Table | undefined =
       await queryRunner.getTable('orders');
 
     /*
      * Check if `orders` table created
-     * */
+     */
     if (ordersTableCreated) {
       /*
        * Get foreign keys in `orders` table named `fk_orders_user_id_to_users_id`
-       * */
+       */
       const ordersFks: TableForeignKey | undefined =
         ordersTableCreated.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -101,7 +101,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Check if `fk_orders_user_id_to_users_id` fk not exist
-       * */
+       */
       if (!ordersFks) {
         /*
          * Create new fk `fk_orders_user_id_to_users_id`
@@ -119,7 +119,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Get all index in `orders` table
-       * */
+       */
       const ordersIndex: TableIndex[] = ordersTableCreated.indices || [];
 
       /*
@@ -131,11 +131,11 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Check if `idx_orders_id` index not exist
-       * */
+       */
       if (!ordersIndexId) {
         /*
          * Create `idx_orders_id` index if not exist
-         * */
+         */
         await queryRunner.createIndex(
           ordersTableCreated,
           new TableIndex({
@@ -154,11 +154,11 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Check if `idx_orders_user_id` index not exist
-       * */
+       */
       if (!ordersIndexUserId) {
         /*
          * Create new `idx_orders_user_id` index
-         * */
+         */
         await queryRunner.createIndex(
           ordersTableCreated,
           new TableIndex({
@@ -175,21 +175,21 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/06
    * @version 1.0.0
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `orders` table after created
-     * */
+     */
     const ordersTableCreated: Table | undefined =
       await queryRunner.getTable('orders');
 
     /*
      * Check if `orders` table created
-     * */
+     */
     if (ordersTableCreated) {
       /*
        * Get foreign keys in `orders` table named `fk_orders_user_id_to_users_id`
-       * */
+       */
       const ordersFks: TableForeignKey | undefined =
         ordersTableCreated.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -198,7 +198,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Check if `fk_orders_user_id_to_users_id` fk exist
-       * */
+       */
       if (ordersFks) {
         /*
          * Drop fk `fk_orders_user_id_to_users_id` if exist
@@ -211,7 +211,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Get all index in `orders` table
-       * */
+       */
       const ordersIndex: TableIndex[] = ordersTableCreated.indices || [];
 
       /*
@@ -223,11 +223,11 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Check if `idx_orders_id` index exist
-       * */
+       */
       if (ordersIndexId) {
         /*
          * Drop `idx_orders_id` index if exist
-         * */
+         */
         await queryRunner.dropIndex(ordersTableCreated, 'idx_orders_id');
       }
 
@@ -240,11 +240,11 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 
       /*
        * Check if `idx_orders_user_id` index exist
-       * */
+       */
       if (!ordersIndexUserId) {
         /*
          * Drop `idx_orders_user_id` index if exist
-         * */
+         */
         await queryRunner.dropIndex(ordersTableCreated, 'idx_orders_user_id');
       }
     }

@@ -2,9 +2,9 @@
  * @description google oauth 2 strategy passport
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-12
+ * @modifies 2025-09-12
  * @version 1.0.2
- * */
+ */
 
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -35,18 +35,18 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
    * @return: void
    * @author Nhut Tan
    * @since 2025-09-10
-   * @modified: 2025-09-12
+   * @modifies 2025-09-12
    * @version 1.0.1
-   * */
+   */
   validate(profile: Profile, done: VerifyCallback): void {
     /*
      * Get user profile from Google o-auth 2
-     * */
+     */
     const { id, name, emails, photos } = profile;
 
     /*
      * Get value from name, emails, photos field
-     * */
+     */
     const email: string = emails?.[0]?.value || '';
     const fullName: string = [
       name?.givenName,

@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025/09/05
  * @version 1.0.0
- * */
+ */
 
 import {
   MigrationInterface,
@@ -20,17 +20,17 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/05
    * @version 1.0.0
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get products table if exists
-     * */
+     */
     const productsTable: Table | undefined =
       await queryRunner.getTable('products');
 
     /*
      * Create products table if not exists
-     * */
+     */
     if (!productsTable) {
       await queryRunner.createTable(
         new Table({
@@ -90,17 +90,17 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 
     /*
      * Get created `products` table
-     * */
+     */
     const createdProductsTable: Table | undefined =
       await queryRunner.getTable('products');
 
     /*
      * Check if products table exists
-     * */
+     */
     if (createdProductsTable) {
       /*
        * Get all foreign keys in `products` table
-       * */
+       */
       const existingFks: TableForeignKey[] =
         createdProductsTable.foreignKeys || [];
 
@@ -108,7 +108,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
        * Create foreign key for `products` table named
        * `fk_product_image_id_to_images_id` preference to `id`
        * in `images` table
-       * */
+       */
       if (
         !existingFks.find(
           (fk: TableForeignKey): boolean =>
@@ -128,13 +128,13 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 
       /*
        * Get all index in `products` table
-       * */
+       */
       const tableIndices: TableIndex[] = createdProductsTable.indices || [];
 
       if (!tableIndices) {
         /*
          * Create index for `id` column named `idx_products_id` if not exists
-         * */
+         */
         await queryRunner.createIndices(createdProductsTable, [
           new TableIndex({
             name: 'idx_products_id',
@@ -154,27 +154,27 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/05
    * @version 1.0.0
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get products table if exists
-     * */
+     */
     const productsTable: Table | undefined =
       await queryRunner.getTable('products');
 
     /*
      * Check if products table exists
-     * */
+     */
     if (productsTable) {
       /*
        * Get all foreign keys in `products` table
-       * */
+       */
       const existingFks: TableForeignKey[] = productsTable.foreignKeys || [];
 
       /*
        * Drop foreign key for `products` table named
        * `fk_product_image_id_to_images_id` if exists
-       * */
+       */
       if (existingFks.length > 0) {
         await queryRunner.dropForeignKey(
           productsTable,
@@ -184,7 +184,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 
       /*
        * Drop products table
-       * */
+       */
       await queryRunner.dropTable(productsTable);
     }
   }

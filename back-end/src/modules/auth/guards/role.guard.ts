@@ -2,7 +2,7 @@
  * @description role guard used for checking role to access controller
  * @author Nhut Tan
  * @since 2025-09-09
- * @modified: 2025-09-17
+ * @modifies 2025-09-17
  * @version 1.0.1
  */
 
@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     /*
      * Getting role from meta data
-     * */
+     */
     const roles: string[] = this.refector.get<string[]>(
       Roles,
       context.getHandler(),
@@ -30,7 +30,7 @@ export class RoleGuard implements CanActivate {
 
     /*
      * If role non-exist, allow access
-     * */
+     */
     if (!roles) {
       return false;
     }
@@ -49,7 +49,7 @@ export class RoleGuard implements CanActivate {
 
     /*
      * Check if roles include user role
-     * */
+     */
     return roles.includes(user.role);
   }
 }

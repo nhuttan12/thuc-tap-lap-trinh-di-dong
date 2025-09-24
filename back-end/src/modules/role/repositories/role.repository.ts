@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-13
  * @version 1.0.0
- * */
+ */
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from '../entities/role.entity';
@@ -25,14 +25,14 @@ export class RoleRepository {
    * @author Nhut Tan
    * @since 2025-09-13
    * @version 1.0.0
-   * */
+   */
   async createRole(name: string): Promise<RoleEntity> {
     try {
       return await this.dataSource.transaction(
         async (tx: EntityManager): Promise<RoleEntity> => {
           /*
            * Create role entity instance to insert to database
-           * */
+           */
           const roleEntity: RoleEntity = tx.create(RoleEntity, {
             name,
             status: RoleStatus.ACTIVE,
@@ -43,7 +43,7 @@ export class RoleRepository {
 
           /*
            * Save role entity instance to database
-           * */
+           */
           return await tx.save(roleEntity);
         },
       );
@@ -61,7 +61,7 @@ export class RoleRepository {
    * @author Nhut Tan
    * @since 2025-09-13
    * @version 1.0.0
-   * */
+   */
   async getRoleByName(name: string): Promise<RoleEntity | null> {
     try {
       return await this.roleRepository.findOne({

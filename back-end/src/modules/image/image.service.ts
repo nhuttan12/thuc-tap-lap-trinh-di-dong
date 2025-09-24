@@ -1,9 +1,9 @@
-/*
+/**
  * @description image service
  * @author Nhut Tan
  * @since 2025-09-11
  * @version 1.0.1
- * */
+ */
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ImageRepository } from './repositories/image.repository';
@@ -28,14 +28,14 @@ export class ImageService {
    * @author Nhut Tan
    * @since 2025-09-12
    * @version 1.0.0
-   * */
+   */
   async createImage(
     imageUrl: string,
     userID: number,
   ): Promise<ImageEntityResponse> {
     /*
      * Call `createImage` in `ImageRepository`
-     * */
+     */
     const imageEntity: ImageEntity = await this.imageRepository.createImage(
       imageUrl,
       userID,
@@ -46,7 +46,7 @@ export class ImageService {
 
     /*
      * Check image existence
-     * */
+     */
     if (!imageEntity) {
       this.logger.error(
         `Image with url: ${imageUrl} and userID: ${userID} not found after created`,
@@ -60,7 +60,7 @@ export class ImageService {
 
     /*
      * Mapping image entity to image response dto
-     * */
+     */
     const imageResponseDto: ImageEntityResponse =
       this.imageMapper.toImageEntityResponse(imageEntity);
 

@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025/09/06
  * @version 1.0.0
- * */
+ */
 
 import {
   MigrationInterface,
@@ -22,21 +22,21 @@ export class CreateProductImagesTable1757177326850
    * @author Nhut Tan
    * @since 2025/09/06
    * @version 1.0.0
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `product_images` table if exists
-     * */
+     */
     const productImagesTable: Table | undefined =
       await queryRunner.getTable('product_images');
 
     /*
      * Check exist `product_images` table
-     * */
+     */
     if (!productImagesTable) {
       /*
        * Create `product_images` table
-       * */
+       */
       await queryRunner.createTable(
         new Table({
           name: 'product_images',
@@ -85,17 +85,17 @@ export class CreateProductImagesTable1757177326850
 
     /*
      * Get `product_images` table after created
-     * */
+     */
     const productImagesTableCreated: Table | undefined =
       await queryRunner.getTable('product_images');
 
     /*
      * Check if `product_images` created
-     * */
+     */
     if (productImagesTableCreated) {
       /*
        * Get foreign keys in `product_images` table named `fk_product_images_image_id_to_images_id`
-       * */
+       */
       const imageIDFks: TableForeignKey | undefined =
         productImagesTableCreated.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -104,11 +104,11 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Check if `fk_product_images_image_id_to_images_id` not exists
-       * */
+       */
       if (!imageIDFks) {
         /*
          * Create new foreign key named `fk_product_images_image_id_to_images_id`
-         * */
+         */
         await queryRunner.createForeignKey(
           productImagesTableCreated,
           new TableForeignKey({
@@ -122,7 +122,7 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Get foreign keys in `product_images` table named `fk_product_images_product_id_to_products_id`
-       * */
+       */
       const productIDFks: TableForeignKey | undefined =
         productImagesTableCreated.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -131,11 +131,11 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Check if `fk_product_images_product_id_to_products_id` not exists
-       * */
+       */
       if (!productIDFks) {
         /*
          * Create new foreign key named `fk_product_images_product_id_to_products_id`
-         * */
+         */
         await queryRunner.createForeignKey(
           productImagesTableCreated,
           new TableForeignKey({
@@ -149,7 +149,7 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Get index in `product_images` table named `idx_product_images_id`
-       * */
+       */
       const idxID: TableIndex | undefined =
         productImagesTableCreated.indices.find(
           (index: TableIndex): boolean =>
@@ -158,11 +158,11 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Check if `idx_product_images_id` not exists
-       * */
+       */
       if (!idxID) {
         /*
          * Create new index `idx_product_images_id`
-         * */
+         */
         await queryRunner.createIndex(
           productImagesTableCreated,
           new TableIndex({
@@ -179,21 +179,21 @@ export class CreateProductImagesTable1757177326850
    * @author Nhut Tan
    * @since 2025/09/06
    * @version 1.0.0
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `product_images` table after created
-     * */
+     */
     const productImagesTableCreated: Table | undefined =
       await queryRunner.getTable('product_images');
 
     /*
      * Check if `product_images` created
-     * */
+     */
     if (productImagesTableCreated) {
       /*
        * Get foreign keys in `product_images` table named `fk_product_images_image_id_to_images_id`
-       * */
+       */
       const imageIDFks: TableForeignKey | undefined =
         productImagesTableCreated.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -202,17 +202,17 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Check if `fk_product_images_image_id_to_images_id` exists
-       * */
+       */
       if (imageIDFks) {
         /*
          * Drop foreign key named `fk_product_images_image_id_to_images_id`
-         * */
+         */
         await queryRunner.dropForeignKey(productImagesTableCreated, imageIDFks);
       }
 
       /*
        * Get foreign keys in `product_images` table named `fk_product_images_product_id_to_products_id`
-       * */
+       */
       const productIDFks: TableForeignKey | undefined =
         productImagesTableCreated.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -221,11 +221,11 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Check if `fk_product_images_product_id_to_products_id` exists
-       * */
+       */
       if (productIDFks) {
         /*
          * Drop foreign key named `fk_product_images_product_id_to_products_id`
-         * */
+         */
         await queryRunner.dropForeignKey(
           productImagesTableCreated,
           productIDFks,
@@ -234,7 +234,7 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Get index in `product_images` table named `idx_product_images_id`
-       * */
+       */
       const idxID: TableIndex | undefined =
         productImagesTableCreated.indices.find(
           (index: TableIndex): boolean =>
@@ -243,17 +243,17 @@ export class CreateProductImagesTable1757177326850
 
       /*
        * Check if `idx_product_images_id` not exists
-       * */
+       */
       if (idxID) {
         /*
          * Drop index `idx_product_images_id`
-         * */
+         */
         await queryRunner.dropIndex(productImagesTableCreated, idxID);
       }
 
       /*
        * Drop `product_images` table if exist
-       * */
+       */
       await queryRunner.dropTable(productImagesTableCreated);
     }
   }

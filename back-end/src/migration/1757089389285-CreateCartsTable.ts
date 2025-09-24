@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025/09/06
  * @version 1.0.0
- * */
+ */
 
 import {
   MigrationInterface,
@@ -20,7 +20,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/06
    * @version 1.0.0
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /**
      * Get `carts` table if exists
@@ -29,11 +29,11 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 
     /*
      * Check if `carts` table not exists
-     * */
+     */
     if (!cartsTable) {
       /*
        * Create new `carts` table
-       * */
+       */
       await queryRunner.createTable(
         new Table({
           name: 'carts',
@@ -77,22 +77,22 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 
     /*
      * Get `carts` table after created
-     * */
+     */
     const createdCartsTable: Table | undefined =
       await queryRunner.getTable('carts');
 
     /*
      * Check if `carts` table exists
-     * */
+     */
     if (createdCartsTable) {
       /*
        * Get all foreign keys in `carts` table
-       * */
+       */
       const cartFks: TableForeignKey[] = createdCartsTable.foreignKeys || [];
 
       /*
        * Check if foreign key named `fk_carts_user_id_to_users_id` is not exists
-       * */
+       */
       if (
         !cartFks.find(
           (fk: TableForeignKey): boolean =>
@@ -101,7 +101,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
       ) {
         /*
          * Create new foreign key named `fk_carts_user_id_to_users_id`
-         * */
+         */
         await queryRunner.createForeignKey(
           createdCartsTable,
           new TableForeignKey({
@@ -115,18 +115,18 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 
       /*
        * Create new index for `id` column
-       * */
+       */
       const cartIndex: TableIndex[] = createdCartsTable.indices;
 
       /*
        * Check index named `idx_carts_id` is not exists
-       * */
+       */
       if (
         !cartIndex.find((i: TableIndex): boolean => i.name === 'idx_carts_id')
       ) {
         /*
          * Create new index named `idx_carts_id`
-         * */
+         */
         await queryRunner.createIndex(
           'carts',
           new TableIndex({
@@ -143,7 +143,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/06
    * @version 1.0.0
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /**
      * Get `carts` table created if exists
@@ -153,11 +153,11 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 
     /*
      * Check if `carts` table exists
-     * */
+     */
     if (createdCartsTable) {
       /*
        * Get foreign keys in `carts` table named `fk_carts_user_id_to_users_id`
-       * */
+       */
       const cartFks: TableForeignKey | undefined =
         createdCartsTable.foreignKeys.find(
           (fk: TableForeignKey): boolean =>
@@ -166,28 +166,28 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 
       /*
        * Drop foreign key named `fk_carts_user_id_to_users_id` if exist
-       * */
+       */
       if (cartFks) {
         await queryRunner.dropForeignKey(createdCartsTable, cartFks);
       }
 
       /*
        * Get index in `carts` table named `idx_carts_id`
-       * */
+       */
       const cartIndex: TableIndex | undefined = createdCartsTable.indices.find(
         (i: TableIndex): boolean => i.name === 'idx_carts_id',
       );
 
       /*
        * Drop index named `idx_carts_id` if exist
-       * */
+       */
       if (cartIndex) {
         await queryRunner.dropIndex(createdCartsTable, cartIndex);
       }
 
       /*
        * Drop `carts` table if exist
-       * */
+       */
       await queryRunner.dropTable(createdCartsTable);
     }
   }

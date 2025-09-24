@@ -2,10 +2,10 @@
  * @description Migration file for create roles table
  * @author Nhut Tan
  * @since 2025/09/02
- * @modified: 2025/09/04
+ * @modifies 2025/09/04
  * @modifiedBy: Nhut Tan
  * @version 1.0.3
- * */
+ */
 
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
@@ -14,19 +14,19 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
    * @description Run migration
    * @author Nhut Tan
    * @since 2025/09/02
-   * @modified: 2025/09/04
+   * @modifies 2025/09/04
    * @modifiedBy: Nhut Tan
    * @version 1.0.3
-   * */
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Check if table roles exists
-     * */
+     */
     const rolesTable: Table | undefined = await queryRunner.getTable('roles');
 
     /*
      * Create new role table if not exists
-     * */
+     */
     if (!rolesTable) {
       await queryRunner.createTable(
         new Table({
@@ -63,14 +63,14 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 
     /*
      * Get all existing index in `roles` table
-     * */
+     */
     const tableIndices: TableIndex[] = await queryRunner
       .getTable('roles')
       .then((t: Table | undefined): TableIndex[] => t?.indices || []);
 
     /*
      * Create index for `id` column named `idx_roles_id` if not exists
-     * */
+     */
     if (
       !tableIndices.find((i: TableIndex): string => (i.name = 'idx_roles_id'))
     ) {
@@ -85,7 +85,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 
     /*
      * Create index for `name` column named `idx_roles_name` if not exists
-     * */
+     */
     if (
       !tableIndices.find(
         (i: TableIndex): string => (i.name = 'idx_roles_name'),
@@ -106,7 +106,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
    * @author Nhut Tan
    * @since 2025/09/02
    * @version 1.0.1
-   * */
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropIndex('roles', 'idx_roles');
     await queryRunner.dropTable('roles');

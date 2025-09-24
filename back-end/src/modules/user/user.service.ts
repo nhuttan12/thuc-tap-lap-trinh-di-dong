@@ -2,9 +2,9 @@
  * @description user service
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-12
+ * @modifies 2025-09-12
  * @version 1.0.2
- * */
+ */
 
 import {
   ForbiddenException,
@@ -46,7 +46,7 @@ export class UserService {
    * @author Nhut Tan
    * @since 2025-09-08
    * @version 1.0.0
-   * */
+   */
   async getUserByUserNameAndPasswordForLogin(
     username: string,
     password: string,
@@ -54,7 +54,7 @@ export class UserService {
     try {
       /*
        * Call `getUserByUserNameAndPassword` function from repository
-       * */
+       */
       const user: UserEntity | null =
         await this.userRepository.getUserByUserNameAndPassword(
           username,
@@ -66,11 +66,11 @@ export class UserService {
 
       /*
        * Check user existence
-       * */
+       */
       if (!user) {
         /*
          * If user not found, throw not found exception
-         * */
+         */
         this.logger.error(
           `User with username ${username} and password ${password} not found`,
         );
@@ -83,7 +83,7 @@ export class UserService {
 
       /*
        * Convert user entity to user response dto
-       * */
+       */
       const userResponseDto: UserEntityResponseDto =
         this.userMapper.toUserResponseDto(user);
       this.logger.debug(
@@ -105,12 +105,12 @@ export class UserService {
    * @author Nhut Tan
    * @since 2025-09-10
    * @version 1.0.0
-   * */
+   */
   async getUserByUserID(userID: number): Promise<UserEntityResponseDto> {
     try {
       /*
        * Call `getUserByUserID` function from repository
-       * */
+       */
       const user: UserEntity | null =
         await this.userRepository.getUserByUerID(userID);
       this.logger.debug(
@@ -119,11 +119,11 @@ export class UserService {
 
       /*
        * Check user existence
-       * */
+       */
       if (!user) {
         /*
          * If user not found, throw not found exception
-         * */
+         */
         this.logger.error(`User with userID ${userID} not found`);
         throw new NotFoundException({
           statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
@@ -134,7 +134,7 @@ export class UserService {
 
       /*
        * Convert user entity to user response dto
-       * */
+       */
       const userResponseDto: UserEntityResponseDto =
         this.userMapper.toUserResponseDto(user);
       this.logger.debug(
@@ -158,12 +158,12 @@ export class UserService {
    * @author Nhut Tan
    * @since 2025-09-10
    * @version 1.0.0
-   * */
+   */
   async getUserByEmail(email: string): Promise<UserEntityResponseDto | null> {
     try {
       /*
        * Call `getUserByEmail` function from repository
-       * */
+       */
       const user: UserEntity | null =
         await this.userRepository.getUserByEmail(email);
       this.logger.debug(
@@ -172,17 +172,17 @@ export class UserService {
 
       /*
        * Check user existence
-       * */
+       */
       if (!user) {
         /*
          * If user not exist, return null
-         * */
+         */
         return null;
       }
 
       /*
        * Validate status user if user banned
-       * */
+       */
       if (user.status === (UserStatus.BANNED as UserStatus)) {
         throw new ForbiddenException({
           statusCode: UserStatusCode.USER_BANNED.statusCode,
@@ -193,7 +193,7 @@ export class UserService {
 
       /*
        * Convert user entity to user response dto
-       * */
+       */
       const userResponseDto: UserEntityResponseDto =
         this.userMapper.toUserResponseDto(user);
       this.logger.debug(
@@ -218,7 +218,7 @@ export class UserService {
     try {
       /*
        * Create new user with Google information
-       * */
+       */
       const user: UserEntity = await this.userRepository.createNewUserGoogle(
         name,
         email,
@@ -229,7 +229,7 @@ export class UserService {
 
       /*
        * Call `create image` in image service
-       * */
+       */
       const image: ImageEntityResponse = await this.imageService.createImage(
         imageUrl,
         user.id,
@@ -240,7 +240,7 @@ export class UserService {
 
       /*
        * Convert user to user response dto
-       * */
+       */
       const userResponseDto: UserEntityResponseDto =
         this.userMapper.toUserResponseDto(user);
       this.logger.debug(
@@ -309,7 +309,7 @@ export class UserService {
    * @return {UserEntityResponseDto}
    * @author Nhut Tan
    * @since 2025-09-17
-   * @modified: 2025-09-23
+   * @modifies 2025-09-23
    * @version 1.0.1
    */
   async createUserWithUsernameEmailPassword(

@@ -21,29 +21,29 @@ export class RemoveNameColumnFromImageTable1757662860161
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `images` table if exist
-     * */
+     */
     const imageTable: Table | undefined = await queryRunner.getTable('images');
 
     /*
      * Check `images` table existence
-     * */
+     */
     if (!imageTable) return;
 
     /*
      * Get `name` columns in `images` table if exist
-     * */
+     */
     const nameColumn: TableColumn | undefined = imageTable.columns.find(
       (column: TableColumn): boolean => column.name === 'name',
     );
 
     /*
      * Check column `name` in `images` table existence
-     * */
+     */
     if (!nameColumn) return;
 
     /*
      * Remove `name` column in `images` table
-     * */
+     */
     await queryRunner.dropColumn(imageTable, nameColumn);
   }
 
@@ -57,29 +57,29 @@ export class RemoveNameColumnFromImageTable1757662860161
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `images` table if exist
-     * */
+     */
     const imageTable: Table | undefined = await queryRunner.getTable('images');
 
     /*
      * Check `images` table existence
-     * */
+     */
     if (!imageTable) return;
 
     /*
      * Get `name` columns in `images` table if exist
-     * */
+     */
     const nameColumn: TableColumn | undefined = imageTable.columns.find(
       (column: TableColumn): boolean => column.name === 'name',
     );
 
     /*
      * Check column `name` in `images` table existence
-     * */
+     */
     if (nameColumn) return;
 
     /*
      * Create `name` column in `images` table
-     * */
+     */
     await queryRunner.addColumn(
       imageTable,
       new TableColumn({

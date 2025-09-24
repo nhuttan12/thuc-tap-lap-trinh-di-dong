@@ -4,7 +4,7 @@
  * @since 2025-08-30
  * @version 1.0.1
  * @modifies 2025-09-10
- * */
+ */
 
 import { Logger, Module } from '@nestjs/common';
 import {

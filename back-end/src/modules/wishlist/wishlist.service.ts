@@ -168,4 +168,48 @@ export class WishlistService {
       throw e;
     }
   }
+
+  /**
+   * @description Remove product from wishlist
+   * @param {number} productID - ID of product
+   * @param {number} userID - ID of user
+   * @return {Promise<boolean>} - True if product removed from wishlist successfully
+   * @since 2025-09-24
+   * @version 1.0.0
+   */
+  async removeWishlistItem(
+    productID: number,
+    userID: number,
+  ): Promise<boolean> {
+    try {
+      /**
+       * Call `removeWishlistItem` in `WishlistItemRepository`
+       */
+      const wishlistItemEntity: WishlistItemEntity | null =
+        await this.wishlistItemRepository.removeWishlistItem(productID, userID);
+
+      /**
+       * Check if `wishlistItemEntity` is null
+       */
+      if (!wishlistItemEntity) {
+        /**
+         * Log error, and throwing error
+         */
+        this.logger.warn('Product not in wishlist');
+        throw new BadRequestException({
+          statusCode: WishlistStatusCode.ProductNotInWishlist.statusCode,
+          customCode: WishlistStatusCode.ProductNotInWishlist.customCode,
+          message: WishlistStatusCode.ProductNotInWishlist.message,
+        });
+      }
+
+      return true;
+    } catch (e) {
+      this.logger.error(
+        `Error in \`removeWishlistItem\`: ${(e as Error).message}`,
+        (e as Error).stack,
+      );
+      throw e;
+    }
+  }
 }

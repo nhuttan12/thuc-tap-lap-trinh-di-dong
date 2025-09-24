@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-08
  * @version 1.0.0
- * */
+ */
 
 import { IsNotEmpty, IsString, NotContains } from '@nestjs/class-validator';
 import { AuthStatusCode } from '../status-code/auth.status-code';

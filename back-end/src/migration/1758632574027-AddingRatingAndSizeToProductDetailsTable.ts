@@ -1,48 +1,73 @@
 /**
- * @description Migration to add rating to products table
+ * @description Migration to add rating to product_details table
  * @author Nhut Tan
  * @since 2025/09/23
- * @version 1.0.0
+ * @modifies 2025/09/24
+ * @version 1.0.1
  */
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 
-export class AddingRatingToProductsTable1758632574027
+export class AddingRatingAndSizeToProductDetailsTable1758632574027
   implements MigrationInterface
 {
   /**
-   * @description Adding rating to products table
+   * @description Adding rating to product_details table
    * @param queryRunner
    * @author Nhut Tan
    * @since 2025/09/23
-   * @version 1.0.0
+   * @modifies 2025/09/24
+   * @version 1.0.1
    */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /**
-     * Get `products` table if exist
+     * Get `product_details` table if exist
      */
-    const productTable: Table | undefined =
-      await queryRunner.getTable('products');
+    const productDetailsTable: Table | undefined =
+      await queryRunner.getTable('product_details');
 
     /**
-     * Check if `products` table not exist
+     * Check if `product_details` table not exist
      */
-    if (!productTable) return;
+    if (!productDetailsTable) return;
 
     /**
-     * Get `rating` columns to `products` table if exist
+     * Get `rating` columns to `product_details` table if exist
      */
-    const ratingColumn: TableColumn | undefined = productTable.columns.find(
-      (column: TableColumn): boolean => column.name === 'rating',
-    );
+    const ratingColumn: TableColumn | undefined =
+      productDetailsTable.columns.find(
+        (column: TableColumn): boolean => column.name === 'rating',
+      );
 
     /**
      * if `rating` column not exist, create new one
      */
     if (!ratingColumn) {
       await queryRunner.addColumn(
-        productTable,
+        productDetailsTable,
         new TableColumn({
           name: 'rating',
+          type: 'decimal',
+          isNullable: true,
+        }),
+      );
+    }
+
+    /**
+     * Get `size` columns to `product_details` table if exist
+     */
+    const sizeColumn: TableColumn | undefined =
+      productDetailsTable.columns.find(
+        (column: TableColumn): boolean => column.name === 'size',
+      );
+
+    /**
+     * if `size` column not exist, create new one
+     */
+    if (!sizeColumn) {
+      await queryRunner.addColumn(
+        productDetailsTable,
+        new TableColumn({
+          name: 'size',
           type: 'decimal',
           isNullable: true,
         }),
@@ -51,36 +76,53 @@ export class AddingRatingToProductsTable1758632574027
   }
 
   /**
-   * @description Remove rating from products table
+   * @description Remove rating from product_details table
    * @param queryRunner
    * @author Nhut Tan
    * @since 2025/09/23
-   * @version 1.0.0
+   * @modifies 2025/09/24
+   * @version 1.0.1
    */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /**
-     * Get `products` table if exist
+     * Get `product_details` table if exist
      */
-    const productTable: Table | undefined =
-      await queryRunner.getTable('products');
+    const productDetailsTable: Table | undefined =
+      await queryRunner.getTable('product_details');
 
     /**
-     * Check exist `products` table
+     * Check exist `product_details` table
      */
-    if (!productTable) return;
+    if (!productDetailsTable) return;
 
     /**
-     * Get `rating` columns to `products` table if exist
+     * Get `rating` columns to `product_details` table if exist
      */
-    const ratingColumn: TableColumn | undefined = productTable.columns.find(
-      (column: TableColumn): boolean => column.name === 'rating',
-    );
+    const ratingColumn: TableColumn | undefined =
+      productDetailsTable.columns.find(
+        (column: TableColumn): boolean => column.name === 'rating',
+      );
 
     /**
      * if `rating` column exist, drop it
      */
     if (ratingColumn) {
-      await queryRunner.dropColumn(productTable, ratingColumn);
+      await queryRunner.dropColumn(productDetailsTable, ratingColumn);
+    }
+
+    /**
+     * Get `size` columns to `product_details` table if exist
+     */
+    const sizeColumn: TableColumn | undefined =
+      productDetailsTable.columns.find(
+        (column: TableColumn): boolean => column.name === 'size',
+      );
+
+    /**
+     * if `size` column exist, drop it
+     */
+    if (sizeColumn) {
+      await queryRunner.dropColumn(productDetailsTable, sizeColumn);
     }
   }
 }

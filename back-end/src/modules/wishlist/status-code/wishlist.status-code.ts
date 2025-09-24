@@ -32,4 +32,22 @@ export class WishlistStatusCode extends BaseStatusCode {
       'WLI_004',
       'Get products in wishlist successfully',
     );
+  static readonly AddProductToWishlistSuccess: WishlistStatusCode =
+    new WishlistStatusCode(
+      HttpStatus.OK,
+      'WLI_005',
+      'Add product to wishlist success',
+    );
+  static readonly ProductNotInWishlist: WishlistStatusCode =
+    new WishlistStatusCode(
+      HttpStatus.NOT_FOUND,
+      'WLI_006',
+      'Product not in wishlist',
+    );
+  static readonly RemoveWishlistItemSuccess: WishlistStatusCode =
+    new WishlistStatusCode(
+      HttpStatus.OK,
+      'WLI_007',
+      'Remove wishlist item success',
+    );
 }

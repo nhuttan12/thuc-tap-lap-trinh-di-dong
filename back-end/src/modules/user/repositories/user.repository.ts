@@ -2,7 +2,7 @@
  * @description user repository
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-22
+ * @modifies 2025-09-22
  * @version 1.0.3
  */
 
@@ -23,7 +23,7 @@ export class UserRepository {
    * @author Nhut Tan
    * @since 2025-09-08
    * @version 1.0.0
-   * */
+   */
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -37,7 +37,7 @@ export class UserRepository {
    * @author Nhut Tan
    * @since 2025-09-08
    * @version 1.0.0
-   * */
+   */
   async getUserByUserNameAndPassword(
     username: string,
     password: string,
@@ -45,7 +45,7 @@ export class UserRepository {
     try {
       /*
        * Get user from database and print to log user
-       * */
+       */
       const user: UserEntity | null = await this.userRepository.findOne({
         where: { username, password },
         relations: {
@@ -56,7 +56,7 @@ export class UserRepository {
 
       /*
        * Return user to user service
-       * */
+       */
       return user;
     } catch (e) {
       this.logger.error(
@@ -74,12 +74,12 @@ export class UserRepository {
    * @author Nhut Tan
    * @since 2025-09-09
    * @version 1.0.0
-   * */
+   */
   async getUserByUerID(userID: number): Promise<UserEntity | null> {
     try {
       /*
        * Get user from database and print to log user
-       * */
+       */
       const user: UserEntity | null = await this.userRepository.findOne({
         where: {
           id: userID,
@@ -92,7 +92,7 @@ export class UserRepository {
 
       /*
        * Return user to user service
-       * */
+       */
       return user;
     } catch (e) {
       this.logger.error(
@@ -110,12 +110,12 @@ export class UserRepository {
    * @author Nhut Tan
    * @since 2025-09-10
    * @version 1.0.0
-   * */
+   */
   async getUserByEmail(email: string): Promise<UserEntity | null> {
     try {
       /*
        * Get user from database and print to log user
-       * */
+       */
       const user: UserEntity | null = await this.userRepository.findOne({
         where: {
           email: email,
@@ -128,7 +128,7 @@ export class UserRepository {
 
       /*
        * Return user to user service
-       * */
+       */
       return user;
     } catch (e) {
       this.logger.error(
@@ -146,13 +146,13 @@ export class UserRepository {
    * @author Nhut Tan
    * @since 2025-09-10
    * @version 1.0.0
-   * */
+   */
   async createNewUserGoogle(name: string, email: string): Promise<UserEntity> {
     try {
       return await this.dataSource.transaction(async (tx: EntityManager) => {
         /*
          * Create user entity instance
-         * */
+         */
         const user: UserEntity = tx.create(UserEntity, {
           name: name,
           email: email,
@@ -160,7 +160,7 @@ export class UserRepository {
 
         /*
          * Save it to database
-         * */
+         */
         return await tx.save(user);
       });
     } catch (e) {
@@ -208,7 +208,7 @@ export class UserRepository {
    * @param password
    * @author Nhut Tan
    * @since 2025-09-17
-   * @modified: 2025-09-22
+   * @modifies 2025-09-22
    * @version 1.0.3
    */
   async createUserWithUsernameEmailPassword(
