@@ -1,8 +1,8 @@
 /*
- * @description: image service
- * @author: Nhut Tan
- * @date: 2025-09-11
- * @version: 1.0.1
+ * @description image service
+ * @author Nhut Tan
+ * @since 2025-09-11
+ * @version 1.0.1
  * */
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
@@ -22,12 +22,12 @@ export class ImageService {
   ) {}
 
   /*
-   * @description: Create image
+   * @description Create image
    * @param {imageUrl: string, userID: number}
    * @return {ImageEntity}
-   * @author: Nhut Tan
-   * @date: 2025-09-12
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-12
+   * @version 1.0.0
    * */
   async createImage(
     imageUrl: string,
@@ -68,12 +68,12 @@ export class ImageService {
   }
 
   /**
-   * @description: Get image by url
+   * @description Get image by url
    * @param url
    * @return {ImageEntityResponse}
-   * @author: Nhut Tan
-   * @date: 2025-09-23
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-23
+   * @version 1.0.0
    */
   async getImageByUrl(url: string): Promise<ImageEntityResponse> {
     /**

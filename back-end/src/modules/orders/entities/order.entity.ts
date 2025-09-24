@@ -1,9 +1,9 @@
 /*
- * @description: Order entity
- * @author: Nhut Tan
- * @date: 2025-09-05
+ * @description Order entity
+ * @author Nhut Tan
+ * @since 2025-09-05
  * @modified: 2025-09-14
- * @version: 1.0.2
+ * @version 1.0.2
  * */
 
 import {

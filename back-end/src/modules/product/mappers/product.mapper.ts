@@ -1,8 +1,8 @@
 /*
- * @description: Product mapper
- * @author: Nhut Tan
- * @date: 2025-09-15
- * @version: 1.0.0
+ * @description Product mapper
+ * @author Nhut Tan
+ * @since 2025-09-15
+ * @version 1.0.0
  * */
 
 import { Injectable } from '@nestjs/common';

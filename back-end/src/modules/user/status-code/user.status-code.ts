@@ -1,9 +1,9 @@
 /*
- * @description: user status code
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description user status code
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-12
- * @version: 1.0.1
+ * @version 1.0.1
  * */
 
 import { HttpStatus } from '@nestjs/common';

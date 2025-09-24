@@ -1,9 +1,9 @@
 /**
- * @description: Main file
- * @author: Nhut Tan
- * @date: 2025-08-29
- * @modifies: 2025-09-18
- * @version: 1.0.1
+ * @description Main file
+ * @author Nhut Tan
+ * @since 2025-08-29
+ * @modifies 2025-09-18
+ * @version 1.0.1
  */
 
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';

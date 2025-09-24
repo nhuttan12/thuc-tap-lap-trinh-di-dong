@@ -1,8 +1,8 @@
 /**
- * @description: Seed initial data into database
- * @author: Nhut Tan
- * @date: 2025-09-22
- * @version: 1.0.0
+ * @description Seed initial data into database
+ * @author Nhut Tan
+ * @since 2025-09-22
+ * @version 1.0.0
  */
 
 import { DataSource, EntityManager } from 'typeorm';

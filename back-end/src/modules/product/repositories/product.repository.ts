@@ -1,9 +1,9 @@
 /*
- * @description: user repository
- * @author: Nhut Tan
- * @date: 2025-09-08
- * @modified: 2025-09-15
- * @version: 1.0.2
+ * @description user repository
+ * @author Nhut Tan
+ * @since 2025-09-08
+ * @modified: 2025-09-24
+ * @version 1.0.3
  * */
 
 import { ProductEntity } from '../entities/product.entity';
@@ -11,8 +11,6 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger } from '@nestjs/common';
 import { ProductStatusEnum } from '../enums/product-status.enum';
-import { BuildPagingMetaService } from '../../../common/helper/build-paging-meta.service';
-import { PagingResponseDto } from '../../../common/helper/dtos/paging-response.dto';
 
 export class ProductRepository {
   private readonly logger: Logger = new Logger(ProductRepository.name);
@@ -21,21 +19,22 @@ export class ProductRepository {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
     private readonly dataSource: DataSource,
-    private readonly buildPagingMetaService: BuildPagingMetaService,
   ) {}
 
-  /*
-   * @description: Get products paging
-   * @param {take: number, skip: number}
-   * @return {PagingResponseDto<ProductEntity>}
-   * @author: Nhut Tan
-   * @date: 2025-09-15
-   * @version: 1.0.0
-   * */
+  /**
+   * @description Get products paging
+   * @param {number} take - Number of items to take
+   * @param {number} skip - Number of items to skip
+   * @return {Promise<[ProductEntity[], number]>}
+   * @author Nhut Tan
+   * @since 2025-09-15
+   * @modifies 2025-09-24
+   * @version 1.0.1
+   */
   async getProductsPaging(
     take: number,
     skip: number,
-  ): Promise<PagingResponseDto<ProductEntity>> {
+  ): Promise<[ProductEntity[], number]> {
     try {
       /**
        * Get products from database
@@ -60,14 +59,9 @@ export class ProductRepository {
       );
 
       /**
-       * Build paging response
+       * Return data
        */
-      return this.buildPagingMetaService.buildPagingResponse(
-        products,
-        skip,
-        take,
-        total,
-      );
+      return [products, total];
     } catch (e) {
       this.logger.error(
         `Error in \`getProductsPaging\`: ${(e as Error).message}`,

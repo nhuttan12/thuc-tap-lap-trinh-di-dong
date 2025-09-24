@@ -1,8 +1,8 @@
 /*
- * @description: Product detail entity
- * @author: Nhut Tan
- * @date: 2025-09-03
- * @version: 1.0.0
+ * @description Product detail entity
+ * @author Nhut Tan
+ * @since 2025-09-03
+ * @version 1.0.0
  * */
 
 import { Module } from '@nestjs/common';

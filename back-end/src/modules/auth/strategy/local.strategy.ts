@@ -1,9 +1,9 @@
 /*
- * @description: local strategy passport
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description local strategy passport
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-10
- * @version: 1.0.1
+ * @version 1.0.1
  * */
 
 import { PassportStrategy } from '@nestjs/passport';
@@ -22,13 +22,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   /*
-   * @description: validate function is call when local passport is called
+   * @description validate function is call when local passport is called
    * @param: UserLoginRequestDto
    * @return: JwtPayloadInterface
-   * @author: Nhut Tan
-   * @date: 2025-09-08
+   * @author Nhut Tan
+   * @since 2025-09-08
    * @modified: 2025-09-10
-   * @version: 1.0.1
+   * @version 1.0.1
    * */
   async validate({
     username,

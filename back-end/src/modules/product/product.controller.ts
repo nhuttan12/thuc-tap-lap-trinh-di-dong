@@ -1,9 +1,9 @@
 /**
- * @description: Product controller
- * @author: Nhut Tan
- * @date: 2025-09-16
- * @modifies: 2025-09-17
- * @version: 1.0.1
+ * @description Product controller
+ * @author Nhut Tan
+ * @since 2025-09-16
+ * @modifies 2025-09-17
+ * @version 1.0.1
  */
 
 import { Controller, Get, HttpCode, HttpStatus, Logger } from '@nestjs/common';
@@ -21,8 +21,12 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   /**
-   * @description: Get products paging
-   * @param request
+   * @description Get products paging
+   * @param {GetProductsPagingRequest} request - Get products paging request
+   * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
+   * @author Nhut Tan
+   * @since 2025-09-16
+   * @version 1.0.0
    */
   @HttpCode(HttpStatus.OK)
   @Get()

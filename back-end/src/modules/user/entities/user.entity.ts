@@ -1,9 +1,9 @@
 /**
- * @description: user entity
- * @author: Nhut Tan
- * @date: 2025-09-03
+ * @description user entity
+ * @author Nhut Tan
+ * @since 2025-09-03
  * @modified: 2025-09-14
- * @version: 1.0.2
+ * @version 1.0.2
  */
 
 import {
@@ -22,6 +22,7 @@ import { UserStatus } from '../enums/user-status.enum';
 import { CartEntity } from '../../cart/entities/cart.entity';
 import { OrderEntity } from '../../orders/entities/order.entity';
 import { UserImageEntity } from '../../image/entities/user-image.entity';
+import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity';
 
 @Entity('users')
 export class UserEntity extends TimestampField {
@@ -92,4 +93,13 @@ export class UserEntity extends TimestampField {
     },
   )
   userImages: UserImageEntity[];
+
+  @OneToMany(
+    (): typeof WishlistItemEntity => WishlistItemEntity,
+    (wishlist: WishlistItemEntity): UserEntity => wishlist.user,
+    {
+      cascade: ['insert', 'update', 'soft-remove'],
+    },
+  )
+  wishlistItems: WishlistItemEntity[];
 }

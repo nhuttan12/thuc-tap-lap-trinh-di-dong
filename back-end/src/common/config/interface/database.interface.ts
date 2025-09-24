@@ -1,9 +1,9 @@
 /**
- * @description: DatabaseConfig interface for parsed configuration and get data
- * @author: Nhut Tan
- * @date: 2025-08-30
- * @modifies: 2025-09-01
- * @version: 1.0.1
+ * @description DatabaseConfig interface for parsed configuration and get data
+ * @author Nhut Tan
+ * @since 2025-08-30
+ * @modifies 2025-09-01
+ * @version 1.0.1
  * */
 export interface DatabaseConfig {
   /*

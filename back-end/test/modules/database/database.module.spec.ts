@@ -1,8 +1,8 @@
 /*
- * @description: Mocking test create typeorm options
- * @author: Nhut Tan
- * @date: 2025-09-01
- * @version: 1.0.0
+ * @description Mocking test create typeorm options
+ * @author Nhut Tan
+ * @since 2025-09-01
+ * @version 1.0.0
  * */
 
 import { DatabaseConfig } from '../../../src/common/config/interface/database.interface';

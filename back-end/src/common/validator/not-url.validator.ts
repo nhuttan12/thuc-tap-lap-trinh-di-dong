@@ -1,8 +1,8 @@
 /**
- * @description: Not url validator
- * @author: Nhut Tan
- * @date: 2025-09-22
- * @version: 1.0.0
+ * @description Not url validator
+ * @author Nhut Tan
+ * @since 2025-09-22
+ * @version 1.0.0
  */
 
 import {

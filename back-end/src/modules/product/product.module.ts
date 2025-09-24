@@ -1,9 +1,9 @@
 /**
- * @description: Product module
- * @author: Nhut Tan
- * @date: 2025-09-14
+ * @description Product module
+ * @author Nhut Tan
+ * @since 2025-09-14
  * @modified: 2025-09-15
- * @version: 1.0.1
+ * @version 1.0.1
  */
 
 import { Module } from '@nestjs/common';

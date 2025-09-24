@@ -1,8 +1,8 @@
 /**
- * @description: auth controller for login user
- * @author: Nhut Tan
- * @date: 2025-09-09
- * @version: 1.0.0
+ * @description auth controller for login user
+ * @author Nhut Tan
+ * @since 2025-09-09
+ * @version 1.0.0
  */
 
 import {
@@ -38,12 +38,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   /**
-   * @description: login user via local strategy passport
+   * @description login user via local strategy passport
    * @param: req: AuthRequest
    * @return: JwtPayload
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    */
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -52,22 +52,22 @@ export class AuthController {
   }
 
   /**
-   * @description: login user via Google strategy passport
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @description login user via Google strategy passport
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    */
   @Get('google')
   @UseGuards(GoogleOauthGuard)
   async auth(): Promise<void> {}
 
   /**
-   * @description: callback from Google strategy passport
+   * @description callback from Google strategy passport
    * @param req
    * @param res
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    */
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
@@ -89,12 +89,12 @@ export class AuthController {
   }
 
   /**
-   * @description: Sign up user
+   * @description Sign up user
    * @param: request: UserSignUpRequestDto
    * @return: UserEntityResponseDto
-   * @author: Nhut Tan
-   * @date: 2025-09-17
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-17
+   * @version 1.0.0
    */
   @Post('sign-up')
   async signUp(

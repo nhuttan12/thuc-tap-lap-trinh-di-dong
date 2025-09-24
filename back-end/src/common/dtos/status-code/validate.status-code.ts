@@ -1,8 +1,8 @@
 /**
- * @description: Validate status code
- * @author: Nhut Tan
- * @date: 2025-09-22
- * @version: 1.0.0
+ * @description Validate status code
+ * @author Nhut Tan
+ * @since 2025-09-22
+ * @version 1.0.0
  */
 
 import { BaseStatusCode } from './base.status-code';

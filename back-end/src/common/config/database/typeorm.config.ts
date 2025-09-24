@@ -1,9 +1,9 @@
 /*
- * @description: Configuration for TypeORM migration
- * @author: Nhut Tan
- * @date: 2025-09-03
+ * @description Configuration for TypeORM migration
+ * @author Nhut Tan
+ * @since 2025-09-03
  * @modified: 2025-09-12
- * @version: 1.0.1
+ * @version 1.0.1
  * */
 
 import { DataSource, DataSourceOptions } from 'typeorm';

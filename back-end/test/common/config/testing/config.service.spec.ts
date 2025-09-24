@@ -1,9 +1,9 @@
 /*
- * @description: Test file for ConfigService class to retrieve the database configuration from environment variables.
- * @author: Nhut Tan
- * @date: 2025-08-31
- * @version: 1.0.0
- * @modifies: 2025-09-01
+ * @description Test file for ConfigService class to retrieve the database configuration from environment variables.
+ * @author Nhut Tan
+ * @since 2025-08-31
+ * @version 1.0.0
+ * @modifies 2025-09-01
  * */
 
 import { ConfigService as NestConfigService } from '@nestjs/config';
@@ -70,6 +70,9 @@ describe('ConfigService', () => {
     const mockHttpConfig: HttpConfig = {
       environment: 'develop',
       port: 8080,
+      saltRounds: 10,
+      jwtSecret: 'secretKey',
+      expireTime: '1h',
     };
 
     /*

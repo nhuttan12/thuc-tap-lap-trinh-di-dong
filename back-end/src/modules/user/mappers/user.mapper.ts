@@ -1,9 +1,9 @@
 /*
- * @description: user mapper
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description user mapper
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-12
- * @version: 1.0.1
+ * @version 1.0.1
  * */
 
 import { UserEntity } from '../entities/user.entity';

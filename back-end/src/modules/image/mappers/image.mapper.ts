@@ -1,8 +1,8 @@
 /*
- * @description: mapper class used for convert a type to `JwtPayloadInterface`
- * @author: Nhut Tan
- * @date: 2025-09-10
- * @version: 1.0.0
+ * @description mapper class used for convert a type to `JwtPayloadInterface`
+ * @author Nhut Tan
+ * @since 2025-09-10
+ * @version 1.0.0
  * */
 
 import { ImageEntityResponse } from '../dtos/image-entity.response';

@@ -1,9 +1,9 @@
 /*
- * @description: jwt strategy passport
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description jwt strategy passport
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-12
- * @version: 1.0.1
+ * @version 1.0.1
  * */
 
 import { ForbiddenException, Injectable } from '@nestjs/common';
@@ -32,14 +32,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   /*
-   * @description: validate function is call when jwt passport is called,
+   * @description validate function is call when jwt passport is called,
    * this function is called to validate the jwt payload
    * @param: JwtPayloadInterface
    * @return: JwtPayloadInterface
-   * @author: Nhut Tan
-   * @date: 2025-09-09
+   * @author Nhut Tan
+   * @since 2025-09-09
    * @modified: 2025-09-10
-   * @version: 1.0.0
+   * @version 1.0.0
    * */
   async validate(payload: JwtPayload): Promise<JwtPayload> {
     /*

@@ -1,8 +1,8 @@
 /*
- * @description: role repository
- * @author: Nhut Tan
- * @date: 2025-09-13
- * @version: 1.0.0
+ * @description role repository
+ * @author Nhut Tan
+ * @since 2025-09-13
+ * @version 1.0.0
  * */
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,10 +21,10 @@ export class RoleRepository {
   ) {}
 
   /*
-   * @description: Create new role in database
-   * @author: Nhut Tan
-   * @date: 2025-09-13
-   * @version: 1.0.0
+   * @description Create new role in database
+   * @author Nhut Tan
+   * @since 2025-09-13
+   * @version 1.0.0
    * */
   async createRole(name: string): Promise<RoleEntity> {
     try {
@@ -57,10 +57,10 @@ export class RoleRepository {
   }
 
   /*
-   * @description: Get role by name in the database
-   * @author: Nhut Tan
-   * @date: 2025-09-13
-   * @version: 1.0.0
+   * @description Get role by name in the database
+   * @author Nhut Tan
+   * @since 2025-09-13
+   * @version 1.0.0
    * */
   async getRoleByName(name: string): Promise<RoleEntity | null> {
     try {

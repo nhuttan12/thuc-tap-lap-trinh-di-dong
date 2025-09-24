@@ -1,9 +1,9 @@
 /*
- * @description: Category entity
- * @author: Nhut Tan
- * @date: 2025-09-06
+ * @description Category entity
+ * @author Nhut Tan
+ * @since 2025-09-06
  * @modified: 2025-09-14
- * @version: 1.0.3
+ * @version 1.0.3
  * */
 
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';

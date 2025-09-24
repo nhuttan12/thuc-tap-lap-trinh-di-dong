@@ -1,8 +1,8 @@
 /*
- * @description: role service
- * @author: Nhut Tan
- * @date: 2025-09-13
- * @version: 1.0.0
+ * @description role service
+ * @author Nhut Tan
+ * @since 2025-09-13
+ * @version 1.0.0
  * */
 
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';

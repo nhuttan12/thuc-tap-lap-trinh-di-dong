@@ -1,8 +1,8 @@
 /**
- * @description: Build paging meta service
- * @author: Nhut Tan
- * @date: 2025-09-17
- * @version: 1.0.0
+ * @description Build paging meta service
+ * @author Nhut Tan
+ * @since 2025-09-17
+ * @version 1.0.0
  */
 import { Injectable } from '@nestjs/common';
 import { PagingResponseDto } from './dtos/paging-response.dto';
@@ -11,12 +11,13 @@ import { PagingMetaDto } from './dtos/page-meta.dto';
 @Injectable()
 export class BuildPagingMetaService {
   /**
-   * @description: build Pagination response for paging
-   * @param items - array of items to be paginated
-   * @param page - current page (1-based)
-   * @param limit - number of items per page
-   * @param totalItems - total number of items
-   * @returns paging response
+   * @description build Pagination response for paging
+   * @param {T[]} items - array of items to be paginated
+   * @param {number} page - current page (1-based)
+   * @param {number} limit - number of items per page
+   * @param {number} totalItems - total number of items
+   * @returns {PagingResponseDto<T>}
+   * @version 1.0.0
    */
   buildPagingResponse<T>(
     items: T[],
@@ -32,10 +33,11 @@ export class BuildPagingMetaService {
   }
 
   /**
-   * @description: Calculate skip (offset) for pagination
-   * @param page - current page (1-based)
-   * @param limit - number of items per page
-   * @returns skip number (0-based offset)
+   * @description Calculate skip (offset) for pagination
+   * @param {number} page - current page (1-based)
+   * @param {number} limit - number of items per page
+   * @returns {number} skip number (0-based offset)
+   * @version 1.0.0
    */
   calculateSkip(page = 1, limit = 10): number {
     if (page < 1) page = 1;

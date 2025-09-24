@@ -1,9 +1,9 @@
 /**
- * @description: Database module configuration for establish connection to database
- * @author: Nhut Tan
- * @date: 2025-09-01
- * @version: 1.0.0
- * @modifies: 2025-09-01
+ * @description Database module configuration for establish connection to database
+ * @author Nhut Tan
+ * @since 2025-09-01
+ * @version 1.0.0
+ * @modifies 2025-09-01
  */
 
 import { DynamicModule, Module } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { DatabaseConfig } from '../../common/config/interface/database.interface
 import { DatabaseType } from 'typeorm';
 
 /**
- * @description: Create TypeORM module options
+ * @description Create TypeORM module options
  * @param {ConfigService} configService
  * @returns {TypeOrmModuleOptions} TypeORM module options
  */
@@ -36,7 +36,7 @@ export function createTypeOrmModuleOptions(
 }
 
 /**
- * @description: TypeORM configuration for database module
+ * @description TypeORM configuration for database module
  */
 const typeOrmConfiguration: DynamicModule = TypeOrmModule.forRootAsync({
   imports: [ConfigModule],

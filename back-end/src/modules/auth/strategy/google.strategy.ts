@@ -1,9 +1,9 @@
 /*
- * @description: google oauth 2 strategy passport
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description google oauth 2 strategy passport
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-12
- * @version: 1.0.2
+ * @version 1.0.2
  * */
 
 import { Injectable } from '@nestjs/common';
@@ -29,14 +29,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   /*
-   * @description: validate function is call when google passport is called
+   * @description validate function is call when google passport is called
    * @param: Profile
    * @param: VerifyCallback
    * @return: void
-   * @author: Nhut Tan
-   * @date: 2025-09-10
+   * @author Nhut Tan
+   * @since 2025-09-10
    * @modified: 2025-09-12
-   * @version: 1.0.1
+   * @version 1.0.1
    * */
   validate(profile: Profile, done: VerifyCallback): void {
     /*

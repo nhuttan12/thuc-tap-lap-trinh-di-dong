@@ -1,9 +1,9 @@
 /*
- * @description: Test file for ConfigModule class to retrieve the configuration from environment variables.
- * @author: Nhut Tan
- * @date: 2025-09-01
- * @version: 1.0.0
- * @modifies: 2025-09-01
+ * @description Test file for ConfigModule class to retrieve the configuration from environment variables.
+ * @author Nhut Tan
+ * @since 2025-09-01
+ * @version 1.0.0
+ * @modifies 2025-09-01
  * */
 
 import { Test, TestingModule } from '@nestjs/testing';

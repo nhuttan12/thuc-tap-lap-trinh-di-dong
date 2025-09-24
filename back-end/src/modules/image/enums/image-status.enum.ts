@@ -1,8 +1,8 @@
 /*
- * @description: Image status enum
- * @author: Nhut Tan
- * @date: 2025-09-05
- * @version: 1.0.0
+ * @description Image status enum
+ * @author Nhut Tan
+ * @since 2025-09-05
+ * @version 1.0.0
  * */
 
 export enum ImageStatusEnum {

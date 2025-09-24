@@ -1,8 +1,8 @@
 /*
- * @description: auth service
- * @author: Nhut Tan
- * @date: 2025-09-08
- * @version: 1.0.0
+ * @description auth service
+ * @author Nhut Tan
+ * @since 2025-09-08
+ * @version 1.0.0
  * */
 
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
@@ -26,13 +26,13 @@ export class AuthService {
   ) {}
 
   /*
-   * @description: Validate user by calling `getUserByUserNameAndPasswordForLogin` function from user service
+   * @description Validate user by calling `getUserByUserNameAndPasswordForLogin` function from user service
    * @param username: string
    * @param pass: string
    * @returns: Promise<JwtPayloadInterface>
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
    * */
   async userLogin(username: string, pass: string): Promise<JwtPayload> {
     try {
@@ -87,13 +87,13 @@ export class AuthService {
   }
 
   /**
-   * @description: Sign up user
+   * @description Sign up user
    * @param username
    * @param password
    * @param email
    * @param retypePassword
-   * @author: Nhut Tan
-   * @date: 2025-09-17
+   * @author Nhut Tan
+   * @since 2025-09-17
    */
   async signUp(
     username: string,

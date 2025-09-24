@@ -1,9 +1,10 @@
-/*
- * @description: auth status code
- * @author: Nhut Tan
- * @date: 2025-09-13
- * @version: 1.0.0
- * */
+/**
+ * @description auth status code
+ * @author Nhut Tan
+ * @date 2025-09-13
+ * @modifies 2025-09-24
+ * @version 1.0.1
+ */
 
 import { BaseStatusCode } from '../../../common/dtos/status-code/base.status-code';
 import { HttpStatus } from '@nestjs/common';
@@ -31,13 +32,13 @@ export class AuthStatusCode extends BaseStatusCode {
       'Username must not contain space',
     );
   static readonly EMAIL_ALREADY_EXISTS: AuthStatusCode = new AuthStatusCode(
-    HttpStatus.FORBIDDEN,
+    HttpStatus.CONFLICT,
     'ATH_005',
     'Email already exists',
   );
   static readonly PASSWORD_AND_RETYPE_PASSWORD_ARE_NOT_THE_SAME: AuthStatusCode =
     new AuthStatusCode(
-      HttpStatus.FORBIDDEN,
+      HttpStatus.BAD_REQUEST,
       'ATH_006',
       'Password and retype password are not the same',
     );
@@ -58,7 +59,7 @@ export class AuthStatusCode extends BaseStatusCode {
       'Retype password must not be empty',
     );
   static readonly USER_ALREADY_EXISTS: AuthStatusCode = new AuthStatusCode(
-    HttpStatus.FORBIDDEN,
+    HttpStatus.CONFLICT,
     'ATH_010',
     'User already exists',
   );

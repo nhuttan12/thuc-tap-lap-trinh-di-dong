@@ -1,9 +1,9 @@
 /**
- * @description: user repository
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description user repository
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-22
- * @version: 1.0.3
+ * @version 1.0.3
  */
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,10 +19,10 @@ export class UserRepository {
   private readonly logger: Logger = new Logger(UserRepository.name);
 
   /*
-   * @description: constructor of user repository class
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
+   * @description constructor of user repository class
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
    * */
   constructor(
     @InjectRepository(UserEntity)
@@ -31,12 +31,12 @@ export class UserRepository {
   ) {}
 
   /*
-   * @description: Get user by username and password
+   * @description Get user by username and password
    * @param {username: string, password: string}
    * @return {UserEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
    * */
   async getUserByUserNameAndPassword(
     username: string,
@@ -68,12 +68,12 @@ export class UserRepository {
   }
 
   /*
-   * @description: Get user by username and password
+   * @description Get user by username and password
    * @param {userID: number}
    * @return {UserEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    * */
   async getUserByUerID(userID: number): Promise<UserEntity | null> {
     try {
@@ -104,12 +104,12 @@ export class UserRepository {
   }
 
   /*
-   * @description: Get user by email
+   * @description Get user by email
    * @param {email: string}
    * @return {UserEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-10
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-10
+   * @version 1.0.0
    * */
   async getUserByEmail(email: string): Promise<UserEntity | null> {
     try {
@@ -140,12 +140,12 @@ export class UserRepository {
   }
 
   /*
-   * @description: Create user with Google information
+   * @description Create user with Google information
    * @param {name: string, email: string, photos: string}
    * @return {UserEntity}
-   * @author: Nhut Tan
-   * @date: 2025-09-10
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-10
+   * @version 1.0.0
    * */
   async createNewUserGoogle(name: string, email: string): Promise<UserEntity> {
     try {
@@ -173,7 +173,7 @@ export class UserRepository {
   }
 
   /**
-   * @description: Get user by username
+   * @description Get user by username
    * @param username
    */
   async getUserByUsername(username: string): Promise<UserEntity | null> {
@@ -199,17 +199,17 @@ export class UserRepository {
   }
 
   /**
-   * @description: Create user with username, email and password with default
+   * @description Create user with username, email and password with default
    * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
    * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
    * and id is 1
    * @param username
    * @param email
    * @param password
-   * @author: Nhut Tan
-   * @date: 2025-09-17
+   * @author Nhut Tan
+   * @since 2025-09-17
    * @modified: 2025-09-22
-   * @version: 1.0.3
+   * @version 1.0.3
    */
   async createUserWithUsernameEmailPassword(
     username: string,

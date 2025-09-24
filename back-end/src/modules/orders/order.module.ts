@@ -1,8 +1,8 @@
 /*
- * @description: Order module
- * @author: Nhut Tan
- * @date: 2025-09-14
- * @version: 1.0.0
+ * @description Order module
+ * @author Nhut Tan
+ * @since 2025-09-14
+ * @version 1.0.0
  * */
 
 import { Module } from '@nestjs/common';

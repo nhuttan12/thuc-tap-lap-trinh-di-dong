@@ -1,9 +1,9 @@
 /*
- * @description: image service
- * @author: Nhut Tan
- * @date: 2025-09-11
+ * @description image service
+ * @author Nhut Tan
+ * @since 2025-09-11
  * @modified: 2025-09-23
- * @version: 1.0.2
+ * @version 1.0.2
  * */
 
 import { Logger } from '@nestjs/common';
@@ -16,10 +16,10 @@ export class ImageRepository {
   private readonly logger: Logger = new Logger(ImageRepository.name);
 
   /*
-   * @description: constructor of image repository class
-   * @author: Nhut Tan
-   * @date: 2025-09-12
-   * @version: 1.0.0
+   * @description constructor of image repository class
+   * @author Nhut Tan
+   * @since 2025-09-12
+   * @version 1.0.0
    * */
   constructor(
     @InjectRepository(ImageEntity)
@@ -28,12 +28,12 @@ export class ImageRepository {
   ) {}
 
   /*
-   * @description: Create image
+   * @description Create image
    * @param {imageUrl: string, userID: number}
    * @return {ImageEntity}
-   * @author: Nhut Tan
-   * @date: 2025-09-12
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-12
+   * @version 1.0.0
    * */
   async createImage(imageUrl: string, userID: number): Promise<ImageEntity> {
     try {
@@ -73,12 +73,12 @@ export class ImageRepository {
   }
 
   /**
-   * @description: Get image by url
+   * @description Get image by url
    * @param: {url}
    * @return {ImageEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-23
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-23
+   * @version 1.0.0
    */
   async getImageByUrl(url: string): Promise<ImageEntity | null> {
     try {

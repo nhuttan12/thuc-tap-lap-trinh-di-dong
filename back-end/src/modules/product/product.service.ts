@@ -1,8 +1,8 @@
 /*
- * @description: Product service
- * @author: Nhut Tan
- * @date: 2025-09-15
- * @version: 1.0.0
+ * @description Product service
+ * @author Nhut Tan
+ * @since 2025-09-15
+ * @version 1.0.0
  * */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -24,14 +24,14 @@ export class ProductService {
   ) {}
 
   /**
-   * @description: Get products paging
-   * @param page
-   * @param limit
-   * @returns {PagingResponseDto<ProductEntityResponseDto>}
-   * @author: Nhut Tan
-   * @date: 2025-09-15
-   * @modifies: 2025-09-17
-   * @version: 1.0.0
+   * Get products with pagination
+   * @param {number} page - The page number (1-based)
+   * @param {number} limit - Number of items per page
+   * @returns {Promise<PagingResponseDto<ProductEntityResponseDto>>} Paginated list of products
+   * @author Nhut Tan
+   * @since 2025-09-15
+   * @modifies 2025-09-17
+   * @version 1.0.0
    */
   async getProductsPaging(
     page: number,
@@ -49,23 +49,23 @@ export class ProductService {
       /*
        * Calling `getProductsPaging` from `ProductRepository`
        * */
-      const result: PagingResponseDto<ProductEntity> =
+      const [products, total]: [ProductEntity[], number] =
         await this.productRepository.getProductsPaging(limit, skip);
 
       /*
        * Convert `ProductEntity` to `ProductEntityResponseDto`
        * */
       const productResponse: ProductEntityResponseDto[] =
-        this.productMapper.toProductEntityListResponseDto(result.data);
+        this.productMapper.toProductEntityListResponseDto(products);
 
       /**
-       * Return
+       * Build pagination response
        */
       return this.buildPagingMetaService.buildPagingResponse(
         productResponse,
         page,
         limit,
-        result.meta.totalItems,
+        total,
       );
     } catch (e) {
       this.logger.error(

@@ -1,9 +1,9 @@
 /*
- * @description: Product entity
- * @author: Nhut Tan
- * @date: 2025-09-06
- * @modified: 2025-09-14
- * @version: 1.0.3
+ * @description Product entity
+ * @author Nhut Tan
+ * @since 2025-09-06
+ * @modified: 2025-09-23
+ * @version 1.0.4
  * */
 
 import {
@@ -19,6 +19,7 @@ import { ProductDetailsEntity } from './product-details.entity';
 import { CartDetailEntity } from '../../cart/entities/cart-detail.entity';
 import { OrderDetailEntity } from '../../orders/entities/order-detail.entity';
 import { ProductImageEntity } from '../../image/entities/product-image.entity';
+import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity';
 
 @Entity('products')
 export class ProductEntity extends TimestampField {
@@ -78,4 +79,17 @@ export class ProductEntity extends TimestampField {
     },
   )
   productImages: ProductImageEntity[];
+
+  @OneToOne(
+    (): typeof WishlistItemEntity => WishlistItemEntity,
+    (wishlistItemEntity: WishlistItemEntity): ProductEntity =>
+      wishlistItemEntity.product,
+    {
+      cascade: ['insert', 'update', 'soft-remove'],
+    },
+  )
+  wishlistItem: WishlistItemEntity;
+
+  @Column()
+  rating: number;
 }

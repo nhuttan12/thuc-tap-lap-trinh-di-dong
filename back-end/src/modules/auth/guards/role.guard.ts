@@ -1,9 +1,9 @@
 /**
- * @description: role guard used for checking role to access controller
- * @author: Nhut Tan
- * @date: 2025-09-09
+ * @description role guard used for checking role to access controller
+ * @author Nhut Tan
+ * @since 2025-09-09
  * @modified: 2025-09-17
- * @version: 1.0.1
+ * @version 1.0.1
  */
 
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';

@@ -1,12 +1,12 @@
-/*
- * @description: A service to retrieve typed application configurations.
+/**
+ * @description A service to retrieve typed application configurations.
  * This service provides a type-safe way to access configuration
  * from the NestJS ConfigModule.
- * @author: Nhut Tan
- * @date: 2025-08-30
- * @modifies: 2025-09-10
- * @version: 1.0.1
- * */
+ * @author Nhut Tan
+ * @since 2025-08-30
+ * @modifies 2025-09-23
+ * @version 1.0.2
+ */
 
 import { DatabaseConfig } from './interface/database.interface';
 import { ConfigService as NestConfigService } from '@nestjs/config';
@@ -24,7 +24,7 @@ export class ConfigService {
   constructor(private readonly config: NestConfigService) {}
 
   /*
-   * @description: Retrieve database configuration object.
+   * @description Retrieve database configuration object.
    * Throw ConflictException if the configuration is not found.
    * @returns {DatabaseConfig} The database configuration object.
    * */
@@ -56,7 +56,7 @@ export class ConfigService {
   }
 
   /*
-   * @description: Retrieve http configuration object.
+   * @description Retrieve http configuration object.
    * Throw ConflictException if the configuration is not found.
    * @returns {HttpConfig} The http configuration object.
    * */
@@ -69,6 +69,7 @@ export class ConfigService {
       environment: this.config.get<string>('HTTP_ENVIRONMENT')!,
       jwtSecret: this.config.get<string>('HTTP_JWT_SECRET')!,
       expireTime: this.config.get<string>('HTTP_EXPIRE_TIME')!,
+      saltRounds: this.config.get<number>('HTTP_SALT_ROUNDS_BCRYPT')!,
     };
     this.logger.debug(`Http config: ${JSON.stringify(httpConfig)}`);
 
@@ -86,7 +87,7 @@ export class ConfigService {
   }
 
   /*
-   * @description: Retrieve google configuration object.
+   * @description Retrieve google configuration object.
    * Throw ConflictException if the configuration is not found.
    * @returns {GoogleConfigInterface} The http configuration object.
    * */

@@ -1,9 +1,9 @@
 /*
- * @description: user service
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description user service
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @modified: 2025-09-12
- * @version: 1.0.2
+ * @version 1.0.2
  * */
 
 import {
@@ -42,10 +42,10 @@ export class UserService {
   }
 
   /*
-   * @description: Get user by username and password for login
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
+   * @description Get user by username and password for login
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
    * */
   async getUserByUserNameAndPasswordForLogin(
     username: string,
@@ -101,10 +101,10 @@ export class UserService {
   }
 
   /*
-   * @description: Get user by user ID
-   * @author: Nhut Tan
-   * @date: 2025-09-10
-   * @version: 1.0.0
+   * @description Get user by user ID
+   * @author Nhut Tan
+   * @since 2025-09-10
+   * @version 1.0.0
    * */
   async getUserByUserID(userID: number): Promise<UserEntityResponseDto> {
     try {
@@ -152,12 +152,12 @@ export class UserService {
   }
 
   /*
-   * @description: Get user by email
+   * @description Get user by email
    * @param {email: string}
    * @return {UserEntityResponseDto | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-10
-   * @version: 1.0.0
+   * @author Nhut Tan
+   * @since 2025-09-10
+   * @version 1.0.0
    * */
   async getUserByEmail(email: string): Promise<UserEntityResponseDto | null> {
     try {
@@ -258,10 +258,10 @@ export class UserService {
   }
 
   /**
-   * @description: Get user by `username` for checking exist
-   * @author: Nhut Tan
-   * @date: 2025-09-17
-   * @version: 1.0.0
+   * @description Get user by `username` for checking exist
+   * @author Nhut Tan
+   * @since 2025-09-17
+   * @version 1.0.0
    */
   async getUserByUsername(username: string): Promise<UserEntityResponseDto | null> {
     try {
@@ -302,15 +302,15 @@ export class UserService {
   }
 
   /**
-   * @description: Create user with username, email and password
+   * @description Create user with username, email and password
    * @param username
    * @param email
    * @param password
    * @return {UserEntityResponseDto}
-   * @author: Nhut Tan
-   * @date: 2025-09-17
+   * @author Nhut Tan
+   * @since 2025-09-17
    * @modified: 2025-09-23
-   * @version: 1.0.1
+   * @version 1.0.1
    */
   async createUserWithUsernameEmailPassword(
     username: string,

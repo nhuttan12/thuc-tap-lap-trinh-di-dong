@@ -1,10 +1,9 @@
 /*
- * @description: Main module of application
- * @author: Nhut Tan
- * @date: 2025-08-30
- * @version: 1.0.1
- * @modifies: 2025-09-01
- * @modifies: 2025-09-10
+ * @description Main module of application
+ * @author Nhut Tan
+ * @since 2025-08-30
+ * @version 1.0.1
+ * @modifies 2025-09-10
  * */
 
 import { Logger, Module } from '@nestjs/common';
@@ -23,6 +22,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { ImageModule } from './modules/image/image.module';
 import { OrderModule } from './modules/orders/order.module';
 import { ProductModule } from './modules/product/product.module';
+import { WishlistModule } from './modules/wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -41,6 +41,7 @@ import { ProductModule } from './modules/product/product.module';
     ImageModule,
     OrderModule,
     ProductModule,
+    WishlistModule,
   ],
   providers: [Logger, ConfigService],
   exports: [Logger, ConfigService],

@@ -1,9 +1,9 @@
 /**
- * @description: Catch every thing exception
- * @author: Nhut Tan
- * @date: 2025-09-14
- * @modifies: 2025-09-22
- * @version: 1.0.2
+ * @description Catch every thing exception
+ * @author Nhut Tan
+ * @since 2025-09-14
+ * @modifies 2025-09-22
+ * @version 1.0.2
  */
 
 import {
