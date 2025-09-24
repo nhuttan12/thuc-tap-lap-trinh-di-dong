@@ -2,8 +2,8 @@
  * @description Product module
  * @author Nhut Tan
  * @since 2025-09-14
- * @modified: 2025-09-15
- * @version 1.0.1
+ * @modifies 2025-09-24
+ * @version 1.0.2
  */
 
 import { Module } from '@nestjs/common';
@@ -18,6 +18,9 @@ import { ProductService } from './product.service';
 import { ProductMapper } from './mappers/product.mapper';
 import { ProductController } from './product.controller';
 import { HelperModule } from '../../common/helper/helper.module';
+import { ProductDetailRepository } from './repositories/product-detail.repository';
+import { ProductDetailMapper } from './mappers/product-detail.mapper';
+import { ProductDetailService } from './product-detail.service';
 
 @Module({
   imports: [
@@ -27,7 +30,14 @@ import { HelperModule } from '../../common/helper/helper.module';
     OrderModule,
     HelperModule,
   ],
-  providers: [ProductRepository, ProductService, ProductMapper],
+  providers: [
+    ProductRepository,
+    ProductDetailRepository,
+    ProductService,
+    ProductDetailService,
+    ProductMapper,
+    ProductDetailMapper,
+  ],
   exports: [ProductService],
   controllers: [ProductController],
 })

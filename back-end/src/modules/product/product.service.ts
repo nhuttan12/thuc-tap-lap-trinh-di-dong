@@ -3,7 +3,7 @@
  * @author Nhut Tan
  * @since 2025-09-15
  * @version 1.0.0
- * */
+ */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ProductRepository } from './repositories/product.repository';
@@ -48,13 +48,13 @@ export class ProductService {
 
       /*
        * Calling `getProductsPaging` from `ProductRepository`
-       * */
+       */
       const [products, total]: [ProductEntity[], number] =
         await this.productRepository.getProductsPaging(limit, skip);
 
       /*
        * Convert `ProductEntity` to `ProductEntityResponseDto`
-       * */
+       */
       const productResponse: ProductEntityResponseDto[] =
         this.productMapper.toProductEntityListResponseDto(products);
 

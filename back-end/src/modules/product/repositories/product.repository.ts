@@ -2,9 +2,9 @@
  * @description user repository
  * @author Nhut Tan
  * @since 2025-09-08
- * @modified: 2025-09-24
+ * @modifies 2025-09-24
  * @version 1.0.3
- * */
+ */
 
 import { ProductEntity } from '../entities/product.entity';
 import { DataSource, Repository } from 'typeorm';

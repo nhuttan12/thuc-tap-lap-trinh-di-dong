@@ -2,9 +2,9 @@
  * @description Product entity
  * @author Nhut Tan
  * @since 2025-09-06
- * @modified: 2025-09-23
- * @version 1.0.4
- * */
+ * @modifies 2025-09-24
+ * @version 1.0.5
+ */
 
 import {
   Column,
@@ -46,7 +46,7 @@ export class ProductEntity extends TimestampField {
   @OneToOne(
     (): typeof ProductDetailsEntity => ProductDetailsEntity,
     (productDetailsEntity: ProductDetailsEntity): ProductEntity =>
-      productDetailsEntity.productEntity,
+      productDetailsEntity.product,
     {
       cascade: ['insert', 'update', 'soft-remove'],
     },
@@ -89,7 +89,4 @@ export class ProductEntity extends TimestampField {
     },
   )
   wishlistItem: WishlistItemEntity;
-
-  @Column()
-  rating: number;
 }
