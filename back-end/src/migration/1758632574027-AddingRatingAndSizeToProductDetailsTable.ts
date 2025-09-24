@@ -24,7 +24,7 @@ export class AddingRatingToProductsTable1758632574027
       await queryRunner.getTable('products');
 
     /**
-     * Check exist `products` table
+     * Check if `products` table not exist
      */
     if (!productTable) return;
 
