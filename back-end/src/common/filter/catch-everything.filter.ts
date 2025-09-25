@@ -1,9 +1,9 @@
 /**
- * @description: Catch every thing exception
- * @author: Nhut Tan
- * @date: 2025-09-14
- * @modifies: 2025-09-18
- * @version: 1.0.1
+ * @description Catch every thing exception
+ * @author Nhut Tan
+ * @since 2025-09-14
+ * @modifies 2025-09-22
+ * @version 1.0.2
  */
 
 import {
@@ -28,20 +28,17 @@ export class CatchEverythingFilter implements ExceptionFilter {
      */
     const ctx: HttpArgumentsHost = host.switchToHttp();
 
-    /**
-     * Get response from exception
-     */
-    // @ts-expect-error getResponse() can return string | object, casting to any for safe merge
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
-    const res: any = exception.getResponse();
+    let res: any = null;
+    let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
 
     /**
-     * Get HTTP status code
+     * Get response and http status from exception
      */
-    const httpStatus: number =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    if (exception instanceof HttpException) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
+      res = exception.getResponse();
+      httpStatus = exception.getStatus();
+    }
 
     const isStringResponse: boolean = typeof res === 'string';
 

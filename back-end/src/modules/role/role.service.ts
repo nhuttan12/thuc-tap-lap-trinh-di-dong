@@ -1,9 +1,9 @@
 /*
- * @description: role service
- * @author: Nhut Tan
- * @date: 2025-09-13
- * @version: 1.0.0
- * */
+ * @description role service
+ * @author Nhut Tan
+ * @since 2025-09-13
+ * @version 1.0.0
+ */
 
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { RoleRepository } from './repositories/role.repository';
@@ -37,7 +37,7 @@ export class RoleService {
     try {
       /*
        * Call `getRoleByName` function from repository
-       * */
+       */
       const role: RoleEntity | null =
         await this.roleRepository.getRoleByName(name);
       this.logger.debug(
@@ -55,7 +55,7 @@ export class RoleService {
 
       /*
        * Convert `RoleEntity` to `RoleResponseDto`
-       * */
+       */
       const roleResponseDto: RoleResponseDto =
         this.roleMapper.toRoleResponseDto(role);
       this.logger.debug(
@@ -64,7 +64,7 @@ export class RoleService {
 
       /*
        * Returning `RoleResponseDto`
-       * */
+       */
       return roleResponseDto;
     } catch (e) {
       this.logger.error(

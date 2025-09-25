@@ -1,8 +1,8 @@
 /**
- * @description: auth controller for login user
- * @author: Nhut Tan
- * @date: 2025-09-09
- * @version: 1.0.0
+ * @description auth controller for login user
+ * @author Nhut Tan
+ * @since 2025-09-09
+ * @version 1.0.0
  */
 
 import {
@@ -14,7 +14,8 @@ import {
   Post,
   Req,
   Request,
-  Res, UseFilters,
+  Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -26,7 +27,7 @@ import { GoogleRequest } from './interface/google-request';
 import { GoogleLogin } from './interface/google-login.interface';
 import { Response } from 'express';
 import { UserSignUpRequestDto } from './dtos/user-sign-up-request.dto';
-import { UserResponseDto } from '../user/dtos/user-response.dto';
+import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
 import { CatchEverythingFilter } from '../../common/filter/catch-everything.filter';
 
 @Controller('auth')
@@ -37,12 +38,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   /**
-   * @description: login user via local strategy passport
-   * @param: req: AuthRequestInterface
-   * @return: JwtPayloadInterface
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @description login user via local strategy passport
+   * @param {AuthRequest} req - Auth request to log in with local service
+   * @return JwtPayload
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    */
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -51,22 +52,22 @@ export class AuthController {
   }
 
   /**
-   * @description: login user via Google strategy passport
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @description login user via Google strategy passport
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    */
   @Get('google')
   @UseGuards(GoogleOauthGuard)
   async auth(): Promise<void> {}
 
   /**
-   * @description: callback from Google strategy passport
-   * @param req
-   * @param res
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
+   * @description callback from Google strategy passport
+   * @param {GoogleRequest} req - Google request to log in with Google service
+   * @param {Response} res - Response of log in Google
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
    */
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
@@ -88,17 +89,17 @@ export class AuthController {
   }
 
   /**
-   * @description: Sign up user
-   * @param: request: UserSignUpRequestDto
-   * @return: UserResponseDto
-   * @author: Nhut Tan
-   * @date: 2025-09-17
-   * @version: 1.0.0
+   * @description Sign up user
+   * @param {UserSignUpRequestDto} request - User sign up request
+   * @return {Promise<UserEntityResponseDto>}
+   * @author Nhut Tan
+   * @since 2025-09-17
+   * @version 1.0.0
    */
   @Post('sign-up')
   async signUp(
     @Body() request: UserSignUpRequestDto,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserEntityResponseDto> {
     return await this.authService.signUp(
       request.username,
       request.email,

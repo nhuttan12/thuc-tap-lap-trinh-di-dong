@@ -1,27 +1,29 @@
 /**
- * @description: user repository
- * @author: Nhut Tan
- * @date: 2025-09-08
- * @modified: 2025-09-17
- * @version: 1.0.2
+ * @description user repository
+ * @author Nhut Tan
+ * @since 2025-09-08
+ * @modifies 2025-09-22
+ * @version 1.0.3
  */
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
-import { RoleName } from '../../role/enums/role-name.enum';
 import { v4 as uuidv4 } from 'uuid';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { ImageEntity } from '../../image/entities/image.entity';
 
 export class UserRepository {
   private readonly logger: Logger = new Logger(UserRepository.name);
 
   /*
-   * @description: constructor of user repository class
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
-   * */
+   * @description constructor of user repository class
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
+   */
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -29,13 +31,13 @@ export class UserRepository {
   ) {}
 
   /*
-   * @description: Get user by username and password
+   * @description Get user by username and password
    * @param {username: string, password: string}
    * @return {UserEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
-   * */
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
+   */
   async getUserByUserNameAndPassword(
     username: string,
     password: string,
@@ -43,7 +45,7 @@ export class UserRepository {
     try {
       /*
        * Get user from database and print to log user
-       * */
+       */
       const user: UserEntity | null = await this.userRepository.findOne({
         where: { username, password },
         relations: {
@@ -54,7 +56,7 @@ export class UserRepository {
 
       /*
        * Return user to user service
-       * */
+       */
       return user;
     } catch (e) {
       this.logger.error(
@@ -66,18 +68,18 @@ export class UserRepository {
   }
 
   /*
-   * @description: Get user by username and password
+   * @description Get user by username and password
    * @param {userID: number}
    * @return {UserEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-09
-   * @version: 1.0.0
-   * */
+   * @author Nhut Tan
+   * @since 2025-09-09
+   * @version 1.0.0
+   */
   async getUserByUerID(userID: number): Promise<UserEntity | null> {
     try {
       /*
        * Get user from database and print to log user
-       * */
+       */
       const user: UserEntity | null = await this.userRepository.findOne({
         where: {
           id: userID,
@@ -90,7 +92,7 @@ export class UserRepository {
 
       /*
        * Return user to user service
-       * */
+       */
       return user;
     } catch (e) {
       this.logger.error(
@@ -102,18 +104,18 @@ export class UserRepository {
   }
 
   /*
-   * @description: Get user by email
+   * @description Get user by email
    * @param {email: string}
    * @return {UserEntity | null}
-   * @author: Nhut Tan
-   * @date: 2025-09-10
-   * @version: 1.0.0
-   * */
+   * @author Nhut Tan
+   * @since 2025-09-10
+   * @version 1.0.0
+   */
   async getUserByEmail(email: string): Promise<UserEntity | null> {
     try {
       /*
        * Get user from database and print to log user
-       * */
+       */
       const user: UserEntity | null = await this.userRepository.findOne({
         where: {
           email: email,
@@ -126,7 +128,7 @@ export class UserRepository {
 
       /*
        * Return user to user service
-       * */
+       */
       return user;
     } catch (e) {
       this.logger.error(
@@ -138,19 +140,19 @@ export class UserRepository {
   }
 
   /*
-   * @description: Create user with Google information
+   * @description Create user with Google information
    * @param {name: string, email: string, photos: string}
    * @return {UserEntity}
-   * @author: Nhut Tan
-   * @date: 2025-09-10
-   * @version: 1.0.0
-   * */
+   * @author Nhut Tan
+   * @since 2025-09-10
+   * @version 1.0.0
+   */
   async createNewUserGoogle(name: string, email: string): Promise<UserEntity> {
     try {
       return await this.dataSource.transaction(async (tx: EntityManager) => {
         /*
          * Create user entity instance
-         * */
+         */
         const user: UserEntity = tx.create(UserEntity, {
           name: name,
           email: email,
@@ -158,7 +160,7 @@ export class UserRepository {
 
         /*
          * Save it to database
-         * */
+         */
         return await tx.save(user);
       });
     } catch (e) {
@@ -171,7 +173,7 @@ export class UserRepository {
   }
 
   /**
-   * @description: Get user by username
+   * @description Get user by username
    * @param username
    */
   async getUserByUsername(username: string): Promise<UserEntity | null> {
@@ -197,17 +199,24 @@ export class UserRepository {
   }
 
   /**
-   * @description: Create user with username, email and password with default
-   * role is customer, full name is `Nguười dùng ${uuid}`, default image is
+   * @description Create user with username, email and password with default
+   * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
    * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
+   * and id is 1
    * @param username
    * @param email
    * @param password
+   * @author Nhut Tan
+   * @since 2025-09-17
+   * @modifies 2025-09-22
+   * @version 1.0.3
    */
   async createUserWithUsernameEmailPassword(
     username: string,
     email: string,
     password: string,
+    roleID: number,
+    imageID: number,
   ): Promise<UserEntity> {
     try {
       /**
@@ -215,8 +224,6 @@ export class UserRepository {
        */
       const uuid: string = uuidv4();
       const defaultName: string = `Người dùng ${uuid}`;
-      const defaultImageUrl: string =
-        'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp';
 
       return await this.dataSource.transaction(
         async (tx: EntityManager): Promise<UserEntity> => {
@@ -231,12 +238,12 @@ export class UserRepository {
             createdAt: new Date(),
             updatedAt: new Date(),
             role: {
-              name: RoleName.CUSTOMER,
+              id: roleID,
             },
             userImages: [
               {
                 image: {
-                  url: defaultImageUrl,
+                  id: imageID,
                 },
               },
             ],

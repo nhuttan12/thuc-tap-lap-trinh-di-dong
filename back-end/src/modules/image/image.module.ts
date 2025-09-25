@@ -1,10 +1,10 @@
 /*
- * @description: image module
- * @author: Nhut Tan
- * @date: 2025-09-11
- * @modified: 2025-09-14
- * @version: 1.0.2
- * */
+ * @description image module
+ * @author Nhut Tan
+ * @since 2025-09-11
+ * @modifies 2025-09-14
+ * @version 1.0.2
+ */
 
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

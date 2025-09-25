@@ -1,9 +1,9 @@
 /*
- * @description: Migration to create `cart_details` table
- * @author: Nhut Tan
- * @date: 2025/09/06
- * @version: 1.0.0
- * */
+ * @description Migration to create `cart_details` table
+ * @author Nhut Tan
+ * @since 2025/09/06
+ * @version 1.0.0
+ */
 
 import {
   MigrationInterface,
@@ -16,21 +16,21 @@ import { CartDetailsStatusEnum } from '../modules/cart/enums/cart-details.status
 
 export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
   /*
-   * @description: Migration run creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
-   * */
+   * @description Migration run creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `cart_details` table if exist
-     * */
+     */
     const cartDetailsTable: Table | undefined =
       await queryRunner.getTable('cart_details');
 
     /*
      * If `cart_details` table exists
-     * */
+     */
     if (!cartDetailsTable) {
       await queryRunner.createTable(
         new Table({
@@ -85,23 +85,23 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 
     /*
      * Get `cart_details` table after created
-     * */
+     */
     const cartDetailsTableCreated: Table | undefined =
       await queryRunner.getTable('cart_details');
 
     /*
      * If `cart_details` table exist
-     * */
+     */
     if (cartDetailsTableCreated) {
       /*
        * Get all foreign key constraints in `cart_details` table
-       * */
+       */
       const cartDetailsFks: TableForeignKey[] =
         cartDetailsTableCreated.foreignKeys || [];
 
       /*
        * Check if fk `fk_cart_details_cart_id_to_carts_id` not exist
-       * */
+       */
       if (
         !cartDetailsFks.find(
           (fk: TableForeignKey): boolean =>
@@ -110,7 +110,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
       ) {
         /*
          * Create fk `fk_cart_details_cart_id_to_carts_id`
-         * */
+         */
         await queryRunner.createForeignKey(
           cartDetailsTableCreated,
           new TableForeignKey({
@@ -124,7 +124,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 
       /*
        * Check if fk `fk_cart_details_product_id_to_products_id` not exist
-       * */
+       */
       if (
         !cartDetailsFks.find(
           (fk: TableForeignKey): boolean =>
@@ -133,7 +133,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
       ) {
         /*
          * Create fk `fk_cart_details_product_id_to_products_id`
-         * */
+         */
         await queryRunner.createForeignKey(
           cartDetailsTableCreated,
           new TableForeignKey({
@@ -147,13 +147,13 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 
       /*
        * Get all index in `cart_details` table
-       * */
+       */
       const cartDetailsIndex: TableIndex[] =
         cartDetailsTableCreated.indices || [];
 
       /*
        * Check if `idx_cart_details_id` not exist
-       * */
+       */
       if (
         !cartDetailsIndex.find(
           (i: TableIndex): boolean => i.name === 'idx_cart_details_id',
@@ -171,31 +171,31 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
   }
 
   /*
-   * @description: Migration revert creating `cart_details` table
-   * @author: Nhut Tan
-   * @date: 2025/09/06
-   * @version: 1.0.0
-   * */
+   * @description Migration revert creating `cart_details` table
+   * @author Nhut Tan
+   * @since 2025/09/06
+   * @version 1.0.0
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get `cart_details` table after created
-     * */
+     */
     const cartDetailsTableCreated: Table | undefined =
       await queryRunner.getTable('cart_details');
 
     /*
      * If `cart_details` table exist
-     * */
+     */
     if (cartDetailsTableCreated) {
       /*
        * Get all foreign key constraints in `cart_details` table
-       * */
+       */
       const cartDetailsFks: TableForeignKey[] =
         cartDetailsTableCreated.foreignKeys || [];
 
       /*
        * Check if fk `fk_cart_details_cart_id_to_carts_id` exist
-       * */
+       */
       if (
         cartDetailsFks.find(
           (fk: TableForeignKey): boolean =>
@@ -204,7 +204,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
       ) {
         /*
          * Drop fk `fk_cart_details_cart_id_to_carts_id`
-         * */
+         */
         await queryRunner.dropForeignKey(
           cartDetailsTableCreated,
           'fk_cart_details_cart_id_to_carts_id',
@@ -213,7 +213,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 
       /*
        * Check if fk `fk_cart_details_product_id_to_products_id` exist
-       * */
+       */
       if (
         cartDetailsFks.find(
           (fk: TableForeignKey): boolean =>
@@ -222,7 +222,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
       ) {
         /*
          * Drop fk `fk_cart_details_product_id_to_products_id`
-         * */
+         */
         await queryRunner.dropForeignKey(
           cartDetailsTableCreated,
           'fk_cart_details_product_id_to_products_id',
@@ -231,13 +231,13 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 
       /*
        * Get all index in `cart_details` table
-       * */
+       */
       const cartDetailsIndex: TableIndex[] =
         cartDetailsTableCreated.indices || [];
 
       /*
        * Check if `idx_cart_details_id` exist
-       * */
+       */
       if (
         cartDetailsIndex.find(
           (i: TableIndex): boolean => i.name === 'idx_cart_details_id',

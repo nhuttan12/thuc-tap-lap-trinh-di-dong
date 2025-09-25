@@ -1,9 +1,9 @@
 /**
- * @description: Paging request dto
- * @author: Nhut Tan
- * @date: 2025-09-15
- * @modified: 2025-09-17
- * @version: 1.0.1
+ * @description Paging request dto
+ * @author Nhut Tan
+ * @since 2025-09-15
+ * @modifies 2025-09-17
+ * @version 1.0.1
  */
 
 import { IsNotEmpty, IsNumber, Min } from '@nestjs/class-validator';
@@ -18,7 +18,7 @@ export class PagingRequestDto {
     },
     { message: PagingStatusCode.PAGE_NUMBER_MUST_BE_POSITIVE.customCode },
   )
-  @Min(1, { message: PagingStatusCode.PAGE_NUMBER_MUST_BE_NUMBER.customCode })
+  @Min(1, { message: PagingStatusCode.PAGE_NUMBER_MUST_BE_A_NUMBER.customCode })
   @IsNotEmpty({
     message: PagingStatusCode.PAGE_NUMBER_MUST_NOT_BE_EMPTY.customCode,
   })
@@ -30,7 +30,7 @@ export class PagingRequestDto {
       allowInfinity: false,
       maxDecimalPlaces: 0,
     },
-    { message: PagingStatusCode.LIMIT_NUMBER_MUST_BE_NUMBER.customCode },
+    { message: PagingStatusCode.LIMIT_NUMBER_MUST_BE_A_NUMBER.customCode },
   )
   @IsNotEmpty({
     message: PagingStatusCode.LIMIT_NUMBER_MUST_NOT_BE_EMPTY.customCode,

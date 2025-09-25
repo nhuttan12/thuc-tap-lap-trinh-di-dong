@@ -1,9 +1,9 @@
 /*
- * @description: Migration to create product_details table
- * @author: Nhut Tan
- * @date: 2025/09/05
- * @version: 1.0.0
- * */
+ * @description Migration to create product_details table
+ * @author Nhut Tan
+ * @since 2025/09/05
+ * @version 1.0.0
+ */
 
 import {
   MigrationInterface,
@@ -17,21 +17,21 @@ export class CreateProductDetailsTable1757075759428
   implements MigrationInterface
 {
   /*
-   * @description: Migration up creating product_details table
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
-   * */
+   * @description Migration up creating product_details table
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get product detail table if exists
-     * */
+     */
     const productDetailsTable: Table | undefined =
       await queryRunner.getTable('product_details');
 
     /*
      * Check product detail table if not exists, create it
-     * */
+     */
     if (!productDetailsTable) {
       await queryRunner.createTable(
         new Table({
@@ -83,17 +83,17 @@ export class CreateProductDetailsTable1757075759428
 
     /*
      * Get created `product_details` table
-     * */
+     */
     const createdProductDetailsTable: Table | undefined =
       await queryRunner.getTable('product_details');
 
     /*
      * If `product_details` table exist, create foreign key to `categories` table
-     * */
+     */
     if (createdProductDetailsTable) {
       /*
        * Get all `product_details` foreign keys
-       * */
+       */
       const productDetailsFk: TableForeignKey[] =
         createdProductDetailsTable.foreignKeys || [];
 
@@ -101,7 +101,7 @@ export class CreateProductDetailsTable1757075759428
        * Create foreign key for `product_details` table named
        * `fk_product_detail_category_id_to_categories_id` preference to `id`
        * in `categories` table
-       * */
+       */
       if (
         !productDetailsFk.find(
           (fk: TableForeignKey): boolean =>
@@ -123,7 +123,7 @@ export class CreateProductDetailsTable1757075759428
        * Create foreign key for `product_details` table named
        * `fk_product_details_id_to_products_id` preference to `id`
        * in `products` table
-       * */
+       */
       if (
         !productDetailsFk.find(
           (fk: TableForeignKey): boolean =>
@@ -143,14 +143,14 @@ export class CreateProductDetailsTable1757075759428
 
       /*
        * Get all index in `product_details` table
-       * */
+       */
       const tableIndices: TableIndex[] =
         createdProductDetailsTable.indices || [];
 
       if (!tableIndices) {
         /*
          * Create index for `id` column named `idx_product_details_id` if not exists
-         * */
+         */
         await queryRunner.createIndex(
           createdProductDetailsTable,
           new TableIndex({
@@ -163,43 +163,43 @@ export class CreateProductDetailsTable1757075759428
   }
 
   /*
-   * @description: Migration revert creating product_details table
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
-   * */
+   * @description Migration revert creating product_details table
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get product detail table if exists
-     * */
+     */
     const productDetailsTable: Table | undefined =
       await queryRunner.getTable('product_details');
 
     /*
      * Check product detail table if not exists, create it
-     * */
+     */
     if (productDetailsTable) {
       /*
        * Get all index in `product_details` table
-       * */
+       */
       const tableIndices: TableIndex[] = productDetailsTable.indices || [];
 
       /*
        * If `product_details` table has index, drop it
-       * */
+       */
       if (tableIndices.length > 0) {
         await queryRunner.dropIndices(productDetailsTable, tableIndices);
       }
 
       /*
        * Get all foreign key in `product_details` table
-       * */
+       */
       const productDetailsFk: TableForeignKey[] =
         productDetailsTable.foreignKeys || [];
 
       /*
        * If `product_details` table has foreign key, drop it
-       * */
+       */
       if (productDetailsFk.length > 0) {
         await queryRunner.dropForeignKeys(
           productDetailsTable,
@@ -209,7 +209,7 @@ export class CreateProductDetailsTable1757075759428
 
       /*
        * Drop `product_details` table
-       * */
+       */
       await queryRunner.dropTable(productDetailsTable);
     }
   }

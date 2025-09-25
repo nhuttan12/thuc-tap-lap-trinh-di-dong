@@ -1,13 +1,13 @@
 /*
- * @description: auth service
- * @author: Nhut Tan
- * @date: 2025-09-08
- * @version: 1.0.0
- * */
+ * @description auth service
+ * @author Nhut Tan
+ * @since 2025-09-08
+ * @version 1.0.0
+ */
 
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserResponseDto } from '../user/dtos/user-response.dto';
+import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
 import { JwtPayload } from './interface/jwt-payload.interface';
 import { AuthMapper } from './mapper/auth.mapper';
 import { JwtService } from '@nestjs/jwt';
@@ -26,20 +26,20 @@ export class AuthService {
   ) {}
 
   /*
-   * @description: Validate user by calling `getUserByUserNameAndPasswordForLogin` function from user service
+   * @description Validate user by calling `getUserByUserNameAndPasswordForLogin` function from user service
    * @param username: string
    * @param pass: string
    * @returns: Promise<JwtPayloadInterface>
-   * @author: Nhut Tan
-   * @date: 2025-09-08
-   * @version: 1.0.0
-   * */
+   * @author Nhut Tan
+   * @since 2025-09-08
+   * @version 1.0.0
+   */
   async userLogin(username: string, pass: string): Promise<JwtPayload> {
     try {
       /*
        * Get `getUserByUserNameAndPasswordForLogin` function from user service
-       * */
-      const user: UserResponseDto =
+       */
+      const user: UserEntityResponseDto =
         await this.userService.getUserByUserNameAndPasswordForLogin(
           username,
           pass,
@@ -50,7 +50,7 @@ export class AuthService {
 
       /*
        * Validate status user if user banned
-       * */
+       */
       if (user.status === UserStatus.BANNED.toString()) {
         throw new ForbiddenException({
           statusCode: UserStatusCode.USER_BANNED.statusCode,
@@ -61,7 +61,7 @@ export class AuthService {
 
       /*
        * Mapping user response to jwt payload
-       * */
+       */
       const payload: JwtPayload = this.authMapper.toJwtPayload(user);
       this.logger.debug(
         `Mapping user response to jwt payload: ${JSON.stringify(payload)}`,
@@ -69,13 +69,13 @@ export class AuthService {
 
       /*
        * Sign token and declare to payload
-       * */
+       */
       payload.accessToken = this.jwtService.sign(payload);
       this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
 
       /*
        * Return jwt payload
-       * */
+       */
       return payload;
     } catch (e) {
       this.logger.error(
@@ -87,20 +87,20 @@ export class AuthService {
   }
 
   /**
-   * @description: Sign up user
+   * @description Sign up user
    * @param username
    * @param password
    * @param email
    * @param retypePassword
-   * @author: Nhut Tan
-   * @date: 2025-09-17
+   * @author Nhut Tan
+   * @since 2025-09-17
    */
   async signUp(
     username: string,
     email: string,
     password: string,
     retypePassword: string,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserEntityResponseDto> {
     try {
       /**
        * Check for similarities between `password` and `retypePassword`
@@ -123,7 +123,7 @@ export class AuthService {
       /**
        * Get user by email
        */
-      const user: UserResponseDto | null =
+      const user: UserEntityResponseDto | null =
         await this.userService.getUserByEmail(email);
       this.logger.debug(`Get user by email: ${JSON.stringify(user)}`);
 
@@ -142,16 +142,28 @@ export class AuthService {
       /**
        * Check user exist with username
        */
-      const userByUsername: UserResponseDto =
+      const userByUsername: UserEntityResponseDto | null =
         await this.userService.getUserByUsername(username);
       this.logger.debug(
         `Get user by username: ${JSON.stringify(userByUsername)}`,
       );
 
       /**
+       * Check if user is null
+       */
+      if (userByUsername) {
+        this.logger.warn(`User with username ${username} already exists`);
+        throw new ForbiddenException({
+          statusCode: AuthStatusCode.USER_ALREADY_EXISTS.statusCode,
+          customCode: AuthStatusCode.USER_ALREADY_EXISTS.customCode,
+          message: AuthStatusCode.USER_ALREADY_EXISTS.message,
+        });
+      }
+
+      /**
        * Create user with username, email, password
        */
-      const userCreated: UserResponseDto =
+      const userCreated: UserEntityResponseDto =
         await this.userService.createUserWithUsernameEmailPassword(
           username,
           email,
@@ -182,8 +194,8 @@ export class AuthService {
     try {
       /*
        * Call `getUserByEmail` function from user service
-       * */
-      let user: UserResponseDto | null = await this.userService.getUserByEmail(
+       */
+      let user: UserEntityResponseDto | null = await this.userService.getUserByEmail(
         email[0],
       );
       this.logger.debug(
@@ -192,17 +204,17 @@ export class AuthService {
 
       /*
        * Check if user is null
-       * */
+       */
       if (user === null) {
         /*
          * Create user by google
-         * */
+         */
         user = await this.userService.createNewUserGoogle(email, name, photo);
       }
 
       /*
        * Mapping user response to jwt payload
-       * */
+       */
       const payload: JwtPayload = this.authMapper.toJwtPayload(user);
       this.logger.debug(
         `Mapping user response to jwt payload: ${JSON.stringify(payload)}`,
@@ -210,13 +222,13 @@ export class AuthService {
 
       /*
        * Sign token and declare to payload
-       * */
+       */
       payload.accessToken = this.jwtService.sign(payload);
       this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
 
       /*
        * Return jwt payload
-       * */
+       */
       return payload;
     } catch (e) {
       this.logger.error(

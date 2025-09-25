@@ -1,9 +1,9 @@
 /**
- * @description: Paging status code
- * @author: Nhut Tan
- * @date: 2025-09-13
- * @modifies: 2025-09-17
- * @version: 1.0.1
+ * @description Paging status code
+ * @author Nhut Tan
+ * @since 2025-09-13
+ * @modifies 2025-09-24
+ * @version 1.0.2
  */
 
 import { BaseStatusCode } from './base.status-code';
@@ -22,17 +22,17 @@ export class PagingStatusCode extends BaseStatusCode {
       'PGE_002',
       'Page number must not be empty',
     );
-  static readonly PAGE_NUMBER_MUST_BE_NUMBER: PagingStatusCode =
+  static readonly PAGE_NUMBER_MUST_BE_A_NUMBER: PagingStatusCode =
     new PagingStatusCode(
       HttpStatus.BAD_REQUEST,
       'PGE_003',
-      'Page number must be number',
+      'Page number must be a number',
     );
-  static readonly LIMIT_NUMBER_MUST_BE_NUMBER: PagingStatusCode =
+  static readonly LIMIT_NUMBER_MUST_BE_A_NUMBER: PagingStatusCode =
     new PagingStatusCode(
       HttpStatus.BAD_REQUEST,
       'LMT_001',
-      'Limit number must be number',
+      'Limit number must be a number',
     );
   static readonly LIMIT_NUMBER_MUST_NOT_BE_EMPTY: PagingStatusCode =
     new PagingStatusCode(

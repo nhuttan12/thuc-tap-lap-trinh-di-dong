@@ -1,7 +1,7 @@
 /**
- * @description: Paging meta data DTO
- * @author: Nhut Tan
- * @date: 2025-09-17
+ * @description Paging meta data DTO
+ * @author Nhut Tan
+ * @since 2025-09-17
  */
 
 export class PagingMetaDto {

@@ -1,10 +1,10 @@
 /*
- * @description: Test file for ConfigService class to retrieve the database configuration from environment variables.
- * @author: Nhut Tan
- * @date: 2025-08-31
- * @version: 1.0.0
- * @modifies: 2025-09-01
- * */
+ * @description Test file for ConfigService class to retrieve the database configuration from environment variables.
+ * @author Nhut Tan
+ * @since 2025-08-31
+ * @version 1.0.0
+ * @modifies 2025-09-01
+ */
 
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import { ConfigService } from '../../../../src/common/config/config.service';
@@ -30,7 +30,7 @@ describe('ConfigService', () => {
   it('should return database configuration', () => {
     /*
      * Define the mock database config
-     * */
+     */
     const mockDatabaseConfig: DatabaseConfig = {
       type: 'postgres' as DatabaseType,
       host: 'localhost',
@@ -42,56 +42,59 @@ describe('ConfigService', () => {
 
     /*
      * Set up get method to return expected data when called with database key
-     * */
+     */
     (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(
       mockDatabaseConfig,
     );
 
     /*
      * Call getter and setter result
-     * */
+     */
     const result: DatabaseConfig = configService.databaseConfig;
 
     /*
      * Assert the data match the mock data
-     * */
+     */
     expect(result).toEqual(mockDatabaseConfig);
 
     /*
      * Assert that the mock 'get' method was called with the correct key.
-     * */
+     */
     expect(mockNestConfigService.get).toHaveBeenCalledWith('database');
   });
 
   it('should return the http configuration', () => {
     /*
      * Define mock http configuration
-     * */
+     */
     const mockHttpConfig: HttpConfig = {
       environment: 'develop',
       port: 8080,
+      saltRounds: 10,
+      jwtSecret: 'secretKey',
+      expireTime: '1h',
     };
 
     /*
      * Set up get method to return expected data when called with http key
-     * */
+     */
     (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(
       mockHttpConfig,
     );
 
     /*
      * Call getter and setter result
-     * */
+     */
     const result: HttpConfig = configService.httpConfig;
 
     /*
      * Assert the data match the mock data
-     * */
+     */
     expect(result).toEqual(mockHttpConfig);
 
     /*
      * Assert that the mock 'get' method was called with the correct key.
-     * */
+     */
     expect(mockNestConfigService.get).toHaveBeenCalledWith('http');
   });
 
@@ -103,7 +106,7 @@ describe('ConfigService', () => {
 
     /*
      * Throw ConflictException when database key not found
-     * */
+     */
     expect((): DatabaseConfig => configService.databaseConfig).toThrow(
       ConflictException,
     );
@@ -115,12 +118,12 @@ describe('ConfigService', () => {
   it('should throw ConflictException when http key not found', () => {
     /*
      * Set up method to return undefined
-     * */
+     */
     (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(undefined);
 
     /*
      * Throw ConflictException when http key not found
-     * */
+     */
     expect((): HttpConfig => configService.httpConfig).toThrow(
       ConflictException,
     );

@@ -1,8 +1,8 @@
 /**
- * @description: User sign up request dto
- * @author: Nhut Tan
- * @date: 2025-09-17
- * @version: 1.0.0
+ * @description User sign up request dto
+ * @author Nhut Tan
+ * @since 2025-09-17
+ * @version 1.0.0
  */
 import {
   IsEmail,

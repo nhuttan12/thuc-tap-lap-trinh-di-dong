@@ -1,10 +1,10 @@
 /*
- * @description: Product entity
- * @author: Nhut Tan
- * @date: 2025-09-06
- * @modified: 2025-09-14
- * @version: 1.0.3
- * */
+ * @description Product entity
+ * @author Nhut Tan
+ * @since 2025-09-06
+ * @modifies 2025-09-24
+ * @version 1.0.5
+ */
 
 import {
   Column,
@@ -19,6 +19,7 @@ import { ProductDetailsEntity } from './product-details.entity';
 import { CartDetailEntity } from '../../cart/entities/cart-detail.entity';
 import { OrderDetailEntity } from '../../orders/entities/order-detail.entity';
 import { ProductImageEntity } from '../../image/entities/product-image.entity';
+import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity';
 
 @Entity('products')
 export class ProductEntity extends TimestampField {
@@ -45,7 +46,7 @@ export class ProductEntity extends TimestampField {
   @OneToOne(
     (): typeof ProductDetailsEntity => ProductDetailsEntity,
     (productDetailsEntity: ProductDetailsEntity): ProductEntity =>
-      productDetailsEntity.productEntity,
+      productDetailsEntity.product,
     {
       cascade: ['insert', 'update', 'soft-remove'],
     },
@@ -78,4 +79,14 @@ export class ProductEntity extends TimestampField {
     },
   )
   productImages: ProductImageEntity[];
+
+  @OneToOne(
+    (): typeof WishlistItemEntity => WishlistItemEntity,
+    (wishlistItemEntity: WishlistItemEntity): ProductEntity =>
+      wishlistItemEntity.product,
+    {
+      cascade: ['insert', 'update', 'soft-remove'],
+    },
+  )
+  wishlistItem: WishlistItemEntity;
 }

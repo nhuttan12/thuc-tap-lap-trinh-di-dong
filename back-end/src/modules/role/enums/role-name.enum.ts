@@ -1,8 +1,8 @@
 /**
- * @description: enum role name
- * @author: Nhut Tan
- * @date: 2025-09-17
- * @version: 1.0.0
+ * @description enum role name
+ * @author Nhut Tan
+ * @since 2025-09-17
+ * @version 1.0.0
  */
 
 export enum RoleName {

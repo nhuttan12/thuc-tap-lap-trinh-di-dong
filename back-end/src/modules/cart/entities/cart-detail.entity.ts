@@ -1,20 +1,38 @@
-/*
- * @description: Cart detail entity
- * @author: Nhut Tan
- * @date: 2025-09-07
- * @modified: 2025-09-14
- * @version: 1.0.2
- * */
+/**
+ * @description Cart detail entity
+ * @author Nhut Tan
+ * @since 2025-09-07
+ * @modifies 2025-09-24
+ * @version 1.0.3
+ */
 
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { CartEntity } from './cart.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
+import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
 
 @Entity('cart_details')
 export class CartDetailEntity extends TimestampField {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  quantity: number;
+
+  @Column({
+    type: 'enum',
+    enumName: 'cart_details_status_enum',
+    default: CartDetailsStatusEnum.ACTIVE,
+    nullable: false,
+  })
+  status: CartDetailsStatusEnum;
 
   @ManyToOne(
     (): typeof CartEntity => CartEntity,

@@ -1,9 +1,9 @@
 /**
- * @description: Main file
- * @author: Nhut Tan
- * @date: 2025-08-29
- * @modifies: 2025-09-18
- * @version: 1.0.1
+ * @description Main file
+ * @author Nhut Tan
+ * @since 2025-08-29
+ * @modifies 2025-09-18
+ * @version 1.0.1
  */
 
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
@@ -30,7 +30,7 @@ async function bootstrap() {
 
   /*
    * Set global pipe with validation
-   * */
+   */
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -41,18 +41,18 @@ async function bootstrap() {
 
   /*
    * Set up global filter
-   * */
+   */
   const httpAdapterHost: HttpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new CatchEverythingFilter(httpAdapterHost));
 
   /*
    * Get config service
-   * */
+   */
   const nestConfigService: NestConfigService = app.get(NestConfigService);
 
   /*
    * Get port from config service
-   * */
+   */
   const port: number | undefined = nestConfigService.get<number>('HTTP_PORT');
 
   // Listen to port

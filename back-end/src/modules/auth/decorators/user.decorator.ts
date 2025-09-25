@@ -1,9 +1,9 @@
 /*
- * @description: param decorator used for getting user by request
- * @author: Nhut Tan
- * @date: 2025-09-09
- * @version: 1.0.0
- * */
+ * @description param decorator used for getting user by request
+ * @author Nhut Tan
+ * @since 2025-09-09
+ * @version 1.0.0
+ */
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { AuthRequest } from '../interface/auth-request.interface';

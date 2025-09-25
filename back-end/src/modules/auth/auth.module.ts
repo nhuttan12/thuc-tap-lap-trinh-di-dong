@@ -1,10 +1,10 @@
 /*
- * @description: auth module
- * @author: Nhut Tan
- * @date: 2025-09-08
+ * @description auth module
+ * @author Nhut Tan
+ * @since 2025-09-08
  * @last modified: 2025-09-14
- * @version: 1.0.2
- * */
+ * @version 1.0.2
+ */
 
 import { Module } from '@nestjs/common';
 import { UserModule } from '../user/user.module';

@@ -1,9 +1,9 @@
 /*
- * @description: Migration to add status column to users and roles table
- * @author: Nhut Tan
- * @date: 2025/09/05
- * @version: 1.0.0
- * */
+ * @description Migration to add status column to users and roles table
+ * @author Nhut Tan
+ * @since 2025/09/05
+ * @version 1.0.0
+ */
 
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 import { UserStatus } from '../modules/user/enums/user-status.enum';
@@ -13,25 +13,25 @@ export class AddingStatusToUsersAndRolesTable1757059294386
   implements MigrationInterface
 {
   /*
-   * @description: Run migration
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
-   * */
+   * @description Run migration
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
+   */
   public async up(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get users table and roles table if exists
-     * */
+     */
     const usersTable: Table | undefined = await queryRunner.getTable('users');
     const rolesTable: Table | undefined = await queryRunner.getTable('roles');
 
     /*
      * Check if table is exist
-     * */
+     */
     if (usersTable && rolesTable) {
       /*
        * Check tables if has column statusA
-       * */
+       */
       const usersTableColumn: TableColumn | undefined = usersTable.columns.find(
         (c: TableColumn): boolean => c.name === 'status',
       );
@@ -41,7 +41,7 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 
       /*
        * Add column status to users table if not exists
-       * */
+       */
       if (!usersTableColumn) {
         await queryRunner.addColumn(
           usersTable,
@@ -58,7 +58,7 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 
       /*
        * Add column status to users table if not exists
-       * */
+       */
       if (!rolesTableColumn) {
         await queryRunner.addColumn(
           rolesTable,
@@ -76,25 +76,25 @@ export class AddingStatusToUsersAndRolesTable1757059294386
   }
 
   /*
-   * @description: Revert migration
-   * @author: Nhut Tan
-   * @date: 2025/09/05
-   * @version: 1.0.0
-   * */
+   * @description Revert migration
+   * @author Nhut Tan
+   * @since 2025/09/05
+   * @version 1.0.0
+   */
   public async down(queryRunner: QueryRunner): Promise<void> {
     /*
      * Get users table and roles table if exists
-     * */
+     */
     const usersTable: Table | undefined = await queryRunner.getTable('users');
     const rolesTable: Table | undefined = await queryRunner.getTable('roles');
 
     /*
      * If users table and roles table is exist
-     * */
+     */
     if (usersTable && rolesTable) {
       /*
        * Check tables if has column statusA
-       * */
+       */
       const usersTableColumn: TableColumn | undefined = usersTable.columns.find(
         (c: TableColumn): boolean => c.name === 'status',
       );
@@ -104,7 +104,7 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 
       /*
        * Drop status column if its exist
-       * */
+       */
       if (usersTableColumn && rolesTableColumn) {
         await queryRunner.dropColumn(usersTable, 'status');
         await queryRunner.dropColumn(rolesTable, 'status');

@@ -1,10 +1,10 @@
 /*
- * @description: user status code
- * @author: Nhut Tan
- * @date: 2025-09-08
- * @modified: 2025-09-12
- * @version: 1.0.1
- * */
+ * @description user status code
+ * @author Nhut Tan
+ * @since 2025-09-08
+ * @modifies 2025-09-12
+ * @version 1.0.1
+ */
 
 import { HttpStatus } from '@nestjs/common';
 import { BaseStatusCode } from '../../../common/dtos/status-code/base.status-code';

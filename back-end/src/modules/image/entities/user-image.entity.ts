@@ -1,10 +1,10 @@
-/*
- * @description: User image entity
- * @author: Nhut Tan
- * @date: 2025-09-07
- * @modified: 2025-09-14
- * @version: 1.0.3
- * */
+/**
+ * @description User image entity
+ * @author Nhut Tan
+ * @since 2025-09-07
+ * @modifies 2025-09-14
+ * @version 1.0.3
+ */
 
 import {
   Entity,
@@ -36,5 +36,6 @@ export class UserImageEntity extends TimestampField {
       cascade: ['insert', 'update', 'soft-remove'],
     },
   )
+  @JoinColumn({ name: 'image_id' })
   image: ImageEntity;
 }

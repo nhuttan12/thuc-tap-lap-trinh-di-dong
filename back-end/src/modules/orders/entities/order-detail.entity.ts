@@ -1,10 +1,10 @@
 /*
- * @description: Order detail entity
- * @author: Nhut Tan
- * @date: 2025-09-05
- * @modified: 2025-09-14
- * @version: 1.0.2
- * */
+ * @description Order detail entity
+ * @author Nhut Tan
+ * @since 2025-09-05
+ * @modifies 2025-09-14
+ * @version 1.0.2
+ */
 
 import {
   Column,

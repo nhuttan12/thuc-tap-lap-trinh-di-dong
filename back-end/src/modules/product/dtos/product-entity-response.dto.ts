@@ -1,9 +1,9 @@
 /*
- * @description: Product entity response dto
- * @author: Nhut Tan
- * @date: 2025-09-15
- * @version: 1.0.0
- * */
+ * @description Product entity response dto
+ * @author Nhut Tan
+ * @since 2025-09-15
+ * @version 1.0.0
+ */
 
 export class ProductEntityResponseDto {
   id: number;
