@@ -39,8 +39,8 @@ export class AuthController {
 
   /**
    * @description login user via local strategy passport
-   * @param: req: AuthRequest
-   * @return: JwtPayload
+   * @param {AuthRequest} req - Auth request to log in with local service
+   * @return JwtPayload
    * @author Nhut Tan
    * @since 2025-09-09
    * @version 1.0.0
@@ -63,8 +63,8 @@ export class AuthController {
 
   /**
    * @description callback from Google strategy passport
-   * @param req
-   * @param res
+   * @param {GoogleRequest} req - Google request to log in with Google service
+   * @param {Response} res - Response of log in Google
    * @author Nhut Tan
    * @since 2025-09-09
    * @version 1.0.0
@@ -90,8 +90,8 @@ export class AuthController {
 
   /**
    * @description Sign up user
-   * @param: request: UserSignUpRequestDto
-   * @return: UserEntityResponseDto
+   * @param {UserSignUpRequestDto} request - User sign up request
+   * @return {Promise<UserEntityResponseDto>}
    * @author Nhut Tan
    * @since 2025-09-17
    * @version 1.0.0

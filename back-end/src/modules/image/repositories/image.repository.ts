@@ -27,10 +27,11 @@ export class ImageRepository {
     private readonly dataSource: DataSource,
   ) {}
 
-  /*
+  /**
    * @description Create image
-   * @param {imageUrl: string, userID: number}
-   * @return {ImageEntity}
+   * @param {string} imageUrl - Image url
+   * @param {number} userID - ID of user
+   * @return {Promise<ImageEntity>}
    * @author Nhut Tan
    * @since 2025-09-12
    * @version 1.0.0
@@ -74,8 +75,8 @@ export class ImageRepository {
 
   /**
    * @description Get image by url
-   * @param: {url}
-   * @return {ImageEntity | null}
+   * @param {string} url - Image url
+   * @return {Promise<ImageEntity | null>}
    * @author Nhut Tan
    * @since 2025-09-23
    * @version 1.0.0

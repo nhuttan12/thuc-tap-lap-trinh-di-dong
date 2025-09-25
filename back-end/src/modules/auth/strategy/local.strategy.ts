@@ -23,8 +23,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   /*
    * @description validate function is call when local passport is called
-   * @param: UserLoginRequestDto
-   * @return: JwtPayloadInterface
+   * @param UserLoginRequestDto
+   * @return JwtPayloadInterface
    * @author Nhut Tan
    * @since 2025-09-08
    * @modifies 2025-09-10

@@ -34,8 +34,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   /*
    * @description validate function is call when jwt passport is called,
    * this function is called to validate the jwt payload
-   * @param: JwtPayloadInterface
-   * @return: JwtPayloadInterface
+   * @param JwtPayloadInterface
+   * @return JwtPayloadInterface
    * @author Nhut Tan
    * @since 2025-09-09
    * @modifies 2025-09-10

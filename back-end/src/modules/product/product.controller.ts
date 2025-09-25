@@ -6,7 +6,14 @@
  * @version 1.0.1
  */
 
-import { Controller, Get, HttpCode, HttpStatus, Logger } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
 import { GetProductsPagingRequest } from './dtos/get-products-paging-request';
@@ -38,7 +45,7 @@ export class ProductController {
   @HttpCode(HttpStatus.OK)
   @Get()
   async getProducts(
-    request: GetProductsPagingRequest,
+    @Body() request: GetProductsPagingRequest,
   ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
     try {
       this.logger.debug(`Get products paging: ${JSON.stringify(request)}`);
@@ -79,7 +86,7 @@ export class ProductController {
    */
   @Get()
   async getProductDetailByProductID(
-    request: GetProductDetailByProductIdRequestDto,
+    @Body() request: GetProductDetailByProductIdRequestDto,
   ): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
     try {
       /**

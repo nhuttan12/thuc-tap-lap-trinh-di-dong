@@ -30,9 +30,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
   /*
    * @description validate function is call when google passport is called
-   * @param: Profile
-   * @param: VerifyCallback
-   * @return: void
+   * @param Profile
+   * @param VerifyCallback
+   * @return void
    * @author Nhut Tan
    * @since 2025-09-10
    * @modifies 2025-09-12

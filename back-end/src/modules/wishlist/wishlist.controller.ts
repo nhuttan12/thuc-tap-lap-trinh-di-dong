@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
 import { GetWishlistItemRequestDto } from './dtos/get-wishlist-item-request.dto';
@@ -32,7 +32,7 @@ export class WishlistController {
   @Get()
   async getAllProductInWishlist(
     @User() user: JwtPayload,
-    request: GetWishlistItemRequestDto,
+    @Body() request: GetWishlistItemRequestDto,
   ): Promise<
     SuccessResponseDto<PagingResponseDto<ProductInWishlistResponseDto>>
   > {
@@ -68,7 +68,7 @@ export class WishlistController {
   @Post()
   async addProductToWishlist(
     @User() payload: JwtPayload,
-    productID: number,
+    @Body() productID: number,
   ): Promise<SuccessResponseDto<boolean>> {
     /**
      * Call `addToWishlist` in `WishlistService`
