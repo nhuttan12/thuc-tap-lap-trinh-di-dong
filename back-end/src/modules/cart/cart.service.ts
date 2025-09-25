@@ -2,16 +2,17 @@
  * @description Cart service
  * @author Nhut Tan
  * @since 2025-09-14
- * @version 1.0.0
+ * @modifies 2025-09-25
+ * @version 1.0.1
  */
 
-import { Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { CartRepository } from './repositories/cart.repository';
 import { CartEntity } from './entities/cart.entity';
-import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
 import { CartDetailService } from './cart-detail.service';
-import { CartDetailEntity } from './entities/cart-detail.entity';
 import { CartResponseDto } from './dtos/cart-response.dto';
+import { CartMapper } from './mappers/cart.mapper';
+import { CartStatusCode } from './status-code/cart.status-code';
 
 @Injectable()
 export class CartService {
@@ -20,6 +21,7 @@ export class CartService {
   constructor(
     private readonly cartRepository: CartRepository,
     private readonly cartDetailService: CartDetailService,
+    private readonly cartMapper: CartMapper,
   ) {}
 
   /**
@@ -48,7 +50,7 @@ export class CartService {
       );
 
       /**
-       * Check if cart entity exist
+       * Check if cart entity not exist
        */
       if (!existingCartEntity) {
         /**
@@ -74,23 +76,66 @@ export class CartService {
          * Get cart entity after create new cart and cart detail
          */
         const newCartAfterCreated: CartEntity | null =
-          this.cartRepository.getActiveCartByUserID(userID);
+          await this.cartRepository.getActiveCartByUserID(userID);
 
         /**
-         * Mapping `CartEntity` to `CartResponseDto`
+         * Checking cart existence after created
          */
-        const cartResponseDto: CartResponseDto = this.cartMapper.toCartResponseDto(
-          newCartAfterCreated,
+        if (!newCartAfterCreated) {
+          /**
+           * Logging error and throw exception
+           */
+          this.logger.debug('Cart not found after created');
+          throw new ConflictException({
+            message: CartStatusCode.CART_NOT_FOUND.message,
+            statusCode: CartStatusCode.CART_NOT_FOUND.customCode,
+            customCode: CartStatusCode.CART_NOT_FOUND.customCode,
+          });
+        }
+
+        /**
+         * Mapping `CartEntity` to `CartResponseDto` and return
+         */
+        return this.cartMapper.toCartResponseDto(newCartAfterCreated);
+      } else {
+        /**
+         * If cart already exist, adding new cart detail to existing cart
+         */
+        await this.cartDetailService.createNewCartDetail(
+          productID,
+          existingCartEntity.id,
+          quantity,
         );
 
         /**
-         * Return data
+         * Get new cart after adding new cart detail to existing cart
          */
-        return cartResponseDto;
+        const newCartAfterCreated: CartEntity | null =
+          await this.cartRepository.getActiveCartByUserID(userID);
+
+        /**
+         * Checking cart existence after created
+         */
+        if (!newCartAfterCreated) {
+          /**
+           * Logging error and throw exception
+           */
+          this.logger.debug('Cart not found after created');
+          throw new ConflictException({
+            message: CartStatusCode.CART_NOT_FOUND.message,
+            statusCode: CartStatusCode.CART_NOT_FOUND.customCode,
+            customCode: CartStatusCode.CART_NOT_FOUND.customCode,
+          });
+        }
+
+        /**
+         * Mapping `CartEntity` to `CartResponseDto` and return
+         */
+        return this.cartMapper.toCartResponseDto(newCartAfterCreated);
       }
     } catch (e) {
       this.logger.error(
-        `Error in \`getCartDetailsByUserID\`: ${(e as Error).message}`,
+        `Error in \`addProductToCart\`: ${(e as Error).message}`,
         (e as Error).stack,
       );
       throw e;
