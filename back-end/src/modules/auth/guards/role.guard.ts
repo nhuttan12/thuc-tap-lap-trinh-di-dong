@@ -9,7 +9,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { Roles } from '../decorators/role.decorator';
+import { Roles } from '../../role/decorators/role.decorator';
 import { AuthRequest } from '../interface/auth-request.interface';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 

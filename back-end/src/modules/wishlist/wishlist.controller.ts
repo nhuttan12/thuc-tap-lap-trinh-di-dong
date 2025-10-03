@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
 import { GetWishlistItemRequestDto } from './dtos/get-wishlist-item-request.dto';
@@ -14,8 +14,13 @@ import { User } from '../user/decorators/user.decorator';
 import { JwtPayload } from '../auth/interface/jwt-payload.interface';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
 import { WishlistStatusCode } from './status-code/wishlist.status-code';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../role/decorators/role.decorator';
+import { RoleName } from '../role/enums/role-name.enum';
 
 @Controller('wishlist')
+@UseGuards(JwtAuthGuard)
+@Roles([RoleName.CUSTOMER])
 export class WishlistController {
   private readonly logger: Logger = new Logger(WishlistController.name);
 
