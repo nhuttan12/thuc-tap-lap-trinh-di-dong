@@ -6,9 +6,9 @@
  */
 
 export class RoleResponseDto {
-  id: number;
-  name: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+	id: number
+	name: string
+	status: string
+	createdAt: Date
+	updatedAt: Date
 }

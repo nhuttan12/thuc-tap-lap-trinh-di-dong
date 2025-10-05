@@ -6,6 +6,6 @@
  */
 
 export enum WishlistStatusEnum {
-  ACTIVE = 'ACTIVE',
-  DELETED = 'DELETED',
+	ACTIVE = 'ACTIVE',
+	DELETED = 'DELETED',
 }

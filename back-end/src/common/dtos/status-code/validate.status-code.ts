@@ -5,14 +5,14 @@
  * @version 1.0.0
  */
 
-import { BaseStatusCode } from './base.status-code';
-import { HttpStatus } from '@nestjs/common';
+import { BaseStatusCode } from './base.status-code'
+import { HttpStatus } from '@nestjs/common'
 
 export class ValidateStatusCode extends BaseStatusCode {
-  static readonly TextMustNotContainUrl: ValidateStatusCode =
-    new ValidateStatusCode(
-      HttpStatus.BAD_REQUEST,
-      'VAL_001',
-      'Text must not contains url',
-    );
+	static readonly TextMustNotContainUrl: ValidateStatusCode =
+		new ValidateStatusCode(
+			HttpStatus.BAD_REQUEST,
+			'VAL_001',
+			'Text must not contains url'
+		)
 }

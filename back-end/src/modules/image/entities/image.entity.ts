@@ -6,43 +6,44 @@
  * @version 1.0.3
  */
 
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ImageStatusEnum } from '../enums/image-status.enum';
-import { TimestampField } from '../../../common/database/timestamp.field';
-import { ProductImageEntity } from './product-image.entity';
-import { UserImageEntity } from './user-image.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { ImageStatusEnum } from '../enums/image-status.enum'
+import { TimestampField } from '../../../common/database/timestamp.field'
+import { ProductImageEntity } from './product-image.entity'
+import { UserImageEntity } from './user-image.entity'
 
 @Entity('images')
 export class ImageEntity extends TimestampField {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column()
-  url: string;
+	@Column()
+	url: string
 
-  @Column({
-    type: 'enum',
-    enum: ImageStatusEnum,
-    nullable: false,
-  })
-  status: ImageStatusEnum;
+	@Column({
+		type: 'enum',
+		enum: ImageStatusEnum,
+		nullable: false,
+	})
+	status: ImageStatusEnum
 
-  @OneToOne(
-    (): typeof ProductImageEntity => ProductImageEntity,
-    (productImageEntity: ProductImageEntity): ImageEntity =>
-      productImageEntity.image,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  productImage: ProductImageEntity;
+	@OneToOne(
+		(): typeof ProductImageEntity => ProductImageEntity,
+		(productImageEntity: ProductImageEntity): ImageEntity =>
+			productImageEntity.image,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	productImage: ProductImageEntity
 
-  @OneToOne(
-    (): typeof UserImageEntity => UserImageEntity,
-    (userImageEntity: UserImageEntity): ImageEntity => userImageEntity.image,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  userImage: UserImageEntity;
+	@OneToOne(
+		(): typeof UserImageEntity => UserImageEntity,
+		(userImageEntity: UserImageEntity): ImageEntity =>
+			userImageEntity.image,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	userImage: UserImageEntity
 }

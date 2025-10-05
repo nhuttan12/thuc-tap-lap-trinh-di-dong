@@ -7,99 +7,99 @@
  */
 
 import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { TimestampField } from '../../../common/database/timestamp.field';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { UserDetailEntity } from './user-detail.entity';
-import { UserStatus } from '../enums/user-status.enum';
-import { CartEntity } from '../../cart/entities/cart.entity';
-import { OrderEntity } from '../../orders/entities/order.entity';
-import { UserImageEntity } from '../../image/entities/user-image.entity';
-import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity';
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+} from 'typeorm'
+import { TimestampField } from '../../../common/database/timestamp.field'
+import { RoleEntity } from '../../role/entities/role.entity'
+import { UserDetailEntity } from './user-detail.entity'
+import { UserStatus } from '../enums/user-status.enum'
+import { CartEntity } from '../../cart/entities/cart.entity'
+import { OrderEntity } from '../../orders/entities/order.entity'
+import { UserImageEntity } from '../../image/entities/user-image.entity'
+import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity'
 
 @Entity('users')
 export class UserEntity extends TimestampField {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column()
-  username: string;
+	@Column()
+	username: string
 
-  @Column()
-  password: string;
+	@Column()
+	password: string
 
-  @Column({ name: 'full_name' })
-  fullName: string;
+	@Column({ name: 'full_name' })
+	fullName: string
 
-  @Column()
-  email: string;
+	@Column()
+	email: string
 
-  @Column({
-    type: 'enum',
-    enum: UserStatus,
-    default: UserStatus.ACTIVE,
-  })
-  status: UserStatus;
+	@Column({
+		type: 'enum',
+		enum: UserStatus,
+		default: UserStatus.ACTIVE,
+	})
+	status: UserStatus
 
-  @ManyToOne(
-    (): typeof RoleEntity => RoleEntity,
-    (role: RoleEntity): UserEntity[] => role.user,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  @JoinColumn({ name: 'role_id' })
-  role: RoleEntity;
+	@ManyToOne(
+		(): typeof RoleEntity => RoleEntity,
+		(role: RoleEntity): UserEntity[] => role.user,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	@JoinColumn({ name: 'role_id' })
+	role: RoleEntity
 
-  @OneToOne(
-    (): typeof UserDetailEntity => UserDetailEntity,
-    (detail: UserDetailEntity): UserEntity => detail.user,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  userDetail: UserDetailEntity;
+	@OneToOne(
+		(): typeof UserDetailEntity => UserDetailEntity,
+		(detail: UserDetailEntity): UserEntity => detail.user,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	userDetail: UserDetailEntity
 
-  @OneToMany(
-    (): typeof CartEntity => CartEntity,
-    (cart: CartEntity): UserEntity => cart.user,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  cart: CartEntity[];
+	@OneToMany(
+		(): typeof CartEntity => CartEntity,
+		(cart: CartEntity): UserEntity => cart.user,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	cart: CartEntity[]
 
-  @OneToMany(
-    (): typeof OrderEntity => OrderEntity,
-    (order: OrderEntity): UserEntity => order.user,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  order: OrderEntity[];
+	@OneToMany(
+		(): typeof OrderEntity => OrderEntity,
+		(order: OrderEntity): UserEntity => order.user,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	order: OrderEntity[]
 
-  @OneToMany(
-    (): typeof UserImageEntity => UserImageEntity,
-    (userImage: UserImageEntity): UserEntity => userImage.user,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  userImages: UserImageEntity[];
+	@OneToMany(
+		(): typeof UserImageEntity => UserImageEntity,
+		(userImage: UserImageEntity): UserEntity => userImage.user,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	userImages: UserImageEntity[]
 
-  @OneToMany(
-    (): typeof WishlistItemEntity => WishlistItemEntity,
-    (wishlist: WishlistItemEntity): UserEntity => wishlist.user,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  wishlistItems: WishlistItemEntity[];
+	@OneToMany(
+		(): typeof WishlistItemEntity => WishlistItemEntity,
+		(wishlist: WishlistItemEntity): UserEntity => wishlist.user,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	wishlistItems: WishlistItemEntity[]
 }

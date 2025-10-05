@@ -6,9 +6,9 @@
  */
 
 export class BaseStatusCode {
-  public constructor(
-    public readonly statusCode: number,
-    public readonly customCode: string,
-    public readonly message: string,
-  ) {}
+	public constructor(
+		public readonly statusCode: number,
+		public readonly customCode: string,
+		public readonly message: string
+	) {}
 }

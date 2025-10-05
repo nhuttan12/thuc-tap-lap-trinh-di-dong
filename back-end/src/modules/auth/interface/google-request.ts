@@ -6,9 +6,9 @@
  * @version 1.0.0
  */
 
-import { Request as ExpressRequest } from 'express';
-import { GoogleLogin } from './google-login.interface';
+import { Request as ExpressRequest } from 'express'
+import { GoogleLogin } from './google-login.interface'
 
 export interface GoogleRequest extends ExpressRequest {
-  user: GoogleLogin;
+	user: GoogleLogin
 }

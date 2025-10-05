@@ -6,7 +6,7 @@
  */
 
 export enum ProductStatusEnum {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DELETED = 'DELETED',
+	ACTIVE = 'ACTIVE',
+	INACTIVE = 'INACTIVE',
+	DELETED = 'DELETED',
 }

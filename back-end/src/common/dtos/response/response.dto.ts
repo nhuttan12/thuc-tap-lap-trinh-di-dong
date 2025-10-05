@@ -7,24 +7,24 @@
  */
 
 export class ResponseDto<T> {
-  /*
-   * statusCode: status code of response
-   */
-  statusCode: string;
+	/*
+	 * statusCode: status code of response
+	 */
+	statusCode: string
 
-  /*
-   * message: message of response
-   */
-  message: string;
+	/*
+	 * message: message of response
+	 */
+	message: string
 
-  /*
-   * data: data of response
-   */
-  data: T;
+	/*
+	 * data: data of response
+	 */
+	data: T
 
-  constructor(statusCode: string, message: string, data: T) {
-    this.data = data;
-    this.message = message;
-    this.statusCode = statusCode;
-  }
+	constructor(statusCode: string, message: string, data: T) {
+		this.data = data
+		this.message = message
+		this.statusCode = statusCode
+	}
 }

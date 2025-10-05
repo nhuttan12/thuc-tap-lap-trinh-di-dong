@@ -4,11 +4,11 @@
  * @since 2025-09-17
  * @version 1.0.0
  */
-import { Module } from '@nestjs/common';
-import { BuildPagingMetaService } from './build-paging-meta.service';
+import { Module } from '@nestjs/common'
+import { BuildPagingMetaService } from './build-paging-meta.service'
 
 @Module({
-  providers: [BuildPagingMetaService],
-  exports: [BuildPagingMetaService],
+	providers: [BuildPagingMetaService],
+	exports: [BuildPagingMetaService],
 })
 export class HelperModule {}
