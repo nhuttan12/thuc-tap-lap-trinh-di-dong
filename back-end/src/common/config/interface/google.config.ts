@@ -9,20 +9,20 @@ export interface GoogleConfig {
 	/**
 	 * Client id of Google
 	 */
-	clientID: string
+	clientID: string;
 
 	/**
 	 * Client secret of Google
 	 */
-	clientSecret: string
+	clientSecret: string;
 
 	/**
 	 * Callback URL of Google
 	 */
-	callbackURL: string
+	callbackURL: string;
 
 	/**
 	 * Access type of Google
 	 */
-	accessType: string
+	accessType: string;
 }

@@ -12,16 +12,16 @@ import {
 	JoinColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { OrderStatusEnum } from '../enums/order-status.enum'
-import { UserEntity } from '../../user/entities/user.entity'
-import { OrderDetailEntity } from './order-detail.entity'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { OrderStatusEnum } from '../enums/order-status.enum';
+import { UserEntity } from '../../user/entities/user.entity';
+import { OrderDetailEntity } from './order-detail.entity';
 
 @Entity('orders')
 export class OrderEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@ManyToOne(
 		(): typeof UserEntity => UserEntity,
@@ -31,13 +31,13 @@ export class OrderEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'user_id' })
-	user: UserEntity
+	user: UserEntity;
 
 	@Column()
-	price: number
+	price: number;
 
 	@Column()
-	status: OrderStatusEnum
+	status: OrderStatusEnum;
 
 	@ManyToOne(
 		(): typeof OrderDetailEntity => OrderDetailEntity,
@@ -47,5 +47,5 @@ export class OrderEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	orderDetails: OrderDetailEntity[]
+	orderDetails: OrderDetailEntity[];
 }

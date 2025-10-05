@@ -12,28 +12,28 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { ProductStatusEnum } from '../enums/product-status.enum'
-import { ProductDetailsEntity } from './product-details.entity'
-import { CartDetailEntity } from '../../cart/entities/cart-detail.entity'
-import { OrderDetailEntity } from '../../orders/entities/order-detail.entity'
-import { ProductImageEntity } from '../../image/entities/product-image.entity'
-import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductStatusEnum } from '../enums/product-status.enum';
+import { ProductDetailsEntity } from './product-details.entity';
+import { CartDetailEntity } from '../../cart/entities/cart-detail.entity';
+import { OrderDetailEntity } from '../../orders/entities/order-detail.entity';
+import { ProductImageEntity } from '../../image/entities/product-image.entity';
+import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity';
 
 @Entity('products')
 export class ProductEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	name: string
+	name: string;
 
 	@Column()
-	price: number
+	price: number;
 
 	@Column()
-	discount: number
+	discount: number;
 
 	@Column({
 		type: 'enum',
@@ -41,7 +41,7 @@ export class ProductEntity extends TimestampField {
 		default: ProductStatusEnum.ACTIVE,
 		nullable: false,
 	})
-	status: ProductStatusEnum
+	status: ProductStatusEnum;
 
 	@OneToOne(
 		(): typeof ProductDetailsEntity => ProductDetailsEntity,
@@ -51,7 +51,7 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	productDetailsEntity: ProductDetailsEntity
+	productDetailsEntity: ProductDetailsEntity;
 
 	@OneToMany(
 		(): typeof CartDetailEntity => CartDetailEntity,
@@ -60,7 +60,7 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	cartDetail: CartDetailEntity[]
+	cartDetail: CartDetailEntity[];
 
 	@OneToMany(
 		(): typeof OrderDetailEntity => OrderDetailEntity,
@@ -69,7 +69,7 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	orderDetails: OrderDetailEntity[]
+	orderDetails: OrderDetailEntity[];
 
 	@OneToMany(
 		(): typeof ProductImageEntity => ProductImageEntity,
@@ -79,7 +79,7 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	productImages: ProductImageEntity[]
+	productImages: ProductImageEntity[];
 
 	@OneToOne(
 		(): typeof WishlistItemEntity => WishlistItemEntity,
@@ -89,5 +89,5 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	wishlistItem: WishlistItemEntity
+	wishlistItem: WishlistItemEntity;
 }

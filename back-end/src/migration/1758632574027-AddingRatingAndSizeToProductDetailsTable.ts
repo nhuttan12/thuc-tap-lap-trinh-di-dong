@@ -5,7 +5,7 @@
  * @modifies 2025/09/24
  * @version 1.0.1
  */
-import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm'
+import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 
 export class AddingRatingAndSizeToProductDetailsTable1758632574027
 	implements MigrationInterface
@@ -23,12 +23,12 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 		 * Get `product_details` table if exist
 		 */
 		const productDetailsTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/**
 		 * Check if `product_details` table not exist
 		 */
-		if (!productDetailsTable) return
+		if (!productDetailsTable) return;
 
 		/**
 		 * Get `rating` columns to `product_details` table if exist
@@ -36,7 +36,7 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 		const ratingColumn: TableColumn | undefined =
 			productDetailsTable.columns.find(
 				(column: TableColumn): boolean => column.name === 'rating'
-			)
+			);
 
 		/**
 		 * if `rating` column not exist, create new one
@@ -49,7 +49,7 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 					type: 'decimal',
 					isNullable: true,
 				})
-			)
+			);
 		}
 
 		/**
@@ -58,7 +58,7 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 		const sizeColumn: TableColumn | undefined =
 			productDetailsTable.columns.find(
 				(column: TableColumn): boolean => column.name === 'size'
-			)
+			);
 
 		/**
 		 * if `size` column not exist, create new one
@@ -71,7 +71,7 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 					type: 'decimal',
 					isNullable: true,
 				})
-			)
+			);
 		}
 	}
 
@@ -88,12 +88,12 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 		 * Get `product_details` table if exist
 		 */
 		const productDetailsTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/**
 		 * Check exist `product_details` table
 		 */
-		if (!productDetailsTable) return
+		if (!productDetailsTable) return;
 
 		/**
 		 * Get `rating` columns to `product_details` table if exist
@@ -101,13 +101,13 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 		const ratingColumn: TableColumn | undefined =
 			productDetailsTable.columns.find(
 				(column: TableColumn): boolean => column.name === 'rating'
-			)
+			);
 
 		/**
 		 * if `rating` column exist, drop it
 		 */
 		if (ratingColumn) {
-			await queryRunner.dropColumn(productDetailsTable, ratingColumn)
+			await queryRunner.dropColumn(productDetailsTable, ratingColumn);
 		}
 
 		/**
@@ -116,13 +116,13 @@ export class AddingRatingAndSizeToProductDetailsTable1758632574027
 		const sizeColumn: TableColumn | undefined =
 			productDetailsTable.columns.find(
 				(column: TableColumn): boolean => column.name === 'size'
-			)
+			);
 
 		/**
 		 * if `size` column exist, drop it
 		 */
 		if (sizeColumn) {
-			await queryRunner.dropColumn(productDetailsTable, sizeColumn)
+			await queryRunner.dropColumn(productDetailsTable, sizeColumn);
 		}
 	}
 }

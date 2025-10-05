@@ -5,24 +5,24 @@
  * @version 1.0.0
  */
 
-import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common'
-import { CartService } from './cart.service'
-import { CartDetailService } from './cart-detail.service'
-import { User } from '../user/decorators/user.decorator'
-import { JwtPayload } from '../auth/interface/jwt-payload.interface'
-import { AddProductToCartRequestDto } from './dtos/add-product-to-cart-request.dto'
-import { CartResponseDto } from './dtos/cart-response.dto'
-import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto'
-import { CartStatusCode } from './status-code/cart.status-code'
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { Roles } from '../role/decorators/role.decorator'
-import { RoleName } from '../role/enums/role-name.enum'
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
+import { CartService } from './cart.service';
+import { CartDetailService } from './cart-detail.service';
+import { User } from '../user/decorators/user.decorator';
+import { JwtPayload } from '../auth/interface/jwt-payload.interface';
+import { AddProductToCartRequestDto } from './dtos/add-product-to-cart-request.dto';
+import { CartResponseDto } from './dtos/cart-response.dto';
+import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
+import { CartStatusCode } from './status-code/cart.status-code';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../role/decorators/role.decorator';
+import { RoleName } from '../role/enums/role-name.enum';
 
 @Controller('cart')
 @UseGuards(JwtAuthGuard)
 @Roles([RoleName.CUSTOMER])
 export class CartController {
-	private readonly logger: Logger = new Logger(CartController.name)
+	private readonly logger: Logger = new Logger(CartController.name);
 
 	constructor(
 		private readonly cartService: CartService,
@@ -46,18 +46,18 @@ export class CartController {
 		/**
 		 * Get productID and quantity from the request
 		 */
-		const { productID, quantity } = request
+		const { productID, quantity } = request;
 
 		/**
 		 * Get user ID from payload
 		 */
-		const { id } = payload
+		const { id } = payload;
 
 		/**
 		 * Calling `addProductToCart` from `CartService`
 		 */
 		const cartResponseDto: CartResponseDto =
-			await this.cartService.addProductToCart(productID, id, quantity)
+			await this.cartService.addProductToCart(productID, id, quantity);
 
 		/**
 		 * Returning response
@@ -66,6 +66,6 @@ export class CartController {
 			data: cartResponseDto,
 			message: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.message,
 			statusCode: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode,
-		}
+		};
 	}
 }

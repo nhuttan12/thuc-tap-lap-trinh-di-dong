@@ -13,16 +13,16 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { ImageEntity } from './image.entity'
-import { ProductEntity } from '../../product/entities/product.entity'
-import { ProductImageTypeEnum } from '../../product/enums/product-image.type.enum'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ImageEntity } from './image.entity';
+import { ProductEntity } from '../../product/entities/product.entity';
+import { ProductImageTypeEnum } from '../../product/enums/product-image.type.enum';
 
 @Entity('product_images')
 export class ProductImageEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@OneToOne(
 		(): typeof ImageEntity => ImageEntity,
@@ -33,7 +33,7 @@ export class ProductImageEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'image_id' })
-	image: ImageEntity
+	image: ImageEntity;
 
 	@ManyToOne(
 		(): typeof ProductEntity => ProductEntity,
@@ -44,12 +44,12 @@ export class ProductImageEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'product_id' })
-	product: ProductEntity
+	product: ProductEntity;
 
 	@Column({
 		type: 'enum',
 		enum: ProductImageTypeEnum,
 		nullable: false,
 	})
-	type: ProductImageTypeEnum
+	type: ProductImageTypeEnum;
 }

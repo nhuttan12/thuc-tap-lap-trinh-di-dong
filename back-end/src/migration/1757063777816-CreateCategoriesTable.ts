@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { CategoryStatusEnum } from '../modules/category/enums/category-status.enum'
-import { ImageStatusEnum } from '../modules/image/enums/image-status.enum'
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { CategoryStatusEnum } from '../modules/category/enums/category-status.enum';
+import { ImageStatusEnum } from '../modules/image/enums/image-status.enum';
 
 export class CreateCategoriesTable1757063777816 implements MigrationInterface {
 	public async up(queryRunner: QueryRunner): Promise<void> {
@@ -15,7 +15,7 @@ export class CreateCategoriesTable1757063777816 implements MigrationInterface {
 		 * Get categories table
 		 */
 		const categoriesTable: Table | undefined =
-			await queryRunner.getTable('categories')
+			await queryRunner.getTable('categories');
 
 		/*
 		 * Create categories table if not exists
@@ -59,7 +59,7 @@ export class CreateCategoriesTable1757063777816 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 	}
 
@@ -68,13 +68,13 @@ export class CreateCategoriesTable1757063777816 implements MigrationInterface {
 		 * Get categories table
 		 */
 		const categoriesTable: Table | undefined =
-			await queryRunner.getTable('categories')
+			await queryRunner.getTable('categories');
 
 		/*
 		 * Drop categories table if exists
 		 */
 		if (categoriesTable) {
-			await queryRunner.dropTable(categoriesTable)
+			await queryRunner.dropTable(categoriesTable);
 		}
 	}
 }

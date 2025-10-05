@@ -11,8 +11,8 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
-import { ProductStatusEnum } from '../modules/product/enums/product-status.enum'
+} from 'typeorm';
+import { ProductStatusEnum } from '../modules/product/enums/product-status.enum';
 
 export class CreateProductsTable1757072374025 implements MigrationInterface {
 	/*
@@ -26,7 +26,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 		 * Get products table if exists
 		 */
 		const productsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Create products table if not exists
@@ -85,14 +85,14 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get created `products` table
 		 */
 		const createdProductsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Check if products table exists
@@ -102,7 +102,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 			 * Get all foreign keys in `products` table
 			 */
 			const existingFks: TableForeignKey[] =
-				createdProductsTable.foreignKeys || []
+				createdProductsTable.foreignKeys || [];
 
 			/*
 			 * Create foreign key for `products` table named
@@ -123,14 +123,14 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'images',
 					})
-				)
+				);
 			}
 
 			/*
 			 * Get all index in `products` table
 			 */
 			const tableIndices: TableIndex[] =
-				createdProductsTable.indices || []
+				createdProductsTable.indices || [];
 
 			if (!tableIndices) {
 				/*
@@ -145,7 +145,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 						name: 'idx_products_name',
 						columnNames: ['name'],
 					}),
-				])
+				]);
 			}
 		}
 	}
@@ -161,7 +161,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 		 * Get products table if exists
 		 */
 		const productsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Check if products table exists
@@ -171,7 +171,7 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 			 * Get all foreign keys in `products` table
 			 */
 			const existingFks: TableForeignKey[] =
-				productsTable.foreignKeys || []
+				productsTable.foreignKeys || [];
 
 			/*
 			 * Drop foreign key for `products` table named
@@ -181,13 +181,13 @@ export class CreateProductsTable1757072374025 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					productsTable,
 					'fk_product_image_id_to_images_id'
-				)
+				);
 			}
 
 			/*
 			 * Drop products table
 			 */
-			await queryRunner.dropTable(productsTable)
+			await queryRunner.dropTable(productsTable);
 		}
 	}
 }

@@ -6,25 +6,25 @@
  * @version 1.0.2
  */
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { UserEntity } from '../../user/entities/user.entity'
-import { RoleStatus } from '../enums/role-status.enum'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { UserEntity } from '../../user/entities/user.entity';
+import { RoleStatus } from '../enums/role-status.enum';
 
 @Entity('roles')
 export class RoleEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	name: string
+	name: string;
 
 	@Column({
 		type: 'enum',
 		enum: RoleStatus,
 		default: RoleStatus.ACTIVE,
 	})
-	status: RoleStatus
+	status: RoleStatus;
 
 	@OneToMany(
 		(): typeof UserEntity => UserEntity,
@@ -33,5 +33,5 @@ export class RoleEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	user: UserEntity[]
+	user: UserEntity[];
 }

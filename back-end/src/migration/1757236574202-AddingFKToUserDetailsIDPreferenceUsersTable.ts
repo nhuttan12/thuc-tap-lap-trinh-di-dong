@@ -11,7 +11,7 @@ import {
 	QueryRunner,
 	Table,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 	implements MigrationInterface
@@ -28,12 +28,12 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 		 * Get `user_details` table
 		 */
 		const userDetailTable: Table | undefined =
-			await queryRunner.getTable('user_details')
+			await queryRunner.getTable('user_details');
 
 		/*
 		 * Check if `user_details` table not exists
 		 */
-		if (!userDetailTable) return
+		if (!userDetailTable) return;
 
 		/*
 		 * Get foreign keys of `user_details` table in `id` column preference
@@ -45,14 +45,14 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 					fk.referencedTableName === 'users' &&
 					fk.columnNames.includes('id') &&
 					fk.referencedColumnNames.includes('id')
-				)
+				);
 			}
-		)
+		);
 
 		/*
 		 * Check if foreign key exists
 		 */
-		if (foreignKeys) return
+		if (foreignKeys) return;
 
 		/*
 		 * Create foreign key named `fk_user_details_id_to_users_id`
@@ -65,7 +65,7 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 				referencedColumnNames: ['id'],
 				referencedTableName: 'users',
 			})
-		)
+		);
 	}
 
 	/*
@@ -80,12 +80,12 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 		 * Get `user_details` table
 		 */
 		const userDetailTable: Table | undefined =
-			await queryRunner.getTable('user_details')
+			await queryRunner.getTable('user_details');
 
 		/*
 		 * Check if `user_details` table not exists
 		 */
-		if (!userDetailTable) return
+		if (!userDetailTable) return;
 
 		/*
 		 * Get foreign keys of `user_details` table in `id` column preference
@@ -97,14 +97,14 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 					fk.referencedTableName === 'users' &&
 					fk.columnNames.includes('id') &&
 					fk.referencedColumnNames.includes('id')
-				)
+				);
 			}
-		)
+		);
 
 		/*
 		 * Check if foreign key not exists
 		 */
-		if (!foreignKeys) return
+		if (!foreignKeys) return;
 
 		/*
 		 * Drop foreign key named `fk_user_details_id_to_users_id`
@@ -112,6 +112,6 @@ export class AddingFKToUserDetailsIDPreferenceUsersTable1757236574202
 		await queryRunner.dropForeignKey(
 			userDetailTable,
 			'fk_user_details_id_to_users_id'
-		)
+		);
 	}
 }

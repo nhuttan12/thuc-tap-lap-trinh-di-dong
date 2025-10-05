@@ -8,39 +8,39 @@ export class PagingMetaDto {
 	/**
 	 * current page number (1-based)
 	 */
-	page: number
+	page: number;
 
 	/**
 	 * number of items per page
 	 */
-	limit: number
+	limit: number;
 
 	/**
 	 * total number of items
 	 */
-	totalItems: number
+	totalItems: number;
 
 	/**
 	 * total number of pages
 	 */
-	totalPages: number
+	totalPages: number;
 
 	/**
 	 * is there a next page?
 	 */
-	hasNextPage: boolean
+	hasNextPage: boolean;
 
 	/**
 	 * is there a previous page?
 	 */
-	hasPreviousPage: boolean
+	hasPreviousPage: boolean;
 
 	constructor(page: number, limit: number, totalItems: number) {
-		this.page = page
-		this.limit = limit
-		this.totalItems = totalItems
-		this.totalPages = Math.ceil(totalItems / limit) || 1
-		this.hasNextPage = page < this.totalPages
-		this.hasPreviousPage = page > 1
+		this.page = page;
+		this.limit = limit;
+		this.totalItems = totalItems;
+		this.totalPages = Math.ceil(totalItems / limit) || 1;
+		this.hasNextPage = page < this.totalPages;
+		this.hasPreviousPage = page > 1;
 	}
 }

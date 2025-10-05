@@ -12,35 +12,35 @@ import {
 	ExceptionFilter,
 	HttpException,
 	HttpStatus,
-} from '@nestjs/common'
-import { HttpAdapterHost } from '@nestjs/core'
-import { HttpArgumentsHost } from '@nestjs/common/interfaces'
-import { Request, Response } from 'express'
+} from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { Request, Response } from 'express';
 
 @Catch()
 export class CatchEverythingFilter implements ExceptionFilter {
 	constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
 	catch(exception: unknown, host: ArgumentsHost): void {
-		const { httpAdapter } = this.httpAdapterHost
+		const { httpAdapter } = this.httpAdapterHost;
 		/**
 		 * Switch to HTTP arguments host
 		 */
-		const ctx: HttpArgumentsHost = host.switchToHttp()
+		const ctx: HttpArgumentsHost = host.switchToHttp();
 
-		let res: any = null
-		let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR
+		let res: any = null;
+		let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
 
 		/**
 		 * Get response and http status from exception
 		 */
 		if (exception instanceof HttpException) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
-			res = exception.getResponse()
-			httpStatus = exception.getStatus()
+			res = exception.getResponse();
+			httpStatus = exception.getStatus();
 		}
 
-		const isStringResponse: boolean = typeof res === 'string'
+		const isStringResponse: boolean = typeof res === 'string';
 
 		/**
 		 * Create response body
@@ -60,8 +60,8 @@ export class CatchEverythingFilter implements ExceptionFilter {
 						) as string,
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
 						message: res.customCode || res.message,
-					}
+					};
 
-		httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus)
+		httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
 	}
 }

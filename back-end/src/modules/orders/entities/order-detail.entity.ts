@@ -12,15 +12,15 @@ import {
 	JoinColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { OrderEntity } from './order.entity'
-import { ProductEntity } from '../../product/entities/product.entity'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { OrderEntity } from './order.entity';
+import { ProductEntity } from '../../product/entities/product.entity';
 
 @Entity('order_details')
 export class OrderDetailEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@ManyToOne(
 		(): typeof OrderEntity => OrderEntity,
@@ -31,7 +31,7 @@ export class OrderDetailEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'order_id' })
-	order: OrderEntity
+	order: OrderEntity;
 
 	@ManyToOne(
 		(): typeof ProductEntity => ProductEntity,
@@ -42,11 +42,11 @@ export class OrderDetailEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'product_id' })
-	product: ProductEntity
+	product: ProductEntity;
 
 	@Column()
-	quantity: number
+	quantity: number;
 
 	@Column()
-	price: number
+	price: number;
 }

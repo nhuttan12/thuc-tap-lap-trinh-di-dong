@@ -11,8 +11,8 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
-import { OrderStatusEnum } from '../modules/orders/enums/order-status.enum'
+} from 'typeorm';
+import { OrderStatusEnum } from '../modules/orders/enums/order-status.enum';
 
 export class CreateOrdersTable1757153969179 implements MigrationInterface {
 	/*
@@ -26,7 +26,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 		 * Get `orders` table if exist
 		 */
 		const ordersTable: Table | undefined =
-			await queryRunner.getTable('orders')
+			await queryRunner.getTable('orders');
 
 		/*
 		 * Check if `orders` table exists
@@ -78,14 +78,14 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get `orders` table after created
 		 */
 		const ordersTableCreated: Table | undefined =
-			await queryRunner.getTable('orders')
+			await queryRunner.getTable('orders');
 
 		/*
 		 * Check if `orders` table created
@@ -98,7 +98,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 				ordersTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_orders_user_id_to_users_id'
-				)
+				);
 
 			/*
 			 * Check if `fk_orders_user_id_to_users_id` fk not exist
@@ -115,20 +115,20 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'users',
 					})
-				)
+				);
 			}
 
 			/*
 			 * Get all index in `orders` table
 			 */
-			const ordersIndex: TableIndex[] = ordersTableCreated.indices || []
+			const ordersIndex: TableIndex[] = ordersTableCreated.indices || [];
 
 			/*
 			 * Get `idx_orders_id` index if exist
 			 */
 			const ordersIndexId: TableIndex | undefined = ordersIndex.find(
 				(index: TableIndex): boolean => index.name === 'idx_orders_id'
-			)
+			);
 
 			/*
 			 * Check if `idx_orders_id` index not exist
@@ -143,7 +143,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 						name: 'idx_orders_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 
 			/*
@@ -152,7 +152,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 			const ordersIndexUserId: TableIndex | undefined = ordersIndex.find(
 				(index: TableIndex): boolean =>
 					index.name === 'idx_orders_user_id'
-			)
+			);
 
 			/*
 			 * Check if `idx_orders_user_id` index not exist
@@ -167,7 +167,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 						name: 'idx_orders_user_id',
 						columnNames: ['user_id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -183,7 +183,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 		 * Get `orders` table after created
 		 */
 		const ordersTableCreated: Table | undefined =
-			await queryRunner.getTable('orders')
+			await queryRunner.getTable('orders');
 
 		/*
 		 * Check if `orders` table created
@@ -196,7 +196,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 				ordersTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_orders_user_id_to_users_id'
-				)
+				);
 
 			/*
 			 * Check if `fk_orders_user_id_to_users_id` fk exist
@@ -208,20 +208,20 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					ordersTableCreated,
 					'fk_orders_user_id_to_users_id'
-				)
+				);
 			}
 
 			/*
 			 * Get all index in `orders` table
 			 */
-			const ordersIndex: TableIndex[] = ordersTableCreated.indices || []
+			const ordersIndex: TableIndex[] = ordersTableCreated.indices || [];
 
 			/*
 			 * Get `idx_orders_id` index if exist
 			 */
 			const ordersIndexId: TableIndex | undefined = ordersIndex.find(
 				(index: TableIndex): boolean => index.name === 'idx_orders_id'
-			)
+			);
 
 			/*
 			 * Check if `idx_orders_id` index exist
@@ -230,7 +230,10 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 				/*
 				 * Drop `idx_orders_id` index if exist
 				 */
-				await queryRunner.dropIndex(ordersTableCreated, 'idx_orders_id')
+				await queryRunner.dropIndex(
+					ordersTableCreated,
+					'idx_orders_id'
+				);
 			}
 
 			/*
@@ -239,7 +242,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 			const ordersIndexUserId: TableIndex | undefined = ordersIndex.find(
 				(index: TableIndex): boolean =>
 					index.name === 'idx_orders_user_id'
-			)
+			);
 
 			/*
 			 * Check if `idx_orders_user_id` index exist
@@ -251,7 +254,7 @@ export class CreateOrdersTable1757153969179 implements MigrationInterface {
 				await queryRunner.dropIndex(
 					ordersTableCreated,
 					'idx_orders_user_id'
-				)
+				);
 			}
 		}
 	}

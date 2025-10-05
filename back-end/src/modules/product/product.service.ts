@@ -5,17 +5,17 @@
  * @version 1.0.0
  */
 
-import { Injectable, Logger } from '@nestjs/common'
-import { ProductRepository } from './repositories/product.repository'
-import { ProductEntityResponseDto } from './dtos/product-entity-response.dto'
-import { ProductEntity } from './entities/product.entity'
-import { ProductMapper } from './mappers/product.mapper'
-import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service'
-import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto'
+import { Injectable, Logger } from '@nestjs/common';
+import { ProductRepository } from './repositories/product.repository';
+import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
+import { ProductEntity } from './entities/product.entity';
+import { ProductMapper } from './mappers/product.mapper';
+import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
+import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 
 @Injectable()
 export class ProductService {
-	private readonly logger: Logger = new Logger(ProductService.name)
+	private readonly logger: Logger = new Logger(ProductService.name);
 
 	constructor(
 		private readonly productRepository: ProductRepository,
@@ -44,19 +44,19 @@ export class ProductService {
 			const skip: number = this.buildPagingMetaService.calculateSkip(
 				page,
 				limit
-			)
+			);
 
 			/*
 			 * Calling `getProductsPaging` from `ProductRepository`
 			 */
 			const [products, total]: [ProductEntity[], number] =
-				await this.productRepository.getProductsPaging(limit, skip)
+				await this.productRepository.getProductsPaging(limit, skip);
 
 			/*
 			 * Convert `ProductEntity` to `ProductEntityResponseDto`
 			 */
 			const productResponse: ProductEntityResponseDto[] =
-				this.productMapper.toProductEntityListResponseDto(products)
+				this.productMapper.toProductEntityListResponseDto(products);
 
 			/**
 			 * Build pagination response
@@ -66,13 +66,13 @@ export class ProductService {
 				page,
 				limit,
 				total
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getProductsPaging\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

@@ -6,18 +6,18 @@
  * @version 1.0.3
  */
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { CategoryStatusEnum } from '../enums/category-status.enum'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { ProductDetailsEntity } from '../../product/entities/product-details.entity'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { CategoryStatusEnum } from '../enums/category-status.enum';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductDetailsEntity } from '../../product/entities/product-details.entity';
 
 @Entity('categories')
 export class CategoryEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	name: string
+	name: string;
 
 	@Column({
 		type: 'enum',
@@ -25,7 +25,7 @@ export class CategoryEntity extends TimestampField {
 		default: CategoryStatusEnum.ACTIVE,
 		nullable: false,
 	})
-	status: CategoryStatusEnum
+	status: CategoryStatusEnum;
 
 	@OneToMany(
 		(): typeof ProductDetailsEntity => ProductDetailsEntity,
@@ -35,5 +35,5 @@ export class CategoryEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	productDetails: ProductDetailsEntity[]
+	productDetails: ProductDetailsEntity[];
 }

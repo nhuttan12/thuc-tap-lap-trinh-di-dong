@@ -11,7 +11,7 @@ import {
 	Table,
 	TableColumn,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class RemoveImageIDOnProductTables1757177316135
 	implements MigrationInterface
@@ -27,7 +27,7 @@ export class RemoveImageIDOnProductTables1757177316135
 		 * Get `products` table if exist
 		 */
 		const productsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Check if `products` table exist
@@ -40,7 +40,7 @@ export class RemoveImageIDOnProductTables1757177316135
 				productsTable.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_product_image_id_to_images_id'
-				)
+				);
 
 			/*
 			 * If fk `fk_product_image_id_to_images_id` exist
@@ -52,7 +52,7 @@ export class RemoveImageIDOnProductTables1757177316135
 				await queryRunner.dropForeignKey(
 					productsTable,
 					'fk_product_image_id_to_images_id'
-				)
+				);
 			}
 
 			/*
@@ -61,7 +61,7 @@ export class RemoveImageIDOnProductTables1757177316135
 			const imageIDColumn: TableColumn | undefined =
 				productsTable.columns.find(
 					(col: TableColumn): boolean => col.name === 'image_id'
-				)
+				);
 
 			/*
 			 * If `image_id` column exist in products table
@@ -70,7 +70,7 @@ export class RemoveImageIDOnProductTables1757177316135
 				/*
 				 * Remove `image_id` column from `products` table
 				 */
-				await queryRunner.dropColumn(productsTable, 'image_id')
+				await queryRunner.dropColumn(productsTable, 'image_id');
 			}
 		}
 	}
@@ -86,7 +86,7 @@ export class RemoveImageIDOnProductTables1757177316135
 		 * Get `products` table if exist
 		 */
 		const productsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Check if `products` table not exist
@@ -99,7 +99,7 @@ export class RemoveImageIDOnProductTables1757177316135
 				productsTable.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_product_image_id_to_images_id'
-				)
+				);
 
 			/*
 			 * If fk `fk_product_image_id_to_images_id` not exist
@@ -116,7 +116,7 @@ export class RemoveImageIDOnProductTables1757177316135
 						referencedColumnNames: ['id'],
 						referencedTableName: 'images',
 					})
-				)
+				);
 			}
 
 			/*
@@ -125,7 +125,7 @@ export class RemoveImageIDOnProductTables1757177316135
 			const imageIDColumn: TableColumn | undefined =
 				productsTable.columns.find(
 					(col: TableColumn): boolean => col.name === 'image_id'
-				)
+				);
 
 			/*
 			 * If `image_id` column not exist in products table
@@ -141,7 +141,7 @@ export class RemoveImageIDOnProductTables1757177316135
 						type: 'integer',
 						isNullable: true,
 					})
-				)
+				);
 			}
 		}
 	}

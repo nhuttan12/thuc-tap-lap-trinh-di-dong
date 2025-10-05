@@ -12,22 +12,22 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { UserEntity } from '../../user/entities/user.entity'
-import { ImageEntity } from './image.entity'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { UserEntity } from '../../user/entities/user.entity';
+import { ImageEntity } from './image.entity';
 
 @Entity('user_images')
 export class UserImageEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@ManyToOne(
 		(): typeof UserEntity => UserEntity,
 		(userEntity: UserEntity): UserImageEntity[] => userEntity.userImages
 	)
 	@JoinColumn({ name: 'user_id' })
-	user: UserEntity
+	user: UserEntity;
 
 	@OneToOne(
 		(): typeof ImageEntity => ImageEntity,
@@ -37,5 +37,5 @@ export class UserImageEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'image_id' })
-	image: ImageEntity
+	image: ImageEntity;
 }

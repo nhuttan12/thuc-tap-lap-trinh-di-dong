@@ -10,7 +10,7 @@ import {
 	QueryRunner,
 	Table,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 	/*
@@ -24,7 +24,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 		 * Get `user_images` if exist
 		 */
 		const userImagesTable: Table | undefined =
-			await queryRunner.getTable('user_images')
+			await queryRunner.getTable('user_images');
 
 		/*
 		 * Check if `user_images` not exist
@@ -69,14 +69,14 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get `user_images` after created
 		 */
 		const userImagesTableCreated: Table | undefined =
-			await queryRunner.getTable('user_images')
+			await queryRunner.getTable('user_images');
 
 		/*
 		 * Check if `user_images` exist
@@ -89,7 +89,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 				userImagesTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_user_images_image_id_to_images_id'
-				)
+				);
 
 			/*
 			 * Check if foreign key `fk_user_images_image_id_to_images_id` not exist
@@ -106,7 +106,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'images',
 					})
-				)
+				);
 			}
 
 			/*
@@ -116,7 +116,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 				userImagesTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_user_images_user_id_to_users_id'
-				)
+				);
 
 			/*
 			 * Check if foreign key `fk_user_images_user_id_to_users_id` not exist
@@ -133,7 +133,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'users',
 					})
-				)
+				);
 			}
 		}
 	}
@@ -149,7 +149,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 		 * Get `user_images` after created
 		 */
 		const userImagesTableCreated: Table | undefined =
-			await queryRunner.getTable('user_images')
+			await queryRunner.getTable('user_images');
 
 		/*
 		 * Check if `user_images` exist
@@ -162,7 +162,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 				userImagesTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_user_images_image_id_to_images_id'
-				)
+				);
 
 			/*
 			 * Check if foreign key `fk_user_images_image_id_to_images_id` exist
@@ -174,7 +174,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					userImagesTableCreated,
 					userIDFk
-				)
+				);
 			}
 
 			/*
@@ -184,7 +184,7 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 				userImagesTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_user_images_user_id_to_users_id'
-				)
+				);
 
 			/*
 			 * Check if foreign key `fk_user_images_user_id_to_users_id` exist
@@ -196,13 +196,13 @@ export class CreateUserImagesTable1757179904025 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					userImagesTableCreated,
 					imageIDFk
-				)
+				);
 			}
 
 			/*
 			 * Drop `user_images` table if exist
 			 */
-			await queryRunner.dropTable(userImagesTableCreated)
+			await queryRunner.dropTable(userImagesTableCreated);
 		}
 	}
 }

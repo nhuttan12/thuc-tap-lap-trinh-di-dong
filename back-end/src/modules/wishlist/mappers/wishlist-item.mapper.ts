@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { Injectable } from '@nestjs/common'
-import { WishlistItemEntity } from '../entities/wishlist-item.entity'
-import { ProductInWishlistResponseDto } from '../dtos/product-in-wishlist-response.dto'
+import { Injectable } from '@nestjs/common';
+import { WishlistItemEntity } from '../entities/wishlist-item.entity';
+import { ProductInWishlistResponseDto } from '../dtos/product-in-wishlist-response.dto';
 
 @Injectable()
 export class WishlistItemMapper {
@@ -24,7 +24,7 @@ export class WishlistItemMapper {
 				rating: wishlistItem.product.productDetailsEntity.rating,
 				createdAt: wishlistItem.createdAt,
 				updatedAt: wishlistItem.updatedAt,
-			}
-		})
+			};
+		});
 	}
 }

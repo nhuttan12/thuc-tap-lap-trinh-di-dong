@@ -5,16 +5,16 @@
  * @version 1.0.1
  */
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common'
-import { ImageRepository } from './repositories/image.repository'
-import { ImageEntity } from './entities/image.entity'
-import { ImageStatusCode } from './status-code/image.status-code'
-import { ImageMapper } from './mappers/image.mapper'
-import { ImageEntityResponse } from './dtos/image-entity.response'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { ImageRepository } from './repositories/image.repository';
+import { ImageEntity } from './entities/image.entity';
+import { ImageStatusCode } from './status-code/image.status-code';
+import { ImageMapper } from './mappers/image.mapper';
+import { ImageEntityResponse } from './dtos/image-entity.response';
 
 @Injectable()
 export class ImageService {
-	private readonly logger: Logger = new Logger(ImageService.name)
+	private readonly logger: Logger = new Logger(ImageService.name);
 
 	constructor(
 		private readonly imageRepository: ImageRepository,
@@ -39,10 +39,10 @@ export class ImageService {
 		const imageEntity: ImageEntity = await this.imageRepository.createImage(
 			imageUrl,
 			userID
-		)
+		);
 		this.logger.debug(
 			`Call \`createImage\` in \`ImageRepository\`: ${JSON.stringify(imageEntity)}`
-		)
+		);
 
 		/*
 		 * Check image existence
@@ -50,21 +50,21 @@ export class ImageService {
 		if (!imageEntity) {
 			this.logger.error(
 				`Image with url: ${imageUrl} and userID: ${userID} not found after created`
-			)
+			);
 			throw new BadRequestException({
 				statusCode: ImageStatusCode.IMAGE_NOT_FOUND.statusCode,
 				customCode: ImageStatusCode.IMAGE_NOT_FOUND.customCode,
 				message: ImageStatusCode.IMAGE_NOT_FOUND.message,
-			})
+			});
 		}
 
 		/*
 		 * Mapping image entity to image response dto
 		 */
 		const imageResponseDto: ImageEntityResponse =
-			this.imageMapper.toImageEntityResponse(imageEntity)
+			this.imageMapper.toImageEntityResponse(imageEntity);
 
-		return imageResponseDto
+		return imageResponseDto;
 	}
 
 	/**
@@ -80,26 +80,26 @@ export class ImageService {
 		 * Call `getImageByUrl` in `ImageRepository`
 		 */
 		const imageEntity: ImageEntity | null =
-			await this.imageRepository.getImageByUrl(url)
+			await this.imageRepository.getImageByUrl(url);
 
 		/**
 		 * Check image exist
 		 */
 		if (!imageEntity) {
-			this.logger.error(`Image with url: ${url} not found`)
+			this.logger.error(`Image with url: ${url} not found`);
 			throw new BadRequestException({
 				statusCode: ImageStatusCode.IMAGE_NOT_FOUND.statusCode,
 				customCode: ImageStatusCode.IMAGE_NOT_FOUND.customCode,
 				message: ImageStatusCode.IMAGE_NOT_FOUND.message,
-			})
+			});
 		}
 
 		/**
 		 * Mapping image entity to image response dto
 		 */
 		const imageResponseDto: ImageEntityResponse =
-			this.imageMapper.toImageEntityResponse(imageEntity)
+			this.imageMapper.toImageEntityResponse(imageEntity);
 
-		return imageResponseDto
+		return imageResponseDto;
 	}
 }

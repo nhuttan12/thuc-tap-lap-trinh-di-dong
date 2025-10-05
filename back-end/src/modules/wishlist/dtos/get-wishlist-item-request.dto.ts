@@ -5,6 +5,6 @@
  * @version 1.0.0
  */
 
-import { PagingRequestDto } from '../../../common/dtos/request/paging-request.dto'
+import { PagingRequestDto } from '../../../common/dtos/request/paging-request.dto';
 
 export class GetWishlistItemRequestDto extends PagingRequestDto {}

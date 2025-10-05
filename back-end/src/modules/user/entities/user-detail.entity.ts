@@ -6,29 +6,29 @@
  * @version 1.0.2
  */
 
-import { TimestampField } from '../../../common/database/timestamp.field'
+import { TimestampField } from '../../../common/database/timestamp.field';
 import {
 	Column,
 	Entity,
 	JoinColumn,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { UserEntity } from './user.entity'
+} from 'typeorm';
+import { UserEntity } from './user.entity';
 
 @Entity()
 export class UserDetailEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	address1: string
+	address1: string;
 
 	@Column()
-	address2: string
+	address2: string;
 
 	@Column()
-	address3: string
+	address3: string;
 
 	@OneToOne(
 		(): typeof UserEntity => UserEntity,
@@ -38,5 +38,5 @@ export class UserDetailEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'id' })
-	user: UserEntity
+	user: UserEntity;
 }

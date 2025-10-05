@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { Injectable } from '@nestjs/common'
-import { CartDetailEntity } from '../entities/cart-detail.entity'
-import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto'
+import { Injectable } from '@nestjs/common';
+import { CartDetailEntity } from '../entities/cart-detail.entity';
+import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto';
 
 @Injectable()
 export class CartDetailMapper {
@@ -22,8 +22,8 @@ export class CartDetailMapper {
 				price: cartDetailEntity.product.price,
 				name: cartDetailEntity.product.name,
 				images: cartDetailEntity.product.productImages[0].image.url,
-			}
-		})
+			};
+		});
 	}
 
 	toCartDetailResponseDto(
@@ -36,6 +36,6 @@ export class CartDetailMapper {
 			price: cartDetailEntity.product.price,
 			name: cartDetailEntity.product.name,
 			images: cartDetailEntity.product.productImages[0].image.url,
-		}
+		};
 	}
 }

@@ -6,17 +6,17 @@
  * @version 1.0.3
  */
 
-import { InjectRepository } from '@nestjs/typeorm'
-import { UserEntity } from '../entities/user.entity'
-import { DataSource, EntityManager, Repository } from 'typeorm'
-import { Logger } from '@nestjs/common'
-import { v4 as uuidv4 } from 'uuid'
-import { RoleEntity } from '../../role/entities/role.entity'
-import { RoleName } from '../../role/enums/role-name.enum'
-import { ImageEntity } from '../../image/entities/image.entity'
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from '../entities/user.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { ImageEntity } from '../../image/entities/image.entity';
 
 export class UserRepository {
-	private readonly logger: Logger = new Logger(UserRepository.name)
+	private readonly logger: Logger = new Logger(UserRepository.name);
 
 	/*
 	 * @description constructor of user repository class
@@ -51,19 +51,21 @@ export class UserRepository {
 				relations: {
 					role: true,
 				},
-			})
-			this.logger.debug(`Get users from database ${JSON.stringify(user)}`)
+			});
+			this.logger.debug(
+				`Get users from database ${JSON.stringify(user)}`
+			);
 
 			/*
 			 * Return user to user service
 			 */
-			return user
+			return user;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getUserByUserNameAndPassword\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -87,19 +89,21 @@ export class UserRepository {
 				relations: {
 					role: true,
 				},
-			})
-			this.logger.debug(`Get users from database ${JSON.stringify(user)}`)
+			});
+			this.logger.debug(
+				`Get users from database ${JSON.stringify(user)}`
+			);
 
 			/*
 			 * Return user to user service
 			 */
-			return user
+			return user;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getUserByUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -123,19 +127,21 @@ export class UserRepository {
 				relations: {
 					role: true,
 				},
-			})
-			this.logger.debug(`Get users from database ${JSON.stringify(user)}`)
+			});
+			this.logger.debug(
+				`Get users from database ${JSON.stringify(user)}`
+			);
 
 			/*
 			 * Return user to user service
 			 */
-			return user
+			return user;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getUserByEmail\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -160,20 +166,20 @@ export class UserRepository {
 					const user: UserEntity = tx.create(UserEntity, {
 						name: name,
 						email: email,
-					})
+					});
 
 					/*
 					 * Save it to database
 					 */
-					return await tx.save(user)
+					return await tx.save(user);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createNewUserGoogle\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -190,16 +196,18 @@ export class UserRepository {
 				where: {
 					username: username,
 				},
-			})
-			this.logger.debug(`Get user from database ${JSON.stringify(users)}`)
+			});
+			this.logger.debug(
+				`Get user from database ${JSON.stringify(users)}`
+			);
 
-			return users
+			return users;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getUserByUsername\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -227,8 +235,8 @@ export class UserRepository {
 			/**
 			 * Declare uuidv4() and generating default full name
 			 */
-			const uuid: string = uuidv4()
-			const defaultName: string = `Người dùng ${uuid}`
+			const uuid: string = uuidv4();
+			const defaultName: string = `Người dùng ${uuid}`;
 
 			return await this.dataSource.transaction(
 				async (tx: EntityManager): Promise<UserEntity> => {
@@ -252,20 +260,20 @@ export class UserRepository {
 								},
 							},
 						],
-					})
+					});
 
 					/**
 					 * Save user to database
 					 */
-					return tx.save(user)
+					return tx.save(user);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createUserWithUsernameEmailPassword\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

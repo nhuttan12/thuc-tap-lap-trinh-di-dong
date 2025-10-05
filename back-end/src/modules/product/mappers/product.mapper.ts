@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { Injectable } from '@nestjs/common'
-import { ProductEntity } from '../entities/product.entity'
-import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto'
+import { Injectable } from '@nestjs/common';
+import { ProductEntity } from '../entities/product.entity';
+import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 
 @Injectable()
 export class ProductMapper {
@@ -24,7 +24,7 @@ export class ProductMapper {
 				status: product.status,
 				createdAt: product.createdAt,
 				updatedAt: product.updatedAt,
-			}
-		})
+			};
+		});
 	}
 }

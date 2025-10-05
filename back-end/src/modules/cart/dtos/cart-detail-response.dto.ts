@@ -6,10 +6,10 @@
  */
 
 export class CartDetailResponseDto {
-	id: number
-	images: string
-	name: string
-	price: number
-	discount: number
-	quantity: number
+	id: number;
+	images: string;
+	name: string;
+	price: number;
+	discount: number;
+	quantity: number;
 }

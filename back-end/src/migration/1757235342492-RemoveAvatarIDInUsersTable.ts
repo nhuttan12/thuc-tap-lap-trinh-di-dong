@@ -11,7 +11,7 @@ import {
 	Table,
 	TableColumn,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class RemoveAvatarIDInUsersTable1757235342492
 	implements MigrationInterface
@@ -27,12 +27,12 @@ export class RemoveAvatarIDInUsersTable1757235342492
 		 * Get `users` table if exist
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 
 		/*
 		 * Check if `users` table not exist
 		 */
-		if (!usersTable) return
+		if (!usersTable) return;
 
 		/*
 		 * Get fk named `fk_users_avatar_id_to_images_id` if exist in `users` table
@@ -41,34 +41,34 @@ export class RemoveAvatarIDInUsersTable1757235342492
 			usersTable.foreignKeys.find(
 				(fk: TableForeignKey): boolean =>
 					fk.name === 'fk_users_avatar_id_to_images_id'
-			)
+			);
 
 		/*
 		 * Check fk named `fk_users_avatar_id_to_images_id` not exist in `users` table
 		 */
-		if (!fkUsersAvatarIdToImagesId) return
+		if (!fkUsersAvatarIdToImagesId) return;
 
 		/*
 		 * Drop fk named `fk_users_avatar_id_to_images_id` in `users` table
 		 */
-		await queryRunner.dropForeignKey(usersTable, fkUsersAvatarIdToImagesId)
+		await queryRunner.dropForeignKey(usersTable, fkUsersAvatarIdToImagesId);
 
 		/*
 		 * Get `avatar_id` column if exist in `users` table
 		 */
 		const avatarIdColumn: TableColumn | undefined = usersTable.columns.find(
 			(column: TableColumn): boolean => column.name === 'avatar_id'
-		)
+		);
 
 		/*
 		 * Check `avatar_id` column not exist in `users` table
 		 */
-		if (!avatarIdColumn) return
+		if (!avatarIdColumn) return;
 
 		/*
 		 * Drop `avatar_id` column in `users` table
 		 */
-		await queryRunner.dropColumn(usersTable, avatarIdColumn)
+		await queryRunner.dropColumn(usersTable, avatarIdColumn);
 	}
 
 	/*
@@ -82,24 +82,24 @@ export class RemoveAvatarIDInUsersTable1757235342492
 		 * Get `users` table if exist
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 
 		/*
 		 * Check if `users` table not exist
 		 */
-		if (!usersTable) return
+		if (!usersTable) return;
 
 		/*
 		 * Get `avatar_id` column if exist in `users` table
 		 */
 		const avatarIdColumn: TableColumn | undefined = usersTable.columns.find(
 			(column: TableColumn): boolean => column.name === 'avatar_id'
-		)
+		);
 
 		/*
 		 * Check `avatar_id` column exist in `users` table
 		 */
-		if (avatarIdColumn) return
+		if (avatarIdColumn) return;
 
 		/*
 		 * Create `avatar_id` column in `users` table
@@ -111,7 +111,7 @@ export class RemoveAvatarIDInUsersTable1757235342492
 				type: 'integer',
 				isNullable: true,
 			})
-		)
+		);
 
 		/*
 		 * Get fk named `fk_users_avatar_id_to_images_id` if exist in `users` table
@@ -120,12 +120,12 @@ export class RemoveAvatarIDInUsersTable1757235342492
 			usersTable.foreignKeys.find(
 				(fk: TableForeignKey): boolean =>
 					fk.name === 'fk_users_avatar_id_to_images_id'
-			)
+			);
 
 		/*
 		 * Check fk named `fk_users_avatar_id_to_images_id` exist in `users` table
 		 */
-		if (fkUsersAvatarIdToImagesId) return
+		if (fkUsersAvatarIdToImagesId) return;
 
 		/*
 		 * Create fk named `fk_users_avatar_id_to_images_id` in `users` table
@@ -138,6 +138,6 @@ export class RemoveAvatarIDInUsersTable1757235342492
 				referencedColumnNames: ['id'],
 				referencedTableName: 'images',
 			})
-		)
+		);
 	}
 }

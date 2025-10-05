@@ -13,16 +13,16 @@ import {
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { UserEntity } from '../../user/entities/user.entity'
-import { CartDetailEntity } from './cart-detail.entity'
-import { CartStatusEnum } from '../enums/cart.status.enum'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { UserEntity } from '../../user/entities/user.entity';
+import { CartDetailEntity } from './cart-detail.entity';
+import { CartStatusEnum } from '../enums/cart.status.enum';
 
 @Entity('carts')
 export class CartEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column({
 		type: 'enum',
@@ -30,7 +30,7 @@ export class CartEntity extends TimestampField {
 		default: CartStatusEnum.ACTIVE,
 		nullable: false,
 	})
-	status: CartStatusEnum
+	status: CartStatusEnum;
 
 	@ManyToOne(
 		(): typeof UserEntity => UserEntity,
@@ -40,7 +40,7 @@ export class CartEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'user_id' })
-	user: UserEntity
+	user: UserEntity;
 
 	@OneToMany(
 		(): typeof CartDetailEntity => CartDetailEntity,
@@ -49,5 +49,5 @@ export class CartEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	cartDetail: CartDetailEntity[]
+	cartDetail: CartDetailEntity[];
 }

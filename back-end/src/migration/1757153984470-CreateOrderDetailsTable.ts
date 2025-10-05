@@ -11,7 +11,7 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
+} from 'typeorm';
 
 export class CreateOrderDetailsTable1757153984470
 	implements MigrationInterface
@@ -27,7 +27,7 @@ export class CreateOrderDetailsTable1757153984470
 		 * Get `order_details` table
 		 */
 		const orderDetailsTable: Table | undefined =
-			await queryRunner.getTable('order_details')
+			await queryRunner.getTable('order_details');
 
 		/*
 		 * Check if `order_details` table not exist
@@ -82,14 +82,14 @@ export class CreateOrderDetailsTable1757153984470
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get `order_details` table after created
 		 */
 		const orderDetailsTableCreated: Table | undefined =
-			await queryRunner.getTable('order_details')
+			await queryRunner.getTable('order_details');
 
 		/*
 		 * Check if `order_details` created
@@ -99,7 +99,7 @@ export class CreateOrderDetailsTable1757153984470
 			 * Get all order_details foreign keys
 			 */
 			const orderDetailsFks: TableForeignKey[] =
-				orderDetailsTableCreated.foreignKeys
+				orderDetailsTableCreated.foreignKeys;
 
 			/*
 			 * Check if foreign key `fk_order_details_order_id_orders_id` not exist
@@ -121,7 +121,7 @@ export class CreateOrderDetailsTable1757153984470
 						referencedColumnNames: ['id'],
 						referencedTableName: 'orders',
 					})
-				)
+				);
 			}
 
 			/*
@@ -144,7 +144,7 @@ export class CreateOrderDetailsTable1757153984470
 						referencedColumnNames: ['id'],
 						referencedTableName: 'products',
 					})
-				)
+				);
 			}
 
 			/*
@@ -153,7 +153,7 @@ export class CreateOrderDetailsTable1757153984470
 			const orderDetailsIndexId: TableIndex | undefined =
 				orderDetailsTableCreated.indices.find(
 					(i: TableIndex): boolean => i.name === 'inx_orders_id'
-				)
+				);
 
 			/*
 			 * Create new index named `inx_orders_id` if not exist
@@ -165,7 +165,7 @@ export class CreateOrderDetailsTable1757153984470
 						name: 'inx_orders_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -181,7 +181,7 @@ export class CreateOrderDetailsTable1757153984470
 		 * Get `order_details` table after created
 		 */
 		const orderDetailsTableCreated: Table | undefined =
-			await queryRunner.getTable('order_details')
+			await queryRunner.getTable('order_details');
 
 		/*
 		 * Check if `order_details` created
@@ -191,7 +191,7 @@ export class CreateOrderDetailsTable1757153984470
 			 * Get all order_details foreign keys
 			 */
 			const orderDetailsFks: TableForeignKey[] =
-				orderDetailsTableCreated.foreignKeys
+				orderDetailsTableCreated.foreignKeys;
 
 			/*
 			 * Check if foreign key `fk_order_details_order_id_orders_id` exist
@@ -208,7 +208,7 @@ export class CreateOrderDetailsTable1757153984470
 				await queryRunner.dropForeignKey(
 					orderDetailsTableCreated,
 					'fk_order_details_order_id_orders_id'
-				)
+				);
 			}
 
 			/*
@@ -226,7 +226,7 @@ export class CreateOrderDetailsTable1757153984470
 				await queryRunner.dropForeignKey(
 					orderDetailsTableCreated,
 					'fk_order_details_product_id_products_id'
-				)
+				);
 			}
 
 			/*
@@ -235,7 +235,7 @@ export class CreateOrderDetailsTable1757153984470
 			const orderDetailsIndexId: TableIndex | undefined =
 				orderDetailsTableCreated.indices.find(
 					(i: TableIndex): boolean => i.name === 'inx_orders_id'
-				)
+				);
 
 			/*
 			 * Drop index named `inx_orders_id` if exist
@@ -244,7 +244,7 @@ export class CreateOrderDetailsTable1757153984470
 				await queryRunner.dropIndex(
 					orderDetailsTableCreated,
 					'inx_orders_id'
-				)
+				);
 			}
 		}
 	}

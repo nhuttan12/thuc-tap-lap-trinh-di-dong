@@ -4,14 +4,14 @@
  * @since 2025-09-14
  * @version 1.0.0
  */
-import { Logger } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { CartEntity } from '../entities/cart.entity'
-import { DataSource, EntityManager, Repository } from 'typeorm'
-import { CartStatusEnum } from '../enums/cart.status.enum'
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CartEntity } from '../entities/cart.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { CartStatusEnum } from '../enums/cart.status.enum';
 
 export class CartRepository {
-	private readonly logger: Logger = new Logger(CartRepository.name)
+	private readonly logger: Logger = new Logger(CartRepository.name);
 
 	constructor(
 		@InjectRepository(CartEntity)
@@ -41,20 +41,20 @@ export class CartRepository {
 						status: CartStatusEnum.ACTIVE,
 						createdAt: new Date(),
 						updatedAt: new Date(),
-					})
+					});
 
 					/**
 					 * Save instance to the database
 					 */
-					return await tx.save(cartEntity)
+					return await tx.save(cartEntity);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createCart\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -79,21 +79,21 @@ export class CartRepository {
 						},
 						status: CartStatusEnum.ACTIVE,
 					},
-				})
+				});
 			this.logger.debug(
 				`Get cart by user ID and ACTIVE status from database: ${JSON.stringify(cartEntity)}`
-			)
+			);
 
 			/**
 			 * Return data
 			 */
-			return cartEntity
+			return cartEntity;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getActiveCartByUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

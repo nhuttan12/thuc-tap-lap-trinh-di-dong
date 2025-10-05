@@ -11,16 +11,16 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { ProductEntity } from '../../product/entities/product.entity'
-import { UserEntity } from '../../user/entities/user.entity'
-import { WishlistStatusEnum } from '../enums/wishlist-status.enum'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductEntity } from '../../product/entities/product.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { WishlistStatusEnum } from '../enums/wishlist-status.enum';
 
 @Entity('wishlist_items')
 export class WishlistItemEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@OneToOne(
 		(): typeof ProductEntity => ProductEntity,
@@ -30,7 +30,7 @@ export class WishlistItemEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'product_id' })
-	product: ProductEntity
+	product: ProductEntity;
 
 	@ManyToOne(
 		(): typeof UserEntity => UserEntity,
@@ -40,7 +40,7 @@ export class WishlistItemEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'user_id' })
-	user: UserEntity
+	user: UserEntity;
 
 	@Column({
 		type: 'enum',
@@ -48,5 +48,5 @@ export class WishlistItemEntity extends TimestampField {
 		default: WishlistStatusEnum.ACTIVE,
 		nullable: false,
 	})
-	status: WishlistStatusEnum
+	status: WishlistStatusEnum;
 }

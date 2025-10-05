@@ -7,7 +7,7 @@
  * @version 1.0.3
  */
 
-import * as Joi from 'joi'
+import * as Joi from 'joi';
 
 export const envValidationSchema: Joi.ObjectSchema = Joi.object({
 	/**
@@ -36,4 +36,4 @@ export const envValidationSchema: Joi.ObjectSchema = Joi.object({
 	GOOGLE_CLIENT_SECRET: Joi.string().required(),
 	GOOGLE_CALLBACK_URL: Joi.string().required(),
 	GOOGLE_ACCESS_TYPE: Joi.string().required(),
-})
+});

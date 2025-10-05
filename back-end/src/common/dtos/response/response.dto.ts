@@ -10,21 +10,21 @@ export class ResponseDto<T> {
 	/*
 	 * statusCode: status code of response
 	 */
-	statusCode: string
+	statusCode: string;
 
 	/*
 	 * message: message of response
 	 */
-	message: string
+	message: string;
 
 	/*
 	 * data: data of response
 	 */
-	data: T
+	data: T;
 
 	constructor(statusCode: string, message: string, data: T) {
-		this.data = data
-		this.message = message
-		this.statusCode = statusCode
+		this.data = data;
+		this.message = message;
+		this.statusCode = statusCode;
 	}
 }

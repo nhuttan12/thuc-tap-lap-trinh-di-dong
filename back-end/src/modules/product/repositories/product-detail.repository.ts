@@ -5,13 +5,13 @@
  * @version 1.0.0
  */
 
-import { Logger } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { ProductDetailsEntity } from '../entities/product-details.entity'
-import { Repository } from 'typeorm'
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProductDetailsEntity } from '../entities/product-details.entity';
+import { Repository } from 'typeorm';
 
 export class ProductDetailRepository {
-	private readonly logger: Logger = new Logger(ProductDetailRepository.name)
+	private readonly logger: Logger = new Logger(ProductDetailRepository.name);
 
 	constructor(
 		@InjectRepository(ProductDetailsEntity)
@@ -46,18 +46,18 @@ export class ProductDetailRepository {
 							},
 						},
 					},
-				})
+				});
 
 			/**
 			 * Return data
 			 */
-			return productDetailEntity
+			return productDetailEntity;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

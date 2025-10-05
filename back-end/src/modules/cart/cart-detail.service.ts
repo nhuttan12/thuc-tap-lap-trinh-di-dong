@@ -5,19 +5,19 @@
  * @version 1.0.0
  */
 
-import { Injectable, Logger } from '@nestjs/common'
-import { CartDetailRepository } from './repositories/cart-detail.repository'
-import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto'
-import { CartDetailResponseDto } from './dtos/cart-detail-response.dto'
-import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service'
-import { CartDetailEntity } from './entities/cart-detail.entity'
-import { CartDetailMapper } from './mappers/cart-detail.mapper'
-import { CartService } from './cart.service'
-import { CartEntity } from './entities/cart.entity'
+import { Injectable, Logger } from '@nestjs/common';
+import { CartDetailRepository } from './repositories/cart-detail.repository';
+import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
+import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
+import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
+import { CartDetailEntity } from './entities/cart-detail.entity';
+import { CartDetailMapper } from './mappers/cart-detail.mapper';
+import { CartService } from './cart.service';
+import { CartEntity } from './entities/cart.entity';
 
 @Injectable()
 export class CartDetailService {
-	private readonly logger: Logger = new Logger(CartDetailService.name)
+	private readonly logger: Logger = new Logger(CartDetailService.name);
 
 	constructor(
 		private readonly cartDetailRepository: CartDetailRepository,
@@ -47,7 +47,7 @@ export class CartDetailService {
 			const skip: number = this.buildPagingMetaService.calculateSkip(
 				page,
 				limit
-			)
+			);
 
 			/**
 			 * Calling `getCartDetailsByUserID` from `CartDetailRepository`
@@ -57,13 +57,13 @@ export class CartDetailService {
 					userID,
 					skip,
 					limit
-				)
+				);
 
 			/**
 			 * Convert `CartDetailEntity` to `CartDetailResponseDto`
 			 */
 			const cartDetailsResponseDto: CartDetailResponseDto[] =
-				this.cartDetailMapper.toCartDetailsResponseDto(cartDetails)
+				this.cartDetailMapper.toCartDetailsResponseDto(cartDetails);
 
 			/**
 			 * Build paging response
@@ -73,13 +73,13 @@ export class CartDetailService {
 				total,
 				page,
 				limit
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getCartDetailsByUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -107,23 +107,23 @@ export class CartDetailService {
 					productID,
 					cartID,
 					quantity
-				)
+				);
 			this.logger.debug(
 				`Cart detail created: ${JSON.stringify(cartDetailEntity)}`
-			)
+			);
 
 			/**
 			 * Mapping `CartDetailEntity` to `CartDetailResponseDto`
 			 */
 			return this.cartDetailMapper.toCartDetailResponseDto(
 				cartDetailEntity
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createNewCartDetail\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

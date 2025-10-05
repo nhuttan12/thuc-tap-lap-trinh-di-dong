@@ -17,23 +17,23 @@ import {
 	Res,
 	UseFilters,
 	UseGuards,
-} from '@nestjs/common'
-import { AuthService } from './auth.service'
-import { LocalAuthGuard } from './guards/local-auth.guard'
-import { JwtPayload } from './interface/jwt-payload.interface'
-import { AuthRequest } from './interface/auth-request.interface'
-import { GoogleOauthGuard } from './guards/google-oauth.guard'
-import { GoogleRequest } from './interface/google-request'
-import { GoogleLogin } from './interface/google-login.interface'
-import { Response } from 'express'
-import { UserSignUpRequestDto } from './dtos/user-sign-up-request.dto'
-import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto'
-import { CatchEverythingFilter } from '../../common/filter/catch-everything.filter'
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtPayload } from './interface/jwt-payload.interface';
+import { AuthRequest } from './interface/auth-request.interface';
+import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { GoogleRequest } from './interface/google-request';
+import { GoogleLogin } from './interface/google-login.interface';
+import { Response } from 'express';
+import { UserSignUpRequestDto } from './dtos/user-sign-up-request.dto';
+import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
+import { CatchEverythingFilter } from '../../common/filter/catch-everything.filter';
 
 @Controller('auth')
 @UseFilters(CatchEverythingFilter)
 export class AuthController {
-	private readonly logger: Logger = new Logger(AuthController.name)
+	private readonly logger: Logger = new Logger(AuthController.name);
 
 	constructor(private readonly authService: AuthService) {}
 
@@ -48,7 +48,7 @@ export class AuthController {
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	login(@Request() req: AuthRequest): JwtPayload {
-		return req.user
+		return req.user;
 	}
 
 	/**
@@ -72,20 +72,20 @@ export class AuthController {
 	@Get('google/callback')
 	@UseGuards(GoogleOauthGuard)
 	async googleAuthCallback(@Req() req: GoogleRequest, @Res() res: Response) {
-		const user: GoogleLogin = req.user
+		const user: GoogleLogin = req.user;
 		const token: JwtPayload = await this.authService.googleLogin(
 			user.email,
 			user.name,
 			user.picture
-		)
+		);
 
 		res.cookie('access_token', token, {
 			maxAge: 2592000000,
 			sameSite: true,
 			secure: false,
-		})
+		});
 
-		return res.status(HttpStatus.OK)
+		return res.status(HttpStatus.OK);
 	}
 
 	/**
@@ -105,6 +105,6 @@ export class AuthController {
 			request.email,
 			request.password,
 			request.retypePassword
-		)
+		);
 	}
 }

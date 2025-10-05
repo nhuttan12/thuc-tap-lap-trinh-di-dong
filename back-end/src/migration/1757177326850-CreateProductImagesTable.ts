@@ -11,8 +11,8 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
-import { ProductImageTypeEnum } from '../modules/product/enums/product-image.type.enum'
+} from 'typeorm';
+import { ProductImageTypeEnum } from '../modules/product/enums/product-image.type.enum';
 
 export class CreateProductImagesTable1757177326850
 	implements MigrationInterface
@@ -28,7 +28,7 @@ export class CreateProductImagesTable1757177326850
 		 * Get `product_images` table if exists
 		 */
 		const productImagesTable: Table | undefined =
-			await queryRunner.getTable('product_images')
+			await queryRunner.getTable('product_images');
 
 		/*
 		 * Check exist `product_images` table
@@ -80,14 +80,14 @@ export class CreateProductImagesTable1757177326850
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get `product_images` table after created
 		 */
 		const productImagesTableCreated: Table | undefined =
-			await queryRunner.getTable('product_images')
+			await queryRunner.getTable('product_images');
 
 		/*
 		 * Check if `product_images` created
@@ -100,7 +100,7 @@ export class CreateProductImagesTable1757177326850
 				productImagesTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_product_images_image_id_to_images_id'
-				)
+				);
 
 			/*
 			 * Check if `fk_product_images_image_id_to_images_id` not exists
@@ -117,7 +117,7 @@ export class CreateProductImagesTable1757177326850
 						referencedColumnNames: ['id'],
 						referencedTableName: 'images',
 					})
-				)
+				);
 			}
 
 			/*
@@ -128,7 +128,7 @@ export class CreateProductImagesTable1757177326850
 					(fk: TableForeignKey): boolean =>
 						fk.name ===
 						'fk_product_images_product_id_to_products_id'
-				)
+				);
 
 			/*
 			 * Check if `fk_product_images_product_id_to_products_id` not exists
@@ -145,7 +145,7 @@ export class CreateProductImagesTable1757177326850
 						referencedColumnNames: ['id'],
 						referencedTableName: 'products',
 					})
-				)
+				);
 			}
 
 			/*
@@ -155,7 +155,7 @@ export class CreateProductImagesTable1757177326850
 				productImagesTableCreated.indices.find(
 					(index: TableIndex): boolean =>
 						index.name === 'idx_product_images_id'
-				)
+				);
 
 			/*
 			 * Check if `idx_product_images_id` not exists
@@ -170,7 +170,7 @@ export class CreateProductImagesTable1757177326850
 						name: 'idx_product_images_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -186,7 +186,7 @@ export class CreateProductImagesTable1757177326850
 		 * Get `product_images` table after created
 		 */
 		const productImagesTableCreated: Table | undefined =
-			await queryRunner.getTable('product_images')
+			await queryRunner.getTable('product_images');
 
 		/*
 		 * Check if `product_images` created
@@ -199,7 +199,7 @@ export class CreateProductImagesTable1757177326850
 				productImagesTableCreated.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_product_images_image_id_to_images_id'
-				)
+				);
 
 			/*
 			 * Check if `fk_product_images_image_id_to_images_id` exists
@@ -211,7 +211,7 @@ export class CreateProductImagesTable1757177326850
 				await queryRunner.dropForeignKey(
 					productImagesTableCreated,
 					imageIDFks
-				)
+				);
 			}
 
 			/*
@@ -222,7 +222,7 @@ export class CreateProductImagesTable1757177326850
 					(fk: TableForeignKey): boolean =>
 						fk.name ===
 						'fk_product_images_product_id_to_products_id'
-				)
+				);
 
 			/*
 			 * Check if `fk_product_images_product_id_to_products_id` exists
@@ -234,7 +234,7 @@ export class CreateProductImagesTable1757177326850
 				await queryRunner.dropForeignKey(
 					productImagesTableCreated,
 					productIDFks
-				)
+				);
 			}
 
 			/*
@@ -244,7 +244,7 @@ export class CreateProductImagesTable1757177326850
 				productImagesTableCreated.indices.find(
 					(index: TableIndex): boolean =>
 						index.name === 'idx_product_images_id'
-				)
+				);
 
 			/*
 			 * Check if `idx_product_images_id` not exists
@@ -253,13 +253,13 @@ export class CreateProductImagesTable1757177326850
 				/*
 				 * Drop index `idx_product_images_id`
 				 */
-				await queryRunner.dropIndex(productImagesTableCreated, idxID)
+				await queryRunner.dropIndex(productImagesTableCreated, idxID);
 			}
 
 			/*
 			 * Drop `product_images` table if exist
 			 */
-			await queryRunner.dropTable(productImagesTableCreated)
+			await queryRunner.dropTable(productImagesTableCreated);
 		}
 	}
 }

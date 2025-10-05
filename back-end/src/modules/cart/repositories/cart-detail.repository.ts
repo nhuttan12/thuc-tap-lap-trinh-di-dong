@@ -4,14 +4,14 @@
  * @since 2025-09-14
  * @version 1.0.0
  */
-import { Logger } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { CartDetailEntity } from '../entities/cart-detail.entity'
-import { DataSource, EntityManager, Repository } from 'typeorm'
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum'
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CartDetailEntity } from '../entities/cart-detail.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
 
 export class CartDetailRepository {
-	private readonly logger: Logger = new Logger(CartDetailRepository.name)
+	private readonly logger: Logger = new Logger(CartDetailRepository.name);
 
 	constructor(
 		@InjectRepository(CartDetailEntity)
@@ -59,19 +59,19 @@ export class CartDetailRepository {
 					order: {
 						createdAt: 'DESC',
 					},
-				})
-			this.logger.debug(`Cart details: ${JSON.stringify(cartDetails)}`)
+				});
+			this.logger.debug(`Cart details: ${JSON.stringify(cartDetails)}`);
 
 			/**
 			 * Return data
 			 */
-			return [cartDetails, total]
+			return [cartDetails, total];
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getCartDetailsByUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -110,20 +110,20 @@ export class CartDetailRepository {
 							createdAt: new Date(),
 							updatedAt: new Date(),
 						}
-					)
+					);
 
 					/**
 					 * Save the instance to the database
 					 */
-					return await tx.save(cartDetailEntity)
+					return await tx.save(cartDetailEntity);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createCartDetail\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

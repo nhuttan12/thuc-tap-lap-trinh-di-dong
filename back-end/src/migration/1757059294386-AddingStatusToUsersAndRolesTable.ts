@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm'
-import { UserStatus } from '../modules/user/enums/user-status.enum'
-import { RoleStatus } from '../modules/role/enums/role-status.enum'
+import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
+import { UserStatus } from '../modules/user/enums/user-status.enum';
+import { RoleStatus } from '../modules/role/enums/role-status.enum';
 
 export class AddingStatusToUsersAndRolesTable1757059294386
 	implements MigrationInterface
@@ -23,9 +23,9 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 		 * Get users table and roles table if exists
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 		const rolesTable: Table | undefined =
-			await queryRunner.getTable('roles')
+			await queryRunner.getTable('roles');
 
 		/*
 		 * Check if table is exist
@@ -37,11 +37,11 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 			const usersTableColumn: TableColumn | undefined =
 				usersTable.columns.find(
 					(c: TableColumn): boolean => c.name === 'status'
-				)
+				);
 			const rolesTableColumn: TableColumn | undefined =
 				rolesTable.columns.find(
 					(c: TableColumn): boolean => c.name === 'status'
-				)
+				);
 
 			/*
 			 * Add column status to users table if not exists
@@ -57,7 +57,7 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 						default: `'${UserStatus.ACTIVE}'`,
 						isNullable: false,
 					})
-				)
+				);
 			}
 
 			/*
@@ -74,7 +74,7 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 						default: `'${RoleStatus.ACTIVE}'`,
 						isNullable: false,
 					})
-				)
+				);
 			}
 		}
 	}
@@ -90,9 +90,9 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 		 * Get users table and roles table if exists
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 		const rolesTable: Table | undefined =
-			await queryRunner.getTable('roles')
+			await queryRunner.getTable('roles');
 
 		/*
 		 * If users table and roles table is exist
@@ -104,18 +104,18 @@ export class AddingStatusToUsersAndRolesTable1757059294386
 			const usersTableColumn: TableColumn | undefined =
 				usersTable.columns.find(
 					(c: TableColumn): boolean => c.name === 'status'
-				)
+				);
 			const rolesTableColumn: TableColumn | undefined =
 				rolesTable.columns.find(
 					(c: TableColumn): boolean => c.name === 'status'
-				)
+				);
 
 			/*
 			 * Drop status column if its exist
 			 */
 			if (usersTableColumn && rolesTableColumn) {
-				await queryRunner.dropColumn(usersTable, 'status')
-				await queryRunner.dropColumn(rolesTable, 'status')
+				await queryRunner.dropColumn(usersTable, 'status');
+				await queryRunner.dropColumn(rolesTable, 'status');
 			}
 		}
 	}

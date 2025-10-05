@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm'
+import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 
 export class ChangeProductPriceToDoublePresicion1757087302315
 	implements MigrationInterface
@@ -21,7 +21,7 @@ export class ChangeProductPriceToDoublePresicion1757087302315
 		 * Get `products` table if exists
 		 */
 		const productsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Check if `products` table exists
@@ -43,7 +43,7 @@ export class ChangeProductPriceToDoublePresicion1757087302315
 						isNullable: false,
 						default: 0.0,
 					})
-				)
+				);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ export class ChangeProductPriceToDoublePresicion1757087302315
 		 * Get `products` table if exists
 		 */
 		const productsTable: Table | undefined =
-			await queryRunner.getTable('products')
+			await queryRunner.getTable('products');
 
 		/*
 		 * Check if `products` table exists
@@ -81,7 +81,7 @@ export class ChangeProductPriceToDoublePresicion1757087302315
 						isNullable: false,
 						default: 0.0,
 					})
-				)
+				);
 			}
 		}
 	}

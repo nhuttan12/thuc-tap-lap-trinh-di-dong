@@ -6,8 +6,8 @@
  * @version 1.0.1
  */
 
-import { IsNotEmpty, IsNumber, Min } from '@nestjs/class-validator'
-import { PagingStatusCode } from '../status-code/paging.status-code'
+import { IsNotEmpty, IsNumber, Min } from '@nestjs/class-validator';
+import { PagingStatusCode } from '../status-code/paging.status-code';
 
 export class PagingRequestDto {
 	@IsNumber(
@@ -24,7 +24,7 @@ export class PagingRequestDto {
 	@IsNotEmpty({
 		message: PagingStatusCode.PAGE_NUMBER_MUST_NOT_BE_EMPTY.customCode,
 	})
-	page: number
+	page: number;
 
 	@IsNumber(
 		{
@@ -37,5 +37,5 @@ export class PagingRequestDto {
 	@IsNotEmpty({
 		message: PagingStatusCode.LIMIT_NUMBER_MUST_NOT_BE_EMPTY.customCode,
 	})
-	limit: number
+	limit: number;
 }

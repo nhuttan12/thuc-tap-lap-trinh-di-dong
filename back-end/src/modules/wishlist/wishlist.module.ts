@@ -5,14 +5,14 @@
  * @version 1.0.0
  */
 
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { WishlistItemEntity } from './entities/wishlist-item.entity'
-import { WishlistItemRepository } from './repositories/wishlist-item.repository'
-import { WishlistService } from './wishlist.service'
-import { WishlistItemMapper } from './mappers/wishlist-item.mapper'
-import { HelperModule } from '../../common/helper/helper.module'
-import { WishlistController } from './wishlist.controller'
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { WishlistItemEntity } from './entities/wishlist-item.entity';
+import { WishlistItemRepository } from './repositories/wishlist-item.repository';
+import { WishlistService } from './wishlist.service';
+import { WishlistItemMapper } from './mappers/wishlist-item.mapper';
+import { HelperModule } from '../../common/helper/helper.module';
+import { WishlistController } from './wishlist.controller';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([WishlistItemEntity]), HelperModule],

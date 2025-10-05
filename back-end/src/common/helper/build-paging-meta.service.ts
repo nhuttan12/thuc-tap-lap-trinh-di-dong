@@ -4,9 +4,9 @@
  * @since 2025-09-17
  * @version 1.0.0
  */
-import { Injectable } from '@nestjs/common'
-import { PagingResponseDto } from './dtos/paging-response.dto'
-import { PagingMetaDto } from './dtos/page-meta.dto'
+import { Injectable } from '@nestjs/common';
+import { PagingResponseDto } from './dtos/paging-response.dto';
+import { PagingMetaDto } from './dtos/page-meta.dto';
 
 @Injectable()
 export class BuildPagingMetaService {
@@ -28,8 +28,8 @@ export class BuildPagingMetaService {
 		/*
 		 * Pagination meta
 		 */
-		const meta = new PagingMetaDto(page, limit, totalItems)
-		return new PagingResponseDto(items, meta)
+		const meta = new PagingMetaDto(page, limit, totalItems);
+		return new PagingResponseDto(items, meta);
 	}
 
 	/**
@@ -40,8 +40,8 @@ export class BuildPagingMetaService {
 	 * @version 1.0.0
 	 */
 	calculateSkip(page = 1, limit = 10): number {
-		if (page < 1) page = 1
-		if (limit < 1) limit = 10 // default fallback
-		return (page - 1) * limit
+		if (page < 1) page = 1;
+		if (limit < 1) limit = 10; // default fallback
+		return (page - 1) * limit;
 	}
 }

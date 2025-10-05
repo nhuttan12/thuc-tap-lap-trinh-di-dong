@@ -4,10 +4,10 @@
  * @since 2025-09-24
  * @version 1.0.0
  */
-import { Injectable } from '@nestjs/common'
-import { ProductDetailsEntity } from '../entities/product-details.entity'
-import { ProductDetailResponseDto } from '../dtos/product-detail-response.dto'
-import { ProductImageEntity } from '../../image/entities/product-image.entity'
+import { Injectable } from '@nestjs/common';
+import { ProductDetailsEntity } from '../entities/product-details.entity';
+import { ProductDetailResponseDto } from '../dtos/product-detail-response.dto';
+import { ProductImageEntity } from '../../image/entities/product-image.entity';
 
 @Injectable()
 export class ProductDetailMapper {
@@ -25,9 +25,9 @@ export class ProductDetailMapper {
 			description: productDetailEntity.description,
 			imageList: productDetailEntity.product.productImages.map(
 				(productImageEntity: ProductImageEntity): string => {
-					return productImageEntity.image.url
+					return productImageEntity.image.url;
 				}
 			),
-		}
+		};
 	}
 }

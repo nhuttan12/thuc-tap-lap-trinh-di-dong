@@ -7,7 +7,7 @@
  * @version 1.0.3
  */
 
-import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm'
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export class CreateRoleTable1756829451859 implements MigrationInterface {
 	/*
@@ -23,7 +23,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 		 * Check if table roles exists
 		 */
 		const rolesTable: Table | undefined =
-			await queryRunner.getTable('roles')
+			await queryRunner.getTable('roles');
 
 		/*
 		 * Create new role table if not exists
@@ -59,7 +59,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
@@ -67,7 +67,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 		 */
 		const tableIndices: TableIndex[] = await queryRunner
 			.getTable('roles')
-			.then((t: Table | undefined): TableIndex[] => t?.indices || [])
+			.then((t: Table | undefined): TableIndex[] => t?.indices || []);
 
 		/*
 		 * Create index for `id` column named `idx_roles_id` if not exists
@@ -83,7 +83,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 					name: 'idx_roles_id',
 					columnNames: ['id'],
 				})
-			)
+			);
 		}
 
 		/*
@@ -100,7 +100,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 					name: 'idx_roles_name',
 					columnNames: ['name'],
 				})
-			)
+			);
 		}
 	}
 
@@ -111,7 +111,7 @@ export class CreateRoleTable1756829451859 implements MigrationInterface {
 	 * @version 1.0.1
 	 */
 	public async down(queryRunner: QueryRunner): Promise<void> {
-		await queryRunner.dropIndex('roles', 'idx_roles')
-		await queryRunner.dropTable('roles')
+		await queryRunner.dropIndex('roles', 'idx_roles');
+		await queryRunner.dropTable('roles');
 	}
 }

@@ -5,18 +5,18 @@
  * @version 1.0.0
  */
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common'
-import { WishlistItemRepository } from './repositories/wishlist-item.repository'
-import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto'
-import { WishlistItemEntity } from './entities/wishlist-item.entity'
-import { WishlistItemMapper } from './mappers/wishlist-item.mapper'
-import { WishlistStatusCode } from './status-code/wishlist.status-code'
-import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service'
-import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { WishlistItemRepository } from './repositories/wishlist-item.repository';
+import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
+import { WishlistItemEntity } from './entities/wishlist-item.entity';
+import { WishlistItemMapper } from './mappers/wishlist-item.mapper';
+import { WishlistStatusCode } from './status-code/wishlist.status-code';
+import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
+import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 
 @Injectable()
 export class WishlistService {
-	private readonly logger: Logger = new Logger(WishlistService.name)
+	private readonly logger: Logger = new Logger(WishlistService.name);
 
 	constructor(
 		private readonly wishlistItemRepository: WishlistItemRepository,
@@ -46,7 +46,7 @@ export class WishlistService {
 			const skip: number = this.buildPagingMetaService.calculateSkip(
 				page,
 				limit
-			)
+			);
 
 			/**
 			 * Call `getAllWishlistItems` in `WishlistItemRepository`
@@ -56,10 +56,10 @@ export class WishlistService {
 					userID,
 					skip,
 					limit
-				)
+				);
 			this.logger.debug(
 				`Get all wishlist items ${JSON.stringify(wishlistItems)}`
-			)
+			);
 
 			/**
 			 * Convert wishlist items to product in wishlist response dto
@@ -67,23 +67,23 @@ export class WishlistService {
 			const productsInWishlistResponseDto: ProductInWishlistResponseDto[] =
 				this.wishlistItemMapper.toProductInWishlistListResponseDto(
 					wishlistItems
-				)
+				);
 			this.logger.debug(
 				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto)}`
-			)
+			);
 
 			return this.buildPagingMetaService.buildPagingResponse(
 				productsInWishlistResponseDto,
 				skip,
 				limit,
 				total
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getAllProductInWishlist\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -104,7 +104,7 @@ export class WishlistService {
 			await this.getProductInWishlistByProductIDAndUserID(
 				productID,
 				userID
-			)
+			);
 
 			/**
 			 * Call `createWishlistItem` in `WishlistItemRepository`
@@ -112,18 +112,18 @@ export class WishlistService {
 			await this.wishlistItemRepository.createWishlistItem(
 				productID,
 				userID
-			)
+			);
 
 			/**
 			 * If wishlist item created successfully, return true
 			 */
-			return true
+			return true;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getAllProductInWishlist\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -148,7 +148,7 @@ export class WishlistService {
 				await this.wishlistItemRepository.getWishlistItemByProductIDAndUserID(
 					productID,
 					userID
-				)
+				);
 
 			/**
 			 * Check wishlist item exist
@@ -157,7 +157,7 @@ export class WishlistService {
 				/**
 				 * Log error, and throwing error
 				 */
-				this.logger.warn('Product already in wishlist')
+				this.logger.warn('Product already in wishlist');
 				throw new BadRequestException({
 					statusCode:
 						WishlistStatusCode.ProductAlreadyInWishlist.statusCode,
@@ -165,16 +165,16 @@ export class WishlistService {
 						WishlistStatusCode.ProductAlreadyInWishlist.customCode,
 					message:
 						WishlistStatusCode.ProductAlreadyInWishlist.message,
-				})
+				});
 			}
 
-			return wishlistItemEntity
+			return wishlistItemEntity;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getProductInWishlistByProductIDAndUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -198,7 +198,7 @@ export class WishlistService {
 				await this.wishlistItemRepository.removeWishlistItem(
 					productID,
 					userID
-				)
+				);
 
 			/**
 			 * Check if `wishlistItemEntity` is null
@@ -207,23 +207,23 @@ export class WishlistService {
 				/**
 				 * Log error, and throwing error
 				 */
-				this.logger.warn('Product not in wishlist')
+				this.logger.warn('Product not in wishlist');
 				throw new BadRequestException({
 					statusCode:
 						WishlistStatusCode.ProductNotInWishlist.statusCode,
 					customCode:
 						WishlistStatusCode.ProductNotInWishlist.customCode,
 					message: WishlistStatusCode.ProductNotInWishlist.message,
-				})
+				});
 			}
 
-			return true
+			return true;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`removeWishlistItem\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

@@ -11,7 +11,7 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
+} from 'typeorm';
 
 export class CreateProductDetailsTable1757075759428
 	implements MigrationInterface
@@ -27,7 +27,7 @@ export class CreateProductDetailsTable1757075759428
 		 * Get product detail table if exists
 		 */
 		const productDetailsTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/*
 		 * Check product detail table if not exists, create it
@@ -78,14 +78,14 @@ export class CreateProductDetailsTable1757075759428
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get created `product_details` table
 		 */
 		const createdProductDetailsTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/*
 		 * If `product_details` table exist, create foreign key to `categories` table
@@ -95,7 +95,7 @@ export class CreateProductDetailsTable1757075759428
 			 * Get all `product_details` foreign keys
 			 */
 			const productDetailsFk: TableForeignKey[] =
-				createdProductDetailsTable.foreignKeys || []
+				createdProductDetailsTable.foreignKeys || [];
 
 			/*
 			 * Create foreign key for `product_details` table named
@@ -117,7 +117,7 @@ export class CreateProductDetailsTable1757075759428
 						referencedColumnNames: ['id'],
 						referencedTableName: 'categories',
 					})
-				)
+				);
 			}
 
 			/*
@@ -139,14 +139,14 @@ export class CreateProductDetailsTable1757075759428
 						referencedColumnNames: ['id'],
 						referencedTableName: 'products',
 					})
-				)
+				);
 			}
 
 			/*
 			 * Get all index in `product_details` table
 			 */
 			const tableIndices: TableIndex[] =
-				createdProductDetailsTable.indices || []
+				createdProductDetailsTable.indices || [];
 
 			if (!tableIndices) {
 				/*
@@ -158,7 +158,7 @@ export class CreateProductDetailsTable1757075759428
 						name: 'idx_product_details_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -174,7 +174,7 @@ export class CreateProductDetailsTable1757075759428
 		 * Get product detail table if exists
 		 */
 		const productDetailsTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/*
 		 * Check product detail table if not exists, create it
@@ -183,20 +183,24 @@ export class CreateProductDetailsTable1757075759428
 			/*
 			 * Get all index in `product_details` table
 			 */
-			const tableIndices: TableIndex[] = productDetailsTable.indices || []
+			const tableIndices: TableIndex[] =
+				productDetailsTable.indices || [];
 
 			/*
 			 * If `product_details` table has index, drop it
 			 */
 			if (tableIndices.length > 0) {
-				await queryRunner.dropIndices(productDetailsTable, tableIndices)
+				await queryRunner.dropIndices(
+					productDetailsTable,
+					tableIndices
+				);
 			}
 
 			/*
 			 * Get all foreign key in `product_details` table
 			 */
 			const productDetailsFk: TableForeignKey[] =
-				productDetailsTable.foreignKeys || []
+				productDetailsTable.foreignKeys || [];
 
 			/*
 			 * If `product_details` table has foreign key, drop it
@@ -205,13 +209,13 @@ export class CreateProductDetailsTable1757075759428
 				await queryRunner.dropForeignKeys(
 					productDetailsTable,
 					productDetailsFk
-				)
+				);
 			}
 
 			/*
 			 * Drop `product_details` table
 			 */
-			await queryRunner.dropTable(productDetailsTable)
+			await queryRunner.dropTable(productDetailsTable);
 		}
 	}
 }

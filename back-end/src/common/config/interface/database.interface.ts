@@ -9,31 +9,31 @@ export interface DatabaseConfig {
 	/*
 	 * The type of database to connect to.
 	 */
-	type: string
+	type: string;
 
 	/*
 	 * The hostname or IP address of the database server.
 	 */
-	host: string
+	host: string;
 
 	/*
 	 * The port number on which the database server is listening.
 	 * Default for PostgreSQL is 5432, for MySQL is 3306.
 	 */
-	port: number
+	port: number;
 
 	/*
 	 * The username for authenticating with the database.
 	 */
-	username: string
+	username: string;
 
 	/*
 	 * The password for authenticating with the database.
 	 */
-	password: string
+	password: string;
 
 	/*
 	 * The name of the specific database to connect to.
 	 */
-	database: string
+	database: string;
 }

@@ -6,16 +6,16 @@
  * @version 1.0.2
  */
 
-import { forwardRef, Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ImageEntity } from './entities/image.entity'
-import { ImageService } from './image.service'
-import { ImageMapper } from './mappers/image.mapper'
-import { ImageRepository } from './repositories/image.repository'
-import { ProductImageEntity } from './entities/product-image.entity'
-import { UserImageEntity } from './entities/user-image.entity'
-import { ProductModule } from '../product/product.module'
-import { UserModule } from '../user/user.module'
+import { forwardRef, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ImageEntity } from './entities/image.entity';
+import { ImageService } from './image.service';
+import { ImageMapper } from './mappers/image.mapper';
+import { ImageRepository } from './repositories/image.repository';
+import { ProductImageEntity } from './entities/product-image.entity';
+import { UserImageEntity } from './entities/user-image.entity';
+import { ProductModule } from '../product/product.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
 	imports: [

@@ -6,13 +6,13 @@
  * @version 1.0.2
  */
 
-import { Injectable } from '@nestjs/common'
-import { PassportStrategy } from '@nestjs/passport'
-import { ConfigService } from '../../../common/config/config.service'
-import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20'
-import { JwtPayload } from '../interface/jwt-payload.interface'
-import { AuthService } from '../auth.service'
-import { GoogleLogin } from '../interface/google-login.interface'
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ConfigService } from '../../../common/config/config.service';
+import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { JwtPayload } from '../interface/jwt-payload.interface';
+import { AuthService } from '../auth.service';
+import { GoogleLogin } from '../interface/google-login.interface';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -25,7 +25,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 			clientSecret: configService.googleConfig.clientSecret,
 			callbackURL: configService.googleConfig.callbackURL,
 			scope: ['profile', 'email'],
-		})
+		});
 	}
 
 	/*
@@ -42,20 +42,20 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 		/*
 		 * Get user profile from Google o-auth 2
 		 */
-		const { id, name, emails, photos } = profile
+		const { id, name, emails, photos } = profile;
 
 		/*
 		 * Get value from name, emails, photos field
 		 */
-		const email: string = emails?.[0]?.value || ''
+		const email: string = emails?.[0]?.value || '';
 		const fullName: string = [
 			name?.givenName,
 			name?.middleName,
 			name?.familyName,
 		]
 			.filter(Boolean)
-			.join(' ')
-		const photo: string = photos?.[0]?.value || ''
+			.join(' ');
+		const photo: string = photos?.[0]?.value || '';
 
 		const response: GoogleLogin = {
 			provider: 'google',
@@ -63,8 +63,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 			email: email,
 			name: fullName,
 			picture: photo,
-		}
+		};
 
-		done(null, response)
+		done(null, response);
 	}
 }

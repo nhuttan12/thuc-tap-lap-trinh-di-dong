@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { Injectable } from '@nestjs/common'
-import { RoleEntity } from '../entities/role.entity'
-import { RoleResponseDto } from '../dtos/role-response.dto'
+import { Injectable } from '@nestjs/common';
+import { RoleEntity } from '../entities/role.entity';
+import { RoleResponseDto } from '../dtos/role-response.dto';
 
 @Injectable()
 export class RoleMapper {
@@ -24,6 +24,6 @@ export class RoleMapper {
 			status: role.status.toString(),
 			createdAt: role.createdAt,
 			updatedAt: role.updatedAt,
-		}
+		};
 	}
 }

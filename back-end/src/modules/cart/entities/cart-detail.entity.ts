@@ -12,19 +12,19 @@ import {
 	JoinColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { CartEntity } from './cart.entity'
-import { ProductEntity } from '../../product/entities/product.entity'
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { CartEntity } from './cart.entity';
+import { ProductEntity } from '../../product/entities/product.entity';
+import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
 
 @Entity('cart_details')
 export class CartDetailEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	quantity: number
+	quantity: number;
 
 	@Column({
 		type: 'enum',
@@ -32,7 +32,7 @@ export class CartDetailEntity extends TimestampField {
 		default: CartDetailsStatusEnum.ACTIVE,
 		nullable: false,
 	})
-	status: CartDetailsStatusEnum
+	status: CartDetailsStatusEnum;
 
 	@ManyToOne(
 		(): typeof CartEntity => CartEntity,
@@ -42,7 +42,7 @@ export class CartDetailEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'cart_id' })
-	cart: CartEntity
+	cart: CartEntity;
 
 	@ManyToOne(
 		(): typeof ProductEntity => ProductEntity,
@@ -53,5 +53,5 @@ export class CartDetailEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'cart_id' })
-	product: ProductEntity
+	product: ProductEntity;
 }

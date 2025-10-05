@@ -11,7 +11,7 @@ import {
 	QueryRunner,
 	Table,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 	implements MigrationInterface
@@ -21,12 +21,12 @@ export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 		 * Get `product_details` table
 		 */
 		const productDetailTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/*
 		 * Check if `product_details` table not exists
 		 */
-		if (!productDetailTable) return
+		if (!productDetailTable) return;
 
 		/*
 		 * Get foreign keys of `product_details` table in `id` column preference
@@ -38,14 +38,14 @@ export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 					fk.referencedTableName === 'products' &&
 					fk.columnNames.includes('id') &&
 					fk.referencedColumnNames.includes('id')
-				)
+				);
 			}
-		)
+		);
 
 		/*
 		 * Check if foreign key exists
 		 */
-		if (foreignKeys) return
+		if (foreignKeys) return;
 
 		/*
 		 * Create foreign key named `fk_product_details_id_to_products_id`
@@ -58,7 +58,7 @@ export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 				referencedColumnNames: ['id'],
 				referencedTableName: 'products',
 			})
-		)
+		);
 	}
 
 	public async down(queryRunner: QueryRunner): Promise<void> {
@@ -66,12 +66,12 @@ export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 		 * Get `product_details` table
 		 */
 		const userDetailTable: Table | undefined =
-			await queryRunner.getTable('product_details')
+			await queryRunner.getTable('product_details');
 
 		/*
 		 * Check if `product_details` table not exists
 		 */
-		if (!userDetailTable) return
+		if (!userDetailTable) return;
 
 		/*
 		 * Get foreign keys of `product_details` table in `id` column preference
@@ -83,14 +83,14 @@ export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 					fk.referencedTableName === 'products' &&
 					fk.columnNames.includes('id') &&
 					fk.referencedColumnNames.includes('id')
-				)
+				);
 			}
-		)
+		);
 
 		/*
 		 * Check if foreign key not exists
 		 */
-		if (!foreignKeys) return
+		if (!foreignKeys) return;
 
 		/*
 		 * Drop foreign key named `fk_product_details_id_to_products_id`
@@ -98,6 +98,6 @@ export class AddingFKToProductDetailsIDPreferenceProductsTable1757241610129
 		await queryRunner.dropForeignKey(
 			userDetailTable,
 			'fk_product_details_id_to_products_id'
-		)
+		);
 	}
 }

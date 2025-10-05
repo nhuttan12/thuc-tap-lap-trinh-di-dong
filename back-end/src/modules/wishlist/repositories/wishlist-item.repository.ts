@@ -5,15 +5,15 @@
  * @modifies 2025-09-24
  * @version 1.0.2
  */
-import { InjectRepository } from '@nestjs/typeorm'
-import { WishlistItemEntity } from '../entities/wishlist-item.entity'
-import { DataSource, EntityManager, Repository } from 'typeorm'
-import { Logger, NotFoundException } from '@nestjs/common'
-import { WishlistStatusEnum } from '../enums/wishlist-status.enum'
-import { WishlistStatusCode } from '../status-code/wishlist.status-code'
+import { InjectRepository } from '@nestjs/typeorm';
+import { WishlistItemEntity } from '../entities/wishlist-item.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { Logger, NotFoundException } from '@nestjs/common';
+import { WishlistStatusEnum } from '../enums/wishlist-status.enum';
+import { WishlistStatusCode } from '../status-code/wishlist.status-code';
 
 export class WishlistItemRepository {
-	private readonly logger: Logger = new Logger(WishlistItemRepository.name)
+	private readonly logger: Logger = new Logger(WishlistItemRepository.name);
 
 	constructor(
 		@InjectRepository(WishlistItemEntity)
@@ -62,21 +62,21 @@ export class WishlistItemRepository {
 							},
 						},
 					},
-				})
+				});
 			this.logger.debug(
 				`Get all wishlist from database: ${JSON.stringify(wishlistItems)}`
-			)
+			);
 
 			/**
 			 * Return data
 			 */
-			return [wishlistItems, total]
+			return [wishlistItems, total];
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getAllWishlistItems\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -112,20 +112,20 @@ export class WishlistItemRepository {
 							createdAt: new Date(),
 							updatedAt: new Date(),
 						}
-					)
+					);
 
 					/**
 					 * Save instance to the database
 					 */
-					return await tx.save(wishlistItemEntity)
+					return await tx.save(wishlistItemEntity);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createWishlistItem\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -159,7 +159,7 @@ export class WishlistItemRepository {
 								},
 								status: WishlistStatusEnum.ACTIVE,
 							},
-						})
+						});
 
 					/**
 					 * Check if wishlist item not exists
@@ -170,7 +170,7 @@ export class WishlistItemRepository {
 						 */
 						this.logger.error(
 							`Wishlist item with product id ${productID} and user id ${userID} not found`
-						)
+						);
 						throw new NotFoundException({
 							statusCode:
 								WishlistStatusCode.WishlistItemNotFound
@@ -180,26 +180,26 @@ export class WishlistItemRepository {
 									.customCode,
 							message:
 								WishlistStatusCode.WishlistItemNotFound.message,
-						})
+						});
 					}
 
 					/**
 					 * Set new status
 					 */
-					wishlistItemEntity.status = WishlistStatusEnum.DELETED
+					wishlistItemEntity.status = WishlistStatusEnum.DELETED;
 
 					/**
 					 * Save it to the database
 					 */
-					return tx.save(wishlistItemEntity)
+					return tx.save(wishlistItemEntity);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`removeWishlistItem\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -224,13 +224,13 @@ export class WishlistItemRepository {
 					},
 					status: WishlistStatusEnum.ACTIVE,
 				},
-			})
+			});
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getWishlistItemByProductIDAndUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

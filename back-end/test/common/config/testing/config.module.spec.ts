@@ -6,15 +6,15 @@
  * @modifies 2025-09-01
  */
 
-import { Test, TestingModule } from '@nestjs/testing'
-import { ConfigModule } from '../../../../src/common/config/config.module'
-import { ConfigService } from '../../../../src/common/config/config.service'
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '../../../../src/common/config/config.module';
+import { ConfigService } from '../../../../src/common/config/config.service';
 
 describe('ConfigModule', (): void => {
 	/*
 	 * Create testing module for ConfigModule
 	 */
-	let testingModule: TestingModule
+	let testingModule: TestingModule;
 
 	/*
 	 * Initial testing module before each test
@@ -22,24 +22,24 @@ describe('ConfigModule', (): void => {
 	beforeEach(async () => {
 		testingModule = await Test.createTestingModule({
 			imports: [ConfigModule],
-		}).compile()
-	})
+		}).compile();
+	});
 
 	/*
 	 * The module should be defined
 	 */
 	it('should compile module', (): void => {
-		expect(testingModule).toBeDefined()
-	})
+		expect(testingModule).toBeDefined();
+	});
 
 	/*
 	 * Config service can be provided
 	 */
 	it('should provide ConfigService', (): void => {
 		const configSerivce: ConfigService =
-			testingModule.get<ConfigService>(ConfigService)
-		expect(configSerivce).toBeInstanceOf(ConfigService)
-	})
+			testingModule.get<ConfigService>(ConfigService);
+		expect(configSerivce).toBeInstanceOf(ConfigService);
+	});
 
 	/**
 	 * Config service can be exported for other module
@@ -47,10 +47,10 @@ describe('ConfigModule', (): void => {
 	it('should export ConfigService for other module', async () => {
 		const anotherModule = await Test.createTestingModule({
 			imports: [ConfigModule],
-		}).compile()
+		}).compile();
 
 		const configService: ConfigService =
-			anotherModule.get<ConfigService>(ConfigService)
-		expect(configService).toBeDefined()
-	})
-})
+			anotherModule.get<ConfigService>(ConfigService);
+		expect(configService).toBeDefined();
+	});
+});

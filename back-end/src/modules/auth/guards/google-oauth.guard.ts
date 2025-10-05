@@ -5,15 +5,15 @@
  * @version 1.0.0
  */
 
-import { AuthGuard } from '@nestjs/passport'
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from '../../../common/config/config.service'
+import { AuthGuard } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '../../../common/config/config.service';
 
 @Injectable()
 export class GoogleOauthGuard extends AuthGuard('google') {
 	constructor(private readonly configService: ConfigService) {
 		super({
 			accessType: configService.googleConfig.accessType,
-		})
+		});
 	}
 }

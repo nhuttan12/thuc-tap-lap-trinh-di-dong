@@ -13,7 +13,7 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
+} from 'typeorm';
 
 export class CreateUserTable1756830133605 implements MigrationInterface {
 	/*
@@ -29,7 +29,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 		 * Check if users table exists
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 
 		/*
 		 * Create new users table if not exists
@@ -87,14 +87,14 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get all foreign keys in `users` table
 		 */
 		const existingFks: TableForeignKey[] =
-			(await queryRunner.getTable('users'))?.foreignKeys || []
+			(await queryRunner.getTable('users'))?.foreignKeys || [];
 
 		/*
 		 * Create foreign key for `role_id` named `fk_user_role_id_to_roles_id` column if not exists
@@ -113,14 +113,14 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 					referencedColumnNames: ['id'],
 					referencedTableName: 'roles',
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get all existing index in `users` table
 		 */
 		const tableIndices: TableIndex[] =
-			(await queryRunner.getTable('users'))?.indices || []
+			(await queryRunner.getTable('users'))?.indices || [];
 
 		/*
 		 * Create index for `id` column named `idx_user_id` if not exists
@@ -136,7 +136,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 					name: 'idx_user_id',
 					columnNames: ['id'],
 				})
-			)
+			);
 		}
 
 		/*
@@ -153,7 +153,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 					name: 'idx_user_username',
 					columnNames: ['username'],
 				})
-			)
+			);
 		}
 
 		/*
@@ -170,7 +170,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 					name: 'idx_user_password',
 					columnNames: ['password'],
 				})
-			)
+			);
 		}
 
 		/*
@@ -187,7 +187,7 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 					name: 'idx_user_email',
 					columnNames: ['email'],
 				})
-			)
+			);
 		}
 	}
 
@@ -198,8 +198,11 @@ export class CreateUserTable1756830133605 implements MigrationInterface {
 	 * @version 1.0.1
 	 */
 	public async down(queryRunner: QueryRunner): Promise<void> {
-		await queryRunner.dropIndex('users', 'idx_user')
-		await queryRunner.dropForeignKey('users', 'fk_user_role_id_to_roles_id')
-		await queryRunner.dropTable('users')
+		await queryRunner.dropIndex('users', 'idx_user');
+		await queryRunner.dropForeignKey(
+			'users',
+			'fk_user_role_id_to_roles_id'
+		);
+		await queryRunner.dropTable('users');
 	}
 }

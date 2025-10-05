@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { ImageEntityResponse } from '../dtos/image-entity.response'
-import { ImageEntity } from '../entities/image.entity'
-import { Injectable } from '@nestjs/common'
+import { ImageEntityResponse } from '../dtos/image-entity.response';
+import { ImageEntity } from '../entities/image.entity';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ImageMapper {
@@ -18,6 +18,6 @@ export class ImageMapper {
 			status: image.status,
 			createdAt: image.createdAt,
 			updatedAt: image.updatedAt,
-		}
+		};
 	}
 }

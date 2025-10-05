@@ -11,7 +11,7 @@ import {
 	Table,
 	TableColumn,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
 	/*
@@ -25,7 +25,7 @@ export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
 		 * Get users table if exists
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 
 		if (usersTable) {
 			/*
@@ -39,13 +39,13 @@ export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
 						type: 'integer',
 						isNullable: true,
 					})
-				)
+				);
 			}
 
 			/*
 			 * Get all foreign keys in `users` table
 			 */
-			const existingFks: TableForeignKey[] = usersTable.foreignKeys || []
+			const existingFks: TableForeignKey[] = usersTable.foreignKeys || [];
 
 			/*
 			 * Create foreign key for `users` table named
@@ -66,7 +66,7 @@ export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'images',
 					})
-				)
+				);
 			}
 		}
 	}
@@ -82,13 +82,13 @@ export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
 		 * Get users table if exists
 		 */
 		const usersTable: Table | undefined =
-			await queryRunner.getTable('users')
+			await queryRunner.getTable('users');
 
 		if (usersTable) {
 			/*
 			 * Get all foreign keys in `users` table
 			 */
-			const existingFks: TableForeignKey[] = usersTable.foreignKeys || []
+			const existingFks: TableForeignKey[] = usersTable.foreignKeys || [];
 
 			/*
 			 * Create foreign key for `users` table named
@@ -104,7 +104,7 @@ export class AddAvatarToUsersTable1757075353222 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					usersTable,
 					'fk_users_avatar_id_to_images_id'
-				)
+				);
 			}
 		}
 	}

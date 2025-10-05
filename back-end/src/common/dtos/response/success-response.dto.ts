@@ -6,10 +6,10 @@
  * @version 1.0.1
  */
 
-import { ResponseDto } from './response.dto'
+import { ResponseDto } from './response.dto';
 
 export class SuccessResponseDto<T> extends ResponseDto<T> {
 	constructor(statusCode: string, message: string, data: T) {
-		super(statusCode, message, data)
+		super(statusCode, message, data);
 	}
 }

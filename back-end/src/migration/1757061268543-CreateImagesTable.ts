@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm'
-import { ImageTypeEnum } from '../modules/image/enums/image-type.enum'
-import { ImageStatusEnum } from '../modules/image/enums/image-status.enum'
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
+import { ImageTypeEnum } from '../modules/image/enums/image-type.enum';
+import { ImageStatusEnum } from '../modules/image/enums/image-status.enum';
 
 export class CreateImagesTable1757061268543 implements MigrationInterface {
 	/*
@@ -21,7 +21,7 @@ export class CreateImagesTable1757061268543 implements MigrationInterface {
 		 * Get images table
 		 */
 		const imagesTable: Table | undefined =
-			await queryRunner.getTable('images')
+			await queryRunner.getTable('images');
 
 		if (!imagesTable) {
 			await queryRunner.createTable(
@@ -74,7 +74,7 @@ export class CreateImagesTable1757061268543 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
@@ -84,7 +84,7 @@ export class CreateImagesTable1757061268543 implements MigrationInterface {
 			/*
 			 * Get all existing index in `images` table
 			 */
-			const tableIndices: TableIndex[] = imagesTable.indices || []
+			const tableIndices: TableIndex[] = imagesTable.indices || [];
 
 			/*
 			 * Drop index `idx_images_id` if exists
@@ -100,7 +100,7 @@ export class CreateImagesTable1757061268543 implements MigrationInterface {
 						name: 'idx_images_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -116,27 +116,27 @@ export class CreateImagesTable1757061268543 implements MigrationInterface {
 		 * Get images table
 		 */
 		const imagesTable: Table | undefined =
-			await queryRunner.getTable('images')
+			await queryRunner.getTable('images');
 
 		if (imagesTable) {
 			/*
 			 * Get all existing index in `images` table
 			 */
-			const tableIndices: TableIndex[] = imagesTable.indices || []
+			const tableIndices: TableIndex[] = imagesTable.indices || [];
 
 			/*
 			 * Drop all index in `images` table
 			 */
 			if (tableIndices.length > 0) {
 				for (const index of tableIndices) {
-					await queryRunner.dropIndex(imagesTable, index)
+					await queryRunner.dropIndex(imagesTable, index);
 				}
 			}
 
 			/*
 			 * Drop image table
 			 */
-			await queryRunner.dropTable(imagesTable)
+			await queryRunner.dropTable(imagesTable);
 		}
 	}
 }

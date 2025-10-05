@@ -8,25 +8,25 @@ export interface HttpConfig {
 	/*
 	 * The port number on which the server will listen for incoming connections.
 	 */
-	port: number
+	port: number;
 
 	/*
 	 * Environment of the application.
 	 */
-	environment: string
+	environment: string;
 
 	/*
 	 * Secret key for JWT to decode.
 	 */
-	jwtSecret: string
+	jwtSecret: string;
 
 	/*
 	 * Expiration time for JWT.
 	 */
-	expireTime: string
+	expireTime: string;
 
 	/**
 	 * Number of salt rounds for bcrypt.
 	 */
-	saltRounds: number
+	saltRounds: number;
 }

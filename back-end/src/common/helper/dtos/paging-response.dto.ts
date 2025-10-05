@@ -5,21 +5,21 @@
  * @version 1.0.0
  */
 
-import { PagingMetaDto } from './page-meta.dto'
+import { PagingMetaDto } from './page-meta.dto';
 
 export class PagingResponseDto<T> {
 	/**
 	 * Metadata about pagination
 	 */
-	meta: PagingMetaDto
+	meta: PagingMetaDto;
 
 	/**
 	 * Actual data list
 	 */
-	data: T[]
+	data: T[];
 
 	constructor(data: T[], meta: PagingMetaDto) {
-		this.meta = meta
-		this.data = data
+		this.meta = meta;
+		this.data = data;
 	}
 }

@@ -5,6 +5,6 @@
  * @version 1.0.0
  */
 
-import { Reflector } from '@nestjs/core'
+import { Reflector } from '@nestjs/core';
 
-export const Roles = Reflector.createDecorator<string[]>()
+export const Roles = Reflector.createDecorator<string[]>();

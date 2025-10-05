@@ -1,6 +1,6 @@
 export interface ErrorResponse {
-	statusCode: number
-	message: string | string[]
-	error?: string
-	[key: string]: any
+	statusCode: number;
+	message: string | string[];
+	error?: string;
+	[key: string]: any;
 }

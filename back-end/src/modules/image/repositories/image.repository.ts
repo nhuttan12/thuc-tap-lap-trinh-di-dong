@@ -6,14 +6,14 @@
  * @version 1.0.2
  */
 
-import { Logger } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { ImageEntity } from '../entities/image.entity'
-import { DataSource, EntityManager, Repository } from 'typeorm'
-import { ImageStatusEnum } from '../enums/image-status.enum'
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ImageEntity } from '../entities/image.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { ImageStatusEnum } from '../enums/image-status.enum';
 
 export class ImageRepository {
-	private readonly logger: Logger = new Logger(ImageRepository.name)
+	private readonly logger: Logger = new Logger(ImageRepository.name);
 
 	/*
 	 * @description constructor of image repository class
@@ -55,23 +55,23 @@ export class ImageRepository {
 							createdAt: new Date(),
 							updatedAt: new Date(),
 						},
-					})
+					});
 					this.logger.debug(
 						`Created image: ${JSON.stringify(imageEntity)}`
-					)
+					);
 
 					/*
 					 * Save image to database
 					 */
-					return await tx.save(imageEntity)
+					return await tx.save(imageEntity);
 				}
-			)
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createImage\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 
@@ -92,13 +92,13 @@ export class ImageRepository {
 				order: {
 					createdAt: 'DESC',
 				},
-			})
+			});
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getImageByUrl\`: ${(e as Error).message}`,
 				(e as Error).stack
-			)
-			throw e
+			);
+			throw e;
 		}
 	}
 }

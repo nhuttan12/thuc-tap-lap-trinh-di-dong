@@ -12,7 +12,7 @@ import {
 	Table,
 	TableColumn,
 	TableForeignKey,
-} from 'typeorm'
+} from 'typeorm';
 
 export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 	/*
@@ -29,7 +29,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingGenerationStrategyIDTableMigrationUp(
 			queryRunner,
 			'roles'
-		)
+		);
 
 		/*
 		 * Update `users` table
@@ -37,7 +37,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingGenerationStrategyIDTableMigrationUp(
 			queryRunner,
 			'users'
-		)
+		);
 
 		/*
 		 * Update `images` table
@@ -45,7 +45,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingGenerationStrategyIDTableMigrationUp(
 			queryRunner,
 			'images'
-		)
+		);
 
 		/*
 		 * Update `categories` table
@@ -53,7 +53,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingGenerationStrategyIDTableMigrationUp(
 			queryRunner,
 			'categories'
-		)
+		);
 
 		/*
 		 * Update `products` table
@@ -61,7 +61,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingGenerationStrategyIDTableMigrationUp(
 			queryRunner,
 			'products'
-		)
+		);
 
 		/*
 		 * Update `user_details` table
@@ -69,7 +69,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removeIsGeneratedIDTableMigrationUp(
 			queryRunner,
 			'user_details'
-		)
+		);
 
 		/*
 		 * Update `user_details` table
@@ -77,7 +77,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removeIsGeneratedIDTableMigrationUp(
 			queryRunner,
 			'product_details'
-		)
+		);
 	}
 
 	/*
@@ -94,7 +94,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removingGenerationStrategyIDTableMigrationDown(
 			queryRunner,
 			'roles'
-		)
+		);
 
 		/*
 		 * Update `users` table
@@ -102,7 +102,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removingGenerationStrategyIDTableMigrationDown(
 			queryRunner,
 			'users'
-		)
+		);
 
 		/*
 		 * Update `images` table
@@ -110,7 +110,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removingGenerationStrategyIDTableMigrationDown(
 			queryRunner,
 			'images'
-		)
+		);
 
 		/*
 		 * Update `categories` table
@@ -118,7 +118,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removingGenerationStrategyIDTableMigrationDown(
 			queryRunner,
 			'categories'
-		)
+		);
 
 		/*
 		 * Update `products` table
@@ -126,7 +126,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.removingGenerationStrategyIDTableMigrationDown(
 			queryRunner,
 			'products'
-		)
+		);
 
 		/*
 		 * Update `user_details` table
@@ -134,7 +134,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingIsGeneratedIDTableMigrationDown(
 			queryRunner,
 			'user_details'
-		)
+		);
 
 		/*
 		 * Update `product_details` table
@@ -142,7 +142,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		await this.addingIsGeneratedIDTableMigrationDown(
 			queryRunner,
 			'product_details'
-		)
+		);
 	}
 
 	private async addingGenerationStrategyIDTableMigrationUp(
@@ -153,7 +153,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		 * Get table if exists
 		 */
 		const existingTable: Table | undefined =
-			await queryRunner.getTable(tableName)
+			await queryRunner.getTable(tableName);
 
 		/*
 		 * Check if table exists
@@ -165,7 +165,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 			const droppedFKs = await this.dropForeignKeysReferencingTable(
 				queryRunner,
 				tableName
-			)
+			);
 
 			/*
 			 * Update table adding `generationStrategy` to `id` column
@@ -181,12 +181,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 					generationStrategy: 'increment',
 					isNullable: false,
 				})
-			)
+			);
 
 			/*
 			 * Restore foreign keys of table
 			 */
-			await this.restoreForeignKeys(queryRunner, droppedFKs)
+			await this.restoreForeignKeys(queryRunner, droppedFKs);
 		}
 	}
 
@@ -198,18 +198,18 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		 * Get table if exists
 		 */
 		const existingTable: Table | undefined =
-			await queryRunner.getTable(tableName)
+			await queryRunner.getTable(tableName);
 
 		/*
 		 * Check if `user_details` table exists
 		 */
-		if (!existingTable) return
+		if (!existingTable) return;
 
 		/*
 		 * Drop primary key of table if exist
 		 */
 		if (existingTable.primaryColumns.length) {
-			await queryRunner.dropPrimaryKey(existingTable)
+			await queryRunner.dropPrimaryKey(existingTable);
 		}
 
 		/*
@@ -218,7 +218,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		const droppedFKs = await this.dropForeignKeysReferencingTable(
 			queryRunner,
 			tableName
-		)
+		);
 
 		/*
 		 * Update `user_details` table adding `generationStrategy` to `id` column
@@ -232,12 +232,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 				isPrimary: true,
 				isNullable: false,
 			})
-		)
+		);
 
 		/*
 		 * Restore foreign keys of table
 		 */
-		await this.restoreForeignKeys(queryRunner, droppedFKs)
+		await this.restoreForeignKeys(queryRunner, droppedFKs);
 	}
 
 	private async removingGenerationStrategyIDTableMigrationDown(
@@ -248,12 +248,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		 * Get table if exists
 		 */
 		const existingTable: Table | undefined =
-			await queryRunner.getTable(tableName)
+			await queryRunner.getTable(tableName);
 
 		/*
 		 * Check if table exists
 		 */
-		if (!existingTable) return
+		if (!existingTable) return;
 
 		/*
 		 * Drop foreign keys of table preference this table
@@ -261,13 +261,13 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		const droppedFKs = await this.dropForeignKeysReferencingTable(
 			queryRunner,
 			tableName
-		)
+		);
 
 		/*
 		 * Drop primary key of table if exist
 		 */
 		if (existingTable.primaryColumns.length) {
-			await queryRunner.dropPrimaryKey(existingTable)
+			await queryRunner.dropPrimaryKey(existingTable);
 		}
 
 		/*
@@ -283,12 +283,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 				isGenerated: true,
 				isNullable: false,
 			})
-		)
+		);
 
 		/*
 		 * Restore foreign keys
 		 */
-		await this.restoreForeignKeys(queryRunner, droppedFKs)
+		await this.restoreForeignKeys(queryRunner, droppedFKs);
 	}
 
 	private async addingIsGeneratedIDTableMigrationDown(
@@ -299,12 +299,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		 * Get table if exists
 		 */
 		const existingTable: Table | undefined =
-			await queryRunner.getTable(tableName)
+			await queryRunner.getTable(tableName);
 
 		/*
 		 * Check if `user_details` table exists
 		 */
-		if (!existingTable) return
+		if (!existingTable) return;
 
 		/*
 		 * Drop foreign keys of table preference this table
@@ -312,13 +312,13 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		const droppedFKs = await this.dropForeignKeysReferencingTable(
 			queryRunner,
 			tableName
-		)
+		);
 
 		/*
 		 * Drop primary key of table if exist
 		 */
 		if (existingTable.primaryColumns.length) {
-			await queryRunner.dropPrimaryKey(existingTable)
+			await queryRunner.dropPrimaryKey(existingTable);
 		}
 
 		/*
@@ -334,12 +334,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 				isGenerated: true,
 				isNullable: false,
 			})
-		)
+		);
 
 		/*
 		 * Restore foreign keys of table
 		 */
-		await this.restoreForeignKeys(queryRunner, droppedFKs)
+		await this.restoreForeignKeys(queryRunner, droppedFKs);
 	}
 
 	private async dropForeignKeysReferencingTable(
@@ -349,9 +349,9 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		/*
 		 * Get all tables
 		 */
-		const tables: Table[] = await queryRunner.getTables()
+		const tables: Table[] = await queryRunner.getTables();
 
-		const droppedFKs: { table: Table; fk: TableForeignKey }[] = []
+		const droppedFKs: { table: Table; fk: TableForeignKey }[] = [];
 
 		/*
 		 * Drop fks of table
@@ -359,12 +359,12 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		for (const table of tables) {
 			for (const fk of table.foreignKeys) {
 				if (fk.referencedTableName === referencedTable) {
-					await queryRunner.dropForeignKey(table, fk)
-					droppedFKs.push({ table, fk })
+					await queryRunner.dropForeignKey(table, fk);
+					droppedFKs.push({ table, fk });
 				}
 			}
 		}
-		return droppedFKs
+		return droppedFKs;
 	}
 
 	private async restoreForeignKeys(
@@ -372,7 +372,7 @@ export class ModifyIdFieldForTable1757154043115 implements MigrationInterface {
 		fks: { table: Table; fk: TableForeignKey }[]
 	): Promise<void> {
 		for (const { table, fk } of fks) {
-			await queryRunner.createForeignKey(table, fk)
+			await queryRunner.createForeignKey(table, fk);
 		}
 	}
 }

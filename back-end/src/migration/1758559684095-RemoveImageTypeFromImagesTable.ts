@@ -5,8 +5,8 @@
  * @version 1.0.0
  */
 
-import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm'
-import { ImageTypeEnum } from '../modules/image/enums/image-type.enum'
+import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
+import { ImageTypeEnum } from '../modules/image/enums/image-type.enum';
 
 export class RemoveImageTypeFromImagesTable1758559684095
 	implements MigrationInterface
@@ -23,29 +23,29 @@ export class RemoveImageTypeFromImagesTable1758559684095
 		 * Get `images` table if exist
 		 */
 		const imageTable: Table | undefined =
-			await queryRunner.getTable('images')
+			await queryRunner.getTable('images');
 
 		/*
 		 * Check `images` table existence
 		 */
-		if (!imageTable) return
+		if (!imageTable) return;
 
 		/*
 		 * Get `type` column in `images` table if exist
 		 */
 		const nameColumn: TableColumn | undefined = imageTable.columns.find(
 			(column: TableColumn): boolean => column.name === 'type'
-		)
+		);
 
 		/*
 		 * Check column `type` in `images` table existence
 		 */
-		if (!nameColumn) return
+		if (!nameColumn) return;
 
 		/*
 		 * Remove `type` column in `images` table
 		 */
-		await queryRunner.dropColumn(imageTable, nameColumn)
+		await queryRunner.dropColumn(imageTable, nameColumn);
 	}
 
 	/**
@@ -60,24 +60,24 @@ export class RemoveImageTypeFromImagesTable1758559684095
 		 * Get `images` table if exist
 		 */
 		const imageTable: Table | undefined =
-			await queryRunner.getTable('images')
+			await queryRunner.getTable('images');
 
 		/*
 		 * Check `images` table existence
 		 */
-		if (!imageTable) return
+		if (!imageTable) return;
 
 		/*
 		 * Get `type` columns in `images` table if exist
 		 */
 		const nameColumn: TableColumn | undefined = imageTable.columns.find(
 			(column: TableColumn): boolean => column.name === 'name'
-		)
+		);
 
 		/*
 		 * Check column `type` in `images` table existence
 		 */
-		if (nameColumn) return
+		if (nameColumn) return;
 
 		/*
 		 * Create `type` column in `images` table
@@ -92,6 +92,6 @@ export class RemoveImageTypeFromImagesTable1758559684095
 				default: `'${ImageTypeEnum.AVATAR}'`,
 				isNullable: false,
 			})
-		)
+		);
 	}
 }

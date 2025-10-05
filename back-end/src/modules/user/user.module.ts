@@ -6,17 +6,17 @@
  * @version 1.0.2
  */
 
-import { forwardRef, Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { UserEntity } from './entities/user.entity'
-import { UserRepository } from './repositories/user.repository'
-import { UserService } from './user.service'
-import { UserMapper } from './mappers/user.mapper'
-import { ImageModule } from '../image/image.module'
-import { UserDetailEntity } from './entities/user-detail.entity'
-import { UserController } from './user.controller'
-import { RoleModule } from '../role/role.module'
-import { ConfigModule } from '../../common/config/config.module'
+import { forwardRef, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user.entity';
+import { UserRepository } from './repositories/user.repository';
+import { UserService } from './user.service';
+import { UserMapper } from './mappers/user.mapper';
+import { ImageModule } from '../image/image.module';
+import { UserDetailEntity } from './entities/user-detail.entity';
+import { UserController } from './user.controller';
+import { RoleModule } from '../role/role.module';
+import { ConfigModule } from '../../common/config/config.module';
 
 @Module({
 	imports: [

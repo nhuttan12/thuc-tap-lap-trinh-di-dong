@@ -11,8 +11,8 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
-import { CartStatusEnum } from '../modules/cart/enums/cart.status.enum'
+} from 'typeorm';
+import { CartStatusEnum } from '../modules/cart/enums/cart.status.enum';
 
 export class CreateCartsTable1757089389285 implements MigrationInterface {
 	/*
@@ -26,7 +26,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 		 * Get `carts` table if exists
 		 */
 		const cartsTable: Table | undefined =
-			await queryRunner.getTable('carts')
+			await queryRunner.getTable('carts');
 
 		/*
 		 * Check if `carts` table not exists
@@ -73,14 +73,14 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get `carts` table after created
 		 */
 		const createdCartsTable: Table | undefined =
-			await queryRunner.getTable('carts')
+			await queryRunner.getTable('carts');
 
 		/*
 		 * Check if `carts` table exists
@@ -90,7 +90,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 			 * Get all foreign keys in `carts` table
 			 */
 			const cartFks: TableForeignKey[] =
-				createdCartsTable.foreignKeys || []
+				createdCartsTable.foreignKeys || [];
 
 			/*
 			 * Check if foreign key named `fk_carts_user_id_to_users_id` is not exists
@@ -112,13 +112,13 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'users',
 					})
-				)
+				);
 			}
 
 			/*
 			 * Create new index for `id` column
 			 */
-			const cartIndex: TableIndex[] = createdCartsTable.indices
+			const cartIndex: TableIndex[] = createdCartsTable.indices;
 
 			/*
 			 * Check index named `idx_carts_id` is not exists
@@ -137,7 +137,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 						name: 'idx_carts_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -153,7 +153,7 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 		 * Get `carts` table created if exists
 		 */
 		const createdCartsTable: Table | undefined =
-			await queryRunner.getTable('carts')
+			await queryRunner.getTable('carts');
 
 		/*
 		 * Check if `carts` table exists
@@ -166,13 +166,13 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 				createdCartsTable.foreignKeys.find(
 					(fk: TableForeignKey): boolean =>
 						fk.name === 'fk_carts_user_id_to_users_id'
-				)
+				);
 
 			/*
 			 * Drop foreign key named `fk_carts_user_id_to_users_id` if exist
 			 */
 			if (cartFks) {
-				await queryRunner.dropForeignKey(createdCartsTable, cartFks)
+				await queryRunner.dropForeignKey(createdCartsTable, cartFks);
 			}
 
 			/*
@@ -181,19 +181,19 @@ export class CreateCartsTable1757089389285 implements MigrationInterface {
 			const cartIndex: TableIndex | undefined =
 				createdCartsTable.indices.find(
 					(i: TableIndex): boolean => i.name === 'idx_carts_id'
-				)
+				);
 
 			/*
 			 * Drop index named `idx_carts_id` if exist
 			 */
 			if (cartIndex) {
-				await queryRunner.dropIndex(createdCartsTable, cartIndex)
+				await queryRunner.dropIndex(createdCartsTable, cartIndex);
 			}
 
 			/*
 			 * Drop `carts` table if exist
 			 */
-			await queryRunner.dropTable(createdCartsTable)
+			await queryRunner.dropTable(createdCartsTable);
 		}
 	}
 }

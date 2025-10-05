@@ -13,7 +13,7 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
+} from 'typeorm';
 
 export class CreateUserDetailTable1756833480890 implements MigrationInterface {
 	/*
@@ -29,7 +29,7 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
 		 * Check if users table exists
 		 */
 		const userDetailsTable: Table | undefined =
-			await queryRunner.getTable('user_details')
+			await queryRunner.getTable('user_details');
 
 		/*
 		 * Create new `user_details` table if not exists
@@ -75,14 +75,14 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get all foreign keys in `user_details` table
 		 */
 		const existingFks: TableForeignKey[] =
-			(await queryRunner.getTable('user_details'))?.foreignKeys || []
+			(await queryRunner.getTable('user_details'))?.foreignKeys || [];
 
 		/*
 		 * Create foreign key for `id` named `fk_user_details_id_to_users_id` column if not exists
@@ -101,14 +101,14 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
 					referencedColumnNames: ['id'],
 					referencedTableName: 'users',
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get all existing index in `users` table
 		 */
 		const tableIndices: TableIndex[] =
-			(await queryRunner.getTable('user_details'))?.indices || []
+			(await queryRunner.getTable('user_details'))?.indices || [];
 
 		/*
 		 * Create index for `id` column named `idx_user_details_id` if not exists
@@ -124,7 +124,7 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
 					name: 'idx_user_details_id',
 					columnNames: ['id'],
 				})
-			)
+			);
 		}
 	}
 
@@ -138,11 +138,11 @@ export class CreateUserDetailTable1756833480890 implements MigrationInterface {
 		await queryRunner.dropIndex(
 			'user_details',
 			'fk_user_details_id_to_users_id'
-		)
+		);
 		await queryRunner.dropForeignKey(
 			'user_details',
 			'fk_user_details_id_users_id'
-		)
-		await queryRunner.dropTable('user_details')
+		);
+		await queryRunner.dropTable('user_details');
 	}
 }

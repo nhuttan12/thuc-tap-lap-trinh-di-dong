@@ -6,26 +6,26 @@
  * @version 1.0.3
  */
 
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { ImageStatusEnum } from '../enums/image-status.enum'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { ProductImageEntity } from './product-image.entity'
-import { UserImageEntity } from './user-image.entity'
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ImageStatusEnum } from '../enums/image-status.enum';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductImageEntity } from './product-image.entity';
+import { UserImageEntity } from './user-image.entity';
 
 @Entity('images')
 export class ImageEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	url: string
+	url: string;
 
 	@Column({
 		type: 'enum',
 		enum: ImageStatusEnum,
 		nullable: false,
 	})
-	status: ImageStatusEnum
+	status: ImageStatusEnum;
 
 	@OneToOne(
 		(): typeof ProductImageEntity => ProductImageEntity,
@@ -35,7 +35,7 @@ export class ImageEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	productImage: ProductImageEntity
+	productImage: ProductImageEntity;
 
 	@OneToOne(
 		(): typeof UserImageEntity => UserImageEntity,
@@ -45,5 +45,5 @@ export class ImageEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	userImage: UserImageEntity
+	userImage: UserImageEntity;
 }

@@ -13,27 +13,27 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { CategoryEntity } from '../../category/entities/category.entity'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { ProductEntity } from './product.entity'
+} from 'typeorm';
+import { CategoryEntity } from '../../category/entities/category.entity';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { ProductEntity } from './product.entity';
 
 @Entity()
 export class ProductDetailsEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	size: string
+	size: string;
 
 	@Column()
-	color: string
+	color: string;
 
 	@Column()
-	rating: number
+	rating: number;
 
 	@Column()
-	description: string
+	description: string;
 
 	@ManyToOne(
 		(): typeof CategoryEntity => CategoryEntity,
@@ -44,7 +44,7 @@ export class ProductDetailsEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'category_id' })
-	categoryEntity: CategoryEntity
+	categoryEntity: CategoryEntity;
 
 	@OneToOne(
 		(): typeof ProductEntity => ProductEntity,
@@ -55,5 +55,5 @@ export class ProductDetailsEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'id' })
-	product: ProductEntity
+	product: ProductEntity;
 }

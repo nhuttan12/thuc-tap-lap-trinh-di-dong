@@ -5,12 +5,12 @@
  * @version 1.0.0
  */
 
-import { Injectable } from '@nestjs/common'
-import { CartEntity } from '../entities/cart.entity'
-import { CartResponseDto } from '../dtos/cart-response.dto'
-import { CartDetailMapper } from './cart-detail.mapper'
-import { CartDetailEntity } from '../entities/cart-detail.entity'
-import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto'
+import { Injectable } from '@nestjs/common';
+import { CartEntity } from '../entities/cart.entity';
+import { CartResponseDto } from '../dtos/cart-response.dto';
+import { CartDetailMapper } from './cart-detail.mapper';
+import { CartDetailEntity } from '../entities/cart-detail.entity';
+import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto';
 
 @Injectable()
 export class CartMapper {
@@ -27,9 +27,9 @@ export class CartMapper {
 				(cartDetail: CartDetailEntity): CartDetailResponseDto => {
 					return this.cartDetailMapper.toCartDetailResponseDto(
 						cartDetail
-					)
+					);
 				}
 			),
-		}
+		};
 	}
 }

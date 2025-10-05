@@ -14,39 +14,39 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-} from 'typeorm'
-import { TimestampField } from '../../../common/database/timestamp.field'
-import { RoleEntity } from '../../role/entities/role.entity'
-import { UserDetailEntity } from './user-detail.entity'
-import { UserStatus } from '../enums/user-status.enum'
-import { CartEntity } from '../../cart/entities/cart.entity'
-import { OrderEntity } from '../../orders/entities/order.entity'
-import { UserImageEntity } from '../../image/entities/user-image.entity'
-import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity'
+} from 'typeorm';
+import { TimestampField } from '../../../common/database/timestamp.field';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { UserDetailEntity } from './user-detail.entity';
+import { UserStatus } from '../enums/user-status.enum';
+import { CartEntity } from '../../cart/entities/cart.entity';
+import { OrderEntity } from '../../orders/entities/order.entity';
+import { UserImageEntity } from '../../image/entities/user-image.entity';
+import { WishlistItemEntity } from '../../wishlist/entities/wishlist-item.entity';
 
 @Entity('users')
 export class UserEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
-	id: number
+	id: number;
 
 	@Column()
-	username: string
+	username: string;
 
 	@Column()
-	password: string
+	password: string;
 
 	@Column({ name: 'full_name' })
-	fullName: string
+	fullName: string;
 
 	@Column()
-	email: string
+	email: string;
 
 	@Column({
 		type: 'enum',
 		enum: UserStatus,
 		default: UserStatus.ACTIVE,
 	})
-	status: UserStatus
+	status: UserStatus;
 
 	@ManyToOne(
 		(): typeof RoleEntity => RoleEntity,
@@ -56,7 +56,7 @@ export class UserEntity extends TimestampField {
 		}
 	)
 	@JoinColumn({ name: 'role_id' })
-	role: RoleEntity
+	role: RoleEntity;
 
 	@OneToOne(
 		(): typeof UserDetailEntity => UserDetailEntity,
@@ -65,7 +65,7 @@ export class UserEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	userDetail: UserDetailEntity
+	userDetail: UserDetailEntity;
 
 	@OneToMany(
 		(): typeof CartEntity => CartEntity,
@@ -74,7 +74,7 @@ export class UserEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	cart: CartEntity[]
+	cart: CartEntity[];
 
 	@OneToMany(
 		(): typeof OrderEntity => OrderEntity,
@@ -83,7 +83,7 @@ export class UserEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	order: OrderEntity[]
+	order: OrderEntity[];
 
 	@OneToMany(
 		(): typeof UserImageEntity => UserImageEntity,
@@ -92,7 +92,7 @@ export class UserEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	userImages: UserImageEntity[]
+	userImages: UserImageEntity[];
 
 	@OneToMany(
 		(): typeof WishlistItemEntity => WishlistItemEntity,
@@ -101,5 +101,5 @@ export class UserEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	wishlistItems: WishlistItemEntity[]
+	wishlistItems: WishlistItemEntity[];
 }

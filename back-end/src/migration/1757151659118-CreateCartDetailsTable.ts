@@ -11,8 +11,8 @@ import {
 	Table,
 	TableForeignKey,
 	TableIndex,
-} from 'typeorm'
-import { CartDetailsStatusEnum } from '../modules/cart/enums/cart-details.status.enum'
+} from 'typeorm';
+import { CartDetailsStatusEnum } from '../modules/cart/enums/cart-details.status.enum';
 
 export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 	/*
@@ -26,7 +26,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 		 * Get `cart_details` table if exist
 		 */
 		const cartDetailsTable: Table | undefined =
-			await queryRunner.getTable('cart_details')
+			await queryRunner.getTable('cart_details');
 
 		/*
 		 * If `cart_details` table exists
@@ -80,14 +80,14 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 						},
 					],
 				})
-			)
+			);
 		}
 
 		/*
 		 * Get `cart_details` table after created
 		 */
 		const cartDetailsTableCreated: Table | undefined =
-			await queryRunner.getTable('cart_details')
+			await queryRunner.getTable('cart_details');
 
 		/*
 		 * If `cart_details` table exist
@@ -97,7 +97,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 			 * Get all foreign key constraints in `cart_details` table
 			 */
 			const cartDetailsFks: TableForeignKey[] =
-				cartDetailsTableCreated.foreignKeys || []
+				cartDetailsTableCreated.foreignKeys || [];
 
 			/*
 			 * Check if fk `fk_cart_details_cart_id_to_carts_id` not exist
@@ -119,7 +119,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'carts',
 					})
-				)
+				);
 			}
 
 			/*
@@ -142,14 +142,14 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 						referencedColumnNames: ['id'],
 						referencedTableName: 'products',
 					})
-				)
+				);
 			}
 
 			/*
 			 * Get all index in `cart_details` table
 			 */
 			const cartDetailsIndex: TableIndex[] =
-				cartDetailsTableCreated.indices || []
+				cartDetailsTableCreated.indices || [];
 
 			/*
 			 * Check if `idx_cart_details_id` not exist
@@ -165,7 +165,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 						name: 'idx_cart_details_id',
 						columnNames: ['id'],
 					})
-				)
+				);
 			}
 		}
 	}
@@ -181,7 +181,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 		 * Get `cart_details` table after created
 		 */
 		const cartDetailsTableCreated: Table | undefined =
-			await queryRunner.getTable('cart_details')
+			await queryRunner.getTable('cart_details');
 
 		/*
 		 * If `cart_details` table exist
@@ -191,7 +191,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 			 * Get all foreign key constraints in `cart_details` table
 			 */
 			const cartDetailsFks: TableForeignKey[] =
-				cartDetailsTableCreated.foreignKeys || []
+				cartDetailsTableCreated.foreignKeys || [];
 
 			/*
 			 * Check if fk `fk_cart_details_cart_id_to_carts_id` exist
@@ -208,7 +208,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					cartDetailsTableCreated,
 					'fk_cart_details_cart_id_to_carts_id'
-				)
+				);
 			}
 
 			/*
@@ -226,14 +226,14 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 				await queryRunner.dropForeignKey(
 					cartDetailsTableCreated,
 					'fk_cart_details_product_id_to_products_id'
-				)
+				);
 			}
 
 			/*
 			 * Get all index in `cart_details` table
 			 */
 			const cartDetailsIndex: TableIndex[] =
-				cartDetailsTableCreated.indices || []
+				cartDetailsTableCreated.indices || [];
 
 			/*
 			 * Check if `idx_cart_details_id` exist
@@ -246,7 +246,7 @@ export class CreateCartDetailsTable1757151659118 implements MigrationInterface {
 				await queryRunner.dropIndex(
 					cartDetailsTableCreated,
 					'idx_cart_details_id'
-				)
+				);
 			}
 		}
 	}
