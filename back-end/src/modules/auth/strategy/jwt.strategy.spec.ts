@@ -187,7 +187,7 @@ describe('JwtStrategy', () => {
 	/**
 	 * @description Test that the JwtStrategy convert user response to jwt payload if not meet error.
 	 */
-	it('should convert user response to jwt payload if not meet error', async () => {
+	it('should convert user response to jwt payload if not meet error', async (): Promise<void> => {
 		mockAuthMapper.toJwtPayload.mockResolvedValue(payloadMapping);
 		mockUserService.getUserByUserID.mockResolvedValue(user);
 
@@ -202,7 +202,7 @@ describe('JwtStrategy', () => {
 	/**
 	 * @description Test that the JwtStrategy debug message after convert user response to jwt payload.
 	 */
-	it('should debug message after convert user response to jwt payload', async () => {
+	it('should debug message after convert user response to jwt payload', async (): Promise<void> => {
 		const loggerSpy = jest
 			.spyOn(Logger.prototype, 'debug')
 			.mockImplementation((): void => {});

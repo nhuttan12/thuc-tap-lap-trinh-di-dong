@@ -8,9 +8,8 @@
 
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ConfigService } from '../../../common/config/config.service';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { JwtPayload } from '../interface/jwt-payload.interface';
+import { ConfigService } from '../../../common/config/config.service';
 import { AuthService } from '../auth.service';
 import { GoogleLogin } from '../interface/google-login.interface';
 
@@ -28,11 +27,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 		});
 	}
 
-	/*
-	 * @description validate function is call when google passport is called
-	 * @param Profile
-	 * @param VerifyCallback
-	 * @return void
+	/**
+	 * @description Validate function is call when google passport is called.
+	 * @param {Profile} profile - google profile to get information from front end.
+	 * @param {VerifyCallback} done - call back function.
+	 * @return {void}
 	 * @author Nhut Tan
 	 * @since 2025-09-10
 	 * @modifies 2025-09-12

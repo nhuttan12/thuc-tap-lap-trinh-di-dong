@@ -1,5 +1,5 @@
-/*
- * @description user login request dto
+/**
+ * @description User login request dto
  * @author Nhut Tan
  * @since 2025-09-08
  * @version 1.0.0

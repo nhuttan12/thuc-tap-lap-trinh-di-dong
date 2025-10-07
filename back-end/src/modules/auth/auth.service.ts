@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
 import { JwtPayload } from './interface/jwt-payload.interface';
@@ -34,7 +34,7 @@ export class AuthService {
 	 * @since 2025-09-08
 	 * @version 1.0.0
 	 */
-	async userLogin(username: string, pass: string): Promise<JwtPayload> {
+	async userLogin(username: string, password: string): Promise<JwtPayload> {
 		try {
 			/*
 			 * Get `getUserByUserNameAndPasswordForLogin` function from user service
@@ -42,7 +42,7 @@ export class AuthService {
 			const user: UserEntityResponseDto =
 				await this.userService.getUserByUserNameAndPasswordForLogin(
 					username,
-					pass
+					password
 				);
 			this.logger.debug(
 				`Get \`getUserByUserNameAndPasswordForLogin\` function from user service: ${JSON.stringify(user)}`
@@ -109,7 +109,7 @@ export class AuthService {
 				this.logger.warn(
 					`Password and retypePassword are not the same`
 				);
-				throw new ForbiddenException({
+				throw new BadRequestException({
 					statusCode:
 						AuthStatusCode
 							.PASSWORD_AND_RETYPE_PASSWORD_ARE_NOT_THE_SAME
@@ -137,7 +137,7 @@ export class AuthService {
 			 */
 			if (user) {
 				this.logger.warn(`User with email ${email} already exists`);
-				throw new ForbiddenException({
+				throw new ConflictException({
 					statusCode: AuthStatusCode.EMAIL_ALREADY_EXISTS.statusCode,
 					customCode: AuthStatusCode.EMAIL_ALREADY_EXISTS.customCode,
 					message: AuthStatusCode.EMAIL_ALREADY_EXISTS.message,
@@ -160,7 +160,7 @@ export class AuthService {
 				this.logger.warn(
 					`User with username ${username} already exists`
 				);
-				throw new ForbiddenException({
+				throw new ConflictException({
 					statusCode: AuthStatusCode.USER_ALREADY_EXISTS.statusCode,
 					customCode: AuthStatusCode.USER_ALREADY_EXISTS.customCode,
 					message: AuthStatusCode.USER_ALREADY_EXISTS.message,
@@ -203,7 +203,7 @@ export class AuthService {
 			 * Call `getUserByEmail` function from user service
 			 */
 			let user: UserEntityResponseDto | null =
-				await this.userService.getUserByEmail(email[0]);
+				await this.userService.getUserByEmail(email);
 			this.logger.debug(
 				`Call \`getUserByEmail\` function from user service: ${JSON.stringify(user)}`
 			);
