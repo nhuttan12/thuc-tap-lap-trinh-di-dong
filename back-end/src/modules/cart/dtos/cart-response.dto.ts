@@ -11,7 +11,7 @@ export class CartResponseDto {
 	id: number;
 	userID: number;
 	status: string;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: string;
+	updatedAt: string;
 	cartDetails: CartDetailResponseDto[];
 }

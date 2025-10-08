@@ -36,7 +36,7 @@ export class CartDetailEntity extends TimestampField {
 
 	@ManyToOne(
 		(): typeof CartEntity => CartEntity,
-		(cart: CartEntity): CartDetailEntity[] => cart.cartDetail,
+		(cart: CartEntity): CartDetailEntity[] => cart.cartDetails,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
@@ -47,7 +47,7 @@ export class CartDetailEntity extends TimestampField {
 	@ManyToOne(
 		(): typeof ProductEntity => ProductEntity,
 		(productEntity: ProductEntity): CartDetailEntity[] =>
-			productEntity.cartDetail,
+			productEntity.cartDetails,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}

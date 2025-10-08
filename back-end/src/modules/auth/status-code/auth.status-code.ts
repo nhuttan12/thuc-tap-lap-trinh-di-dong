@@ -13,12 +13,12 @@ export class AuthStatusCode extends BaseStatusCode {
 	static readonly USERNAME_MUST_BE_STRING: AuthStatusCode =
 		new AuthStatusCode(
 			HttpStatus.BAD_REQUEST,
-			'ATH_003',
+			'ATH_001',
 			'Username must be a string'
 		);
 	static readonly USERNAME_NOT_EMPTY: AuthStatusCode = new AuthStatusCode(
 		HttpStatus.BAD_REQUEST,
-		'ATH_003',
+		'ATH_002',
 		'Username must not be empty'
 	);
 	static readonly PASSWORD_NOT_EMPTY: AuthStatusCode = new AuthStatusCode(

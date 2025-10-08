@@ -5,7 +5,13 @@
  * @version 1.0.0
  */
 
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import {
+	BadRequestException,
+	ConflictException,
+	ForbiddenException,
+	Injectable,
+	Logger,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
 import { JwtPayload } from './interface/jwt-payload.interface';

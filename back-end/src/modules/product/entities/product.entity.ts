@@ -60,7 +60,7 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	cartDetail: CartDetailEntity[];
+	cartDetails: CartDetailEntity[];
 
 	@OneToMany(
 		(): typeof OrderDetailEntity => OrderDetailEntity,

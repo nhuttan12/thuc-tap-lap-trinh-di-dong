@@ -49,5 +49,5 @@ export class CartEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	cartDetail: CartDetailEntity[];
+	cartDetails: CartDetailEntity[];
 }

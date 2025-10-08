@@ -21,9 +21,9 @@ export class CartMapper {
 			id: cartEntity.id,
 			userID: cartEntity.user.id,
 			status: cartEntity.status,
-			createdAt: cartEntity.createdAt,
-			updatedAt: cartEntity.updatedAt,
-			cartDetails: cartEntity.cartDetail.map(
+			createdAt: cartEntity.createdAt.toString(),
+			updatedAt: cartEntity.updatedAt.toString(),
+			cartDetails: cartEntity.cartDetails.map(
 				(cartDetail: CartDetailEntity): CartDetailResponseDto => {
 					return this.cartDetailMapper.toCartDetailResponseDto(
 						cartDetail
