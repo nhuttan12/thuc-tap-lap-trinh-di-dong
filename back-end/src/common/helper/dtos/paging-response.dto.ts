@@ -8,18 +8,18 @@
 import { PagingMetaDto } from './page-meta.dto';
 
 export class PagingResponseDto<T> {
-  /**
-   * Metadata about pagination
-   */
-  meta: PagingMetaDto;
+	/**
+	 * Metadata about pagination
+	 */
+	meta: PagingMetaDto;
 
-  /**
-   * Actual data list
-   */
-  data: T[];
+	/**
+	 * Actual data list
+	 */
+	data: T[];
 
-  constructor(data: T[], meta: PagingMetaDto) {
-    this.meta = meta;
-    this.data = data;
-  }
+	constructor(data: T[], meta: PagingMetaDto) {
+		this.meta = meta;
+		this.data = data;
+	}
 }

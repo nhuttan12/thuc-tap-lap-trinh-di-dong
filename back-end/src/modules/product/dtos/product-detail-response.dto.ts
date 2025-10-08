@@ -6,13 +6,13 @@
  */
 
 export class ProductDetailResponseDto {
-  id: number;
-  imageList: string[];
-  name: string;
-  price: number;
-  discount: number;
-  color: string;
-  rating: number;
-  size: string[];
-  description: string;
+	id: number;
+	imageList: string[];
+	name: string;
+	price: number;
+	discount: number;
+	color: string;
+	rating: number;
+	size: string[];
+	description: string;
 }

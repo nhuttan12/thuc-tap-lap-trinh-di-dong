@@ -8,10 +8,10 @@
 import { TimestampField } from '../../../common/database/timestamp.field';
 
 export class ProductInWishlistResponseDto extends TimestampField {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  discount: number;
-  rating: number;
+	id: number;
+	name: string;
+	image: string;
+	price: number;
+	discount: number;
+	rating: number;
 }

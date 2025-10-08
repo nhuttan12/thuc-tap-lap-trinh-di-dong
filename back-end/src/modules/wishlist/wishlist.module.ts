@@ -15,9 +15,9 @@ import { HelperModule } from '../../common/helper/helper.module';
 import { WishlistController } from './wishlist.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WishlistItemEntity]), HelperModule],
-  providers: [WishlistItemRepository, WishlistService, WishlistItemMapper],
-  exports: [],
-  controllers: [WishlistController],
+	imports: [TypeOrmModule.forFeature([WishlistItemEntity]), HelperModule],
+	providers: [WishlistItemRepository, WishlistService, WishlistItemMapper],
+	exports: [],
+	controllers: [WishlistController],
 })
 export class WishlistModule {}

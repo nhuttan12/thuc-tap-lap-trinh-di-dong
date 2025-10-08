@@ -6,8 +6,8 @@
  */
 
 export interface JwtPayload {
-  id: number;
-  email: string;
-  role: string;
-  accessToken: string;
+	id: number;
+	email: string;
+	role: string;
+	accessToken: string;
 }

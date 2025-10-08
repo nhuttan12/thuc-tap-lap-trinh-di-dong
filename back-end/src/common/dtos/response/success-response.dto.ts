@@ -9,7 +9,7 @@
 import { ResponseDto } from './response.dto';
 
 export class SuccessResponseDto<T> extends ResponseDto<T> {
-  constructor(statusCode: string, message: string, data: T) {
-    super(statusCode, message, data);
-  }
+	constructor(statusCode: string, message: string, data: T) {
+		super(statusCode, message, data);
+	}
 }

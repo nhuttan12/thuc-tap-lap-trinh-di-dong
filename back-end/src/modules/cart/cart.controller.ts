@@ -22,50 +22,50 @@ import { RoleName } from '../role/enums/role-name.enum';
 @UseGuards(JwtAuthGuard)
 @Roles([RoleName.CUSTOMER])
 export class CartController {
-  private readonly logger: Logger = new Logger(CartController.name);
+	private readonly logger: Logger = new Logger(CartController.name);
 
-  constructor(
-    private readonly cartService: CartService,
-    private readonly cartDetailService: CartDetailService,
-  ) {}
+	constructor(
+		private readonly cartService: CartService,
+		private readonly cartDetailService: CartDetailService
+	) {}
 
-  /**
-   * @description Add product to cart
-   * @param {JwtPayload} payload - User payload
-   * @param {AddProductToCartRequestDto} request - Add product to cart request
-   * @return {Promise<SuccessResponseDto<CartResponseDto>>} - Cart response
-   * @author Nhut Tan
-   * @since 2025-09-25
-   * @version 1.0.0
-   */
-  @Post('add-to-cart')
-  async addProductToCart(
-    @User() payload: JwtPayload,
-    @Body() request: AddProductToCartRequestDto,
-  ): Promise<SuccessResponseDto<CartResponseDto>> {
-    /**
-     * Get productID and quantity from the request
-     */
-    const { productID, quantity } = request;
+	/**
+	 * @description Add product to cart
+	 * @param {JwtPayload} payload - User payload
+	 * @param {AddProductToCartRequestDto} request - Add product to cart request
+	 * @return {Promise<SuccessResponseDto<CartResponseDto>>} - Cart response
+	 * @author Nhut Tan
+	 * @since 2025-09-25
+	 * @version 1.0.0
+	 */
+	@Post('add-to-cart')
+	async addProductToCart(
+		@User() payload: JwtPayload,
+		@Body() request: AddProductToCartRequestDto
+	): Promise<SuccessResponseDto<CartResponseDto>> {
+		/**
+		 * Get productID and quantity from the request
+		 */
+		const { productID, quantity } = request;
 
-    /**
-     * Get user ID from payload
-     */
-    const { id } = payload;
+		/**
+		 * Get user ID from payload
+		 */
+		const { id } = payload;
 
-    /**
-     * Calling `addProductToCart` from `CartService`
-     */
-    const cartResponseDto: CartResponseDto =
-      await this.cartService.addProductToCart(productID, id, quantity);
+		/**
+		 * Calling `addProductToCart` from `CartService`
+		 */
+		const cartResponseDto: CartResponseDto =
+			await this.cartService.addProductToCart(productID, id, quantity);
 
-    /**
-     * Returning response
-     */
-    return {
-      data: cartResponseDto,
-      message: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.message,
-      statusCode: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode,
-    };
-  }
+		/**
+		 * Returning response
+		 */
+		return {
+			data: cartResponseDto,
+			message: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.message,
+			statusCode: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode,
+		};
+	}
 }

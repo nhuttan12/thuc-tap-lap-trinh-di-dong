@@ -19,14 +19,14 @@ import { RoleModule } from '../role/role.module';
 import { ConfigModule } from '../../common/config/config.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserEntity, UserDetailEntity]),
-    forwardRef((): typeof ImageModule => ImageModule),
-    RoleModule,
-    ConfigModule,
-  ],
-  providers: [UserRepository, UserService, UserMapper],
-  controllers: [UserController],
-  exports: [UserService],
+	imports: [
+		TypeOrmModule.forFeature([UserEntity, UserDetailEntity]),
+		forwardRef((): typeof ImageModule => ImageModule),
+		RoleModule,
+		ConfigModule,
+	],
+	providers: [UserRepository, UserService, UserMapper],
+	controllers: [UserController],
+	exports: [UserService],
 })
 export class UserModule {}

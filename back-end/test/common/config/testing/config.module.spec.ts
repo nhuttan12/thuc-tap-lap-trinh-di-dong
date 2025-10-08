@@ -11,46 +11,46 @@ import { ConfigModule } from '../../../../src/common/config/config.module';
 import { ConfigService } from '../../../../src/common/config/config.service';
 
 describe('ConfigModule', (): void => {
-  /*
-   * Create testing module for ConfigModule
-   */
-  let testingModule: TestingModule;
+	/*
+	 * Create testing module for ConfigModule
+	 */
+	let testingModule: TestingModule;
 
-  /*
-   * Initial testing module before each test
-   */
-  beforeEach(async () => {
-    testingModule = await Test.createTestingModule({
-      imports: [ConfigModule],
-    }).compile();
-  });
+	/*
+	 * Initial testing module before each test
+	 */
+	beforeEach(async () => {
+		testingModule = await Test.createTestingModule({
+			imports: [ConfigModule],
+		}).compile();
+	});
 
-  /*
-   * The module should be defined
-   */
-  it('should compile module', (): void => {
-    expect(testingModule).toBeDefined();
-  });
+	/*
+	 * The module should be defined
+	 */
+	it('should compile module', (): void => {
+		expect(testingModule).toBeDefined();
+	});
 
-  /*
-   * Config service can be provided
-   */
-  it('should provide ConfigService', (): void => {
-    const configSerivce: ConfigService =
-      testingModule.get<ConfigService>(ConfigService);
-    expect(configSerivce).toBeInstanceOf(ConfigService);
-  });
+	/*
+	 * Config service can be provided
+	 */
+	it('should provide ConfigService', (): void => {
+		const configSerivce: ConfigService =
+			testingModule.get<ConfigService>(ConfigService);
+		expect(configSerivce).toBeInstanceOf(ConfigService);
+	});
 
-  /**
-   * Config service can be exported for other module
-   */
-  it('should export ConfigService for other module', async () => {
-    const anotherModule = await Test.createTestingModule({
-      imports: [ConfigModule],
-    }).compile();
+	/**
+	 * Config service can be exported for other module
+	 */
+	it('should export ConfigService for other module', async () => {
+		const anotherModule = await Test.createTestingModule({
+			imports: [ConfigModule],
+		}).compile();
 
-    const configService: ConfigService =
-      anotherModule.get<ConfigService>(ConfigService);
-    expect(configService).toBeDefined();
-  });
+		const configService: ConfigService =
+			anotherModule.get<ConfigService>(ConfigService);
+		expect(configService).toBeDefined();
+	});
 });

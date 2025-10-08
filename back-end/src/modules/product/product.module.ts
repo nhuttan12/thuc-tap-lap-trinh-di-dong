@@ -23,22 +23,22 @@ import { ProductDetailMapper } from './mappers/product-detail.mapper';
 import { ProductDetailService } from './product-detail.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ProductEntity, ProductDetailsEntity]),
-    CategoryModule,
-    CartModule,
-    OrderModule,
-    HelperModule,
-  ],
-  providers: [
-    ProductRepository,
-    ProductDetailRepository,
-    ProductService,
-    ProductDetailService,
-    ProductMapper,
-    ProductDetailMapper,
-  ],
-  exports: [ProductService],
-  controllers: [ProductController],
+	imports: [
+		TypeOrmModule.forFeature([ProductEntity, ProductDetailsEntity]),
+		CategoryModule,
+		CartModule,
+		OrderModule,
+		HelperModule,
+	],
+	providers: [
+		ProductRepository,
+		ProductDetailRepository,
+		ProductService,
+		ProductDetailService,
+		ProductMapper,
+		ProductDetailMapper,
+	],
+	exports: [ProductService],
+	controllers: [ProductController],
 })
 export class ProductModule {}

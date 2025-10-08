@@ -6,7 +6,7 @@
  */
 
 export enum ProductImageTypeEnum {
-  THUMBNAIL = 'THUMBNAIL',
-  PRODUCT = 'PRODUCT',
-  BANNER = 'BANNER',
+	THUMBNAIL = 'THUMBNAIL',
+	PRODUCT = 'PRODUCT',
+	BANNER = 'BANNER',
 }

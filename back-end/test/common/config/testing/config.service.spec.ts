@@ -14,121 +14,121 @@ import { ConflictException } from '@nestjs/common';
 import { DatabaseType } from 'typeorm';
 
 describe('ConfigService', () => {
-  let configService: ConfigService;
-  let mockNestConfigService: Partial<NestConfigService>;
+	let configService: ConfigService;
+	let mockNestConfigService: Partial<NestConfigService>;
 
-  beforeEach(() => {
-    mockNestConfigService = {
-      get: jest.fn(),
-    };
+	beforeEach(() => {
+		mockNestConfigService = {
+			get: jest.fn(),
+		};
 
-    configService = new ConfigService(
-      mockNestConfigService as NestConfigService,
-    );
-  });
+		configService = new ConfigService(
+			mockNestConfigService as NestConfigService
+		);
+	});
 
-  it('should return database configuration', () => {
-    /*
-     * Define the mock database config
-     */
-    const mockDatabaseConfig: DatabaseConfig = {
-      type: 'postgres' as DatabaseType,
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '123123',
-      database: 'tt-mobile',
-    };
+	it('should return database configuration', () => {
+		/*
+		 * Define the mock database config
+		 */
+		const mockDatabaseConfig: DatabaseConfig = {
+			type: 'postgres' as DatabaseType,
+			host: 'localhost',
+			port: 5432,
+			username: 'postgres',
+			password: '123123',
+			database: 'tt-mobile',
+		};
 
-    /*
-     * Set up get method to return expected data when called with database key
-     */
-    (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(
-      mockDatabaseConfig,
-    );
+		/*
+		 * Set up get method to return expected data when called with database key
+		 */
+		(mockNestConfigService.get as jest.Mock).mockReturnValueOnce(
+			mockDatabaseConfig
+		);
 
-    /*
-     * Call getter and setter result
-     */
-    const result: DatabaseConfig = configService.databaseConfig;
+		/*
+		 * Call getter and setter result
+		 */
+		const result: DatabaseConfig = configService.databaseConfig;
 
-    /*
-     * Assert the data match the mock data
-     */
-    expect(result).toEqual(mockDatabaseConfig);
+		/*
+		 * Assert the data match the mock data
+		 */
+		expect(result).toEqual(mockDatabaseConfig);
 
-    /*
-     * Assert that the mock 'get' method was called with the correct key.
-     */
-    expect(mockNestConfigService.get).toHaveBeenCalledWith('database');
-  });
+		/*
+		 * Assert that the mock 'get' method was called with the correct key.
+		 */
+		expect(mockNestConfigService.get).toHaveBeenCalledWith('database');
+	});
 
-  it('should return the http configuration', () => {
-    /*
-     * Define mock http configuration
-     */
-    const mockHttpConfig: HttpConfig = {
-      environment: 'develop',
-      port: 8080,
-      saltRounds: 10,
-      jwtSecret: 'secretKey',
-      expireTime: '1h',
-    };
+	it('should return the http configuration', () => {
+		/*
+		 * Define mock http configuration
+		 */
+		const mockHttpConfig: HttpConfig = {
+			environment: 'develop',
+			port: 8080,
+			saltRounds: 10,
+			jwtSecret: 'secretKey',
+			expireTime: '1h',
+		};
 
-    /*
-     * Set up get method to return expected data when called with http key
-     */
-    (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(
-      mockHttpConfig,
-    );
+		/*
+		 * Set up get method to return expected data when called with http key
+		 */
+		(mockNestConfigService.get as jest.Mock).mockReturnValueOnce(
+			mockHttpConfig
+		);
 
-    /*
-     * Call getter and setter result
-     */
-    const result: HttpConfig = configService.httpConfig;
+		/*
+		 * Call getter and setter result
+		 */
+		const result: HttpConfig = configService.httpConfig;
 
-    /*
-     * Assert the data match the mock data
-     */
-    expect(result).toEqual(mockHttpConfig);
+		/*
+		 * Assert the data match the mock data
+		 */
+		expect(result).toEqual(mockHttpConfig);
 
-    /*
-     * Assert that the mock 'get' method was called with the correct key.
-     */
-    expect(mockNestConfigService.get).toHaveBeenCalledWith('http');
-  });
+		/*
+		 * Assert that the mock 'get' method was called with the correct key.
+		 */
+		expect(mockNestConfigService.get).toHaveBeenCalledWith('http');
+	});
 
-  it('should throw ConflictException when database not found', () => {
-    /*
-     * Set up get method to return undefined
-     */
-    (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(undefined);
+	it('should throw ConflictException when database not found', () => {
+		/*
+		 * Set up get method to return undefined
+		 */
+		(mockNestConfigService.get as jest.Mock).mockReturnValueOnce(undefined);
 
-    /*
-     * Throw ConflictException when database key not found
-     */
-    expect((): DatabaseConfig => configService.databaseConfig).toThrow(
-      ConflictException,
-    );
-    expect((): DatabaseConfig => configService.databaseConfig).toThrow(
-      'Database configuration is not found',
-    );
-  });
+		/*
+		 * Throw ConflictException when database key not found
+		 */
+		expect((): DatabaseConfig => configService.databaseConfig).toThrow(
+			ConflictException
+		);
+		expect((): DatabaseConfig => configService.databaseConfig).toThrow(
+			'Database configuration is not found'
+		);
+	});
 
-  it('should throw ConflictException when http key not found', () => {
-    /*
-     * Set up method to return undefined
-     */
-    (mockNestConfigService.get as jest.Mock).mockReturnValueOnce(undefined);
+	it('should throw ConflictException when http key not found', () => {
+		/*
+		 * Set up method to return undefined
+		 */
+		(mockNestConfigService.get as jest.Mock).mockReturnValueOnce(undefined);
 
-    /*
-     * Throw ConflictException when http key not found
-     */
-    expect((): HttpConfig => configService.httpConfig).toThrow(
-      ConflictException,
-    );
-    expect((): HttpConfig => configService.httpConfig).toThrow(
-      'Http configuration is not found',
-    );
-  });
+		/*
+		 * Throw ConflictException when http key not found
+		 */
+		expect((): HttpConfig => configService.httpConfig).toThrow(
+			ConflictException
+		);
+		expect((): HttpConfig => configService.httpConfig).toThrow(
+			'Http configuration is not found'
+		);
+	});
 });

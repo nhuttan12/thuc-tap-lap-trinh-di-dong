@@ -8,9 +8,9 @@
 import { TimestampResponseDto } from '../../../common/database/dtos/timestamp.response.dto';
 
 export class UserEntityResponseDto extends TimestampResponseDto {
-  id: number;
-  username: string;
-  email: string;
-  status: string;
-  role: string;
+	id: number;
+	username: string;
+	email: string;
+	status: string;
+	role: string;
 }

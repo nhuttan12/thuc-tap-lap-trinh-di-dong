@@ -18,19 +18,19 @@ import { HelperModule } from '../../common/helper/helper.module';
 import { CartMapper } from './mappers/cart.mapper';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([CartEntity, CartDetailEntity]),
-    HelperModule,
-  ],
-  providers: [
-    CartService,
-    CartDetailService,
-    CartRepository,
-    CartDetailRepository,
-    CartMapper,
-    CartDetailMapper,
-  ],
-  exports: [],
-  controllers: [],
+	imports: [
+		TypeOrmModule.forFeature([CartEntity, CartDetailEntity]),
+		HelperModule,
+	],
+	providers: [
+		CartService,
+		CartDetailService,
+		CartRepository,
+		CartDetailRepository,
+		CartMapper,
+		CartDetailMapper,
+	],
+	exports: [],
+	controllers: [],
 })
 export class CartModule {}

@@ -13,9 +13,9 @@ import { RoleMapper } from './mappers/role.mapper';
 import { RoleService } from './role.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoleEntity])],
-  providers: [RoleRepository, RoleMapper, RoleService],
-  controllers: [],
-  exports: [RoleService],
+	imports: [TypeOrmModule.forFeature([RoleEntity])],
+	providers: [RoleRepository, RoleMapper, RoleService],
+	controllers: [],
+	exports: [RoleService],
 })
 export class RoleModule {}

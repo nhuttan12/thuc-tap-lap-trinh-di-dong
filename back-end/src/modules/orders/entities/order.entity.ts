@@ -7,11 +7,11 @@
  */
 
 import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { OrderStatusEnum } from '../enums/order-status.enum';
@@ -20,32 +20,32 @@ import { OrderDetailEntity } from './order-detail.entity';
 
 @Entity('orders')
 export class OrderEntity extends TimestampField {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @ManyToOne(
-    (): typeof UserEntity => UserEntity,
-    (userEntity: UserEntity): OrderEntity[] => userEntity.order,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+	@ManyToOne(
+		(): typeof UserEntity => UserEntity,
+		(userEntity: UserEntity): OrderEntity[] => userEntity.order,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	@JoinColumn({ name: 'user_id' })
+	user: UserEntity;
 
-  @Column()
-  price: number;
+	@Column()
+	price: number;
 
-  @Column()
-  status: OrderStatusEnum;
+	@Column()
+	status: OrderStatusEnum;
 
-  @ManyToOne(
-    (): typeof OrderDetailEntity => OrderDetailEntity,
-    (orderDetailEntity: OrderDetailEntity): OrderEntity =>
-      orderDetailEntity.order,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  orderDetails: OrderDetailEntity[];
+	@ManyToOne(
+		(): typeof OrderDetailEntity => OrderDetailEntity,
+		(orderDetailEntity: OrderDetailEntity): OrderEntity =>
+			orderDetailEntity.order,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	orderDetails: OrderDetailEntity[];
 }

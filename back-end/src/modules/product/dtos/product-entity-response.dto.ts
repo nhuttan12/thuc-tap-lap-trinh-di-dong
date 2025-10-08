@@ -6,12 +6,12 @@
  */
 
 export class ProductEntityResponseDto {
-  id: number;
-  name: string;
-  price: number;
-  discount: number;
-  imageUrl: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+	id: number;
+	name: string;
+	price: number;
+	discount: number;
+	imageUrl: string;
+	status: string;
+	createdAt: Date;
+	updatedAt: Date;
 }

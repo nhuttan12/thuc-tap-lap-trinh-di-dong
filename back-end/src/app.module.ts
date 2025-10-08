@@ -8,8 +8,8 @@
 
 import { Logger, Module } from '@nestjs/common';
 import {
-  ConfigModule as NestConfigModule,
-  ConfigService,
+	ConfigModule as NestConfigModule,
+	ConfigService,
 } from '@nestjs/config';
 import { DatabaseModule } from './modules/database/database.module';
 import { ConfigModule } from './common/config/config.module';
@@ -25,25 +25,25 @@ import { ProductModule } from './modules/product/product.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 
 @Module({
-  imports: [
-    NestConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env.local',
-      validationSchema: envValidationSchema,
-    }),
-    DatabaseModule,
-    ConfigModule,
-    UserModule,
-    AuthModule,
-    RoleModule,
-    CartModule,
-    CategoryModule,
-    ImageModule,
-    OrderModule,
-    ProductModule,
-    WishlistModule,
-  ],
-  providers: [Logger, ConfigService],
-  exports: [Logger, ConfigService],
+	imports: [
+		NestConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath: '.env.local',
+			validationSchema: envValidationSchema,
+		}),
+		DatabaseModule,
+		ConfigModule,
+		UserModule,
+		AuthModule,
+		RoleModule,
+		CartModule,
+		CategoryModule,
+		ImageModule,
+		OrderModule,
+		ProductModule,
+		WishlistModule,
+	],
+	providers: [Logger, ConfigService],
+	exports: [Logger, ConfigService],
 })
 export class AppModule {}

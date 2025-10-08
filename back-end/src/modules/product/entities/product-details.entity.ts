@@ -7,12 +7,12 @@
  */
 
 import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToOne,
+	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CategoryEntity } from '../../category/entities/category.entity';
 import { TimestampField } from '../../../common/database/timestamp.field';
@@ -20,40 +20,40 @@ import { ProductEntity } from './product.entity';
 
 @Entity()
 export class ProductDetailsEntity extends TimestampField {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @Column()
-  size: string;
+	@Column()
+	size: string;
 
-  @Column()
-  color: string;
+	@Column()
+	color: string;
 
-  @Column()
-  rating: number;
+	@Column()
+	rating: number;
 
-  @Column()
-  description: string;
+	@Column()
+	description: string;
 
-  @ManyToOne(
-    (): typeof CategoryEntity => CategoryEntity,
-    (categoryEntity: CategoryEntity): ProductDetailsEntity[] =>
-      categoryEntity.productDetails,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  @JoinColumn({ name: 'category_id' })
-  categoryEntity: CategoryEntity;
+	@ManyToOne(
+		(): typeof CategoryEntity => CategoryEntity,
+		(categoryEntity: CategoryEntity): ProductDetailsEntity[] =>
+			categoryEntity.productDetails,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	@JoinColumn({ name: 'category_id' })
+	categoryEntity: CategoryEntity;
 
-  @OneToOne(
-    (): typeof ProductEntity => ProductEntity,
-    (productEntity: ProductEntity): ProductDetailsEntity =>
-      productEntity.productDetailsEntity,
-    {
-      cascade: ['insert', 'update', 'soft-remove'],
-    },
-  )
-  @JoinColumn({ name: 'id' })
-  product: ProductEntity;
+	@OneToOne(
+		(): typeof ProductEntity => ProductEntity,
+		(productEntity: ProductEntity): ProductDetailsEntity =>
+			productEntity.productDetailsEntity,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	@JoinColumn({ name: 'id' })
+	product: ProductEntity;
 }

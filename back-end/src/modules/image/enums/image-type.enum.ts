@@ -6,5 +6,5 @@
  */
 
 export enum ImageTypeEnum {
-  AVATAR = 'AVATAR',
+	AVATAR = 'AVATAR',
 }

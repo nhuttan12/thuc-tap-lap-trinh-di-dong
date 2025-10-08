@@ -14,20 +14,22 @@ import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto';
 
 @Injectable()
 export class CartMapper {
-  constructor(private readonly cartDetailMapper: CartDetailMapper) {}
+	constructor(private readonly cartDetailMapper: CartDetailMapper) {}
 
-  toCartResponseDto(cartEntity: CartEntity): CartResponseDto {
-    return {
-      id: cartEntity.id,
-      userID: cartEntity.user.id,
-      status: cartEntity.status,
-      createdAt: cartEntity.createdAt,
-      updatedAt: cartEntity.updatedAt,
-      cartDetails: cartEntity.cartDetail.map(
-        (cartDetail: CartDetailEntity): CartDetailResponseDto => {
-          return this.cartDetailMapper.toCartDetailResponseDto(cartDetail);
-        },
-      ),
-    };
-  }
+	toCartResponseDto(cartEntity: CartEntity): CartResponseDto {
+		return {
+			id: cartEntity.id,
+			userID: cartEntity.user.id,
+			status: cartEntity.status,
+			createdAt: cartEntity.createdAt.toString(),
+			updatedAt: cartEntity.updatedAt.toString(),
+			cartDetails: cartEntity.cartDetails.map(
+				(cartDetail: CartDetailEntity): CartDetailResponseDto => {
+					return this.cartDetailMapper.toCartDetailResponseDto(
+						cartDetail
+					);
+				}
+			),
+		};
+	}
 }

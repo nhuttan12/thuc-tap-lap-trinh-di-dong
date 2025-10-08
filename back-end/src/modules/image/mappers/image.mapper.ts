@@ -11,13 +11,13 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ImageMapper {
-  toImageEntityResponse(image: ImageEntity): ImageEntityResponse {
-    return {
-      id: image.id,
-      url: image.url,
-      status: image.status,
-      createdAt: image.createdAt,
-      updatedAt: image.updatedAt,
-    };
-  }
+	toImageEntityResponse(image: ImageEntity): ImageEntityResponse {
+		return {
+			id: image.id,
+			url: image.url,
+			status: image.status,
+			createdAt: image.createdAt,
+			updatedAt: image.updatedAt,
+		};
+	}
 }

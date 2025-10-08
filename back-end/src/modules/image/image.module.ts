@@ -18,16 +18,16 @@ import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      ImageEntity,
-      ProductImageEntity,
-      UserImageEntity,
-    ]),
-    ProductModule,
-    forwardRef((): typeof UserModule => UserModule),
-  ],
-  providers: [ImageService, ImageMapper, ImageRepository],
-  exports: [ImageService],
+	imports: [
+		TypeOrmModule.forFeature([
+			ImageEntity,
+			ProductImageEntity,
+			UserImageEntity,
+		]),
+		ProductModule,
+		forwardRef((): typeof UserModule => UserModule),
+	],
+	providers: [ImageService, ImageMapper, ImageRepository],
+	exports: [ImageService],
 })
 export class ImageModule {}

@@ -8,16 +8,16 @@ import { BaseStatusCode } from '../../../common/dtos/status-code/base.status-cod
 import { HttpStatus } from '@nestjs/common';
 
 export class ProductDetailStatusCode extends BaseStatusCode {
-  static readonly PRODUCT_DETAIL_NOT_FOUND: ProductDetailStatusCode =
-    new ProductDetailStatusCode(
-      HttpStatus.NOT_FOUND,
-      'PRD_DTL_001',
-      'Product detail not found',
-    );
-  static readonly GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS: ProductDetailStatusCode =
-    new ProductDetailStatusCode(
-      HttpStatus.OK,
-      'PRD_DTL_002',
-      'Get product detail by product ID success',
-    );
+	static readonly PRODUCT_DETAIL_NOT_FOUND: ProductDetailStatusCode =
+		new ProductDetailStatusCode(
+			HttpStatus.NOT_FOUND,
+			'PRD_DTL_001',
+			'Product detail not found'
+		);
+	static readonly GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS: ProductDetailStatusCode =
+		new ProductDetailStatusCode(
+			HttpStatus.OK,
+			'PRD_DTL_002',
+			'Get product detail by product ID success'
+		);
 }

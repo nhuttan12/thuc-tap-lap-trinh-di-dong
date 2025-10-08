@@ -8,10 +8,10 @@
 import { CartDetailResponseDto } from './cart-detail-response.dto';
 
 export class CartResponseDto {
-  id: number;
-  userID: number;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
-  cartDetails: CartDetailResponseDto[];
+	id: number;
+	userID: number;
+	status: string;
+	createdAt: string;
+	updatedAt: string;
+	cartDetails: CartDetailResponseDto[];
 }

@@ -20,29 +20,29 @@ import { AuthController } from './auth.controller';
 import { AuthMapper } from './mapper/auth.mapper';
 
 @Module({
-  imports: [
-    UserModule,
-    PassportModule,
-    ConfigModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.httpConfig.jwtSecret,
-        signOptions: {
-          expiresIn: configService.httpConfig.expireTime,
-        },
-      }),
-    }),
-  ],
-  controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    GoogleStrategy,
-    AuthMapper,
-  ],
-  exports: [AuthService],
+	imports: [
+		UserModule,
+		PassportModule,
+		ConfigModule,
+		JwtModule.registerAsync({
+			imports: [ConfigModule],
+			inject: [ConfigService],
+			useFactory: (configService: ConfigService) => ({
+				secret: configService.httpConfig.jwtSecret,
+				signOptions: {
+					expiresIn: configService.httpConfig.expireTime,
+				},
+			}),
+		}),
+	],
+	controllers: [AuthController],
+	providers: [
+		AuthService,
+		LocalStrategy,
+		JwtStrategy,
+		GoogleStrategy,
+		AuthMapper,
+	],
+	exports: [AuthService],
 })
 export class AuthModule {}
