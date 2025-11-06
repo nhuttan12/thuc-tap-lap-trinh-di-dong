@@ -3,17 +3,17 @@ package com.example.e_commerce.Repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.e_commerce.Model.BrandModel
-import com.example.e_commerce.Model.ItemModel
+import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.Model.SliderModel
 
 class MainRepository {
     private val _brands = MutableLiveData<MutableList<BrandModel>>()
     private val _banners = MutableLiveData<List<SliderModel>>()
-    private val _popular = MutableLiveData<List<ItemModel>>()
+    private val _popular = MutableLiveData<List<ProductModel>>()
 
     val brands: LiveData<MutableList<BrandModel>> get() = _brands
     val banners: LiveData<List<SliderModel>> get() = _banners
-    val popular: LiveData<List<ItemModel>> get() = _popular
+    val popular: LiveData<List<ProductModel>> get() = _popular
 
     fun loadBrands() {
         val brandList = mutableListOf<BrandModel>(
@@ -62,8 +62,8 @@ class MainRepository {
     }
     
     fun loadPopular() {
-        val popularList = mutableListOf<ItemModel>(
-            ItemModel(
+        val popularList = mutableListOf<ProductModel>(
+            ProductModel(
                 title = "Air Jordan 1 Retro High",
                 description = "The classic that started it all. Premium leather upper with iconic design elements.",
                 picUrl = arrayListOf(
@@ -77,7 +77,7 @@ class MainRepository {
                 rating = 4.8,
                 numberInCart = 1
             ),
-            ItemModel(
+            ProductModel(
                 title = "Ultraboost DNA",
                 description = "Responsive Boost cushioning for energy return with every stride. Perfect for daily runs.",
                 picUrl = arrayListOf(
@@ -91,7 +91,7 @@ class MainRepository {
                 rating = 4.5,
                 numberInCart = 1
             ),
-            ItemModel(
+            ProductModel(
                 title = "Essential T-Shirt",
                 description = "A soft and comfortable cotton t-shirt, a staple for any wardrobe.",
                 picUrl = arrayListOf(
@@ -105,7 +105,7 @@ class MainRepository {
                 rating = 4.2,
                 numberInCart = 1
             ),
-            ItemModel(
+            ProductModel(
                 title = "Slim Fit Jeans",
                 description = "Classic five-pocket jeans with a modern slim fit. Made from durable denim.",
                 picUrl = arrayListOf(

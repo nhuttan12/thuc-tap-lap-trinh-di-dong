@@ -9,14 +9,14 @@ import com.bumptech.glide.Glide
 import com.example.e_commerce.Adapter.ColorAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
 import com.example.e_commerce.Adapter.SizeAdapter
-import com.example.e_commerce.Helper.ManagmentCart
-import com.example.e_commerce.Model.ItemModel
+import com.example.e_commerce.Helper.ManagementCart
+import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-    private lateinit var item: ItemModel
-    private lateinit var managmentCart: ManagmentCart
+    private lateinit var item: ProductModel
+    private lateinit var managementCart: ManagementCart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +24,8 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        managmentCart = ManagmentCart(this)
-        item = intent.getSerializableExtra("object")!! as ItemModel
+        managementCart = ManagementCart(this)
+        item = intent.getSerializableExtra("object")!! as ProductModel
 
         setupViews()
         setupPicsList()
@@ -88,7 +88,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         addToCartBtn.setOnClickListener {
-            managmentCart.insert(item)
+            managementCart.insert(item)
         }
     }
 

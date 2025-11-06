@@ -8,16 +8,16 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Helper.ChangeNumberItemsListener
-import com.example.e_commerce.Helper.ManagmentCart
-import com.example.e_commerce.Model.ItemModel
+import com.example.e_commerce.Helper.ManagementCart
+import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.databinding.ViewholderCartBinding
 
 class CartAdapter(
-    private val listItemSelected: ArrayList<ItemModel>,
+    private val listItemSelected: ArrayList<ProductModel>,
     context: Context,
     var changeNumberItemsListener: ChangeNumberItemsListener? = null
 ) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
-    private val managmentCart = ManagmentCart(context)
+    private val managementCart = ManagementCart(context)
 
     class ViewHolder(val binding: ViewholderCartBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -45,7 +45,7 @@ class CartAdapter(
         ).into(holder.binding.pic)
 
         holder.binding.plusCartBtn.setOnClickListener {
-            managmentCart.plusItem(listItemSelected, position, object : ChangeNumberItemsListener {
+            managementCart.plusItem(listItemSelected, position, object : ChangeNumberItemsListener {
                 override fun onChanged() {
                     notifyDataSetChanged()
                     changeNumberItemsListener?.onChanged()
@@ -54,7 +54,7 @@ class CartAdapter(
         }
 
         holder.binding.minusCartBtn.setOnClickListener {
-            managmentCart.minusItem(listItemSelected, position, object : ChangeNumberItemsListener {
+            managementCart.minusItem(listItemSelected, position, object : ChangeNumberItemsListener {
                 override fun onChanged() {
                     notifyDataSetChanged()
                     changeNumberItemsListener?.onChanged()

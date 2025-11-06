@@ -8,13 +8,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Activity.DetailActivity
-import com.example.e_commerce.Model.ItemModel
+import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.databinding.ViewholderRecommendedBinding
 
 class PopularAdapter(
-    private val items: MutableList<ItemModel>
+    private val items: MutableList<ProductModel>
 ) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
-    fun updateDate(newData: List<ItemModel>) {
+    fun updateDate(newData: List<ProductModel>) {
         items.clear()
         items.addAll(newData)
         notifyDataSetChanged()
