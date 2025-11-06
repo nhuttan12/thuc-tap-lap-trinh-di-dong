@@ -112,6 +112,9 @@ export class CartService {
 				 */
 				const newCartAfterCreated: CartEntity | null =
 					await this.cartRepository.getActiveCartByUserID(userID);
+				this.logger.debug(
+					`Get new cart after adding new cart detail to existing cart: ${JSON.stringify(newCartAfterCreated)}`
+				);
 
 				/**
 				 * Checking cart existence after created
