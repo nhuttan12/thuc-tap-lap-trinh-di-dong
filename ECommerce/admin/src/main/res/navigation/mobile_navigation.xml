@@ -3,9 +3,8 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
-            app:startDestination="@id/nav_home">  -->
+            app:startDestination="@id/nav_home">
 
-    <!-- THÊM fragment home -->
     <fragment
             android:id="@+id/nav_home"
             android:name="com.example.admin.fragment.HomeFragment"
@@ -19,10 +18,10 @@
             tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-            android:id="@+id/nav_products"
-            android:name="com.example.admin.fragment.ProductFragment"
-            android:label="Sản phẩm"
-            tools:layout="@layout/fragment_product" />
+            android:id="@+id/nav_add_product"
+            android:name="com.example.admin.fragment.AddProductFragment"
+            android:label="Thêm sản phẩm"
+            tools:layout="@layout/fragment_add_product" />
 
     <fragment
             android:id="@+id/nav_users"
