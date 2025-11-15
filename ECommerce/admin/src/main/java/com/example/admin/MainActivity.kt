@@ -5,16 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.admin.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
+        // Setup navigation
         val navController = findNavController(R.id.nav_host_fragment)
-        binding.bottomNav.setupWithNavController(navController)
+        findViewById<BottomNavigationView>(R.id.bottom_nav).setupWithNavController(navController)
+
+        // Setup drawer navigation
+        findViewById<NavigationView>(R.id.navigationView).setupWithNavController(navController)
     }
 }

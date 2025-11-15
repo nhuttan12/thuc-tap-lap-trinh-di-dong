@@ -10,7 +10,7 @@
     <color name="primary_blue_light">#60A5FA</color>    <!-- Blue 400 - Light accent -->
     <color name="primary_blue_bg">#EFF6FF</color>       <!-- Blue 50 - Background -->
 
-    <!-- Màu phụ (Secondary) - Xanh lá thành công -->
+    <!-- Màu phụ (Secondary) -->
     <color name="secondary_green">#10B981</color>       <!-- Emerald 500 -->
     <color name="secondary_green_light">#34D399</color> <!-- Emerald 400 -->
     <color name="secondary_green_bg">#ECFDF5</color>    <!-- Emerald 50 -->
@@ -50,4 +50,10 @@
     <!-- Gradient colors -->
     <color name="gradient_start">#2563EB</color>
     <color name="gradient_end">#3B82F6</color>
+
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:state_checked="true" android:color="@color/primary_blue_bg" />
+        <item android:state_pressed="true" android:color="@color/surface_variant" />
+        <item android:color="@android:color/transparent" />
+    </selector>
 </resources>

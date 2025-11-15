@@ -1,64 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:weightSum="10">
+            android:padding="12dp">
 
+        <!-- Product Image -->
+        <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageContainer"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                    android:id="@+id/ivProductImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_product"
+                    tools:src="@drawable/ic_product" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Product Info -->
         <LinearLayout
+                android:id="@+id/productInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:orientation="vertical">
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/imageContainer"
+                app:layout_constraintEnd_toStartOf="@id/actionButtons"
+                app:layout_constraintTop_toTopOf="@id/imageContainer">
 
             <TextView
                     android:id="@+id/productNameTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Tên sản phẩm"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="Product"/>
+                    android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="iPhone 15 Pro Max 256GB" />
 
             <TextView
-                    android:id="@+id/productPriceTextView"
+                    android:id="@+id/productBrandTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:text="100.000 VNĐ"/>
+                    android:layout_marginTop="4dp"
+                    android:text="Thương hiệu"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    tools:text="Apple" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                <TextView
+                        android:id="@+id/productPriceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0₫"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/error_red"
+                        tools:text="29.990.000₫" />
+
+                <TextView
+                        android:id="@+id/productOldPriceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="0₫"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_disabled"
+                        android:textDecoration="strikethrough"
+                        android:visibility="gone"
+                        tools:text="34.990.000₫"
+                        tools:visibility="visible" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
+        <!-- Action Buttons -->
         <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/actionButtons"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="horizontal"
-                android:gravity="end">
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/imageContainer"
+                app:layout_constraintBottom_toBottomOf="@id/imageContainer">
 
             <ImageButton
                     android:id="@+id/editButton"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@android:drawable/ic_menu_edit"
-                    android:contentDescription="Edit"/>
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_edit"
+                    android:contentDescription="Chỉnh sửa"
+                    app:tint="@color/primary_blue" />
 
             <ImageButton
                     android:id="@+id/deleteButton"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@android:drawable/ic_menu_delete"
-                    android:contentDescription="Delete"/>
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_delete"
+                    android:contentDescription="Xóa"
+                    app:tint="@color/error_red" />
+
         </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

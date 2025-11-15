@@ -3,12 +3,19 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
-            app:startDestination="@id/nav_dashboard">
+            app:startDestination="@id/nav_home">  -->
+
+    <!-- THÊM fragment home -->
+    <fragment
+            android:id="@+id/nav_home"
+            android:name="com.example.admin.fragment.HomeFragment"
+            android:label="Trang chủ"
+            tools:layout="@layout/fragment_home" />
 
     <fragment
             android:id="@+id/nav_dashboard"
             android:name="com.example.admin.fragment.DashboardFragment"
-            android:label="Trang chủ"
+            android:label="Tổng quan"
             tools:layout="@layout/fragment_dashboard" />
 
     <fragment
