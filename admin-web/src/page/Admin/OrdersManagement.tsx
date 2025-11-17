@@ -5,12 +5,13 @@
  * @since 2025-11-12
  */
 
-import React, { JSX, useEffect, useState } from 'react';
-import { Button, Flex, Table, TableProps } from 'antd';
+import { JSX, useEffect } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { GetAllOrderResponse } from '../../types/orders/GetAllOrderResponse.ts';
+import DynamicTable from '../../components/DynamicTable.tsx';
+import { SearchField } from '../../types/common/SearchField.ts';
 
-const products: GetAllOrderResponse[] = [
+const orders: GetAllOrderResponse[] = [
 	{
 		id: 1,
 		image: 'https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto/b7d9211c-26e7-431a-ac24-b0540fb3c00f/AIR+FORCE+1+%2707.png',
@@ -73,9 +74,6 @@ const products: GetAllOrderResponse[] = [
 	},
 ];
 
-type TableRowSelection<T extends object = object> =
-	TableProps<T>['rowSelection'];
-
 const columns: ColumnsType<GetAllOrderResponse> = [
 	{
 		title: 'ID',
@@ -86,6 +84,7 @@ const columns: ColumnsType<GetAllOrderResponse> = [
 		title: 'Tên sản phẩm',
 		dataIndex: 'name',
 		key: 'name',
+		width: 150,
 	},
 	{
 		title: 'Hình ảnh',
@@ -141,65 +140,29 @@ const columns: ColumnsType<GetAllOrderResponse> = [
 		title: 'Mô tả',
 		dataIndex: 'description',
 		key: 'description',
+		width: 300,
 	},
 ];
 
+const search: SearchField = {
+	placeholder: 'Tìm kiếm người dùng đã mua hoá đơn',
+	allowClear: true,
+	style: {
+		width: 350,
+	},
+};
+
 export default function OrdersManagement(): JSX.Element {
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-	const [loading, setLoading] = useState<boolean>(false);
-
-	const start: () => void = (): void => {
-		setLoading(true);
-
-		setTimeout((): void => {
-			setSelectedRowKeys([]);
-			setLoading(false);
-		}, 1000);
-	};
-
 	useEffect((): void => {
 		document.title = 'Quản lý người dùng';
 	}, []);
 
-	const onSelectedChange = (newSelectedRowKeys: React.Key[]): void => {
-		setSelectedRowKeys(newSelectedRowKeys);
-	};
-
-	const rowSelection: TableRowSelection<GetAllOrderResponse> = {
-		selectedRowKeys,
-		onChange: onSelectedChange,
-	};
-
-	const hasSelected: boolean = setSelectedRowKeys.length > 0;
-
 	return (
-		<Flex
-			gap='middle'
-			vertical
-		>
-			<Flex
-				align='center'
-				gap='middle'
-			>
-				<Button
-					type='primary'
-					onClick={start}
-					disabled={!hasSelected}
-					loading={loading}
-				>
-					Reload
-				</Button>
-				{hasSelected
-					? `Selected ${selectedRowKeys.length} items`
-					: null}
-			</Flex>
-			<Table<GetAllOrderResponse>
-				rowKey='id'
-				rowSelection={rowSelection}
-				columns={columns}
-				dataSource={products}
-				scroll={{ x: 'max-content' }}
-			/>
-		</Flex>
+		<DynamicTable<GetAllOrderResponse>
+			columns={columns}
+			dataSource={orders}
+			timeout={1000}
+			search={search}
+		/>
 	);
 }

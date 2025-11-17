@@ -1,8 +1,8 @@
 /**
  * @description Side bar component
  * @author @nhuttan12
- * @version 1.0.0
- * @since 2025-11-12
+ * @version 1.0.1
+ * @since 2025-11-16
  */
 
 import { JSX } from 'react';
@@ -10,6 +10,8 @@ import { Menu, MenuProps } from 'antd';
 import {
 	DropboxOutlined,
 	ExceptionOutlined,
+	LogoutOutlined,
+	ProfileOutlined,
 	SettingOutlined,
 	UserOutlined,
 } from '@ant-design/icons';
@@ -43,9 +45,21 @@ const items: MenuItem[] = [
 		icon: <ExceptionOutlined />,
 	},
 	{
-		label: 'Settings',
+		label: 'Tuỳ chọn',
 		key: 'settings',
 		icon: <SettingOutlined />,
+		children: [
+			{
+				label: 'Hồ sơ',
+				key: 'profile',
+				icon: <ProfileOutlined />,
+			},
+			{
+				label: 'Đăng xuất',
+				key: 'logout',
+				icon: <LogoutOutlined />,
+			},
+		],
 	},
 ];
 

@@ -25,8 +25,10 @@ export default function AdminLayout(): JSX.Element {
 				return <ProductManagement />;
 			case 'orders':
 				return <OrdersManagement />;
-			case 'settings':
-				return <h1 className='text-2xl font-semibold'>Cài đặt</h1>;
+			case 'profiles':
+				return <h1 className='text-2xl font-semibold'>Hồ sơ người dùng</h1>;
+			case 'logout':
+				return <h1 className='text-2xl font-semibold'>Đăng xuất</h1>;
 			default:
 				return null;
 		}

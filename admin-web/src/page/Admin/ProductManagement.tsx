@@ -5,10 +5,12 @@
  * @since 2025-11-12
  */
 
-import React, { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect } from 'react';
 import { GetAllProductResponse } from '../../types/products/GetAllProductResponse.ts';
-import { Button, Flex, Table, TableProps } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import DynamicTable from '../../components/DynamicTable.tsx';
+import { ButtonField } from '../../types/common/ButtonField.ts';
+import { SearchField } from '../../types/common/SearchField.ts';
 
 const products: GetAllProductResponse[] = [
 	{
@@ -72,9 +74,6 @@ const products: GetAllProductResponse[] = [
 			'Mẫu giày New Balance 550 mang phong cách vintage, phối màu nhã nhặn, dễ phối đồ và cực kỳ thoải mái cho việc di chuyển hàng ngày.',
 	},
 ];
-
-type TableRowSelection<T extends object = object> =
-	TableProps<T>['rowSelection'];
 
 const columns: ColumnsType<GetAllProductResponse> = [
 	{
@@ -144,62 +143,43 @@ const columns: ColumnsType<GetAllProductResponse> = [
 	},
 ];
 
+const buttons: ButtonField[] = [
+	{
+		name: 'Thêm sản phẩm',
+		type: 'button',
+		onClick: (): void => {},
+	},
+	{
+		name: 'Xóa sản phẩm',
+		type: 'button',
+		onClick: (): void => {},
+		disable: (selectedRowKeys: React.Key[]): boolean => {
+			return selectedRowKeys.length === 0;
+		},
+	},
+];
+
+const search: SearchField = {
+	placeholder: 'Tìm kiếm sản phẩm',
+	allowClear: true,
+	style: {
+		width: 200,
+	},
+};
+
 export default function ProductManagement(): JSX.Element {
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-	const [loading, setLoading] = useState<boolean>(false);
-
-	const start: () => void = (): void => {
-		setLoading(true);
-
-		setTimeout((): void => {
-			setSelectedRowKeys([]);
-			setLoading(false);
-		}, 1000);
-	};
-
 	useEffect((): void => {
 		document.title = 'Quản lý người dùng';
 	}, []);
 
-	const onSelectedChange = (newSelectedRowKeys: React.Key[]): void => {
-		setSelectedRowKeys(newSelectedRowKeys);
-	};
-
-	const rowSelection: TableRowSelection<GetAllProductResponse> = {
-		selectedRowKeys,
-		onChange: onSelectedChange,
-	};
-
-	const hasSelected: boolean = setSelectedRowKeys.length > 0;
-
 	return (
-		<Flex
-			gap='middle'
-			vertical
-		>
-			<Flex
-				align='center'
-				gap='middle'
-			>
-				<Button
-					type='primary'
-					onClick={start}
-					disabled={!hasSelected}
-					loading={loading}
-				>
-					Reload
-				</Button>
-				{hasSelected
-					? `Selected ${selectedRowKeys.length} items`
-					: null}
-			</Flex>
-			<Table<GetAllProductResponse>
-				rowKey='id'
-				rowSelection={rowSelection}
-				columns={columns}
-				dataSource={products}
-				scroll={{ x: 'max-content' }}
-			/>
-		</Flex>
+		<DynamicTable<GetAllProductResponse>
+			buttons={buttons}
+			columns={columns}
+			dataSource={products}
+			selectedText={'Số sản phẩm được chọn'}
+			timeout={1000}
+			search={search}
+		/>
 	);
 }

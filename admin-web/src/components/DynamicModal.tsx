@@ -8,18 +8,8 @@
 import { Button, Input, Modal, Typography } from 'antd';
 import { JSX, useState } from 'react';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { ButtonField } from '../types/common/ButtonField.ts';
 
-/**
- * @description Button field interface
- * @property {string} name - Button name
- * @property {'submit' | 'reset' | 'button'} type - Button type
- * @property {function} onClick - Button click handler
- */
-interface ButtonField {
-	name: string;
-	type?: 'submit' | 'reset' | 'button';
-	onClick?: () => void;
-}
 
 interface FormField {
 	value: string;

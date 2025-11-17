@@ -4,12 +4,10 @@
  * @version 1.0.0
  * @since 2025-11-12
  */
-import React, { JSX, useEffect, useState } from 'react';
-import { Button, Flex, Table, TableProps } from 'antd';
+import { JSX, useEffect } from 'react';
 import { GetUserResponse } from '../../types/users/GetUserResponse.ts';
-
-type TableRowSelection<T extends object = object> =
-	TableProps<T>['rowSelection'];
+import DynamicTable from '../../components/DynamicTable.tsx';
+import { SearchField } from '../../types/common/SearchField.ts';
 
 const users: GetUserResponse[] = [
 	{
@@ -97,61 +95,26 @@ const columns = [
 	},
 ];
 
+const search: SearchField = {
+	placeholder: 'Tìm kiếm khách hàng',
+	allowClear: true,
+	style: {
+		width: 250,
+	},
+};
+
 export default function UserManagement(): JSX.Element {
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-	const [loading, setLoading] = useState<boolean>(false);
-
-	const start: () => void = (): void => {
-		setLoading(true);
-
-		setTimeout((): void => {
-			setSelectedRowKeys([]);
-			setLoading(false);
-		}, 1000);
-	};
-
 	useEffect((): void => {
 		document.title = 'Quản lý người dùng';
 	}, []);
 
-	const onSelectedChange = (newSelectedRowKeys: React.Key[]): void => {
-		setSelectedRowKeys(newSelectedRowKeys);
-	};
-
-	const rowSelection: TableRowSelection<GetUserResponse> = {
-		selectedRowKeys,
-		onChange: onSelectedChange,
-	};
-
-	const hasSelected: boolean = setSelectedRowKeys.length > 0;
-
 	return (
-		<Flex
-			gap='middle'
-			vertical
-		>
-			<Flex
-				align='center'
-				gap='middle'
-			>
-				<Button
-					type='primary'
-					onClick={start}
-					disabled={!hasSelected}
-					loading={loading}
-				>
-					Reload
-				</Button>
-				{hasSelected
-					? `Selected ${selectedRowKeys.length} items`
-					: null}
-			</Flex>
-			<Table<GetUserResponse>
-				rowKey='id'
-				rowSelection={rowSelection}
-				columns={columns}
-				dataSource={users}
-			/>
-		</Flex>
+		<DynamicTable<GetUserResponse>
+			columns={columns}
+			selectedText={'Số người dùng được chọn'}
+			dataSource={users}
+			timeout={1000}
+			search={search}
+		/>
 	);
 }
