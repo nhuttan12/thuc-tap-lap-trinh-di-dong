@@ -5,12 +5,14 @@
  * @since 2025-11-12
  */
 
-import { JSX, useEffect } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { GetAllProductResponse } from '../../types/products/GetAllProductResponse.ts';
 import { ColumnsType } from 'antd/es/table';
 import DynamicTable from '../../components/DynamicTable.tsx';
 import { ButtonField } from '../../types/common/ButtonField.ts';
 import { SearchField } from '../../types/common/SearchField.ts';
+import DynamicModal from '../../components/DynamicModal.tsx';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const products: GetAllProductResponse[] = [
 	{
@@ -75,90 +77,6 @@ const products: GetAllProductResponse[] = [
 	},
 ];
 
-const columns: ColumnsType<GetAllProductResponse> = [
-	{
-		title: 'ID',
-		dataIndex: 'id',
-		key: 'id',
-	},
-	{
-		title: 'Tên sản phẩm',
-		dataIndex: 'name',
-		key: 'name',
-	},
-	{
-		title: 'Hình ảnh',
-		dataIndex: 'image',
-		key: 'image',
-		render: (image: string): JSX.Element => {
-			return (
-				<img
-					src={image}
-					style={{
-						width: 60,
-						height: 60,
-						objectFit: 'cover',
-						borderRadius: 8,
-						border: '1px solid #eee',
-					}}
-				/>
-			);
-		},
-	},
-	{
-		title: 'Giá',
-		dataIndex: 'price',
-		key: 'price',
-		render: (price: number): string => {
-			return price.toLocaleString('vi-VN', {
-				style: 'currency',
-				currency: 'VND',
-			});
-		},
-	},
-	{
-		title: 'Giảm giá (%)',
-		dataIndex: 'discount',
-		key: 'discount',
-	},
-	{
-		title: 'Màu sắc',
-		dataIndex: 'color',
-		key: 'color',
-	},
-	{
-		title: 'Đánh giá',
-		dataIndex: 'rating',
-		key: 'rating',
-	},
-	{
-		title: 'Kích cỡ',
-		dataIndex: 'size',
-		key: 'size',
-	},
-	{
-		title: 'Mô tả',
-		dataIndex: 'description',
-		key: 'description',
-	},
-];
-
-const buttons: ButtonField[] = [
-	{
-		name: 'Thêm sản phẩm',
-		type: 'button',
-		onClick: (): void => {},
-	},
-	{
-		name: 'Xóa sản phẩm',
-		type: 'button',
-		onClick: (): void => {},
-		disable: (selectedRowKeys: React.Key[]): boolean => {
-			return selectedRowKeys.length === 0;
-		},
-	},
-];
-
 const search: SearchField = {
 	placeholder: 'Tìm kiếm sản phẩm',
 	allowClear: true,
@@ -168,18 +86,184 @@ const search: SearchField = {
 };
 
 export default function ProductManagement(): JSX.Element {
+	const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
+	const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+
 	useEffect((): void => {
 		document.title = 'Quản lý người dùng';
 	}, []);
 
+	const buttons: ButtonField[] = [
+		{
+			name: 'Thêm sản phẩm',
+			key: 'add product',
+			type: 'primary',
+			htmlType: 'button',
+			onClick: (): void => setOpenCreateModal(true),
+		},
+		{
+			name: 'Xóa sản phẩm',
+			key: 'delete product',
+			type: 'primary',
+			htmlType: 'button',
+			onClick: (): void => {
+				setOpenDeleteModal(true);
+			},
+			disable: (selectedRowKeys: React.Key[]): boolean => {
+				return selectedRowKeys.length === 0;
+			},
+		},
+	];
+
+	const columns: ColumnsType<GetAllProductResponse> = [
+		{
+			title: 'ID',
+			dataIndex: 'id',
+			key: 'id',
+		},
+		{
+			title: 'Tên sản phẩm',
+			dataIndex: 'name',
+			key: 'name',
+			width: 150,
+		},
+		{
+			title: 'Hình ảnh',
+			dataIndex: 'image',
+			key: 'image',
+			render: (image: string): JSX.Element => {
+				return (
+					<img
+						src={image}
+						style={{
+							width: 60,
+							height: 60,
+							objectFit: 'cover',
+							borderRadius: 8,
+							border: '1px solid #eee',
+						}}
+					/>
+				);
+			},
+		},
+		{
+			title: 'Giá',
+			dataIndex: 'price',
+			key: 'price',
+			render: (price: number): string => {
+				return price.toLocaleString('vi-VN', {
+					style: 'currency',
+					currency: 'VND',
+				});
+			},
+		},
+		{
+			title: 'Giảm giá (%)',
+			dataIndex: 'discount',
+			key: 'discount',
+		},
+		{
+			title: 'Màu sắc',
+			dataIndex: 'color',
+			key: 'color',
+		},
+		{
+			title: 'Đánh giá',
+			dataIndex: 'rating',
+			key: 'rating',
+		},
+		{
+			title: 'Kích cỡ',
+			dataIndex: 'size',
+			key: 'size',
+		},
+		{
+			title: 'Mô tả',
+			dataIndex: 'description',
+			key: 'description',
+			width: 300,
+		},
+		{
+			title: 'Thao tác',
+			key: 'action',
+			render: (): JSX.Element => {
+				return (
+					<DeleteOutlined
+						onClick={(): void => {
+							setOpenDeleteModal(true);
+						}}
+						style={{ color: 'red', cursor: 'pointer' }}
+					/>
+				);
+			},
+		},
+	];
+
 	return (
-		<DynamicTable<GetAllProductResponse>
-			buttons={buttons}
-			columns={columns}
-			dataSource={products}
-			selectedText={'Số sản phẩm được chọn'}
-			timeout={1000}
-			search={search}
-		/>
+		<>
+			<DynamicTable<GetAllProductResponse>
+				buttons={buttons}
+				columns={columns}
+				dataSource={products}
+				selectedText={'Số sản phẩm được chọn'}
+				timeout={1000}
+				search={search}
+			/>
+
+			<DynamicModal
+				open={openCreateModal}
+				onClose={(): void => setOpenCreateModal(false)}
+				title='Thêm sản phẩm'
+				confirm={false}
+				buttons={[
+					{
+						name: 'Huỷ',
+						key: 'cancel',
+						htmlType: 'button',
+						type: 'default',
+						onClick: () => setOpenDeleteModal(false),
+					},
+					{
+						name: 'Thêm sản phẩm',
+						key: 'add product',
+						htmlType: 'button',
+						type: 'primary',
+						onClick: () => console.log('Submit create form'),
+					},
+				]}
+				fields={[
+					{
+						label: 'Tên sản phẩm',
+						value: '',
+						disable: false,
+						required: true,
+					},
+					{ label: 'Giá', value: '', disable: false, type: 'text' },
+				]}
+			/>
+
+			<DynamicModal
+				buttons={[
+					{
+						name: 'Huỷ',
+						key: 'cancel',
+						htmlType: 'button',
+						type: 'default',
+						onClick: () => setOpenDeleteModal(false),
+					},
+					{
+						name: 'Xoá sản phẩm',
+						key: 'delete product',
+						htmlType: 'button',
+						type: 'primary',
+						onClick: () => setOpenDeleteModal(false),
+					},
+				]}
+				confirm={true}
+				onClose={(): void => setOpenDeleteModal(false)}
+				open={openDeleteModal}
+				title={'Bạn có muốn xoá sản phẩm nầy không'}
+			/>
+		</>
 	);
 }

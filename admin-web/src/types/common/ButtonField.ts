@@ -16,7 +16,9 @@ import React from 'react';
  */
 export interface ButtonField {
 	name: string;
-	type?: 'submit' | 'reset' | 'button';
+	key: number | string;
+	type: 'primary' | 'dashed' | 'text' | 'link' | 'default';
+	htmlType?: 'submit' | 'reset' | 'button';
 	onClick?: () => void;
 	useTimeout?: boolean;
 	disable?: (selectedRowKeys: React.Key[]) => boolean;

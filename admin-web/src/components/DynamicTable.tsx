@@ -122,7 +122,8 @@ export default function DynamicTable<T extends object>({
 							<>
 								<Button
 									key={index}
-									type='primary'
+									type={'primary'}
+									htmlType={btn.htmlType}
 									onClick={(): void => handleButtonClick(btn)}
 									disabled={
 										btn.disable

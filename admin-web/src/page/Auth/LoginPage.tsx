@@ -6,7 +6,8 @@
  */
 
 import { JSX, useEffect } from 'react';
-import DynamicForm, { FormField } from '../../components/DynamicForm';
+import DynamicForm from '../../components/DynamicForm';
+import { FormField } from '../../types/common/FormField';
 
 export default function LoginPage(): JSX.Element {
 	useEffect((): void => {

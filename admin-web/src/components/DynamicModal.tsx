@@ -7,9 +7,7 @@
 
 import { Button, Input, Modal, Typography } from 'antd';
 import { JSX, useState } from 'react';
-import { ExclamationCircleFilled } from '@ant-design/icons';
 import { ButtonField } from '../types/common/ButtonField.ts';
-
 
 interface FormField {
 	value: string;
@@ -27,26 +25,27 @@ interface FormField {
  * @property {ButtonField[]} buttons - Array of button fields
  */
 interface DynamicModalProps {
+	open: boolean;
+	onClose: () => void;
 	confirm: boolean;
-	message?: string;
-	timeout?: number;
-	description?: string;
+	title: string;
+	content?: string;
 	fields?: FormField[];
 	buttons: ButtonField[];
 }
 
 export default function DynamicModal({
+	open,
+	onClose,
 	confirm,
 	buttons,
-	message,
-	description,
+	title,
+	content,
 	fields,
-	timeout = 2000,
 }: DynamicModalProps): JSX.Element {
 	/**
 	 * @description Modal state
 	 */
-	const [open, setOpen] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [pendingAction, setPendingAction] = useState<(() => void) | null>(
 		null
@@ -63,89 +62,31 @@ export default function DynamicModal({
 		 * Store call-back function of button clicked to pending action state
 		 */
 		setPendingAction((): (() => void) | null => button.onClick ?? null);
-
-		/**
-		 * Checking confirm statement whether true or false
-		 */
-		if (confirm) {
-			/**
-			 * Call {showConfirm} function to show confirm-modal
-			 */
-			showConfirm?.();
-		} else {
-			/**
-			 * Call {showLoading} function to show custom-modal with loading status
-			 */
-			showLoading?.();
-		}
 	};
 
 	/**
 	 * @description Initialize show loading and show confirm function
 	 */
-	let showLoading: (() => void) | undefined;
-	let showConfirm: (() => void) | undefined;
 
 	/**
 	 * Checking confirm statement whether true or false
 	 */
-	if (!confirm) {
-		showLoading = (): void => {
-			setOpen(true);
-			setLoading(true);
+	const showLoading: (() => void) | undefined = async (): Promise<void> => {
+		setLoading(true);
 
-			setTimeout((): void => {
-				setLoading(false);
-			}, timeout);
-		};
-	} else if (confirm) {
-		/**
-		 * @description Show confirm modal
-		 */
-		showConfirm = (): void => {
-			Modal.confirm({
-				title: message,
-				icon: <ExclamationCircleFilled />,
-				content: description,
-				onOk(): void {
-					/**
-					 * If user clicked ok button, call stored function stored in pending action state
-					 */
-					if (pendingAction) {
-						pendingAction();
-					}
-				},
-				onCancel(): void {
-					console.log('Cancel');
-				},
-			});
-		};
-	}
+		if (pendingAction) {
+			await pendingAction();
+			setPendingAction(null);
+		}
+	};
 
 	return (
 		<>
 			{/*If not confirm modal*/}
 			{!confirm ? (
 				<>
-					{buttons.map(
-						(button: ButtonField, index: number): JSX.Element => {
-							return (
-								<Button
-									key={index}
-									type={'primary'}
-									htmlType={button.type}
-									onClick={(): void =>
-										handleButtonClick(button)
-									}
-								>
-									{button.name}
-								</Button>
-							);
-						}
-					)}
-
 					<Modal
-						title={<p>Loading modal</p>}
+						title={<p>{title}</p>}
 						footer={buttons.map(
 							(
 								button: ButtonField,
@@ -154,9 +95,12 @@ export default function DynamicModal({
 								return (
 									<Button
 										key={index}
-										type={'primary'}
-										htmlType={button.type}
-										onClick={button.onClick}
+										type={button.type}
+										htmlType={button.htmlType}
+										onClick={(): void => {
+											handleButtonClick(button);
+											showLoading();
+										}}
 									>
 										{button.name}
 									</Button>
@@ -165,7 +109,7 @@ export default function DynamicModal({
 						)}
 						loading={loading}
 						open={open}
-						onCancel={(): void => setOpen(false)}
+						onCancel={onClose}
 					>
 						<div>
 							{fields?.map(
@@ -202,22 +146,31 @@ export default function DynamicModal({
 			) : (
 				// If confirm modal
 				<>
-					{buttons.map(
-						(button: ButtonField, index: number): JSX.Element => {
-							return (
-								<Button
-									key={index}
-									htmlType={button.type}
-									type={'primary'}
-									onClick={(): void =>
-										handleButtonClick(button)
-									}
-								>
-									{button.name}
-								</Button>
-							);
-						}
-					)}
+					<Modal
+						title={<p>{title}</p>}
+						footer={buttons.map(
+							(
+								button: ButtonField,
+								index: number
+							): JSX.Element => {
+								return (
+									<Button
+										key={index}
+										type={button.type}
+										htmlType={button.htmlType}
+										onClick={button.onClick}
+									>
+										{button.name}
+									</Button>
+								);
+							}
+						)}
+						loading={loading}
+						open={open}
+						onCancel={onClose}
+					>
+						<div>{content}</div>
+					</Modal>
 				</>
 			)}
 		</>
