@@ -45,7 +45,7 @@ export class RoleService {
 			);
 
 			if (!role) {
-				this.logger.error(`Role with name ${name} not found`);
+				this.logger.warn(`Role with name ${name} not found`);
 				throw new NotFoundException({
 					statusCode: RoleStatusCode.ROLE_NOT_FOUND.statusCode,
 					customCode: RoleStatusCode.ROLE_NOT_FOUND.customCode,

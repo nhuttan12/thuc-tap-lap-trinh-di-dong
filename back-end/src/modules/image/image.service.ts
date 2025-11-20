@@ -5,7 +5,12 @@
  * @version 1.0.1
  */
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+	BadRequestException,
+	ConflictException,
+	Injectable,
+	Logger, NotFoundException,
+} from '@nestjs/common';
 import { ImageRepository } from './repositories/image.repository';
 import { ImageEntity } from './entities/image.entity';
 import { ImageStatusCode } from './status-code/image.status-code';
@@ -51,7 +56,7 @@ export class ImageService {
 			this.logger.error(
 				`Image with url: ${imageUrl} and userID: ${userID} not found after created`
 			);
-			throw new BadRequestException({
+			throw new ConflictException({
 				statusCode: ImageStatusCode.IMAGE_NOT_FOUND.statusCode,
 				customCode: ImageStatusCode.IMAGE_NOT_FOUND.customCode,
 				message: ImageStatusCode.IMAGE_NOT_FOUND.message,
@@ -81,13 +86,16 @@ export class ImageService {
 		 */
 		const imageEntity: ImageEntity | null =
 			await this.imageRepository.getImageByUrl(url);
+		this.logger.debug(
+			`Call \`getImageByUrl\` in \`ImageRepository\`: ${JSON.stringify(imageEntity)}`
+		);
 
 		/**
 		 * Check image exist
 		 */
 		if (!imageEntity) {
 			this.logger.error(`Image with url: ${url} not found`);
-			throw new BadRequestException({
+			throw new NotFoundException({
 				statusCode: ImageStatusCode.IMAGE_NOT_FOUND.statusCode,
 				customCode: ImageStatusCode.IMAGE_NOT_FOUND.customCode,
 				message: ImageStatusCode.IMAGE_NOT_FOUND.message,
@@ -99,6 +107,9 @@ export class ImageService {
 		 */
 		const imageResponseDto: ImageEntityResponse =
 			this.imageMapper.toImageEntityResponse(imageEntity);
+		this.logger.debug(
+			`Mapping image entity to image response dto: ${JSON.stringify(imageResponseDto)}`
+		);
 
 		return imageResponseDto;
 	}

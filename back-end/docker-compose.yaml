@@ -13,7 +13,8 @@ services:
       - ./data/db:/var/lib/postgresql/data
     networks:
       - tt_mobile
-
+volumes:
+  data:
 networks:
   tt_mobile:
     name: tt_mobile

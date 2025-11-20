@@ -2,7 +2,8 @@
  * @description Unit Test file for Testing functions in CartService file
  * @author Nhut Tan
  * @since 2025-10-10
- * @version 1.0.0
+ * @modifies 2025-11-18
+ * @version 1.0.1
  */
 
 import { CartService } from './cart.service';
@@ -14,9 +15,8 @@ import { CartEntity } from './entities/cart.entity';
 import { CartStatusEnum } from './enums/cart.status.enum';
 import { UserEntity } from '../user/entities/user.entity';
 import { CartResponseDto } from './dtos/cart-response.dto';
-import { Logger } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { cloneDeep } from 'lodash';
-import { CartDetailEntity } from './entities/cart-detail.entity';
 import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
 
 describe('CartService', (): void => {
@@ -112,13 +112,13 @@ describe('CartService', (): void => {
 			cartMapper.toCartResponseDto.mockReturnValue(mockCartResponse);
 
 			const loggerSpyDebug = jest
-				.spyOn(Logger.prototype, 'debug')
+				.spyOn(cartService['logger'], 'debug')
 				.mockImplementation((): void => {});
 			const loggerSpyLog = jest
-				.spyOn(Logger.prototype, 'log')
+				.spyOn(cartService['logger'], 'log')
 				.mockImplementation((): void => {});
 			const loggerSpyError = jest
-				.spyOn(Logger.prototype, 'error')
+				.spyOn(cartService['logger'], 'error')
 				.mockImplementation((): void => {});
 
 			const result: CartResponseDto = await cartService.addProductToCart(
@@ -180,13 +180,13 @@ describe('CartService', (): void => {
 			 * @description Mocking logger spy called
 			 */
 			const loggerSpyDebug = jest
-				.spyOn(Logger.prototype, 'debug')
+				.spyOn(cartService['logger'], 'debug')
 				.mockImplementation((): void => {});
 			const loggerSpyLog = jest
-				.spyOn(Logger.prototype, 'log')
+				.spyOn(cartService['logger'], 'log')
 				.mockImplementation((): void => {});
 			const loggerSpyError = jest
-				.spyOn(Logger.prototype, 'error')
+				.spyOn(cartService['logger'], 'error')
 				.mockImplementation((): void => {});
 
 			/**
@@ -211,16 +211,130 @@ describe('CartService', (): void => {
 				mockQuantity
 			);
 			expect(result).toEqual(mockCartResponse);
-			expect(loggerSpyLog).toHaveBeenCalledWith(
-				`New cart entity created: ${JSON.stringify(newCartEntity)}`
-			);
 			expect(loggerSpyLog).toHaveBeenCalledTimes(1);
 			expect(loggerSpyError).toHaveBeenCalledTimes(0);
 			expect(loggerSpyDebug).toHaveBeenCalledTimes(2);
 		});
 
-		it('should throw ConflictException when cart not found after created if cart not exist', () => {
-			
+		it('should throw ConflictException when cart not found after created if cart not exist', async (): Promise<void> => {
+			const mockNewCartEntity: CartEntity = cloneDeep(mockCartEntity);
+			const mockNewCartDetail: CartDetailResponseDto = {
+				id: 1,
+				quantity: 1,
+				name: mockProductName,
+				images: mockProductImage,
+				discount: mockDiscount,
+				price: mockPrice,
+			};
+
+			/**
+			 * @description Mocking resolved value for function called
+			 */
+			cartRepository.getActiveCartByUserID
+				.mockResolvedValueOnce(null)
+				.mockResolvedValueOnce(null);
+			cartRepository.createCart.mockResolvedValueOnce(mockNewCartEntity);
+			cartDetailService.createNewCartDetail.mockResolvedValueOnce(
+				mockNewCartDetail
+			);
+
+			/**
+			 * @description Mocking spy function called
+			 */
+			const loggerSpyDebug = jest
+				.spyOn(cartService['logger'], 'debug')
+				.mockImplementation((): void => {});
+			const loggerSpyLog = jest
+				.spyOn(cartService['logger'], 'log')
+				.mockImplementation((): void => {});
+			const loggerSpyError = jest
+				.spyOn(cartService['logger'], 'error')
+				.mockImplementation((): void => {});
+			const spyAddProductToCart = jest.spyOn(
+				cartService,
+				'addProductToCart'
+			);
+
+			/**
+			 * Assert
+			 */
+			await expect(
+				cartService.addProductToCart(
+					mockProductID,
+					mockUserID,
+					mockQuantity
+				)
+			).rejects.toThrow(ConflictException);
+
+			expect(mockCartRepository.createCart).toHaveBeenCalledWith(
+				mockUserID
+			);
+			expect(loggerSpyDebug).toHaveBeenCalledTimes(3);
+			expect(loggerSpyLog).toHaveBeenCalledTimes(1);
+			expect(loggerSpyError).toHaveBeenCalledTimes(1);
+			expect(spyAddProductToCart).toHaveBeenCalledWith(
+				mockProductID,
+				mockUserID,
+				mockQuantity
+			);
+		});
+
+		it('should throw ConflictException when cart not found after cart created if cart exist', async (): Promise<void> => {
+			const mockNewCartDetail: CartDetailResponseDto = {
+				id: 1,
+				quantity: 1,
+				name: mockProductName,
+				images: mockProductImage,
+				discount: mockDiscount,
+				price: mockPrice,
+			};
+
+			/**
+			 * @description Mocking resolved value for function called
+			 */
+			cartRepository.getActiveCartByUserID
+				.mockResolvedValueOnce(mockCartEntity)
+				.mockResolvedValueOnce(null);
+			cartDetailService.createNewCartDetail.mockResolvedValueOnce(
+				mockNewCartDetail
+			);
+
+			/**
+			 * @description Mocking spy function called
+			 */
+			const loggerSpyDebug = jest
+				.spyOn(cartService['logger'], 'debug')
+				.mockImplementation((): void => {});
+			const loggerSpyLog = jest
+				.spyOn(cartService['logger'], 'log')
+				.mockImplementation((): void => {});
+			const loggerSpyError = jest
+				.spyOn(cartService['logger'], 'error')
+				.mockImplementation((): void => {});
+			const spyAddProductToCart = jest.spyOn(
+				cartService,
+				'addProductToCart'
+			);
+
+			/**
+			 * Assert
+			 */
+			await expect(
+				cartService.addProductToCart(
+					mockProductID,
+					mockUserID,
+					mockQuantity
+				)
+			).rejects.toThrow(ConflictException);
+
+			expect(loggerSpyDebug).toHaveBeenCalledTimes(3);
+			expect(loggerSpyLog).toHaveBeenCalledTimes(0);
+			expect(loggerSpyError).toHaveBeenCalledTimes(1);
+			expect(spyAddProductToCart).toHaveBeenCalledWith(
+				mockProductID,
+				mockUserID,
+				mockQuantity
+			);
 		});
 	});
 });

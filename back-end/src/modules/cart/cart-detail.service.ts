@@ -12,8 +12,6 @@ import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 import { CartDetailEntity } from './entities/cart-detail.entity';
 import { CartDetailMapper } from './mappers/cart-detail.mapper';
-import { CartService } from './cart.service';
-import { CartEntity } from './entities/cart.entity';
 
 @Injectable()
 export class CartDetailService {
@@ -48,6 +46,7 @@ export class CartDetailService {
 				page,
 				limit
 			);
+			this.logger.debug(`Calculate skip and take: ${skip}`);
 
 			/**
 			 * Calling `getCartDetailsByUserID` from `CartDetailRepository`
@@ -58,12 +57,18 @@ export class CartDetailService {
 					skip,
 					limit
 				);
+			this.logger.debug(
+				`Calling \`getCartDetailsByUserID\` from \`CartDetailRepository\`: ${JSON.stringify(cartDetails)}, total: ${total}`
+			);
 
 			/**
 			 * Convert `CartDetailEntity` to `CartDetailResponseDto`
 			 */
 			const cartDetailsResponseDto: CartDetailResponseDto[] =
 				this.cartDetailMapper.toCartDetailsResponseDto(cartDetails);
+			this.logger.debug(
+				`Convert \`CartDetailEntity\` to \`CartDetailResponseDto\`: ${JSON.stringify(cartDetailsResponseDto)}`
+			);
 
 			/**
 			 * Build paging response
