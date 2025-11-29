@@ -3,17 +3,15 @@
  * @author Nhut Tan
  * @since 2025-09-08
  * @modifies 2025-09-22
- * @version 1.0.3
+ * @modifies 2025-11-27
+ * @version 1.0.4
  */
 
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/user.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { RoleName } from '../../role/enums/role-name.enum';
-import { ImageEntity } from '../../image/entities/image.entity';
+import { UserEntity } from '../entities/user.entity';
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
@@ -154,7 +152,7 @@ export class UserRepository {
 	 * @version 1.0.0
 	 */
 	async createNewUserGoogle(
-		name: string,
+		fullName: string,
 		email: string
 	): Promise<UserEntity> {
 		try {
@@ -164,7 +162,7 @@ export class UserRepository {
 					 * Create user entity instance
 					 */
 					const user: UserEntity = tx.create(UserEntity, {
-						name: name,
+						fullName: fullName,
 						email: email,
 					});
 

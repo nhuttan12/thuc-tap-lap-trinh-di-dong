@@ -13,6 +13,7 @@ import { ConfigService as NestConfigService } from '@nestjs/config';
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { HttpConfig } from './interface/http.interface';
 import { GoogleConfig } from './interface/google.config';
+import { ThrottlerConfig } from './interface/throttler.interface';
 
 @Injectable()
 export class ConfigService {
@@ -114,5 +115,35 @@ export class ConfigService {
 		 * Return the object
 		 */
 		return googleConfig;
+	}
+
+	/**
+	 * @description Retrieve throttler configuration object.
+	 * Throw ConflictException if the configuration is not found.
+	 * @returns {ThrottlerConfig} The throttler configuration object.
+	 */
+	get throttlerConfig(): ThrottlerConfig {
+		/**
+		 * Retrieve throttler configuration object.
+		 */
+		const throttlerConfig: ThrottlerConfig | undefined = {
+			ttl: Number(this.config.get<number>('THROTTLER_TTL')),
+			limit: Number(this.config.get<number>('THROTTLER_LIMIT')),
+		};
+		this.logger.debug(
+			`Throttler config: ${JSON.stringify(throttlerConfig)}`
+		);
+
+		/*
+		 * Check the object exist, if not, throw Conflict exception
+		 */
+		if (!throttlerConfig) {
+			throw new ConflictException('Throttler configuration is not found');
+		}
+
+		/*
+		 * Return the object
+		 */
+		return throttlerConfig;
 	}
 }

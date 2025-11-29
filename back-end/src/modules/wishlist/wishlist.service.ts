@@ -47,6 +47,7 @@ export class WishlistService {
 				page,
 				limit
 			);
+			this.logger.debug(`Calculate skip in service ${skip}`);
 
 			/**
 			 * Call `getAllWishlistItems` in `WishlistItemRepository`
@@ -99,7 +100,7 @@ export class WishlistService {
 	async addToWishlist(productID: number, userID: number): Promise<boolean> {
 		try {
 			/**
-			 * Check product exist in wishlist
+			 * Get product in wishlist and check product existence in wishlist
 			 */
 			await this.getProductInWishlistByProductIDAndUserID(
 				productID,

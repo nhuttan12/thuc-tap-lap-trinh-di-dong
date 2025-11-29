@@ -1,9 +1,10 @@
-/*
+/**
  * @description user service
  * @author Nhut Tan
  * @since 2025-09-08
  * @modifies 2025-09-12
- * @version 1.0.2
+ * @modifies 2025-11-25
+ * @version 1.0.3
  */
 
 import {
@@ -71,7 +72,7 @@ export class UserService {
 				/*
 				 * If user not found, throw not found exception
 				 */
-				this.logger.error(
+				this.logger.warn(
 					`User with username ${username} and password ${password} not found`
 				);
 				throw new NotFoundException({
@@ -114,7 +115,7 @@ export class UserService {
 			const user: UserEntity | null =
 				await this.userRepository.getUserByUerID(userID);
 			this.logger.debug(
-				`Call \`getUserByUserID\` function from repository: ${JSON.stringify(user)} `
+				`Call \`getUserByUserID\` function from repository: ${JSON.stringify(user)}`
 			);
 
 			/*
@@ -124,7 +125,7 @@ export class UserService {
 				/*
 				 * If user not found, throw not found exception
 				 */
-				this.logger.error(`User with userID ${userID} not found`);
+				this.logger.warn(`User with userID ${userID} not found`);
 				throw new NotFoundException({
 					statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
 					customCode: UserStatusCode.USER_NOT_FOUND.customCode,
@@ -151,10 +152,10 @@ export class UserService {
 		}
 	}
 
-	/*
+	/**
 	 * @description Get user by email
-	 * @param {email: string}
-	 * @return {UserEntityResponseDto | null}
+	 * @param {string} email - User email
+	 * @return {UserEntityResponseDto | null} - User entity response dto or null
 	 * @author Nhut Tan
 	 * @since 2025-09-10
 	 * @version 1.0.0
@@ -167,7 +168,7 @@ export class UserService {
 			const user: UserEntity | null =
 				await this.userRepository.getUserByEmail(email);
 			this.logger.debug(
-				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(user)} `
+				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(user)}`
 			);
 
 			/*

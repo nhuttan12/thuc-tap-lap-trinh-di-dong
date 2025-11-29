@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-08-29
  * @modifies 2025-09-18
- * @version 1.0.1
+ * @modifies 2025-11-27
+ * @version 1.0.2
  */
 
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
@@ -15,6 +16,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import { CatchEverythingFilter } from './common/filter/catch-everything.filter';
+import helmet from 'helmet';
+import compression from 'compression';
 
 async function bootstrap() {
 	/**
@@ -44,6 +47,17 @@ async function bootstrap() {
 	 */
 	const httpAdapterHost: HttpAdapterHost = app.get(HttpAdapterHost);
 	app.useGlobalFilters(new CatchEverythingFilter(httpAdapterHost));
+
+	/**
+	 * Set up helmet and compression
+	 */
+	app.use(helmet());
+	app.use(compression());
+
+	/**
+	 * Set up cors
+	 */
+	app.enableCors();
 
 	/*
 	 * Get config service
