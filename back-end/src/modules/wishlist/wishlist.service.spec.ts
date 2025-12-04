@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WishlistService } from './wishlist.service';
 import { WishlistItemRepository } from './repositories/wishlist-item.repository';
 import { WishlistItemMapper } from './mappers/wishlist-item.mapper';
-import { BuildPagingMetaService } from 'src/common/helper/build-paging-meta.service';
 import { WishlistItemEntity } from './entities/wishlist-item.entity';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
 import { ProductImageEntity } from '../image/entities/product-image.entity';
@@ -12,6 +11,8 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ImageEntity } from '../image/entities/image.entity';
 import { ProductDetailsEntity } from '../product/entities/product-details.entity';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
+import { BadRequestException } from '@nestjs/common';
+import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 
 /**
  * @description Test file for Unit Testing functions in WishlistService file
@@ -319,13 +320,13 @@ describe('WishlistService', (): void => {
 			/**
 			 * Assert called time
 			 */
-			expect(spyLoggerDebug).toHaveBeenCalledTimes(0);
+			expect(spyLoggerDebug).toHaveBeenCalledTimes(1);
 			expect(spyLoggerWarn).toHaveBeenCalledTimes(0);
 			expect(spyLoggerError).toHaveBeenCalledTimes(1);
 			expect(spyGetProductInWishlistPaging).toHaveBeenCalledTimes(1);
 			expect(
 				mockBuildPagingMetaService.calculateSkip
-			).toHaveBeenCalledTimes(0);
+			).toHaveBeenCalledTimes(1);
 			expect(
 				mockWishlistItemRepository.getAllWishlistItems
 			).toHaveBeenCalledTimes(1);
@@ -504,9 +505,8 @@ describe('WishlistService', (): void => {
 				mockProductID,
 				mockUserID
 			);
-			expect(spyLoggerError).toHaveBeenCalledWith(
-				expect.stringContaining(`Error in \`addToWishlist\``),
-				expect.any(String)
+			expect(spyLoggerError.mock.calls[0][0]).toBe(
+				'Error in `getAllProductInWishlist`: Database connection error'
 			);
 
 			/**
@@ -532,22 +532,23 @@ describe('WishlistService', (): void => {
 			user: { id: mockUserID } as UserEntity,
 		};
 
-		it('should return WishlistItemEntity when having product in wishlist', async (): Promise<void> => {
+		it('should return WishlistItemEntity when dont have product in wishlist', async (): Promise<void> => {
 			/**
 			 * Mock return and resolved data
 			 */
 			mockWishlistItemRepository.getWishlistItemByProductIDAndUserID.mockResolvedValueOnce(
-				mockWishlistItemEntity
+				null
 			);
 
 			/**
 			 * Assert equal
 			 */
-			const result: WishlistItemEntity | null = await mockWishlistService.getProductInWishlistByProductIDAndUserID(
-				mockProductID,
-				mockUserID
-			);
-			expect(result).toEqual(mockWishlistItemEntity);
+			const result: WishlistItemEntity | null =
+				await mockWishlistService.getProductInWishlistByProductIDAndUserID(
+					mockProductID,
+					mockUserID
+				);
+			expect(result).toEqual(null);
 
 			/**
 			 * Assert called time
@@ -562,6 +563,129 @@ describe('WishlistService', (): void => {
 			expect(
 				mockWishlistItemRepository.getWishlistItemByProductIDAndUserID
 			).toHaveBeenCalledWith(mockProductID, mockUserID);
+		});
+
+		it('should throw BadRequestException when product already in wishlist', async (): Promise<void> => {
+			/**
+			 * Mock return and resolved data
+			 */
+			mockWishlistItemRepository.getWishlistItemByProductIDAndUserID.mockResolvedValueOnce(
+				mockWishlistItemEntity
+			);
+
+			/**
+			 * Spy function called
+			 */
+			const spyLoggerError = jest
+				.spyOn(mockWishlistService['logger'], 'error')
+				.mockImplementation();
+			const spyLoggerDebug = jest
+				.spyOn(mockWishlistService['logger'], 'debug')
+				.mockImplementation();
+			const spyLoggerWarn = jest
+				.spyOn(mockWishlistService['logger'], 'warn')
+				.mockImplementation();
+
+			/**
+			 * Assert throw error
+			 */
+			await expect(
+				mockWishlistService.getProductInWishlistByProductIDAndUserID(
+					mockProductID,
+					mockUserID
+				)
+			).rejects.toThrow(BadRequestException);
+
+			/**
+			 * Assert called time
+			 */
+			expect(
+				mockWishlistItemRepository.getWishlistItemByProductIDAndUserID
+			).toHaveBeenCalledTimes(1);
+			expect(spyLoggerError).toHaveBeenCalledTimes(1);
+			expect(spyLoggerDebug).toHaveBeenCalledTimes(0);
+			expect(spyLoggerWarn).toHaveBeenCalledTimes(1);
+
+			/**
+			 * Assert called with
+			 */
+			expect(
+				mockWishlistItemRepository.getWishlistItemByProductIDAndUserID
+			).toHaveBeenCalledWith(mockProductID, mockUserID);
+			expect(spyLoggerWarn).toHaveBeenCalledWith(
+				expect.stringContaining(`Product already in wishlist`)
+			);
+			expect(spyLoggerError.mock.calls[0][0]).toBe(
+				`Error in \`getProductInWishlistByProductIDAndUserID\`: Product already in wishlist`
+			);
+
+			/**
+			 * Assert not to be called
+			 */
+			expect(spyLoggerDebug).not.toHaveBeenCalled();
+		});
+
+		it('should throw Internal Error Exception when no connection from database in getProductInWishlistByProductIDAndUserID function', async (): Promise<void> => {
+			/**
+			 * Mock error
+			 */
+			mockWishlistItemRepository.getWishlistItemByProductIDAndUserID.mockRejectedValueOnce(
+				new Error('Database connection error')
+			);
+
+			/**
+			 * Spy function called
+			 */
+			const spyLoggerError = jest
+				.spyOn(mockWishlistService['logger'], 'error')
+				.mockImplementation();
+			const spyLoggerWarn = jest
+				.spyOn(mockWishlistService['logger'], 'warn')
+				.mockImplementation();
+			const spyLoggerDebug = jest
+				.spyOn(mockWishlistService['logger'], 'debug')
+				.mockImplementation();
+
+			/**
+			 * Assert throw error
+			 */
+			await expect(
+				mockWishlistService.getProductInWishlistByProductIDAndUserID(
+					mockProductID,
+					mockUserID
+				)
+			).rejects.toThrow('Database connection error');
+
+			/**
+			 * Assert called time
+			 */
+			expect(
+				mockWishlistItemRepository.getWishlistItemByProductIDAndUserID
+			).toHaveBeenCalledTimes(1);
+			expect(spyLoggerError).toHaveBeenCalledTimes(1);
+			expect(spyLoggerWarn).toHaveBeenCalledTimes(0);
+			expect(spyLoggerDebug).toHaveBeenCalledTimes(0);
+
+			/**
+			 * Assert called with
+			 */
+			expect(
+				mockWishlistItemRepository.getWishlistItemByProductIDAndUserID
+			).toHaveBeenCalledWith(mockProductID, mockUserID);
+			expect(spyLoggerDebug).not.toHaveBeenCalled();
+			expect(spyLoggerWarn).not.toHaveBeenCalled();
+			expect(spyLoggerError).toHaveBeenCalledWith(
+				expect.stringContaining(
+					`Error in \`getProductInWishlistByProductIDAndUserID\``
+				),
+				expect.any(String)
+			);
+
+			/**
+			 * Assert not to be called
+			 */
+			expect(spyLoggerDebug).not.toHaveBeenCalled();
+			expect(spyLoggerWarn).not.toHaveBeenCalled();
 		});
 	});
 });
