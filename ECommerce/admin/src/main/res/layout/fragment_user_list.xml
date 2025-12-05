@@ -10,8 +10,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_blue"
-            android:title="Quản lý sản phẩm"
+            android:background="@color/white"
+            android:title="Quản lý người dùng"
             android:titleTextColor="@android:color/white"
             app:navigationIcon="@drawable/ic_back"
             app:navigationIconTint="@android:color/white" />
@@ -34,28 +34,33 @@
                 android:id="@+id/edtSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tìm kiếm sản phẩm..."
+                android:hint="Tìm kiếm người dùng..."
                 android:inputType="text"
                 android:imeOptions="actionSearch" android:minHeight="50dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Danh sách sản phẩm -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Danh sách người dùng"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerProducts"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:clipToPadding="false" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-    <!-- FAB Thêm sản phẩm -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAdd"
+            android:id="@+id/fabAddProduct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add"
-            app:backgroundTint="@color/primary_blue" />
+            app:tint="@color/white" />
 
 </LinearLayout>

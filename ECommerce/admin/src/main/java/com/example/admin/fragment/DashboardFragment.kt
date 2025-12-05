@@ -1,46 +1,26 @@
 package com.example.admin.fragment
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
+import android.view.View
+import androidx.fragment.app.Fragment
 import com.example.admin.R
-import com.example.admin.databinding.ActivityAdminDashboardBinding
+import com.example.admin.databinding.FragmentAdminDashboardBinding
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
 
-    private lateinit var binding: ActivityAdminDashboardBinding
+    private var binding: FragmentAdminDashboardBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAdminDashboardBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAdminDashboardBinding.bind(view)
 
-        // Setup navigation
-        val navController = findNavController(R.id.nav_host_fragment)
-
-        // Cấu hình AppBarConfiguration
-        val appBarConfiguration = AppBarConfiguration(
-                setOf(R.id.nav_dashboard)
-        )
-
-        // Setup ActionBar với Navigation
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        // Xử lý nút menu để mở drawer
-        binding.btnMenu.setOnClickListener {
-            binding.drawerLayout.openDrawer(binding.navigationView)
-        }
-
-        // Xử lý nút back
-//        binding.btnBack.setOnClickListener {
-//            onBackPressed()
-//        }
+        // Add onClick for cards if needed (temporarily empty for UI only)
+        binding!!.cardAddProduct.setOnClickListener { /* Navigate to add product */ }
+        binding!!.cardViewOrders.setOnClickListener { /* Navigate to orders */ }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 }
