@@ -96,7 +96,6 @@
                         android:text="0₫"
                         android:textSize="12sp"
                         android:textColor="@color/text_disabled"
-                        android:textDecoration="strikethrough"
                         android:visibility="gone"
                         tools:text="34.990.000₫"
                         tools:visibility="visible" />
