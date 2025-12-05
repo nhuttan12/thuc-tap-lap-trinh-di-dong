@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 1. Trang chủ -->
     <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home"
-            android:title="Trang chủ" />
-
-    <!-- 2. Tổng quan -->
-    <item
-            android:id="@+id/nav_dashboard"
+            android:id="@+id/dashboardFragment"
             android:icon="@drawable/ic_dashboard"
             android:title="Tổng quan" />
 
-    <!-- 3. Sản phẩm -->
     <item
-            android:id="@+id/nav_products"
+            android:id="@+id/productListFragment"
             android:icon="@drawable/ic_product"
             android:title="Sản phẩm" />
 
-    <!-- 4. Đơn hàng -->
     <item
-            android:id="@+id/nav_orders"
+            android:id="@+id/orderListFragment"
             android:icon="@drawable/ic_order"
             android:title="Đơn hàng" />
 
-    <!-- 5. Người dùng -->
     <item
-            android:id="@+id/nav_users"
+            android:id="@+id/userListFragment"
             android:icon="@drawable/ic_user"
             android:title="Người dùng" />
 

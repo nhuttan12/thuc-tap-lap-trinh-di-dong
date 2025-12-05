@@ -6,15 +6,15 @@
               android:orientation="vertical">
 
     <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:title="Quản lý đơn hàng"
-            android:titleTextColor="@android:color/white"
-            app:navigationIcon="@drawable/ic_back"
-            app:navigationIconTint="@android:color/white" />
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:background="@color/white"-->
+<!--            android:title="Quản lý đơn hàng"-->
+<!--            android:titleTextColor="@android:color/white"-->
+<!--            app:navigationIcon="@drawable/ic_back"-->
+<!--            app:navigationIconTint="@android:color/white" />-->
 
     <!-- Search Bar -->
     <com.google.android.material.textfield.TextInputLayout
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
-
+<!--button add product-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAddProduct"
             android:layout_width="wrap_content"
@@ -61,6 +61,6 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add"
-            app:tint="@color/white" />
+            app:tint="@color/black" />
 
 </LinearLayout>

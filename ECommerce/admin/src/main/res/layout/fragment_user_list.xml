@@ -6,15 +6,15 @@
               android:orientation="vertical">
 
     <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:title="Quản lý người dùng"
-            android:titleTextColor="@android:color/white"
-            app:navigationIcon="@drawable/ic_back"
-            app:navigationIconTint="@android:color/white" />
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:background="@color/white"-->
+<!--            android:title="Quản lý người dùng"-->
+<!--            android:titleTextColor="@android:color/white"-->
+<!--            app:navigationIcon="@drawable/ic_back"-->
+<!--            app:navigationIconTint="@android:color/white" />-->
 
     <!-- Search Bar -->
     <com.google.android.material.textfield.TextInputLayout
@@ -61,6 +61,6 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add"
-            app:tint="@color/white" />
+            app:tint="@color/black" />
 
 </LinearLayout>
