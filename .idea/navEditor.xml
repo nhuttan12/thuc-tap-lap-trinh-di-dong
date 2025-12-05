@@ -8,28 +8,33 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="dashboardFragment">
+                  <entry key="analyticsFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
                             <option name="x" value="12" />
-                            <option name="y" value="76" />
+                            <option name="y" value="12" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_to_orders">
+                            <entry key="action_analytics_to_dashboard">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_to_products">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_to_users">
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="dashboardFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_dashboard_to_analytics">
                               <value>
                                 <LayoutPositions />
                               </value>
