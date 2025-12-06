@@ -32,7 +32,7 @@ export class ProductService {
 
 	) {}
 
-	// product.service.ts
+
 	async createProductAdmin(body: any): Promise<ProductEntity> {
 		const queryRunner = this.dataSource.createQueryRunner();
 		await queryRunner.connect();
@@ -55,7 +55,7 @@ export class ProductService {
 			product.discount = body.discount ?? 0;
 			product.status = ProductStatusEnum.ACTIVE;
 
-			// 3. Tạo ProductDetails (KHÔNG CẦN SET ID - TypeORM sẽ tự xử lý)
+			// 3. Tạo ProductDetails
 			const details = new ProductDetailsEntity();
 			details.size = body.productDetailsEntity?.size || body.size || 'M';
 			details.color = body.productDetailsEntity?.color || body.color || 'Đen';
@@ -63,10 +63,10 @@ export class ProductService {
 			details.description = body.productDetailsEntity?.description || body.description || '';
 			details.categoryEntity = category;
 
-			// QUAN TRỌNG: Gán details cho product (cascade sẽ tự lưu)
+			//Gán details cho product
 			product.productDetailsEntity = details;
 
-			// 4. Tạo ảnh (nếu có)
+			// 4. Tạo ảnh
 			if (body.productImages && body.productImages.length > 0) {
 				product.productImages = body.productImages.map((img: any) => {
 					const pi = new ProductImageEntity();
@@ -85,7 +85,7 @@ export class ProductService {
 					imageEntity.status = ImageStatusEnum.ACTIVE;
 
 					pi.image = imageEntity;
-					// KHÔNG CẦN: pi.product = product (cascade sẽ xử lý)
+
 
 					return pi;
 				});

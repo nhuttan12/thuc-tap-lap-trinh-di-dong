@@ -16,10 +16,10 @@ export class ProductMapper {
 	}
 
 	toProductEntityResponseDto(product: ProductEntity): ProductEntityResponseDto {
-		// Xử lý ảnh AN TOÀN với null check
+		// Xử lý ảnh với null check
 		let imageUrl = '';
 
-		// Kiểm tra theo từng bước
+		// Kiểm tra
 		if (product.productImages &&
 			Array.isArray(product.productImages) &&
 			product.productImages.length > 0) {

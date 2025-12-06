@@ -114,13 +114,15 @@ export class ProductController {
 			throw e;
 		}
 	}
+
+	//create product
 	@Post('admin')
 	@HttpCode(HttpStatus.CREATED)
 	async createProductForAdmin(@Body() body: any) {
 		return this.productService.createProductAdmin(body);
 	}
 
-
+	//find product
 	@Get()
 	async getProductDetailByProductID(
 		@Body() request: GetProductDetailByProductIdRequestDto

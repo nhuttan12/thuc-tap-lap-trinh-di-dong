@@ -20,7 +20,7 @@ import { ProductEntity } from './product.entity';
 
 @Entity('product_details')
 export class ProductDetailsEntity extends TimestampField {
-	@PrimaryColumn() ///
+	@PrimaryColumn() ///thay doi cho nay
 	id: number;
 
 	@Column()
