@@ -1,4 +1,4 @@
-package com.example.admin.model
+package com.example.admin.Model
 
 data class ProductModel(
         val id: String = "",

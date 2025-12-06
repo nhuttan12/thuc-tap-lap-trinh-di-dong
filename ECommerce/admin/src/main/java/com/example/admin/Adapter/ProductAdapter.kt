@@ -1,4 +1,4 @@
-package com.example.admin.adapter//package com.example.admin.
+package com.example.admin.Adapter//package com.example.admin.
 //
 //import android.os.Bundle
 //import android.view.LayoutInflater

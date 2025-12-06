@@ -8,7 +8,7 @@
     <!-- 1. Dashboard – Màn chính -->
     <fragment
             android:id="@+id/dashboardFragment"
-            android:name="com.example.admin.fragment.DashboardFragment"
+            android:name="com.example.admin.Fragment.DashboardFragment"
             android:label="Tổng quan"
             tools:layout="@layout/fragment_admin_dashboard">
 
@@ -25,7 +25,7 @@
     <!-- 2. Thống kê chi tiết -->
     <fragment
             android:id="@+id/analyticsFragment"
-            android:name="com.example.admin.fragment.AnalyticsFragment"
+            android:name="com.example.admin.Fragment.AnalyticsFragment"
             android:label="Thống kê chi tiết"
             tools:layout="@layout/fragment_analytics">
 
@@ -41,19 +41,19 @@
     <!-- 3. Các màn CRUD -->
     <fragment
             android:id="@+id/productListFragment"
-            android:name="com.example.admin.fragment.ProductListFragment"
+            android:name="com.example.admin.Fragment.ProductListFragment"
             android:label="Sản phẩm"
             tools:layout="@layout/fragment_product_list" />
 
     <fragment
             android:id="@+id/orderListFragment"
-            android:name="com.example.admin.fragment.OrderListFragment"
+            android:name="com.example.admin.Fragment.OrderListFragment"
             android:label="Đơn hàng"
             tools:layout="@layout/fragment_order_list" />
 
     <fragment
             android:id="@+id/userListFragment"
-            android:name="com.example.admin.fragment.UserListFragment"
+            android:name="com.example.admin.Fragment.UserListFragment"
             android:label="Người dùng"
             tools:layout="@layout/fragment_user_list" />
 

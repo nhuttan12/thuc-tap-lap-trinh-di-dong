@@ -106,6 +106,128 @@ export class ProductService {
 		}
 	}
 
+	// UPDATE PRODUCT ADMIN
+	async updateProductAdmin(id: number, body: any): Promise<ProductEntity> {
+		const queryRunner = this.dataSource.createQueryRunner();
+		await queryRunner.connect();
+		await queryRunner.startTransaction();
+
+		try {
+			// Tìm product + load relations
+			const product = await queryRunner.manager.findOne(ProductEntity, {
+				where: { id },
+				relations: ['productDetailsEntity', 'productImages', 'productImages.image'],
+			});
+
+			if (!product) throw new Error(`Product id=${id} not found`);
+
+			// Cập nhật thông tin cơ bản
+			product.name = body.name ?? product.name;
+			product.price = body.price ?? product.price;
+			product.discount = body.discount ?? product.discount;
+
+			// Cập nhật ProductDetails
+			if (body.productDetailsEntity) {
+				if (!product.productDetailsEntity) {
+					product.productDetailsEntity = new ProductDetailsEntity();
+				}
+				const details = product.productDetailsEntity;
+				details.size = body.productDetailsEntity.size ?? details.size;
+				details.color = body.productDetailsEntity.color ?? details.color;
+				details.rating = body.productDetailsEntity.rating ?? details.rating;
+				details.description = body.productDetailsEntity.description ?? details.description;
+
+				if (body.productDetailsEntity.category_id) {
+					const category = await queryRunner.manager.findOne(CategoryEntity, {
+						where: { id: body.productDetailsEntity.category_id },
+					});
+					if (!category) throw new Error('Category not found');
+					details.categoryEntity = category;
+				}
+			}
+
+			// Cập nhật ảnh: xóa cũ, thêm mới (nếu có)
+			if (body.productImages) {
+				// Xóa ảnh cũ
+				if (product.productImages?.length) {
+					await queryRunner.manager.remove(product.productImages);
+				}
+				// Thêm ảnh mới
+				product.productImages = body.productImages.map((img: any) => {
+					const pi = new ProductImageEntity();
+					const type = img.type?.toUpperCase();
+					pi.type =
+						type === 'BANNER'
+							? ProductImageTypeEnum.BANNER
+							: type === 'PRODUCT'
+								? ProductImageTypeEnum.PRODUCT
+								: ProductImageTypeEnum.THUMBNAIL;
+
+					const imageEntity = new ImageEntity();
+					imageEntity.url = img.url || img.image?.url;
+					imageEntity.status = ImageStatusEnum.ACTIVE;
+
+					pi.image = imageEntity;
+					pi.product = product;
+					return pi;
+				});
+			}
+
+			const updated = await queryRunner.manager.save(ProductEntity, product);
+			await queryRunner.commitTransaction();
+			return updated;
+		} catch (err) {
+			await queryRunner.rollbackTransaction();
+			throw err;
+		} finally {
+			await queryRunner.release();
+		}
+	}
+
+// SOFT DELETE PRODUCT
+	async deleteProductAdmin(id: number): Promise<void> {
+		const queryRunner = this.dataSource.createQueryRunner();
+		await queryRunner.connect();
+		await queryRunner.startTransaction();
+		try {
+			const product = await queryRunner.manager.findOne(ProductEntity, { where: { id } });
+			if (!product) throw new Error(`Product id=${id} not found`);
+
+			product.status = ProductStatusEnum.DELETED;
+			await queryRunner.manager.save(product);
+			await queryRunner.commitTransaction();
+		} catch (err) {
+			await queryRunner.rollbackTransaction();
+			throw err;
+		} finally {
+			await queryRunner.release();
+		}
+	}
+
+// UPDATE STATUS (ACTIVE / INACTIVE)
+	async updateProductStatus(id: number, status: string): Promise<void> {
+		const queryRunner = this.dataSource.createQueryRunner();
+		await queryRunner.connect();
+		await queryRunner.startTransaction();
+		try {
+			const product = await queryRunner.manager.findOne(ProductEntity, { where: { id } });
+			if (!product) throw new Error(`Product id=${id} not found`);
+
+			if (!Object.values(ProductStatusEnum).includes(status as ProductStatusEnum)) {
+				throw new Error('Invalid status');
+			}
+
+			product.status = status as ProductStatusEnum;
+			await queryRunner.manager.save(product);
+			await queryRunner.commitTransaction();
+		} catch (err) {
+			await queryRunner.rollbackTransaction();
+			throw err;
+		} finally {
+			await queryRunner.release();
+		}
+	}
+
 	/**
 	 * Get products with pagination
 	 * @param {number} page - The page number (1-based)

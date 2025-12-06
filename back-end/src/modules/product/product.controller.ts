@@ -8,11 +8,11 @@
 
 import {
 	Body,
-	Controller,
+	Controller, Delete,
 	Get,
 	HttpCode,
 	HttpStatus,
-	Logger, Post,
+	Logger, Param, Patch, Post, Put,
 	Query,           // ← Thêm để dùng cho admin endpoint
 } from '@nestjs/common';
 import { ProductService } from './product.service';
@@ -25,6 +25,7 @@ import { ProductDetailService } from './product-detail.service';
 import { ProductDetailResponseDto } from './dtos/product-detail-response.dto';
 import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
 import { GetProductDetailByProductIdRequestDto } from './dtos/get-product-detail-by-product-id-request.dto';
+import {ProductEntity} from "./entities/product.entity";
 
 @Controller('products')
 export class ProductController {
@@ -122,6 +123,7 @@ export class ProductController {
 		return this.productService.createProductAdmin(body);
 	}
 
+
 	//find product
 	@Get()
 	async getProductDetailByProductID(
@@ -163,4 +165,64 @@ export class ProductController {
 		}
 	}
 
+	// product.controller.ts - thêm các endpoint
+
+// Cập nhật sản phẩm
+	@Put('admin/:id')
+	@HttpCode(HttpStatus.OK)
+	async updateProductForAdmin(
+		@Param('id') id: number,
+		@Body() body: any
+	): Promise<SuccessResponseDto<ProductEntity>> {
+		try {
+			const updatedProduct = await this.productService.updateProductAdmin(id, body);
+			return {
+				data: updatedProduct,
+				message: 'Cập nhật sản phẩm thành công',
+				statusCode: 'PRD_ADMIN_004',
+			};
+		} catch (e) {
+			this.logger.error(`Error updating product: ${e.message}`, e.stack);
+			throw e;
+		}
+	}
+
+// Xóa sản phẩm (soft delete - đổi status)
+	@Delete('admin/:id')
+	@HttpCode(HttpStatus.OK)
+	async deleteProductForAdmin(
+		@Param('id') id: number
+	): Promise<SuccessResponseDto<any>> {
+		try {
+			await this.productService.deleteProductAdmin(id);
+			return {
+				data: { id },
+				message: 'Xóa sản phẩm thành công',
+				statusCode: 'PRD_ADMIN_005',
+			};
+		} catch (e) {
+			this.logger.error(`Error deleting product: ${e.message}`, e.stack);
+			throw e;
+		}
+	}
+
+// Cập nhật status
+	@Patch('admin/:id/status')
+	@HttpCode(HttpStatus.OK)
+	async updateProductStatus(
+		@Param('id') id: number,
+		@Body('status') status: string
+	): Promise<SuccessResponseDto<any>> {
+		try {
+			await this.productService.updateProductStatus(id, status);
+			return {
+				data: { id, status },
+				message: 'Cập nhật trạng thái thành công',
+				statusCode: 'PRD_ADMIN_006',
+			};
+		} catch (e) {
+			this.logger.error(`Error updating status: ${e.message}`, e.stack);
+			throw e;
+		}
+	}
 }
