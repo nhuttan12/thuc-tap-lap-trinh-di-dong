@@ -11,20 +11,37 @@ import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 
 @Injectable()
 export class ProductMapper {
-	toProductEntityListResponseDto(
-		products: ProductEntity[]
-	): ProductEntityResponseDto[] {
-		return products.map((product: ProductEntity) => {
-			return {
-				id: product.id,
-				name: product.name,
-				price: product.price,
-				discount: product.discount,
-				imageUrl: product.productImages[0].image.url,
-				status: product.status,
-				createdAt: product.createdAt,
-				updatedAt: product.updatedAt,
-			};
-		});
+	toProductEntityListResponseDto(products: ProductEntity[]): ProductEntityResponseDto[] {
+		return products.map(product => this.toProductEntityResponseDto(product));
+	}
+
+	toProductEntityResponseDto(product: ProductEntity): ProductEntityResponseDto {
+		// Xử lý ảnh AN TOÀN với null check
+		let imageUrl = '';
+
+		// Kiểm tra theo từng bước
+		if (product.productImages &&
+			Array.isArray(product.productImages) &&
+			product.productImages.length > 0) {
+
+			const firstProductImage = product.productImages[0];
+
+			if (firstProductImage &&
+				firstProductImage.image &&
+				firstProductImage.image.url) {
+				imageUrl = firstProductImage.image.url;
+			}
+		}
+
+		return {
+			id: product.id,
+			name: product.name,
+			price: product.price,
+			discount: product.discount,
+			imageUrl: imageUrl, // ← Đã fix
+			status: product.status,
+			createdAt: product.createdAt,
+			updatedAt: product.updatedAt,
+		};
 	}
 }
