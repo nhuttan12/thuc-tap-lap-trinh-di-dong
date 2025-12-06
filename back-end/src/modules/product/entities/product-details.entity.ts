@@ -11,16 +11,16 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
-	OneToOne,
+	OneToOne, PrimaryColumn,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CategoryEntity } from '../../category/entities/category.entity';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { ProductEntity } from './product.entity';
 
-@Entity()
+@Entity('product_details')
 export class ProductDetailsEntity extends TimestampField {
-	@PrimaryGeneratedColumn()
+	@PrimaryColumn() ///
 	id: number;
 
 	@Column()
@@ -56,4 +56,6 @@ export class ProductDetailsEntity extends TimestampField {
 	)
 	@JoinColumn({ name: 'id' })
 	product: ProductEntity;
+
+	//
 }

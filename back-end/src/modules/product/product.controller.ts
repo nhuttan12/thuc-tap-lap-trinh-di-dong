@@ -12,7 +12,8 @@ import {
 	Get,
 	HttpCode,
 	HttpStatus,
-	Logger,
+	Logger, Post,
+	Query,           // ← Thêm để dùng cho admin endpoint
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
@@ -89,6 +90,37 @@ export class ProductController {
 	 * @since 2025-09-24
 	 * @version 1.0.0
 	 */
+
+	@Get('admin')
+	async getProductsForAdmin(
+		@Query('page') page = 1,
+		@Query('limit') limit = 10,
+	): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
+		try {
+			const currentPage = Number(page) > 0 ? Number(page) : 1;
+			const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
+
+			this.logger.debug(`[ADMIN] Get products: page=${currentPage}, limit=${currentLimit}`);
+
+			const products = await this.productService.getProductsPaging(currentPage, currentLimit);
+
+			return {
+				data: products,
+				message: 'Lấy danh sách sản phẩm cho Admin thành công',
+				statusCode: 'PRD_ADMIN_001',
+			};
+		} catch (e) {
+			this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
+			throw e;
+		}
+	}
+	@Post('admin')
+	@HttpCode(HttpStatus.CREATED)
+	async createProductForAdmin(@Body() body: any) {
+		return this.productService.createProductAdmin(body);
+	}
+
+
 	@Get()
 	async getProductDetailByProductID(
 		@Body() request: GetProductDetailByProductIdRequestDto
@@ -128,4 +160,5 @@ export class ProductController {
 			throw e;
 		}
 	}
+
 }

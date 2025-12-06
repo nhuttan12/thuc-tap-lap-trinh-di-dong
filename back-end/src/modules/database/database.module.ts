@@ -12,6 +12,7 @@ import { ConfigModule } from '../../common/config/config.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DatabaseConfig } from '../../common/config/interface/database.interface';
 import { DatabaseType } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 /**
  * @description Create TypeORM module options
@@ -32,6 +33,7 @@ export function createTypeOrmModuleOptions(
     database: databaseConfig.database,
     autoLoadEntities: true,
     synchronize: false,
+    namingStrategy: new SnakeNamingStrategy(),
   } as TypeOrmModuleOptions;
 }
 
