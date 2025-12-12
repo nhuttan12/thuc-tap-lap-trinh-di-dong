@@ -16,7 +16,7 @@ import { UserEntity } from '../entities/user.entity';
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
 
-	/*
+	/**
 	 * @description constructor of user repository class
 	 * @author Nhut Tan
 	 * @since 2025-09-08
