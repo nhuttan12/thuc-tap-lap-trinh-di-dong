@@ -21,16 +21,33 @@
             android:exported="false" />
         <activity
             android:name=".Activity.SplashActivity"
+            android:exported="false">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".Activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".Activity.RegisterActivity"
+            android:exported="true" />
+        <activity
             android:name=".Activity.DashboardActivity"
             android:exported="true" />
+        <activity android:name=".Activity.ForgotPasswordActivity"
+            android:exported="false"/>
+        <activity android:name=".Activity.ResetPasswordActivity"
+            android:exported="false"/>
+        <activity android:name=".Activity.OtpActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

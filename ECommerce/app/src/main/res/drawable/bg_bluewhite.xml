@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-
     <gradient
-        android:angle="270"
-        android:startColor="#001F3F"   <!-- Xanh đen -->
-        android:centerColor="#003366"  <!-- Xanh dương đậm -->
-        android:endColor="#E0F0FF"     <!-- Trắng pha xanh nhạt -->
-    />
-
+        android:angle="-45"
+        android:startColor="#000814"
+        android:centerColor="#334991"
+        android:endColor="#96A4D6"
+        android:centerX="0.75"
+        android:type="linear" />
 </shape>
