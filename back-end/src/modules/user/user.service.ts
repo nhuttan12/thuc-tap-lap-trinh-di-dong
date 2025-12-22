@@ -350,7 +350,7 @@ export class UserService {
 			 * Call `createUserWithUsernameEmailPassword` function from repository
 			 */
 			const user: UserEntity =
-				await this.userRepository.createUserWithUsernameEmailPassword(
+				await this.createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
 					username,
 					email,
 					hashedPassword,
@@ -379,4 +379,28 @@ export class UserService {
 			throw e;
 		}
 	}
+
+	async createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
+		username: string,
+		email: string,
+		password: string,
+		roleID: number,
+		imageID: number
+	): Promise<UserEntity> {
+		return await this.userRepository.createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
+			username,
+			email,
+			password,
+			roleID,
+			imageID
+		);
+	}
+	async updateUserEntity(entity: UserEntity): Promise<UserEntity> {
+		return await this.userRepository.save(entity);
+	}
+	async getUserEntityById(userId: number): Promise<UserEntity | null> {
+		return await this.userRepository.getUserByUerID(userId);
+	}
+
+
 }

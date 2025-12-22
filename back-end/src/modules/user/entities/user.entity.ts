@@ -1,9 +1,11 @@
 /**
  * @description user entity
- * @author Nhut Tan
+ * @author Vo Tan Tai
  * @since 2025-09-03
  * @modifies 2025-09-14
- * @version 1.0.2
+ * @modifies 2025-11-19
+ * @modifies 2025-12-19
+ * @version 1.0.3
  */
 
 import {
