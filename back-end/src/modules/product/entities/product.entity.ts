@@ -35,6 +35,12 @@ export class ProductEntity extends TimestampField {
 	@Column()
 	discount: number;
 
+	@Column()
+	size: string;
+
+	@Column()
+	color: string;
+
 	@Column({
 		type: 'enum',
 		enum: ProductStatusEnum,

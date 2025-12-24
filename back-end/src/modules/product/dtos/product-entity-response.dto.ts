@@ -10,7 +10,9 @@ export class ProductEntityResponseDto {
 	name: string;
 	price: number;
 	discount: number;
-	imageUrl: string;
+	imageUrl: string[];
+	size: string[];
+	color: string[];
 	status: string;
 	createdAt: Date;
 	updatedAt: Date;

@@ -1,8 +1,20 @@
+/**
+ * @description Dashboard activity for displaying data from view model
+ * @author @nhuttan12
+ * @since 2025-08-25
+ * @modifies 2025-08-27
+ * @modifies 2025-08-28
+ * @modifies 2025-08-29
+ * @modifies 2025-12-15
+ * @version 1.0.4
+ */
+
 package com.example.e_commerce.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -65,17 +77,49 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun initBrands() {
+        /**
+         * Binding to recyclerViewBrands in activity_main.xml
+         */
         binding.recyclerViewBrands.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewBrands.adapter = brandsAdapter
-        binding.progressBarBrands.visibility = View.VISIBLE
 
+        /**
+         * Binding to adapter for loading data
+         */
+        binding.recyclerViewBrands.adapter = brandsAdapter
+
+        /**
+         * Observing the data from view model
+         */
         viewModel.brands.observe(this) { data ->
             brandsAdapter.updateData(data)
-            binding.progressBarBrands.visibility = View.GONE
         }
 
-        viewModel.loadBrands()
+        /**
+         * Change visibility of progress bar to true when loading data from view model
+         */
+        viewModel.loading.observe(this) { isLoading ->
+            binding.progressBarBrands.visibility = if (isLoading) View.VISIBLE else View.GONE
+
+            /**
+             * Show text 'Loading brands...'
+             */
+            if (isLoading) {
+                Toast.makeText(this, "Loading brands...", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        /**
+         * Show error message whether if error occurs when loading data from view model
+         */
+        viewModel.error.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
+        /**
+         * Call load brands from view model
+         */
+        viewModel.loadBrands(limit = 10)
     }
 
     private fun setUpBanners(image: List<SliderModel>) {

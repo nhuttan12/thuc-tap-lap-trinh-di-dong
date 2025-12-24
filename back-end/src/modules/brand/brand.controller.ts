@@ -1,8 +1,9 @@
 /**
  * @description Brand controller
  * @author Nhut Tan
- * @since 2025-12-11
- * @version 1.0.0
+ * @since 2025-12-12
+ * @modifies 2025-12-13
+ * @version 1.0.1
  */
 
 import { Controller, Get, Logger, Query } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { BrandService } from './brand.service';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
 import { BrandStatusCode } from './status-code/brand.status-code';
 
-@Controller('brand')
+@Controller('brands')
 export class BrandController {
 	private readonly logger = new Logger(BrandController.name);
 

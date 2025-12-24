@@ -10,7 +10,14 @@ import { BrandStatusCode } from '../status-code/brand.status-code';
 
 export class GetBrandsWithLimitationRequestDto {
 	@IsNotEmpty({ message: BrandStatusCode.LIMIT_MUST_NOT_BE_EMPTY.customCode })
-	@IsNumber({}, { message: BrandStatusCode.LIMIT_MUST_BE_NUMBER.customCode })
+	@IsNumber(
+		{
+			allowNaN: false,
+			allowInfinity: false,
+			maxDecimalPlaces: 0,
+		},
+		{ message: BrandStatusCode.LIMIT_MUST_BE_NUMBER.customCode }
+	)
 	@IsInt({ message: BrandStatusCode.LIMIT_MUST_BE_INT.customCode })
 	@Min(1, {
 		message: BrandStatusCode.LIMIT_MUST_BE_A_POSITIVE_NUMBER.customCode,

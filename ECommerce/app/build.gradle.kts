@@ -48,6 +48,10 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.10.1")
+    
     implementation("com.tbuonomo:dotsindicator:5.1.0")
 
     // Retrofit
