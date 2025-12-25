@@ -32,6 +32,8 @@ export class ProductMapper {
 				name: product.name,
 				price: product.price,
 				discount: product.discount,
+				description: product.productDetailsEntity.description,
+				rating: product.productDetailsEntity.rating,
 				imageUrl: product.productImages.map(
 					(img: ProductImageEntity) => {
 						return img.image.url;
