@@ -1,5 +1,6 @@
 /**
  * @description Brand service
+ * @module BrandModule
  * @author Nhut Tan
  * @since 2025-12-11
  * @version 1.0.0

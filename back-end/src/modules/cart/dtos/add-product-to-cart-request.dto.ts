@@ -4,10 +4,12 @@
  * @since 2025-09-25
  * @version 1.0.0
  */
-import { IsInt, IsNotEmpty, Min } from '@nestjs/class-validator';
+import { IsInt, IsNotEmpty, Min } from 'class-validator';
 import { CartStatusCode } from '../status-code/cart.status-code';
+import { Type } from 'class-transformer';
 
 export class AddProductToCartRequestDto {
+	@Type(() => Number)
 	@IsInt({ message: CartStatusCode.PRODUCT_ID_MUST_BE_INTEGER.customCode })
 	@IsNotEmpty({
 		message: CartStatusCode.PRODUCT_ID_MUST_NOT_BE_EMPTY.customCode,
@@ -17,6 +19,7 @@ export class AddProductToCartRequestDto {
 	})
 	productID: number;
 
+	@Type(() => Number)
 	@IsInt({ message: CartStatusCode.QUANTITY_MUST_BE_INTEGER.customCode })
 	@IsNotEmpty({
 		message: CartStatusCode.QUANTITY_MUST_NOT_BE_EMPTY.customCode,

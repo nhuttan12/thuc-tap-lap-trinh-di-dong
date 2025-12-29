@@ -6,9 +6,10 @@
  */
 import { Module } from '@nestjs/common';
 import { BuildPagingMetaService } from './build-paging-meta.service';
+import { ExtractStringByDelimeter } from './extract-string-by-delimeter';
 
 @Module({
-	providers: [BuildPagingMetaService],
-	exports: [BuildPagingMetaService],
+	providers: [BuildPagingMetaService, ExtractStringByDelimeter],
+	exports: [BuildPagingMetaService, ExtractStringByDelimeter],
 })
 export class HelperModule {}

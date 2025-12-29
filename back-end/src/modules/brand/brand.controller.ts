@@ -1,5 +1,6 @@
 /**
  * @description Brand controller
+ * @module BrandModule
  * @author Nhut Tan
  * @since 2025-12-12
  * @modifies 2025-12-13

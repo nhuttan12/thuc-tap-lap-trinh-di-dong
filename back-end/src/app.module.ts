@@ -25,6 +25,7 @@ import { OrderModule } from './modules/orders/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { AppThrottlerModule } from './common/infrastructure/app-throttler.module';
+import { BrandModule } from './modules/brand/brand.module';
 
 @Module({
 	imports: [
@@ -45,6 +46,7 @@ import { AppThrottlerModule } from './common/infrastructure/app-throttler.module
 		OrderModule,
 		ProductModule,
 		WishlistModule,
+		BrandModule,
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],

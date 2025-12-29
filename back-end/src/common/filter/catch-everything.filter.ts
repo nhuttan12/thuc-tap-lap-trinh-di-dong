@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-14
  * @modifies 2025-09-22
- * @version 1.0.2
+ * @modifies 2025-12-26
+ * @version 1.0.3
  */
 
 import {
@@ -13,9 +14,9 @@ import {
 	HttpException,
 	HttpStatus,
 } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { Request, Response } from 'express';
+import { HttpAdapterHost } from '@nestjs/core';
+import { Request } from 'express';
 
 @Catch()
 export class CatchEverythingFilter implements ExceptionFilter {

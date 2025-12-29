@@ -2,13 +2,16 @@
  * @description GetBrandsWithLimitationRequestDto
  * @author Nhut Tan
  * @since 2025-12-11
- * @version 1.0.0
+ * @modifies 2025-12-26
+ * @version 1.0.1
  */
 
-import { IsInt, IsNotEmpty, IsNumber, Min } from '@nestjs/class-validator';
+import { IsInt, IsNotEmpty, IsNumber, Min } from 'class-validator';
 import { BrandStatusCode } from '../status-code/brand.status-code';
+import { Type } from 'class-transformer';
 
 export class GetBrandsWithLimitationRequestDto {
+	@Type(() => Number)
 	@IsNotEmpty({ message: BrandStatusCode.LIMIT_MUST_NOT_BE_EMPTY.customCode })
 	@IsNumber(
 		{
