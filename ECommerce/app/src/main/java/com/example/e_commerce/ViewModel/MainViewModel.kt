@@ -16,12 +16,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.e_commerce.Model.BrandModel
 import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.Model.SliderModel
+import com.example.e_commerce.Repository.BannerRepository
+import com.example.e_commerce.Repository.BrandRepository
 import com.example.e_commerce.Repository.MainRepository
+import com.example.e_commerce.Repository.ProductRepository
 import com.example.e_commerce.Result.NetworkResult
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
-    private val repository = MainRepository()
+    private val repository = MainRepository(
+        brandRepository = BrandRepository(),
+        bannerRepository = BannerRepository(),
+        productRepository = ProductRepository()
+    )
 
     private val _brands = MutableLiveData<List<BrandModel>>()
     private val _banners = MutableLiveData<List<SliderModel>>()
@@ -80,7 +87,7 @@ class MainViewModel: ViewModel() {
              */
             when (val result = repository.loadPopular()) {
                 is NetworkResult.Success -> {
-                    _popular.postValue(result.data)
+                    _popular.postValue(result.data.data)
                 }
                 is NetworkResult.Error -> {
                     _error.postValue(result.message)

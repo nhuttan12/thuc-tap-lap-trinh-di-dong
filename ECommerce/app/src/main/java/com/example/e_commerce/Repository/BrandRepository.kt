@@ -2,13 +2,14 @@
  * @description Brand repository for connecting to View Model
  * @author @nhuttan12
  * @since 2025-12-24
+ * @modifies 2025-12-26
  * @version 1.0.0
  */
 
 package com.example.e_commerce.Repository
 
-import com.example.e_commerce.Helper.TinyDB
-import com.example.e_commerce.Model.ApiResponse
+import android.util.Log
+import com.example.e_commerce.Model.ApiSucess
 import com.example.e_commerce.Model.BrandModel
 import com.example.e_commerce.Result.NetworkResult
 import com.example.e_commerce.Service.ApiClient
@@ -17,6 +18,11 @@ import retrofit2.Response
 import java.io.IOException
 
 class BrandRepository() : BaseRepository() {
+    /**
+     * @description Tag for logging
+     */
+    private val TAG: String = "BrandRepository"
+
     /**
      * @description Call api and handle result
      *
@@ -35,16 +41,22 @@ class BrandRepository() : BaseRepository() {
              * Call api to load brands
              * Handle result
              */
-            val response: Response<ApiResponse<List<BrandModel>>> = ApiClient.brandService.getBrandsWithLimitation(limit)
+            val response: Response<ApiSucess<List<BrandModel>>> = ApiClient.brandService.getBrandsWithLimitation(limit)
+            Log.e(TAG, "Call api to load brands $response")
 
             /**
              * Handle response
              */
             handleApiResponse(response) { it }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e(TAG, "Network error while loading brands, limit=$limit", e)
             NetworkResult.Error(503, "Network error")
         } catch (e: HttpException) {
+            Log.e(
+                TAG,
+                "HTTP ${e.code()} while loading brands, limit=$limit",
+                e
+            )
             NetworkResult.Error(e.code(), "Server error")
         }
     }

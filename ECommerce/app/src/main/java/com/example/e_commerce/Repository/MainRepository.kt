@@ -37,8 +37,11 @@ class MainRepository(
      *
      * @return [NetworkResult] result of brand list
      */
-    suspend fun loadPopular(): NetworkResult<List<ProductModel>> {
-        return productRepository.loadPopular()
+    suspend fun loadPopular(): NetworkResult<PagingResponse<ProductModel>> {
+        return productRepository.loadPopular(
+            limit = 10,
+            page = 1
+        )
     }
 
     /**
