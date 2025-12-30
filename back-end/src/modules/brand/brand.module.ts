@@ -11,10 +11,11 @@ import { BrandEntity } from './entities/brand.entiy';
 import { BrandRepository } from './repositories/brand.repository';
 import { BrandMapper } from './mappers/brand.mapper';
 import { BrandService } from './brand.service';
+import { BrandController } from './brand.controller';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([BrandEntity])],
-	controllers: [],
+	controllers: [BrandController],
 	providers: [BrandRepository, BrandMapper, BrandService],
 	exports: [BrandService],
 })

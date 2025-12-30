@@ -6,12 +6,13 @@
  * @version 1.0.0
  */
 
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BrandEntity } from './entities/brand.entiy';
 import { BrandRepository } from './repositories/brand.repository';
 import { GetBrandsWithLimitationResponseDto } from './dtos/get-brands-with-limitation-response.dto';
 import { BrandMapper } from './mappers/brand.mapper';
 
+@Injectable()
 export class BrandService {
 	private readonly logger: Logger = new Logger(BrandService.name);
 

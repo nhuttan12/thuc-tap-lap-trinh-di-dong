@@ -9,7 +9,8 @@ import {
 	BadRequestException,
 	ConflictException,
 	Injectable,
-	Logger, NotFoundException,
+	Logger,
+	NotFoundException,
 } from '@nestjs/common';
 import { ImageRepository } from './repositories/image.repository';
 import { ImageEntity } from './entities/image.entity';

@@ -12,35 +12,35 @@ import { ConfigService } from '../../../src/common/config/config.service';
 import { createTypeOrmModuleOptions } from '../../../src/modules/database/database.module';
 
 describe('create typeorm config options', (): void => {
-  /*
-   * Define mock data that our config service mock will return
-   */
-  const mockDatabaseConfig: DatabaseConfig = {
-    type: 'postgres' as DatabaseType,
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: '123123',
-    database: 'tt-mobile',
-  };
+	/*
+	 * Define mock data that our config service mock will return
+	 */
+	const mockDatabaseConfig: DatabaseConfig = {
+		type: 'postgres' as DatabaseType,
+		host: 'localhost',
+		port: 5432,
+		username: 'postgres',
+		password: '123123',
+		database: 'tt-mobile',
+	};
 
-  /*
-   * Mock the ConfigService to return mock data
-   */
-  const mockConfigService: Partial<ConfigService> = {
-    databaseConfig: mockDatabaseConfig,
-  };
+	/*
+	 * Mock the ConfigService to return mock data
+	 */
+	const mockConfigService: Partial<ConfigService> = {
+		databaseConfig: mockDatabaseConfig,
+	};
 
-  it('should return correct TypeORM config', (): void => {
-    const options: TypeOrmModuleOptions = createTypeOrmModuleOptions(
-      mockConfigService as ConfigService,
-    );
+	it('should return correct TypeORM config', (): void => {
+		const options: TypeOrmModuleOptions = createTypeOrmModuleOptions(
+			mockConfigService as ConfigService
+		);
 
-    expect(options).toMatchObject({
-      ...mockDatabaseConfig,
-      autoLoadEntities: true,
-      synchronize: false,
-      migrations: ['src/migration/*.ts'],
-    });
-  });
+		expect(options).toMatchObject({
+			...mockDatabaseConfig,
+			autoLoadEntities: true,
+			synchronize: false,
+			migrations: ['src/migration/*.ts'],
+		});
+	});
 });

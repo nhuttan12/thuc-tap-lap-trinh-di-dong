@@ -4,7 +4,8 @@
  * @since 2025-09-14
  * @modifies 2025-09-22
  * @modifies 2025-12-26
- * @version 1.0.3
+ * @modifies 2025-12-29
+ * @version 1.0.4
  */
 
 import {
@@ -29,40 +30,49 @@ export class CatchEverythingFilter implements ExceptionFilter {
 		 */
 		const ctx: HttpArgumentsHost = host.switchToHttp();
 
-		let res: any = null;
-		let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
+		/**
+		 * Get deffault request and response
+		 */
+		const request = ctx.getRequest<Request>();
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const response = ctx.getResponse();
+
+		/**
+		 * Get deffault status and message
+		 */
+		let status: number = HttpStatus.INTERNAL_SERVER_ERROR;
+		let message: string = 'Internal server error';
 
 		/**
 		 * Get response and http status from exception
 		 */
 		if (exception instanceof HttpException) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
-			res = exception.getResponse();
-			httpStatus = exception.getStatus();
-		}
+			const res = exception.getResponse();
+			status = exception.getStatus();
 
-		const isStringResponse: boolean = typeof res === 'string';
+			if (typeof res === 'string') {
+				message = res;
+			} else if (typeof res === 'object' && res != null) {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+				message = (res as any).message ?? message;
+			}
+		} else {
+			console.error('Unhandled exception:', exception);
+		}
 
 		/**
 		 * Create response body
 		 */
-		const responseBody =
-			!res || isStringResponse
-				? {
-						statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-						timestamp: new Date().toISOString(),
-						message: 'Internal server error',
-					}
-				: {
-						statusCode: httpStatus,
-						timestamp: new Date().toISOString(),
-						path: httpAdapter.getRequestUrl(
-							ctx.getRequest<Request>()
-						) as string,
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-						message: res.customCode || res.message,
-					};
-
-		httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+		httpAdapter.reply(
+			response,
+			{
+				statusCode: status,
+				timestamp: new Date().toISOString(),
+				path: request.url,
+				message,
+			},
+			status
+		);
 	}
 }

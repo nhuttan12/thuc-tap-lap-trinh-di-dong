@@ -37,112 +37,112 @@ config({ path: '.env.local' });
 const logger: Logger = new Logger('Seed');
 
 const AppDataSource = new DataSource({
-  type: env.DATABASE_TYPE as 'postgres',
-  host: env.DATABASE_HOST,
-  port: Number(env.DATABASE_PORT),
-  username: env.DATABASE_USERNAME,
-  password: env.DATABASE_PASSWORD,
-  database: env.DATABASE_NAME,
-  logging: true,
-  synchronize: false,
-  entities: [
-    ImageEntity,
-    RoleEntity,
-    UserEntity,
-    ProductImageEntity,
-    UserImageEntity,
-    ProductEntity,
-    OrderDetailEntity,
-    OrderEntity,
-    ProductDetailsEntity,
-    CategoryEntity,
-    CartEntity,
-    CartDetailEntity,
-    UserDetailEntity,
-  ],
+	type: env.DATABASE_TYPE as 'postgres',
+	host: env.DATABASE_HOST,
+	port: Number(env.DATABASE_PORT),
+	username: env.DATABASE_USERNAME,
+	password: env.DATABASE_PASSWORD,
+	database: env.DATABASE_NAME,
+	logging: true,
+	synchronize: false,
+	entities: [
+		ImageEntity,
+		RoleEntity,
+		UserEntity,
+		ProductImageEntity,
+		UserImageEntity,
+		ProductEntity,
+		OrderDetailEntity,
+		OrderEntity,
+		ProductDetailsEntity,
+		CategoryEntity,
+		CartEntity,
+		CartDetailEntity,
+		UserDetailEntity,
+	],
 });
 
 export async function seed(): Promise<void> {
-  try {
-    /**
-     * Initialize database connection
-     */
-    await AppDataSource.initialize();
-    logger.log('Connected to database...');
+	try {
+		/**
+		 * Initialize database connection
+		 */
+		await AppDataSource.initialize();
+		logger.log('Connected to database...');
 
-    /**
-     * Start transaction
-     */
-    await AppDataSource.transaction(async (tx: EntityManager) => {
-      /**
-       * Insert role data
-       */
-      for (const role of [
-        { name: RoleName.ADMIN, status: RoleStatus.ACTIVE },
-        { name: RoleName.CUSTOMER, status: RoleStatus.ACTIVE },
-        { name: RoleName.EMPLOYEE, status: RoleStatus.ACTIVE },
-      ]) {
-        /**
-         * Check exist each role by name
-         */
-        const exists: RoleEntity | null = await tx
-          .getRepository(RoleEntity)
-          .findOne({ where: { name: role.name } });
+		/**
+		 * Start transaction
+		 */
+		await AppDataSource.transaction(async (tx: EntityManager) => {
+			/**
+			 * Insert role data
+			 */
+			for (const role of [
+				{ name: RoleName.ADMIN, status: RoleStatus.ACTIVE },
+				{ name: RoleName.CUSTOMER, status: RoleStatus.ACTIVE },
+				{ name: RoleName.EMPLOYEE, status: RoleStatus.ACTIVE },
+			]) {
+				/**
+				 * Check exist each role by name
+				 */
+				const exists: RoleEntity | null = await tx
+					.getRepository(RoleEntity)
+					.findOne({ where: { name: role.name } });
 
-        /**
-         * If not exist, create new role
-         */
-        if (!exists) {
-          await tx.getRepository(RoleEntity).save({
-            ...role,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-          logger.log(`Inserted role: ${role.name}`);
-        } else {
-          logger.log(`Role already exists: ${role.name}`);
-        }
-      }
+				/**
+				 * If not exist, create new role
+				 */
+				if (!exists) {
+					await tx.getRepository(RoleEntity).save({
+						...role,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					});
+					logger.log(`Inserted role: ${role.name}`);
+				} else {
+					logger.log(`Role already exists: ${role.name}`);
+				}
+			}
 
-      /**
-       * Insert default user image if not exist
-       */
-      const defaultImageUrl =
-        'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp';
+			/**
+			 * Insert default user image if not exist
+			 */
+			const defaultImageUrl =
+				'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp';
 
-      /**
-       * Get image by default image url
-       */
-      const imageExists: ImageEntity | null = await tx
-        .getRepository(ImageEntity)
-        .findOne({ where: { url: defaultImageUrl } });
+			/**
+			 * Get image by default image url
+			 */
+			const imageExists: ImageEntity | null = await tx
+				.getRepository(ImageEntity)
+				.findOne({ where: { url: defaultImageUrl } });
 
-      /**
-       * If not exist, create new image
-       */
-      if (!imageExists) {
-        await tx.getRepository(ImageEntity).save({
-          url: defaultImageUrl,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          status: ImageStatusEnum.ACTIVE,
-        });
-        logger.log('Inserted default user image');
-      } else {
-        logger.log('Default user image already exists');
-      }
-    });
+			/**
+			 * If not exist, create new image
+			 */
+			if (!imageExists) {
+				await tx.getRepository(ImageEntity).save({
+					url: defaultImageUrl,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+					status: ImageStatusEnum.ACTIVE,
+				});
+				logger.log('Inserted default user image');
+			} else {
+				logger.log('Default user image already exists');
+			}
+		});
 
-    logger.log('Seed success...');
-  } catch (e) {
-    console.error('❌ Seeding failed:', e);
-  } finally {
-    /**
-     * Close database connection
-     */
-    logger.log('Close database connection...');
-    if (AppDataSource.isInitialized) {
-      await AppDataSource.destroy();
-    }
-  }
+		logger.log('Seed success...');
+	} catch (e) {
+		console.error('Seeding failed:', e);
+	} finally {
+		/**
+		 * Close database connection
+		 */
+		logger.log('Close database connection...');
+		if (AppDataSource.isInitialized) {
+			await AppDataSource.destroy();
+		}
+	}
 }
