@@ -21,11 +21,6 @@ node_modules/
 # Coverage reports
 coverage/
 
-# Database stuff
-migrations/
-typeorm-migrations/
-database/
-
 # IDE and OS junk
 .idea/
 .vscode/
