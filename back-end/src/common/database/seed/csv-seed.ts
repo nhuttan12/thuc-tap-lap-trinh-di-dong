@@ -23,15 +23,82 @@ import { OrderDetailEntity } from '../../../modules/orders/entities/order-detail
 import { OrderEntity } from '../../../modules/orders/entities/order.entity';
 import { ProductDetailsEntity } from '../../../modules/product/entities/product-details.entity';
 import { ProductEntity } from '../../../modules/product/entities/product.entity';
+import { ProductImageTypeEnum } from '../../../modules/product/enums/product-image.type.enum';
 import { ProductStatusEnum } from '../../../modules/product/enums/product-status.enum';
 import { RoleEntity } from '../../../modules/role/entities/role.entity';
 import { UserDetailEntity } from '../../../modules/user/entities/user-detail.entity';
 import { UserEntity } from '../../../modules/user/entities/user.entity';
+import { WishlistItemEntity } from '../../../modules/wishlist/entities/wishlist-item.entity';
 
 /**
  * Load environment file before readding env
  */
 config({ path: '.env.local' });
+
+/**
+ * Csv file path
+ */
+const csvPath: string = 'D:/TT_Mobile/crawl/giay_adidas.csv';
+
+/**
+ * Check exist file path
+ */
+if (!fs.existsSync(csvPath)) {
+	throw new Error(`CSV file not found: ${csvPath}`);
+}
+
+/**
+ * Normalize brand in csv file
+ * @param {string} value - brand om csv file
+ * @returns {string}
+ */
+function normalizeBrand(value: string): string {
+	return value.trim().toLowerCase();
+}
+
+/**
+ * Convert from normalize string to title case
+ * @param {string} value - normalize string
+ * @returns {string}
+ */
+function toTitleCase(value: string): string {
+	return value
+		.trim()
+		.toLowerCase()
+		.replace(/\s+/g, ' ')
+		.split(' ')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+}
+
+/**
+ * Brand image map
+ */
+const BRAND_IMAGE_MAP: Record<string, string> = {
+	adidas: 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053803/cat1_pybagd.png',
+	puma: 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat3_ascjfk.png',
+	lacoste:
+		'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat6_ceycg7.png',
+	reebok: 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat5_zivadi.png',
+	horizontal:
+		'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat4_r061f5.png',
+};
+
+/**
+ * Supported product colors which not exist in csv file when data was crawleds
+ */
+const SAMPLE_COLORS: string[] = [
+	'Black',
+	'White',
+	'Red',
+	'Blue',
+	'Green',
+	'Gray',
+	'Beige',
+	'Brown',
+	'Navy',
+	'Yellow',
+];
 
 /**
  * Initial logger
@@ -61,6 +128,8 @@ const AppDataSource = new DataSource({
 		CartEntity,
 		CartDetailEntity,
 		UserDetailEntity,
+		BrandEntity,
+		WishlistItemEntity,
 	],
 });
 
@@ -76,19 +145,109 @@ type CsvRow = {
 	description: string;
 };
 
-function parsePrice(price: string): number {
-	return Number(price.replace(/\./g, '').replace('₫', '').trim());
+/**
+ * Generate random number larger than one specified number
+ * @param min - number like minimum milestone for quantity
+ * @returns {number}
+ */
+function generateRandomNumberLargerThanOneNumber(min: number): number {
+	const randomQuantity: number = Math.floor(Math.random() * 10);
+
+	if (randomQuantity < min) {
+		return generateRandomNumberLargerThanOneNumber(min);
+	} else {
+		return randomQuantity;
+	}
 }
 
-function parseSizes(raw: string): string[] {
-	return raw
+/**
+ * Generate color for each product so that each product has at least 3 colors,
+ * and each of them have random color quantity
+ * @param min - minimum color quantity
+ * @returns {Set<string>}
+ */
+function generateProductColors(min: number = 3): Set<string> {
+	/**
+	 * Random quantity of colors for each product
+	 */
+	const randomColorQuantity: number =
+		generateRandomNumberLargerThanOneNumber(min);
+
+	const response: Set<string> = new Set<string>();
+
+	while (response.size < randomColorQuantity) {
+		/**
+		 * Random number order from 0 to 9 in color picking
+		 */
+		const colorPickedNo: number = Math.floor(
+			Math.random() * SAMPLE_COLORS.length
+		);
+
+		/**
+		 * Add color picked to set
+		 */
+		response.add(SAMPLE_COLORS[colorPickedNo]);
+	}
+
+	return response;
+}
+
+/**
+ * Convert array of colors to string
+ * @param min - minimum color quantity
+ * @returns {string}
+ */
+function buildColorString(min: number = 3): string {
+	return Array.from(generateProductColors(min)).join('; ');
+}
+
+/**
+ * Convert sizes string from CSV to string with delimiter "; "
+ * @param raw - sizes string like "['40','41','42']"
+ * @returns {string}
+ */
+function buildSizeString(raw: string): string {
+	const sizes = raw
 		.replace('[', '')
 		.replace(']', '')
 		.replace(/'/g, '')
 		.split(',')
-		.map((s) => s.trim());
+		.map((s) => s.trim())
+		.filter(Boolean);
+
+	return Array.from(new Set(sizes)).join('; ');
 }
 
+/**
+ * resolve brand image
+ * @param {string} brandName - brand name
+ * @returns {string}
+ */
+function resolveBrandImageUrl(brandName: string): string {
+	const key = normalizeBrand(brandName);
+	const url = BRAND_IMAGE_MAP[key];
+
+	if (!url) {
+		throw new Error(`Missing brand image mapping for brand "${brandName}"`);
+	}
+
+	return url;
+}
+
+/**
+ * Convert price string to number
+ * @param {string} price - price string
+ * @returns {number}
+ */
+function parsePrice(price: string): number {
+	return Number(price.replace(/\./g, '').replace('₫', '').trim());
+}
+
+/**
+ * Convert image from string to string array
+ * @param {string} raw - image string
+ * @returns {string[]}
+ */
 function parseImages(raw: string): string[] {
 	return raw
 		.split(';')
@@ -96,6 +255,11 @@ function parseImages(raw: string): string[] {
 		.filter(Boolean);
 }
 
+/**
+ * Read csv file from specific path
+ * @param {string} path - csv file path
+ * @returns {CsvRow[]}
+ */
 function readCsv(path: string): Promise<CsvRow[]> {
 	return new Promise((resolve, reject) => {
 		const results: CsvRow[] = [];
@@ -120,30 +284,53 @@ export async function csvSeed(): Promise<void> {
 		 * Start transaction
 		 */
 		await AppDataSource.transaction(async (manager) => {
-			const rows = await readCsv('giay_adidas.csv');
+			const rows = await readCsv(csvPath);
 
 			for (let i = 0; i < rows.length; i++) {
 				const row = rows[i];
 				logger.log(`[Row ${i + 1}/${rows.length}] ${row.title}`);
 
 				/**
-				 * BRAND
+				 * Brand
 				 */
+				const rawBrandName = row.brand;
+				const brandNameForDb = toTitleCase(rawBrandName);
+				const brandImageUrl = resolveBrandImageUrl(rawBrandName);
+
 				let brand = await manager.findOne(BrandEntity, {
-					where: { name: row.brand },
+					where: { name: brandNameForDb },
+					relations: { image: true },
 				});
 
 				if (!brand) {
-					brand = manager.create(BrandEntity, { name: row.brand });
+					/**
+					 * create image first
+					 */
+					const brandImage = manager.create(ImageEntity, {
+						url: brandImageUrl,
+						status: ImageStatusEnum.ACTIVE,
+					});
+					await manager.save(brandImage);
+
+					/**
+					 * Create brand with image
+					 */
+					brand = manager.create(BrandEntity, {
+						name: brandNameForDb,
+						image: brandImage,
+					});
+
 					await manager.save(brand);
 
-					logger.log(`Brand created: ${brand.name} (id=${brand.id})`);
+					logger.log(
+						`Brand created: ${brand.name} (id=${brand.id}, image=${brandImageUrl})`
+					);
 				} else {
 					logger.log(`Brand reused: ${brand.name} (id=${brand.id})`);
 				}
 
 				/**
-				 * PRODUCT
+				 * Product
 				 */
 				const price = parsePrice(row.original_price);
 				const salePrice = parsePrice(row.sale_price);
@@ -165,24 +352,24 @@ export async function csvSeed(): Promise<void> {
 					`Product inserted: id=${product.id}, name="${product.name}", price=${product.price}, discount=${product.discount}%`
 				);
 				/**
-				 * PRODUCT DETAILS (sizes)
+				 * Product detail
 				 */
-				const sizes = parseSizes(row.sizes);
+				const size: string = buildSizeString(row.sizes);
+				const color: string = buildColorString(3);
 
-				for (const size of sizes) {
-					const detail = manager.create(ProductDetailsEntity, {
-						product,
-						size,
-						description: row.description,
-						brand,
-						rating: 0,
-					});
+				const detail = manager.create(ProductDetailsEntity, {
+					product,
+					size,
+					color,
+					description: row.description,
+					brand,
+					rating: 0,
+				});
 
-					await manager.save(detail);
-				}
+				await manager.save(detail);
 
 				/**
-				 * MAIN IMAGE
+				 * Main image
 				 */
 				const mainImage = manager.create(ImageEntity, {
 					url: row.image,
@@ -194,11 +381,12 @@ export async function csvSeed(): Promise<void> {
 					manager.create(ProductImageEntity, {
 						product,
 						image: mainImage,
+						type: ProductImageTypeEnum.THUMBNAIL,
 					})
 				);
 
 				/**
-				 * DETAIL IMAGES
+				 * Detail image
 				 */
 				const images = parseImages(row.detail_images);
 
@@ -214,6 +402,7 @@ export async function csvSeed(): Promise<void> {
 						manager.create(ProductImageEntity, {
 							product,
 							image: img,
+							type: ProductImageTypeEnum.PRODUCT,
 						})
 					);
 				}

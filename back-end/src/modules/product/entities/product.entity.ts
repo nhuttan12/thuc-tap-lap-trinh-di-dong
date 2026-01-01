@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-06
  * @modifies 2025-09-24
- * @version 1.0.5
+ * @modifies 2025-12-31
+ * @version 1.0.6
  */
 
 import {
@@ -34,12 +35,6 @@ export class ProductEntity extends TimestampField {
 
 	@Column()
 	discount: number;
-
-	@Column()
-	size: string;
-
-	@Column()
-	color: string;
 
 	@Column({
 		type: 'enum',

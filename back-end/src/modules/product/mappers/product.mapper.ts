@@ -40,11 +40,11 @@ export class ProductMapper {
 					}
 				),
 				size: this.extractString.extractStringByDelimeter(
-					product.size,
+					product.productDetailsEntity.size,
 					'; '
 				),
 				color: this.extractString.extractStringByDelimeter(
-					product.color,
+					product.productDetailsEntity.color,
 					'; '
 				),
 				status: product.status,

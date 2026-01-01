@@ -4,7 +4,8 @@
  * @since 2025-09-08
  * @modifies 2025-09-22
  * @modifies 2025-11-27
- * @version 1.0.4
+ * @modifies 2025-12-31
+ * @version 1.0.5
  */
 
 import { Logger } from '@nestjs/common';
@@ -28,13 +29,15 @@ export class UserRepository {
 		private readonly dataSource: DataSource
 	) {}
 
-	/*
+	/**
 	 * @description Get user by username and password
-	 * @param {username: string, password: string}
+	 * @param username - User username
+	 * @param password - User password
 	 * @return {UserEntity | null}
 	 * @author Nhut Tan
 	 * @since 2025-09-08
-	 * @version 1.0.0
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByUserNameAndPassword(
 		username: string,
@@ -67,13 +70,14 @@ export class UserRepository {
 		}
 	}
 
-	/*
+	/**
 	 * @description Get user by username and password
-	 * @param {userID: number}
+	 * @param {number} userID - ID of user
 	 * @return {UserEntity | null}
 	 * @author Nhut Tan
 	 * @since 2025-09-09
-	 * @version 1.0.0
+	 * @modifies 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByUerID(userID: number): Promise<UserEntity | null> {
 		try {
@@ -105,13 +109,14 @@ export class UserRepository {
 		}
 	}
 
-	/*
+	/**
 	 * @description Get user by email
-	 * @param {email: string}
+	 * @param email - User email
 	 * @return {UserEntity | null}
 	 * @author Nhut Tan
 	 * @since 2025-09-10
-	 * @version 1.0.0
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByEmail(email: string): Promise<UserEntity | null> {
 		try {
@@ -143,13 +148,16 @@ export class UserRepository {
 		}
 	}
 
-	/*
+	/**
 	 * @description Create user with Google information
-	 * @param {name: string, email: string, photos: string}
+	 * @param name - User name
+	 * @param email - User email
+	 * @param photos - User photos by url
 	 * @return {UserEntity}
 	 * @author Nhut Tan
 	 * @since 2025-09-10
-	 * @version 1.0.0
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async createNewUserGoogle(
 		fullName: string,
@@ -183,7 +191,12 @@ export class UserRepository {
 
 	/**
 	 * @description Get user by username
-	 * @param username
+	 * @param username - User username
+	 * @return {UserEntity | null}
+	 * @author Nhut Tan
+	 * @since 2025-09-10
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByUsername(username: string): Promise<UserEntity | null> {
 		try {
@@ -214,13 +227,15 @@ export class UserRepository {
 	 * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
 	 * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
 	 * and id is 1
-	 * @param username
-	 * @param email
-	 * @param password
+	 * @param username - User username
+	 * @param email - User email
+	 * @param password - User password
+	 * @return {UserEntity}
 	 * @author Nhut Tan
 	 * @since 2025-09-17
 	 * @modifies 2025-09-22
-	 * @version 1.0.3
+	 * @modifies 2025-12-31
+	 * @version 1.0.4
 	 */
 	async createUserWithUsernameEmailPassword(
 		username: string,

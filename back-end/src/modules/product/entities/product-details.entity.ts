@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-05
  * @modifies 2025-09-24
- * @version 1.0.3
+ * @modifies 2025-12-31
+ * @version 1.0.4
  */
 
 import {
@@ -19,7 +20,7 @@ import { TimestampField } from '../../../common/database/timestamp.field';
 import { ProductEntity } from './product.entity';
 import { BrandEntity } from '../../brand/entities/brand.entiy';
 
-@Entity()
+@Entity({ name: 'product_details' })
 export class ProductDetailsEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
 	id: number;
