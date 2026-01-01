@@ -29,6 +29,7 @@ import { RoleEntity } from '../../../modules/role/entities/role.entity';
 import { UserDetailEntity } from '../../../modules/user/entities/user-detail.entity';
 import { UserEntity } from '../../../modules/user/entities/user.entity';
 import { WishlistItemEntity } from '../../../modules/wishlist/entities/wishlist-item.entity';
+import { CategoryStatusEnum } from '../../../modules/category/enums/category-status.enum';
 
 /**
  * Load environment file before readding env
@@ -53,7 +54,7 @@ if (!fs.existsSync(csvPath)) {
  * @returns {string}
  */
 function normalizeBrand(value: string): string {
-	return value.trim().toLowerCase();
+	return value.trim().toLowerCase().split(/\s+/)[0];
 }
 
 /**
@@ -140,8 +141,8 @@ type CsvRow = {
 	sale_price: string;
 	original_price: string;
 	brand: string;
-	sizes: string; // "S,M,L"
-	detail_images: string; // "url1|url2|url3"
+	sizes: string;
+	detail_images: string;
 	description: string;
 };
 
@@ -284,32 +285,68 @@ export async function csvSeed(): Promise<void> {
 		 * Start transaction
 		 */
 		await AppDataSource.transaction(async (manager) => {
-			const rows = await readCsv(csvPath);
+			/**
+			 * Read csv
+			 */
+			const rows: CsvRow[] = await readCsv(csvPath);
+
+			/**
+			 * Get category shoe
+			 */
+			let shoeCategory: CategoryEntity | null = await manager.findOne(
+				CategoryEntity,
+				{
+					where: { name: 'Shoe' },
+				}
+			);
+
+			/**
+			 * Create category if not exist
+			 */
+			if (!shoeCategory) {
+				shoeCategory = manager.create(CategoryEntity, {
+					name: 'Shoe',
+					status: CategoryStatusEnum.ACTIVE,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				});
+				await manager.save(shoeCategory);
+			}
 
 			for (let i = 0; i < rows.length; i++) {
-				const row = rows[i];
+				/**
+				 * Read each of line in csv
+				 */
+				const row: CsvRow = rows[i];
 				logger.log(`[Row ${i + 1}/${rows.length}] ${row.title}`);
 
 				/**
 				 * Brand
 				 */
-				const rawBrandName = row.brand;
-				const brandNameForDb = toTitleCase(rawBrandName);
-				const brandImageUrl = resolveBrandImageUrl(rawBrandName);
+				const rawBrandName: string = row.brand;
+				const brandNameForDb: string = toTitleCase(rawBrandName);
+				const brandImageUrl: string =
+					resolveBrandImageUrl(rawBrandName);
 
-				let brand = await manager.findOne(BrandEntity, {
-					where: { name: brandNameForDb },
-					relations: { image: true },
-				});
+				let brand: BrandEntity | null = await manager.findOne(
+					BrandEntity,
+					{
+						where: { name: brandNameForDb },
+						relations: { image: true },
+					}
+				);
 
 				if (!brand) {
 					/**
 					 * create image first
 					 */
-					const brandImage = manager.create(ImageEntity, {
-						url: brandImageUrl,
-						status: ImageStatusEnum.ACTIVE,
-					});
+					const brandImage: ImageEntity = manager.create(
+						ImageEntity,
+						{
+							url: brandImageUrl,
+							status: ImageStatusEnum.ACTIVE,
+						}
+					);
 					await manager.save(brandImage);
 
 					/**
@@ -330,16 +367,19 @@ export async function csvSeed(): Promise<void> {
 				}
 
 				/**
-				 * Product
+				 * Calculate discount and price
 				 */
-				const price = parsePrice(row.original_price);
-				const salePrice = parsePrice(row.sale_price);
-				const discount =
+				const price: number = parsePrice(row.original_price);
+				const salePrice: number = parsePrice(row.sale_price);
+				const discount: number =
 					price > 0
 						? Math.round(((price - salePrice) / price) * 100)
 						: 0;
 
-				const product = manager.create(ProductEntity, {
+				/**
+				 * Save product
+				 */
+				const product: ProductEntity = manager.create(ProductEntity, {
 					name: row.title,
 					price,
 					discount,
@@ -351,60 +391,73 @@ export async function csvSeed(): Promise<void> {
 				logger.log(
 					`Product inserted: id=${product.id}, name="${product.name}", price=${product.price}, discount=${product.discount}%`
 				);
+
 				/**
-				 * Product detail
+				 * Handle size and color
 				 */
 				const size: string = buildSizeString(row.sizes);
 				const color: string = buildColorString(3);
 
-				const detail = manager.create(ProductDetailsEntity, {
-					product,
-					size,
-					color,
-					description: row.description,
-					brand,
-					rating: 0,
-				});
+				/**
+				 * Save product detail
+				 */
+				const detail: ProductDetailsEntity = manager.create(
+					ProductDetailsEntity,
+					{
+						id: product.id,
+						product,
+						size,
+						color,
+						categoryEntity: shoeCategory,
+						description: row.description,
+						brand,
+						rating: 0,
+					}
+				);
 
 				await manager.save(detail);
 
 				/**
-				 * Main image
+				 * Detail image, save first as thumbnail, save others as product
 				 */
-				const mainImage = manager.create(ImageEntity, {
-					url: row.image,
-					status: ImageStatusEnum.ACTIVE,
-				});
-				await manager.save(mainImage);
+				const images: string[] = parseImages(row.detail_images);
 
-				await manager.save(
-					manager.create(ProductImageEntity, {
-						product,
-						image: mainImage,
-						type: ProductImageTypeEnum.THUMBNAIL,
-					})
-				);
+				for (let index = 0; index < images.length; index++) {
+					/**
+					 * Get image from string array
+					 */
+					const imgUrl: string = images[index];
 
-				/**
-				 * Detail image
-				 */
-				const images = parseImages(row.detail_images);
-
-				for (const imgUrl of images) {
-					const img = manager.create(ImageEntity, {
+					/**
+					 * Save image
+					 */
+					const img: ImageEntity = manager.create(ImageEntity, {
 						url: imgUrl,
 						status: ImageStatusEnum.ACTIVE,
 					});
 
 					await manager.save(img);
 
-					await manager.save(
-						manager.create(ProductImageEntity, {
-							product,
-							image: img,
-							type: ProductImageTypeEnum.PRODUCT,
-						})
-					);
+					/**
+					 * If first image, save as thumbnail, else save as product
+					 */
+					if (images[0] === imgUrl) {
+						await manager.save(
+							manager.create(ProductImageEntity, {
+								product,
+								image: img,
+								type: ProductImageTypeEnum.THUMBNAIL,
+							})
+						);
+					} else {
+						await manager.save(
+							manager.create(ProductImageEntity, {
+								product,
+								image: img,
+								type: ProductImageTypeEnum.PRODUCT,
+							})
+						);
+					}
 				}
 			}
 		});

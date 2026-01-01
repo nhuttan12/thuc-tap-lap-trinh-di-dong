@@ -13,16 +13,16 @@ import {
 	JoinColumn,
 	ManyToOne,
 	OneToOne,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 } from 'typeorm';
-import { CategoryEntity } from '../../category/entities/category.entity';
 import { TimestampField } from '../../../common/database/timestamp.field';
-import { ProductEntity } from './product.entity';
 import { BrandEntity } from '../../brand/entities/brand.entiy';
+import { CategoryEntity } from '../../category/entities/category.entity';
+import { ProductEntity } from './product.entity';
 
 @Entity({ name: 'product_details' })
 export class ProductDetailsEntity extends TimestampField {
-	@PrimaryGeneratedColumn()
+	@PrimaryColumn()
 	id: number;
 
 	@Column()
