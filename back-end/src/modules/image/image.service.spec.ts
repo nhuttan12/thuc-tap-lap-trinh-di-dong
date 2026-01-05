@@ -103,7 +103,7 @@ describe('ImageService', (): void => {
 			expect(spyLoggerDebug).toHaveBeenCalledTimes(1);
 			expect(spyLoggerError).toHaveBeenCalledTimes(0);
 			expect(spyLoggerDebug).toHaveBeenCalledWith(
-				`Call \`createImage\` in \`ImageRepository\`: ${JSON.stringify(mockImageEntity)}`
+				`Call \`createImage\` in \`ImageRepository\`: ${JSON.stringify(mockImageEntity, null, 2)}`
 			);
 			expect(mockImageMapper.toImageEntityResponse).toHaveBeenCalledWith(
 				mockImageEntity
@@ -220,11 +220,11 @@ describe('ImageService', (): void => {
 			expect(spyLoggerError).toHaveBeenCalledTimes(0);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`getImageByUrl\` in \`ImageRepository\`: ${JSON.stringify(mockImageEntity)}`
+				`Call \`getImageByUrl\` in \`ImageRepository\`: ${JSON.stringify(mockImageEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Mapping image entity to image response dto: ${JSON.stringify(mockImageResponse)}`
+				`Mapping image entity to image response dto: ${JSON.stringify(mockImageResponse, null, 2)}`
 			);
 
 			/**

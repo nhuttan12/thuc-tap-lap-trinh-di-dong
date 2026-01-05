@@ -47,7 +47,7 @@ export class ImageService {
 			userID
 		);
 		this.logger.debug(
-			`Call \`createImage\` in \`ImageRepository\`: ${JSON.stringify(imageEntity)}`
+			`Call \`createImage\` in \`ImageRepository\`: ${JSON.stringify(imageEntity, null, 2)}`
 		);
 
 		/*
@@ -88,7 +88,7 @@ export class ImageService {
 		const imageEntity: ImageEntity | null =
 			await this.imageRepository.getImageByUrl(url);
 		this.logger.debug(
-			`Call \`getImageByUrl\` in \`ImageRepository\`: ${JSON.stringify(imageEntity)}`
+			`Call \`getImageByUrl\` in \`ImageRepository\`: ${JSON.stringify(imageEntity, null, 2)}`
 		);
 
 		/**
@@ -109,7 +109,7 @@ export class ImageService {
 		const imageResponseDto: ImageEntityResponse =
 			this.imageMapper.toImageEntityResponse(imageEntity);
 		this.logger.debug(
-			`Mapping image entity to image response dto: ${JSON.stringify(imageResponseDto)}`
+			`Mapping image entity to image response dto: ${JSON.stringify(imageResponseDto, null, 2)}`
 		);
 
 		return imageResponseDto;

@@ -60,7 +60,9 @@ export class CartDetailRepository {
 						createdAt: 'DESC',
 					},
 				});
-			this.logger.debug(`Cart details: ${JSON.stringify(cartDetails)}`);
+			this.logger.debug(
+				`Cart details: ${JSON.stringify(cartDetails, null, 2)}`
+			);
 
 			/**
 			 * Return data

@@ -81,7 +81,7 @@ export class CartRepository {
 					},
 				});
 			this.logger.debug(
-				`Get cart by user ID and ACTIVE status from database: ${JSON.stringify(cartEntity)}`
+				`Get cart by user ID and ACTIVE status from database: ${JSON.stringify(cartEntity, null, 2)}`
 			);
 
 			/**

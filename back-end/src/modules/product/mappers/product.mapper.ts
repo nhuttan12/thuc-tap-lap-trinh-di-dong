@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-15
  * @modifes 2025-12-16
- * @version 1.0.1
+ * @modifies 2026-01-04
+ * @version 1.0.2
  */
 
 import { Injectable } from '@nestjs/common';
@@ -27,26 +28,36 @@ export class ProductMapper {
 		products: ProductEntity[]
 	): ProductEntityResponseDto[] {
 		return products.map((product: ProductEntity) => {
+			const details = product.productDetailsEntity;
+
 			return {
 				id: product.id,
 				name: product.name,
 				price: product.price,
-				discount: product.discount,
-				description: product.productDetailsEntity.description,
-				rating: product.productDetailsEntity.rating,
-				imageUrl: product.productImages.map(
-					(img: ProductImageEntity) => {
-						return img.image.url;
-					}
-				),
-				size: this.extractString.extractStringByDelimeter(
-					product.productDetailsEntity.size,
-					'; '
-				),
-				color: this.extractString.extractStringByDelimeter(
-					product.productDetailsEntity.color,
-					'; '
-				),
+
+				discount: product.discount ?? 0,
+				description: details?.description ?? '',
+				rating: details?.rating ?? 0,
+
+				imageUrl:
+					product.productImages?.map((img: ProductImageEntity) => {
+						return img.image?.url ?? null;
+					}) ?? [],
+
+				size: details?.size
+					? this.extractString.extractStringByDelimeter(
+							details.size,
+							'; '
+						)
+					: [],
+
+				color: details?.color
+					? this.extractString.extractStringByDelimeter(
+							details.color,
+							'; '
+						)
+					: [],
+
 				status: product.status,
 				createdAt: product.createdAt,
 				updatedAt: product.updatedAt,

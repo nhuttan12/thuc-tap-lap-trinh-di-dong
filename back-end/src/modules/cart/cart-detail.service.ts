@@ -58,7 +58,7 @@ export class CartDetailService {
 					limit
 				);
 			this.logger.debug(
-				`Calling \`getCartDetailsByUserID\` from \`CartDetailRepository\`: ${JSON.stringify(cartDetails)}, total: ${total}`
+				`Calling \`getCartDetailsByUserID\` from \`CartDetailRepository\`: ${JSON.stringify(cartDetails, null, 2)}, total: ${total}`
 			);
 
 			/**
@@ -67,7 +67,7 @@ export class CartDetailService {
 			const cartDetailsResponseDto: CartDetailResponseDto[] =
 				this.cartDetailMapper.toCartDetailsResponseDto(cartDetails);
 			this.logger.debug(
-				`Convert \`CartDetailEntity\` to \`CartDetailResponseDto\`: ${JSON.stringify(cartDetailsResponseDto)}`
+				`Convert \`CartDetailEntity\` to \`CartDetailResponseDto\`: ${JSON.stringify(cartDetailsResponseDto, null, 2)}`
 			);
 
 			/**
@@ -114,7 +114,7 @@ export class CartDetailService {
 					quantity
 				);
 			this.logger.debug(
-				`Cart detail created: ${JSON.stringify(cartDetailEntity)}`
+				`Cart detail created: ${JSON.stringify(cartDetailEntity, null, 2)}`
 			);
 
 			/**

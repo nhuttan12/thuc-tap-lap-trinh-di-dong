@@ -57,7 +57,7 @@ export class ProductRepository {
 				}
 			);
 			this.logger.debug(
-				`Get products paging from database: ${JSON.stringify(products)}`
+				`Get products paging from database: ${JSON.stringify(products, null, 2)}`
 			);
 
 			/**

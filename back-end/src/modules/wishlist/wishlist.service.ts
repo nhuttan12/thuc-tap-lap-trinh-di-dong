@@ -59,7 +59,7 @@ export class WishlistService {
 					limit
 				);
 			this.logger.debug(
-				`Get all wishlist items ${JSON.stringify(wishlistItems)}`
+				`Get all wishlist items ${JSON.stringify(wishlistItems, null, 2)}`
 			);
 
 			/**
@@ -70,7 +70,7 @@ export class WishlistService {
 					wishlistItems
 				);
 			this.logger.debug(
-				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto)}`
+				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto, null, 2)}`
 			);
 
 			return this.buildPagingMetaService.buildPagingResponse(

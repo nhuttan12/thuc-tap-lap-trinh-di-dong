@@ -54,7 +54,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get users from database ${JSON.stringify(user)}`
+				`Get users from database ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -93,7 +93,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get users from database ${JSON.stringify(user)}`
+				`Get users from database ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -132,7 +132,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get users from database ${JSON.stringify(user)}`
+				`Get users from database ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -209,7 +209,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get user from database ${JSON.stringify(users)}`
+				`Get user from database ${JSON.stringify(users, null, 2)}`
 			);
 
 			return users;

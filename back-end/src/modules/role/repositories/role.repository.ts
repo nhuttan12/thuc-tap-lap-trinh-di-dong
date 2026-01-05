@@ -40,7 +40,7 @@ export class RoleRepository {
 						updatedAt: new Date(),
 					});
 					this.logger.debug(
-						`Created role: ${JSON.stringify(roleEntity)}`
+						`Created role: ${JSON.stringify(roleEntity, null, 2)}`
 					);
 
 					/*

@@ -2,7 +2,8 @@
  * @description Brand repository
  * @author Nhut Tan
  * @since 2025-12-11
- * @version 1.0.0
+ * @modifies 2026-01-04
+ * @version 1.0.1
  */
 
 import { Logger } from '@nestjs/common';
@@ -36,9 +37,12 @@ export class BrandRepository {
 		 */
 		const brands: BrandEntity[] = await this.brandRepository.find({
 			take: limit,
+			relations: {
+				image: true,
+			},
 		});
 		this.logger.debug(
-			`Get all brands with limitation from database: ${JSON.stringify(brands)}`
+			`Get all brands with limitation from database: ${JSON.stringify(brands, null, 2)}`
 		);
 
 		return brands;

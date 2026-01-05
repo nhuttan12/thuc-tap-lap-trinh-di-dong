@@ -57,7 +57,7 @@ export class ImageRepository {
 						},
 					});
 					this.logger.debug(
-						`Created image: ${JSON.stringify(imageEntity)}`
+						`Created image: ${JSON.stringify(imageEntity, null, 2)}`
 					);
 
 					/*

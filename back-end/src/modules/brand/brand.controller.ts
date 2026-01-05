@@ -30,7 +30,7 @@ export class BrandController {
 		const reponse: GetBrandsWithLimitationResponseDto[] =
 			await this.brandService.getAllBrandsWithLimitation(request.limit);
 		this.logger.debug(
-			`Get all brands with limitation from brand service: ${JSON.stringify(reponse)}`
+			`Get all brands with limitation from brand service: ${JSON.stringify(reponse, null, 2)}`
 		);
 
 		return new SuccessResponseDto<GetBrandsWithLimitationResponseDto[]>(

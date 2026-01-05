@@ -155,11 +155,11 @@ describe('ProductDetailService', (): void => {
 			expect(spyGetProductDetailByProductID).toHaveBeenCalledTimes(1);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Product detail in service: ${JSON.stringify(mockProductDetailEntity)}`
+				`Product detail in service: ${JSON.stringify(mockProductDetailEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Product detail in response: ${JSON.stringify(mockProductDetailResponse)}`
+				`Product detail in response: ${JSON.stringify(mockProductDetailResponse, null, 2)}`
 			);
 
 			/**

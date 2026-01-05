@@ -110,11 +110,11 @@ describe('RoleService', (): void => {
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`getRoleByName\` function from repository: ${JSON.stringify(mockRoleEntity)}`
+				`Call \`getRoleByName\` function from repository: ${JSON.stringify(mockRoleEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Call \`toRoleResponseDto\` function from mapper: ${JSON.stringify(mockRoleResponseDto)}`
+				`Call \`toRoleResponseDto\` function from mapper: ${JSON.stringify(mockRoleResponseDto, null, 2)}`
 			);
 			expect(spyLoggerWarn).not.toHaveBeenCalledWith(
 				`Role with name ${mockRoleName} not found`

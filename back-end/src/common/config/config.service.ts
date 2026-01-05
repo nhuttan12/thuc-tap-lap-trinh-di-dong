@@ -41,7 +41,9 @@ export class ConfigService {
 			password: this.config.get<string>('DATABASE_PASSWORD')!,
 			database: this.config.get<string>('DATABASE_NAME')!,
 		};
-		this.logger.debug(`Database config: ${JSON.stringify(databaseConfig)}`);
+		this.logger.debug(
+			`Database config: ${JSON.stringify(databaseConfig, null, 2)}`
+		);
 
 		/*
 		 * Check the object exist, if not, throw Conflict exception
@@ -72,7 +74,9 @@ export class ConfigService {
 			expireTime: this.config.get<string>('HTTP_EXPIRE_TIME')!,
 			saltRounds: this.config.get<number>('HTTP_SALT_ROUNDS_BCRYPT')!,
 		};
-		this.logger.debug(`Http config: ${JSON.stringify(httpConfig)}`);
+		this.logger.debug(
+			`Http config: ${JSON.stringify(httpConfig, null, 2)}`
+		);
 
 		/**
 		 * Check the object exist, if not, throw Conflict exception
@@ -102,7 +106,9 @@ export class ConfigService {
 			callbackURL: this.config.get<string>('GOOGLE_CALLBACK_URL')!,
 			accessType: this.config.get<string>('GOOGLE_ACCESS_TYPE')!,
 		};
-		this.logger.debug(`Http config: ${JSON.stringify(googleConfig)}`);
+		this.logger.debug(
+			`Http config: ${JSON.stringify(googleConfig, null, 2)}`
+		);
 
 		/*
 		 * Check the object exist, if not, throw Conflict exception
@@ -131,7 +137,7 @@ export class ConfigService {
 			limit: Number(this.config.get<number>('THROTTLER_LIMIT')),
 		};
 		this.logger.debug(
-			`Throttler config: ${JSON.stringify(throttlerConfig)}`
+			`Throttler config: ${JSON.stringify(throttlerConfig, null, 2)}`
 		);
 
 		/*

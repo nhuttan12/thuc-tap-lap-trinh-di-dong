@@ -51,7 +51,7 @@ export class AuthService {
 					password
 				);
 			this.logger.debug(
-				`Get \`getUserByUserNameAndPasswordForLogin\` function from user service: ${JSON.stringify(user)}`
+				`Get \`getUserByUserNameAndPasswordForLogin\` function from user service: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -70,14 +70,16 @@ export class AuthService {
 			 */
 			const payload: JwtPayload = this.authMapper.toJwtPayload(user);
 			this.logger.debug(
-				`Mapping user response to jwt payload: ${JSON.stringify(payload)}`
+				`Mapping user response to jwt payload: ${JSON.stringify(payload, null, 2)}`
 			);
 
 			/*
 			 * Sign token and declare to payload
 			 */
 			payload.accessToken = this.jwtService.sign(payload);
-			this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
+			this.logger.debug(
+				`Token after sign: ${JSON.stringify(payload, null, 2)}`
+			);
 
 			/*
 			 * Return jwt payload
@@ -136,7 +138,9 @@ export class AuthService {
 			 */
 			const user: UserEntityResponseDto | null =
 				await this.userService.getUserByEmail(email);
-			this.logger.debug(`Get user by email: ${JSON.stringify(user)}`);
+			this.logger.debug(
+				`Get user by email: ${JSON.stringify(user, null, 2)}`
+			);
 
 			/**
 			 * Check if user is null
@@ -156,7 +160,7 @@ export class AuthService {
 			const userByUsername: UserEntityResponseDto | null =
 				await this.userService.getUserByUsername(username);
 			this.logger.debug(
-				`Get user by username: ${JSON.stringify(userByUsername)}`
+				`Get user by username: ${JSON.stringify(userByUsername, null, 2)}`
 			);
 
 			/**
@@ -183,7 +187,7 @@ export class AuthService {
 					password
 				);
 			this.logger.debug(
-				`Create user with username, email, password: ${JSON.stringify(userCreated)}`
+				`Create user with username, email, password: ${JSON.stringify(userCreated, null, 2)}`
 			);
 
 			/**
@@ -211,7 +215,7 @@ export class AuthService {
 			let user: UserEntityResponseDto | null =
 				await this.userService.getUserByEmail(email);
 			this.logger.debug(
-				`Call \`getUserByEmail\` function from user service: ${JSON.stringify(user)}`
+				`Call \`getUserByEmail\` function from user service: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -233,14 +237,16 @@ export class AuthService {
 			 */
 			const payload: JwtPayload = this.authMapper.toJwtPayload(user);
 			this.logger.debug(
-				`Mapping user response to jwt payload: ${JSON.stringify(payload)}`
+				`Mapping user response to jwt payload: ${JSON.stringify(payload, null, 2)}`
 			);
 
 			/*
 			 * Sign token and declare to payload
 			 */
 			payload.accessToken = this.jwtService.sign(payload);
-			this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
+			this.logger.debug(
+				`Token after sign: ${JSON.stringify(payload, null, 2)}`
+			);
 
 			/*
 			 * Return jwt payload

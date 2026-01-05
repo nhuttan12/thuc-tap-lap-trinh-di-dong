@@ -192,11 +192,11 @@ describe('UserService', (): void => {
 			).toHaveBeenCalledWith(mockUsername, mockPassword);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`getUserByUserNameAndPassword\` function from repository: ${JSON.stringify(mockUserEntity)}`
+				`Call \`getUserByUserNameAndPassword\` function from repository: ${JSON.stringify(mockUserEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Convert user entity to user response dto: ${JSON.stringify(mockUserResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(mockUserResponseDto, null, 2)}`
 			);
 			expect(spyLoggerWarn).not.toHaveBeenCalled();
 			expect(spyLoggerError).not.toHaveBeenCalled();
@@ -427,11 +427,11 @@ describe('UserService', (): void => {
 			expect(spyGetUserByUserID).toHaveBeenCalledWith(mockUserID);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`getUserByUserID\` function from repository: ${JSON.stringify(mockUserEntity)}`
+				`Call \`getUserByUserID\` function from repository: ${JSON.stringify(mockUserEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Convert user entity to user response dto: ${JSON.stringify(mockUserResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(mockUserResponseDto, null, 2)}`
 			);
 			expect(spyLoggerWarn).not.toHaveBeenCalled();
 			expect(spyLoggerError).not.toHaveBeenCalled();
@@ -643,11 +643,11 @@ describe('UserService', (): void => {
 			expect(spyGetUserByEmail).toHaveBeenCalledWith(mockEmail);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(mockUserEntity)}`
+				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(mockUserEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Convert user entity to user response dto: ${JSON.stringify(mockUserResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(mockUserResponseDto, null, 2)}`
 			);
 			expect(spyLoggerWarn).not.toHaveBeenCalled();
 			expect(spyLoggerError).not.toHaveBeenCalled();
@@ -753,7 +753,7 @@ describe('UserService', (): void => {
 			expect(spyGetUserByEmail).toHaveBeenCalledWith(mockEmail);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(bannedUser)}`
+				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(bannedUser, null, 2)}`
 			);
 			expect(spyLoggerWarn).not.toHaveBeenCalled();
 			expect(spyLoggerError).toHaveBeenCalledWith(
@@ -871,16 +871,16 @@ describe('UserService', (): void => {
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				1,
-				`Call \`createNewUserGoogle\` function from repository: ${JSON.stringify(mockUserEntity)}`
+				`Call \`createNewUserGoogle\` function from repository: ${JSON.stringify(mockUserEntity, null, 2)}`
 			);
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				2,
-				`Call \`createImage\` function from image service: ${JSON.stringify(mockImageEntity)}`
+				`Call \`createImage\` function from image service: ${JSON.stringify(mockImageEntity, null, 2)}`
 			);
 
 			expect(spyLoggerDebug).toHaveBeenNthCalledWith(
 				3,
-				`Convert user to user response dto: ${JSON.stringify(mockUserEntity)}`
+				`Convert user to user response dto: ${JSON.stringify(mockUserEntity, null, 2)}`
 			);
 			expect(spyLoggerWarn).not.toHaveBeenCalled();
 			expect(spyLoggerError).not.toHaveBeenCalled();

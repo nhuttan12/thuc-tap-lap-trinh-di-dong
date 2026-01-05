@@ -53,7 +53,7 @@ export class ProductController {
 	> {
 		try {
 			this.logger.debug(
-				`Get products paging: ${JSON.stringify(request)}`
+				`Get products paging: ${JSON.stringify(request, null, 2)}`
 			);
 
 			/**
@@ -65,7 +65,7 @@ export class ProductController {
 					request.limit
 				);
 			this.logger.debug(
-				`Get products paging from database: ${JSON.stringify(products)}`
+				`Get products paging from database: ${JSON.stringify(products, null, 2)}`
 			);
 
 			return {
@@ -110,7 +110,7 @@ export class ProductController {
 					productID
 				);
 			this.logger.debug(
-				`Get product detail by product ID: ${JSON.stringify(productDetail)}`
+				`Get product detail by product ID: ${JSON.stringify(productDetail, null, 2)}`
 			);
 
 			return {

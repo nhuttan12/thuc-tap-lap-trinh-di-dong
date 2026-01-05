@@ -252,11 +252,11 @@ describe('CartDetailService', (): void => {
 			);
 			expect(spyLoggerLog).toHaveBeenNthCalledWith(
 				2,
-				`Calling \`getCartDetailsByUserID\` from \`CartDetailRepository\`: ${JSON.stringify(mockCartDetailEntity)}, total: ${mockTotal}`
+				`Calling \`getCartDetailsByUserID\` from \`CartDetailRepository\`: ${JSON.stringify(mockCartDetailEntity, null, 2)}, total: ${mockTotal}`
 			);
 			expect(spyLoggerLog).toHaveBeenNthCalledWith(
 				3,
-				`Convert \`CartDetailEntity\` to \`CartDetailResponseDto\`: ${JSON.stringify(mockCartDetailResponseDto)}`
+				`Convert \`CartDetailEntity\` to \`CartDetailResponseDto\`: ${JSON.stringify(mockCartDetailResponseDto, null, 2)}`
 			);
 		});
 	});

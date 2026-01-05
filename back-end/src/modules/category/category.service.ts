@@ -38,7 +38,9 @@ export class CategoryService {
 		 */
 		const category: CategoryEntity =
 			await this.categoryRepository.createCategory(categoryName);
-		this.logger.debug(`Created category: ${JSON.stringify(category)}`);
+		this.logger.debug(
+			`Created category: ${JSON.stringify(category, null, 2)}`
+		);
 
 		/**
 		 * Check if category already exists

@@ -36,7 +36,9 @@ export class CategoryRepository {
 					name: categoryName,
 				},
 			});
-		this.logger.debug(`Get category by name: ${JSON.stringify(category)}`);
+		this.logger.debug(
+			`Get category by name: ${JSON.stringify(category, null, 2)}`
+		);
 
 		return category;
 	}

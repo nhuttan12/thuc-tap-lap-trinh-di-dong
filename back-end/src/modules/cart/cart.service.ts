@@ -46,7 +46,7 @@ export class CartService {
 			const existingCartEntity: CartEntity | null =
 				await this.cartRepository.getActiveCartByUserID(userID);
 			this.logger.debug(
-				`Get cart by user ID and ACTIVE status: ${JSON.stringify(existingCartEntity)}`
+				`Get cart by user ID and ACTIVE status: ${JSON.stringify(existingCartEntity, null, 2)}`
 			);
 
 			/**
@@ -60,7 +60,7 @@ export class CartService {
 				const newCartEntity: CartEntity =
 					await this.cartRepository.createCart(userID);
 				this.logger.debug(
-					`New cart entity created: ${JSON.stringify(newCartEntity)}`
+					`New cart entity created: ${JSON.stringify(newCartEntity, null, 2)}`
 				);
 
 				/**
@@ -113,7 +113,7 @@ export class CartService {
 				const newCartAfterCreated: CartEntity | null =
 					await this.cartRepository.getActiveCartByUserID(userID);
 				this.logger.debug(
-					`Get new cart after adding new cart detail to existing cart: ${JSON.stringify(newCartAfterCreated)}`
+					`Get new cart after adding new cart detail to existing cart: ${JSON.stringify(newCartAfterCreated, null, 2)}`
 				);
 
 				/**

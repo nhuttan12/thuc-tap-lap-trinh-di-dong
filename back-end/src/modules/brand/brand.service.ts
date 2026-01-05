@@ -35,7 +35,7 @@ export class BrandService {
 		const brands: BrandEntity[] =
 			await this.brandRepository.getAllBrandsWithLimitation(limit);
 		this.logger.debug(
-			`Call \`getAllBrandsWithLimitation\` function from brand repository: ${JSON.stringify(brands)}`
+			`Call \`getAllBrandsWithLimitation\` function from brand repository: ${JSON.stringify(brands, null, 2)}`
 		);
 
 		/**
@@ -44,7 +44,7 @@ export class BrandService {
 		const response: GetBrandsWithLimitationResponseDto[] =
 			this.brandMapper.toGetBrandsWithLimitationResponseDtos(brands);
 		this.logger.debug(
-			`Map brand entities to get brands with limitation response dtos: ${JSON.stringify(response)}`
+			`Map brand entities to get brands with limitation response dtos: ${JSON.stringify(response, null, 2)}`
 		);
 
 		return response;

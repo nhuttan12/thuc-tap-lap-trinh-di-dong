@@ -62,7 +62,7 @@ export class UserService {
 					password
 				);
 			this.logger.debug(
-				`Call \`getUserByUserNameAndPassword\` function from repository: ${JSON.stringify(user)}`
+				`Call \`getUserByUserNameAndPassword\` function from repository: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -88,7 +88,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto, null, 2)}`
 			);
 
 			return userResponseDto;
@@ -115,7 +115,7 @@ export class UserService {
 			const user: UserEntity | null =
 				await this.userRepository.getUserByUerID(userID);
 			this.logger.debug(
-				`Call \`getUserByUserID\` function from repository: ${JSON.stringify(user)}`
+				`Call \`getUserByUserID\` function from repository: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -139,7 +139,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto, null, 2)}`
 			);
 
 			return userResponseDto;
@@ -168,7 +168,7 @@ export class UserService {
 			const user: UserEntity | null =
 				await this.userRepository.getUserByEmail(email);
 			this.logger.debug(
-				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(user)}`
+				`Call \`getUserByEmail\` function from repository: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -198,7 +198,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto, null, 2)}`
 			);
 
 			return userResponseDto;
@@ -223,7 +223,7 @@ export class UserService {
 			const user: UserEntity =
 				await this.userRepository.createNewUserGoogle(name, email);
 			this.logger.debug(
-				`Call \`createNewUserGoogle\` function from repository: ${JSON.stringify(user)}`
+				`Call \`createNewUserGoogle\` function from repository: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -232,7 +232,7 @@ export class UserService {
 			const image: ImageEntityResponse =
 				await this.imageService.createImage(imageUrl, user.id);
 			this.logger.debug(
-				`Call \`createImage\` function from image service: ${JSON.stringify(image)}`
+				`Call \`createImage\` function from image service: ${JSON.stringify(image, null, 2)}`
 			);
 
 			/*
@@ -241,7 +241,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user to user response dto: ${JSON.stringify(user)}`
+				`Convert user to user response dto: ${JSON.stringify(user, null, 2)}`
 			);
 
 			return userResponseDto;
@@ -270,7 +270,7 @@ export class UserService {
 			const user: UserEntity | null =
 				await this.userRepository.getUserByUsername(username);
 			this.logger.debug(
-				`Call \`getUserByUsername\` function from repository: ${JSON.stringify(user)}`
+				`Call \`getUserByUsername\` function from repository: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/**
@@ -287,7 +287,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto, null, 2)}`
 			);
 
 			return userResponseDto;
@@ -324,7 +324,7 @@ export class UserService {
 				RoleName.CUSTOMER
 			);
 			this.logger.debug(
-				`Call \`getRoleByName\` function from role service: ${JSON.stringify(role)}`
+				`Call \`getRoleByName\` function from role service: ${JSON.stringify(role, null, 2)}`
 			);
 
 			/**
@@ -335,7 +335,7 @@ export class UserService {
 			const image: ImageEntityResponse =
 				await this.imageService.getImageByUrl(defaultImageUrl);
 			this.logger.debug(
-				`Call \`getImageByUrl\` function from image service: ${JSON.stringify(image)}`
+				`Call \`getImageByUrl\` function from image service: ${JSON.stringify(image, null, 2)}`
 			);
 
 			/**
@@ -359,7 +359,7 @@ export class UserService {
 					image.id
 				);
 			this.logger.debug(
-				`Call \`createUserWithUsernameEmailPassword\` function from repository: ${JSON.stringify(user)}`
+				`Call \`createUserWithUsernameEmailPassword\` function from repository: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/**
@@ -368,7 +368,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`
+				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto, null, 2)}`
 			);
 
 			return userResponseDto;
