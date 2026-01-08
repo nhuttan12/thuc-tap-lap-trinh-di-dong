@@ -1,3 +1,10 @@
+/**
+ * @description Detail activity for displaying data from view model
+ * @author @nhuttan12
+ * @since 2026-01-08
+ * @version 1.0.0
+ */
+
 package com.example.e_commerce.Activity
 
 import android.graphics.Paint

@@ -39,7 +39,7 @@ config({ path: '.env.local' });
 /**
  * Csv file path
  */
-const csvPath: string = 'D:/TT_Mobile/crawl/giay_adidas.csv';
+const csvPath: string = 'D:/TT_Mobile/crawl/giay_adidas_pre_processed_v1.csv';
 
 /**
  * Check exist file path
@@ -90,15 +90,15 @@ const horizontalUrl: string =
  * Supported product colors which not exist in csv file when data was crawleds
  */
 const SAMPLE_COLORS: string[] = [
-	'Black',
-	'Red',
-	'Blue',
-	'Green',
-	'Gray',
-	'Beige',
-	'Brown',
-	'Navy',
-	'Yellow',
+	'Đen',
+	'Đỏ',
+	'Xanh dương',
+	'Xanh lá',
+	'Xám',
+	'Be',
+	'Nâu',
+	'Xanh navy',
+	'Vàng',
 ];
 
 /**
@@ -276,14 +276,14 @@ function buildSizeString(raw: string): string {
  * @returns {string}
  */
 function resolveBrandImageUrl(brandName: string): string {
-	const key = normalizeBrand(brandName);
+	const key: string = normalizeBrand(brandName);
 	let url: string;
 
 	if (key.includes('adidas')) {
 		url = adidasUrl;
 	} else if (key.includes('reebok')) {
 		url = reebokUrl;
-	} else if (key.includes('lacosteUrl')) {
+	} else if (key.includes('lacoste')) {
 		url = lacosteUrl;
 	} else if (key.includes('puma')) {
 		url = pumaUrl;
@@ -294,6 +294,27 @@ function resolveBrandImageUrl(brandName: string): string {
 	}
 
 	return url;
+}
+
+function resolveBrandName(brandName: string): string {
+	const key: string = normalizeBrand(brandName);
+	let brand: string;
+
+	if (key.includes('adidas')) {
+		brand = 'adidas';
+	} else if (key.includes('reebok')) {
+		brand = 'reebok';
+	} else if (key.includes('lacoste')) {
+		brand = 'lacoste';
+	} else if (key.includes('puma')) {
+		brand = 'puma';
+	} else if (key.includes('horizontal')) {
+		brand = 'horizontal';
+	} else {
+		throw new Error(`Missing brand image mapping for brand "${brandName}"`);
+	}
+
+	return brand;
 }
 
 /**
@@ -357,7 +378,7 @@ export async function csvSeed(): Promise<void> {
 			let shoeCategory: CategoryEntity | null = await manager.findOne(
 				CategoryEntity,
 				{
-					where: { name: 'Shoe' },
+					where: { name: 'Giày' },
 				}
 			);
 
@@ -385,7 +406,8 @@ export async function csvSeed(): Promise<void> {
 				 * Brand
 				 */
 				const rawBrandName: string = row.brand;
-				const brandNameForDb: string = toTitleCase(rawBrandName);
+				const brandName: string = resolveBrandName(rawBrandName);
+				const brandNameForDb: string = toTitleCase(brandName);
 				const brandImageUrl: string =
 					resolveBrandImageUrl(rawBrandName);
 

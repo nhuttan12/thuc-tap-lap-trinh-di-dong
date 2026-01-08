@@ -10,11 +10,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Activity.DetailActivity
 import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.databinding.ViewholderRecommendedBinding
+import java.text.DecimalFormat
 
 class PopularAdapter(
     private val items: MutableList<ProductModel>,
     private val onItemClick: (ProductModel) -> Unit
 ) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
+    private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
     fun updateDate(newData: List<ProductModel>) {
         items.clear()
         items.addAll(newData)
@@ -44,7 +46,7 @@ class PopularAdapter(
 
         holder.binding.apply {
             titleTxt.text = item.title
-            priceTxt.text = item.price.toString()
+            priceTxt.text = priceFormat.format(item.price)
             ratingTxt.text = item.rating.toString()
 
             Glide
@@ -57,9 +59,6 @@ class PopularAdapter(
                 ).into(pic)
 
             root.setOnClickListener {
-//                val intent = Intent(holder.itemView.context, DetailActivity::class.java)
-//                intent.putExtra("object", item)
-//                holder.itemView.context.startActivity(intent)
                 onItemClick(item)
             }
         }
