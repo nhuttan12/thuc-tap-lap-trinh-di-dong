@@ -16,7 +16,6 @@ data class ProductDTO(
     val id: Int,
     val name: String,
     val price: Int,
-    val discount: Int,
     val description: String,
     val rating: Double,
     val imageUrl: String,

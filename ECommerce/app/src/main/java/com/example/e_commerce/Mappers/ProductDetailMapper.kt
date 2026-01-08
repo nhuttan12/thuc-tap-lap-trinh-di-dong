@@ -9,13 +9,15 @@
 package com.example.e_commerce.Mappers
 
 import com.example.e_commerce.DTOs.ProductDetailDTO
+import com.example.e_commerce.Helper.StringConverter
 import com.example.e_commerce.Model.ProductDetailModel
 
 object ProductDetailMapper {
+    private val stringConverter: StringConverter = StringConverter()
     fun fromDto(dto: ProductDetailDTO): ProductDetailModel {
         return ProductDetailModel(
             title = dto.name,
-            description = dto.description,
+            description = ArrayList(this.stringConverter.splitDescription(dto.description)),
             picUrl = ArrayList(dto.imageList),
             size = ArrayList(dto.size),
             color = ArrayList(dto.color),

@@ -33,4 +33,5 @@
     <string name="welcome">Xin chào quý khách</string>
     <string name="full_name_user">Jammie</string>
     <string name="see_all">Toàn bộ</string>
+    <string name="description">Mô tả</string>
 </resources>

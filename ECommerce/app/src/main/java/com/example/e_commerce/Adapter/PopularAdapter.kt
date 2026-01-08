@@ -47,11 +47,14 @@ class PopularAdapter(
             priceTxt.text = item.price.toString()
             ratingTxt.text = item.rating.toString()
 
-            Glide.with(holder.itemView.context).load(item.picUrl.firstOrNull()).apply(
-                RequestOptions().transform(
-                    CenterCrop()
-                )
-            ).into(pic)
+            Glide
+                .with(holder.itemView.context)
+                .load(item.picUrl)
+                .apply(
+                    RequestOptions().transform(
+                        CenterCrop()
+                    )
+                ).into(pic)
 
             root.setOnClickListener {
 //                val intent = Intent(holder.itemView.context, DetailActivity::class.java)

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.e_commerce.Adapter.ColorAdapter
+import com.example.e_commerce.Adapter.DescriptionAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
 import com.example.e_commerce.Adapter.SizeAdapter
 import com.example.e_commerce.Helper.ManagementCart
@@ -61,13 +62,16 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setupViews() = with(binding) {
         titleTxt.text = item.title
-        descriptionTxt.text = item.description
+        descriptionList.apply {
+            adapter = DescriptionAdapter(item.description)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
 
         priceTxt.text = priceFormat.format(item.price)
         oldPriceTxt.text = priceFormat.format(item.oldPrice)
         oldPriceTxt.paintFlags = priceTxt.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
-        ratingTxt.text = "${item.rating} sao"
+        ratingTxt.text = "${item.rating}"
         numberItemTxt.text = item.numberInCart.toString()
 
         updateTotalPrice()
