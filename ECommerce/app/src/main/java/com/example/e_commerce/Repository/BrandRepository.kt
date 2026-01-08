@@ -41,8 +41,11 @@ class BrandRepository() : BaseRepository() {
              * Call api to load brands
              * Handle result
              */
-            val response: Response<ApiSucess<List<BrandModel>>> = ApiClient.brandService.getBrandsWithLimitation(limit)
-            Log.e(TAG, "Call api to load brands $response")
+            val response: Response<ApiSucess<List<BrandModel>>> =
+                ApiClient.brandService.getBrandsWithLimitation(limit)
+            response.body()?.data?.forEachIndexed { index, brand ->
+                Log.d(TAG, "Brand $index: ${brand}")
+            }
 
             /**
              * Handle response

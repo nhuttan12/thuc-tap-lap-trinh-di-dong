@@ -23,15 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
+import androidx.viewpager2.widget.ViewPager2
 import com.example.e_commerce.Adapter.BrandsAdapter
 import com.example.e_commerce.Adapter.PopularAdapter
 import com.example.e_commerce.Adapter.SliderAdapter
 import com.example.e_commerce.Model.SliderModel
-import com.example.e_commerce.R
 import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.Runnable
+import kotlin.math.min
 
 class DashboardActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by lazy {
@@ -41,14 +40,18 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val brandsAdapter = BrandsAdapter(mutableListOf())
-    private val popularAdapter = PopularAdapter(mutableListOf())
+    private val popularAdapter = PopularAdapter(mutableListOf()) { product ->
+        loadProductDetailAndNavigate(product.id)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         initUI()
+        observeProductDetail()
     }
 
     private fun initUI() {
@@ -122,21 +125,49 @@ class DashboardActivity : AppCompatActivity() {
         viewModel.loadBrands(limit = 10)
     }
 
-    private fun setUpBanners(image: List<SliderModel>) {
+    private fun setUpBanners(imageList: List<SliderModel>) {
+        if (imageList.isEmpty()) return
+
+        val useInfinite = imageList.size >= 3
+        val displayList = if (useInfinite) buildInfiniteList(imageList) else imageList
+
         binding.viewPagerSlider.apply {
-            adapter = SliderAdapter(image, this)
+            adapter = SliderAdapter(displayList, this)
             clipToPadding = false
             clipChildren = false
-            offscreenPageLimit = 3
+            offscreenPageLimit = min(3, displayList.size)
+
             (getChildAt(0) as? RecyclerView)?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-            setPageTransformer(CompositePageTransformer().apply {
-                addTransformer(MarginPageTransformer(40))
-            })
+
+            setPageTransformer(
+                CompositePageTransformer().apply {
+                    addTransformer(MarginPageTransformer(16))
+                    addTransformer { page, position ->
+                        val scale = 0.85f + (1 - kotlin.math.abs(position)) * 0.15f
+                        page.scaleY = scale
+                    }
+                }
+            )
+
+            if (useInfinite) {
+                setCurrentItem(1, false)
+
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        val lastPosition = displayList.size - 1
+                        when (position) {
+                            0 -> setCurrentItem(lastPosition - 1, false)
+                            lastPosition -> setCurrentItem(1, false)
+                        }
+                    }
+                })
+            }
         }
 
+        // Dot indicator
         binding.dotIndicator.apply {
-            visibility = if (image.size > 1) View.VISIBLE else View.GONE
-            if (image.size > 1) attachTo(binding.viewPagerSlider)
+            visibility = if (imageList.size > 1) View.VISIBLE else View.GONE
+            if (imageList.size > 1) attachTo(binding.viewPagerSlider)
         }
     }
 
@@ -148,5 +179,39 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         viewModel.loadBanners()
+    }
+
+    private fun buildInfiniteList(data: List<SliderModel>): List<SliderModel> {
+        if (data.size <= 1) return data
+
+        val list = mutableListOf<SliderModel>()
+        list.add(data.last())
+        list.addAll(data)
+        list.add(data.first())
+
+        return list
+    }
+
+    private fun loadProductDetailAndNavigate(productID: Int) {
+        viewModel.loadProductDetail(productID)
+    }
+
+    private fun observeProductDetail() {
+        viewModel.productDetail.observe(this) { item ->
+            binding.progressBar.visibility = View.GONE
+
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("object", item)
+            startActivity(intent)
+        }
+
+        viewModel.loading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.error.observe(this) { message ->
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 }

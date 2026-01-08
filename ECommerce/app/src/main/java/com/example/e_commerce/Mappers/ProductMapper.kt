@@ -2,7 +2,8 @@
  * @description Product mapper object
  * @author @nhuttan12
  * @since 2025-24-12
- * @version 1.0.0
+ * @modifies 2026-01-07
+ * @version 1.0.1
  */
 
 package com.example.e_commerce.Mappers
@@ -13,15 +14,11 @@ import com.example.e_commerce.Model.ProductModel
 object ProductMapper {
     fun fromDto(dto: ProductDTO): ProductModel {
         return ProductModel(
+            id = dto.id,
             title = dto.name,
-            description = dto.description,
-            picUrl = ArrayList(dto.imageUrl),
-            size = ArrayList(dto.size),
-            color = ArrayList(dto.color),
             price = dto.price.toDouble(),
-            oldPrice = calculateOldPrice(dto.price, dto.discount),
+            picUrl = dto.imageUrl,
             rating = dto.rating,
-            numberInCart = 1
         )
     }
 
@@ -29,11 +26,11 @@ object ProductMapper {
         return dtos.map { fromDto(it) }.toCollection(ArrayList())
     }
 
-    private fun calculateOldPrice(price: Int, discount: Int): Double {
-        return if (discount > 0) {
-            price + (price * discount / 100.0)
-        } else {
-            price.toDouble()
-        }
-    }
+//    private fun calculateOldPrice(price: Int, discount: Int): Double {
+//        return if (discount > 0) {
+//            price + (price * discount / 100.0)
+//        } else {
+//            price.toDouble()
+//        }
+//    }
 }

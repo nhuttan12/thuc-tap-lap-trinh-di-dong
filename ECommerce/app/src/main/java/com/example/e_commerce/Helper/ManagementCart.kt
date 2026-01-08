@@ -2,13 +2,13 @@ package com.example.e_commerce.Helper
 
 import android.content.Context
 import android.widget.Toast
-import com.example.e_commerce.Model.ProductModel
+import com.example.e_commerce.Model.ProductDetailModel
 
 class ManagementCart(val context: Context) {
 
     private val tinyDB = TinyDB(context)
 
-    fun insert(item: ProductModel) {
+    fun insert(item: ProductDetailModel) {
         var listFood = getListCart()
         val existAlready = listFood.any { it.title == item.title }
         val index = listFood.indexOfFirst { it.title == item.title }
@@ -22,11 +22,11 @@ class ManagementCart(val context: Context) {
         Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show()
     }
 
-    fun getListCart(): ArrayList<ProductModel> {
+    fun getListCart(): ArrayList<ProductDetailModel> {
         return tinyDB.getListObject("CartList")
     }
 
-    fun minusItem(listFood: ArrayList<ProductModel>, position: Int, listener: ChangeNumberItemsListener) {
+    fun minusItem(listFood: ArrayList<ProductDetailModel>, position: Int, listener: ChangeNumberItemsListener) {
         if (listFood[position].numberInCart == 1) {
             listFood.removeAt(position)
         } else {
@@ -36,7 +36,7 @@ class ManagementCart(val context: Context) {
         listener.onChanged()
     }
 
-    fun plusItem(listFood: ArrayList<ProductModel>, position: Int, listener: ChangeNumberItemsListener) {
+    fun plusItem(listFood: ArrayList<ProductDetailModel>, position: Int, listener: ChangeNumberItemsListener) {
         listFood[position].numberInCart++
         tinyDB.putListObject("CartList", listFood)
         listener.onChanged()

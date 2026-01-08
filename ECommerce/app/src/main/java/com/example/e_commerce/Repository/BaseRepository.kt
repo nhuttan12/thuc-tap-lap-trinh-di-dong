@@ -33,7 +33,7 @@ abstract class BaseRepository {
                     message = "Unknown error"
                 )
 
-            NetworkResult.Success(mapData(body.data))
+            return NetworkResult.Success(mapData(body.data))
         }
 
         /**

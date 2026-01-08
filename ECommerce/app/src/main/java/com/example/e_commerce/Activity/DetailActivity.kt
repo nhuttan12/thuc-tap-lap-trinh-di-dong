@@ -10,13 +10,15 @@ import com.example.e_commerce.Adapter.ColorAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
 import com.example.e_commerce.Adapter.SizeAdapter
 import com.example.e_commerce.Helper.ManagementCart
-import com.example.e_commerce.Model.ProductModel
+import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.databinding.ActivityDetailBinding
+import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-    private lateinit var item: ProductModel
+    private lateinit var item: ProductDetailModel
     private lateinit var managementCart: ManagementCart
+    private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +27,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         managementCart = ManagementCart(this)
-        item = intent.getSerializableExtra("object")!! as ProductModel
+        item = intent.getSerializableExtra("object")!! as ProductDetailModel
 
         setupViews()
         setupPicsList()
@@ -60,29 +62,32 @@ class DetailActivity : AppCompatActivity() {
     private fun setupViews() = with(binding) {
         titleTxt.text = item.title
         descriptionTxt.text = item.description
-        priceTxt.text = item.price.toString()
-        oldPriceTxt.text = item.oldPrice.toString()
+
+        priceTxt.text = priceFormat.format(item.price)
+        oldPriceTxt.text = priceFormat.format(item.oldPrice)
         oldPriceTxt.paintFlags = priceTxt.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        ratingTxt.text = "${item.rating} Rating"
+
+        ratingTxt.text = "${item.rating} sao"
         numberItemTxt.text = item.numberInCart.toString()
+
         updateTotalPrice()
 
-        Glide.with(this@DetailActivity).load(item.picUrl.firstOrNull()).into(picMain)
+        Glide.with(this@DetailActivity)
+            .load(item.picUrl.firstOrNull())
+            .into(picMain)
 
         backBtn.setOnClickListener { finish() }
 
         plusBtn.setOnClickListener {
-            val quantity = item.numberInCart++
-            item.numberInCart = item.numberInCart++
-            numberItemTxt.text = quantity.toString()
+            item.numberInCart++
+            numberItemTxt.text = item.numberInCart.toString()
             updateTotalPrice()
         }
 
         minusBtn.setOnClickListener {
             if (item.numberInCart > 1) {
-                val quantity = item.numberInCart--
-                item.numberInCart = item.numberInCart--
-                numberItemTxt.text = quantity.toString()
+                item.numberInCart--
+                numberItemTxt.text = item.numberInCart.toString()
                 updateTotalPrice()
             }
         }
@@ -93,6 +98,6 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun updateTotalPrice() = with(binding) {
-        totalPriceTxt.text = (item.price * item.numberInCart).toString()
+        totalPriceTxt.text = priceFormat.format(item.price * item.numberInCart)
     }
 }

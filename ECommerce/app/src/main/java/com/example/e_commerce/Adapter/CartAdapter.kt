@@ -9,11 +9,11 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Helper.ChangeNumberItemsListener
 import com.example.e_commerce.Helper.ManagementCart
-import com.example.e_commerce.Model.ProductModel
+import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.databinding.ViewholderCartBinding
 
 class CartAdapter(
-    private val listItemSelected: ArrayList<ProductModel>,
+    private val listItemSelected: ArrayList<ProductDetailModel>,
     context: Context,
     var changeNumberItemsListener: ChangeNumberItemsListener? = null
 ) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {

@@ -12,7 +12,8 @@ import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.databinding.ViewholderRecommendedBinding
 
 class PopularAdapter(
-    private val items: MutableList<ProductModel>
+    private val items: MutableList<ProductModel>,
+    private val onItemClick: (ProductModel) -> Unit
 ) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
     fun updateDate(newData: List<ProductModel>) {
         items.clear()
@@ -53,9 +54,10 @@ class PopularAdapter(
             ).into(pic)
 
             root.setOnClickListener {
-                val intent = Intent(holder.itemView.context, DetailActivity::class.java)
-                intent.putExtra("object", item)
-                holder.itemView.context.startActivity(intent)
+//                val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+//                intent.putExtra("object", item)
+//                holder.itemView.context.startActivity(intent)
+                onItemClick(item)
             }
         }
     }

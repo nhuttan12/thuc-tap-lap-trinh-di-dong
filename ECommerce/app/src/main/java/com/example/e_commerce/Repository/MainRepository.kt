@@ -11,6 +11,7 @@
 package com.example.e_commerce.Repository
 
 import com.example.e_commerce.Model.BrandModel
+import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.Model.SliderModel
 import com.example.e_commerce.Result.NetworkResult
@@ -51,5 +52,15 @@ class MainRepository(
      */
     fun loadBanners(): NetworkResult<List<SliderModel>> {
         return bannerRepository.loadBanners()
+    }
+
+    /**
+     * @description Call api and handle result
+     *
+     * @param [Int] productID - id of product to load
+     * @return [NetworkResult] result of product detail
+     */
+    suspend fun loadProductDetail(productID: Int): NetworkResult<ProductDetailModel> {
+        return productRepository.getProductDetailByProductID(productID)
     }
 }

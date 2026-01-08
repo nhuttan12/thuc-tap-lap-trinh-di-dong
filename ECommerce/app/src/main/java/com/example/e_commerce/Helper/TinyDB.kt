@@ -8,7 +8,7 @@ import android.os.Environment
 import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.util.Log
-import com.example.e_commerce.Model.ProductModel
+import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.Provider.MoshiProvider
 import java.io.File
 import java.io.FileOutputStream
@@ -121,8 +121,8 @@ class TinyDB(context: Context) {
             ?: throw NullPointerException("Object is null")
     }
 
-    fun getListObject(key: String): ArrayList<ProductModel> {
-        val adapter = moshi.adapter(ProductModel::class.java)
+    fun getListObject(key: String): ArrayList<ProductDetailModel> {
+        val adapter = moshi.adapter(ProductDetailModel::class.java)
         return getListString(key).mapNotNull {
             adapter.fromJson(it)
         }.toCollection(ArrayList())
@@ -166,8 +166,8 @@ class TinyDB(context: Context) {
         putString(key, adapter.toJson(obj))
     }
 
-    fun putListObject(key: String, list: List<ProductModel>) {
-        val adapter = moshi.adapter(ProductModel::class.java)
+    fun putListObject(key: String, list: List<ProductDetailModel>) {
+        val adapter = moshi.adapter(ProductDetailModel::class.java)
         putListString(key, list.map { adapter.toJson(it) })
     }
 
