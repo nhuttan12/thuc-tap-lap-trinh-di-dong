@@ -91,7 +91,6 @@ const horizontalUrl: string =
  */
 const SAMPLE_COLORS: string[] = [
 	'Black',
-	'White',
 	'Red',
 	'Blue',
 	'Green',
@@ -146,6 +145,57 @@ type CsvRow = {
 	detail_images: string;
 	description: string;
 };
+
+/**
+ * Extract product colors from description field
+ * @param description - product description
+ * @param min - minimum random colors if missing
+ */
+function extractColorFromDescription(
+	description: string,
+	min: number = 3
+): string {
+	if (!description) {
+		return buildColorString(min);
+	}
+
+	const segments = description.split(';');
+
+	const colorSegment = segments.find((s) =>
+		s.trim().toLowerCase().startsWith('màu sản phẩm:')
+	);
+
+	/**
+	 * Không có dòng "Màu sản phẩm"
+	 */
+	if (!colorSegment) {
+		return buildColorString(min);
+	}
+
+	/**
+	 * Có dòng nhưng không có giá trị
+	 */
+	const colorValue = colorSegment.split(':')[1]?.trim();
+
+	if (!colorValue) {
+		return buildColorString(min);
+	}
+
+	/**
+	 * Chuẩn hóa màu
+	 * "Blue / Red / Black" -> "Blue; Red; Black"
+	 */
+	const colors = colorValue
+		.split('/')
+		.map((c) => c.trim())
+		.filter(Boolean);
+
+	if (colors.length === 0) {
+		return buildColorString(min);
+	}
+
+	return Array.from(new Set(colors)).join('; ');
+}
 
 /**
  * Generate random number larger than one specified number
@@ -407,7 +457,10 @@ export async function csvSeed(): Promise<void> {
 				 * Handle size and color
 				 */
 				const size: string = buildSizeString(row.sizes);
-				const color: string = buildColorString(3);
+				const color: string = extractColorFromDescription(
+					row.description,
+					3
+				);
 
 				/**
 				 * Save product detail
