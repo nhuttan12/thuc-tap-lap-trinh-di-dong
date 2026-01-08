@@ -9,6 +9,7 @@ import com.example.e_commerce.Adapter.CartAdapter
 import com.example.e_commerce.Helper.ChangeNumberItemsListener
 import com.example.e_commerce.Helper.ManagementCart
 import com.example.e_commerce.databinding.ActivityCartBinding
+import kotlin.math.roundToInt
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -58,15 +59,15 @@ class CartActivity : AppCompatActivity() {
     private fun calculateCart() {
         val percentTax: Double = 0.02
         val delivery: Double = 10.0
-        tax = Math.round((managementCart.getTotalFee() * percentTax) * 100) / 100.0
-        val total = Math.round((managementCart.getTotalFee() + tax + delivery) * 100) / 100
-        val itemTotal = Math.round(managementCart.getTotalFee()*100)/100
+        tax = ((managementCart.getTotalFee() * percentTax) * 100).roundToInt() / 100.0
+        val total = ((managementCart.getTotalFee() + tax + delivery) * 100).roundToInt() / 100
+        val itemTotal = (managementCart.getTotalFee() * 100).roundToInt() / 100
 
         with(binding) {
-            totalFeeTxt.text="$$itemTotal"
-            taxTxt.text="$$tax"
-            deliveryTxt.text="$$delivery"
-            totalTxt.text="$$total"
+            totalFeeTxt.text = "$itemTotal đồng"
+            taxTxt.text = "$tax đồng"
+            deliveryTxt.text = "$delivery đồng"
+            totalTxt.text = "$total đồng"
         }
     }
 }

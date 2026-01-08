@@ -17,12 +17,12 @@ object ProductDetailMapper {
     fun fromDto(dto: ProductDetailDTO): ProductDetailModel {
         return ProductDetailModel(
             title = dto.name,
-            description = ArrayList(this.stringConverter.splitDescription(dto.description)),
+            description = this.stringConverter.splitDescription(dto.description),
             picUrl = ArrayList(dto.imageList),
             size = ArrayList(dto.size),
             color = ArrayList(dto.color),
-            price = dto.price.toDouble(),
-            oldPrice = calculateOldPrice(dto.price, dto.discount),
+            price = applyDiscount(dto.price.toDouble(), dto.discount),
+            oldPrice = dto.price.toDouble(),
             rating = dto.rating,
             numberInCart = 1
         )
@@ -32,11 +32,11 @@ object ProductDetailMapper {
 //        return dtos.map { fromDto(it) }.toCollection(ArrayList())
 //    }
 
-    private fun calculateOldPrice(price: Int, discount: Int): Double {
-        return if (discount > 0) {
-            price + (price * discount / 100.0)
+    fun applyDiscount(price: Double, discount: Int): Double {
+        return if (discount in 1..100) {
+            price * (100 - discount) / 100
         } else {
-            price.toDouble()
+            price
         }
     }
 }

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
     private val moshi = MoshiProvider.moshi
 
-    private final const val IPv4: String = "192.168.100.59"
+    private final const val IPv4: String = "10.0.2.2"
     private final const val BASE_URL: String = "http://$IPv4:8080/"
 
     private val okHttpClient = OkHttpClient.Builder()

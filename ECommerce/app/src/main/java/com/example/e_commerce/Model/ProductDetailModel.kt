@@ -13,10 +13,10 @@ import java.io.Serializable
 @JsonClass(generateAdapter = true)
 data class ProductDetailModel(
     var title: String = "",
-    var description: ArrayList<String> = ArrayList(),
-    var picUrl: ArrayList<String> = ArrayList(),
-    var size: ArrayList<String> = ArrayList(),
-    var color: ArrayList<String> = ArrayList(),
+    var description: List<String> = emptyList(),
+    var picUrl: List<String> = emptyList(),
+    var size: List<String> = emptyList(),
+    var color: List<String> = emptyList(),
     var price: Double = 0.0,
     var oldPrice: Double = 0.0,
     var rating: Double = 0.0,

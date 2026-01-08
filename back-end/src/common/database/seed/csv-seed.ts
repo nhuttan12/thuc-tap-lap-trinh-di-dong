@@ -496,7 +496,7 @@ export async function csvSeed(): Promise<void> {
 						color,
 						categoryEntity: shoeCategory,
 						description: row.description,
-						brand,
+						brandEntity: brand,
 						rating: 0,
 					}
 				);

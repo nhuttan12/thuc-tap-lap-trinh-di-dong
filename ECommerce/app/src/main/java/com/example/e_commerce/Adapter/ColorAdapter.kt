@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.e_commerce.Helper.ColorConverter
 import com.example.e_commerce.databinding.ViewholderColorBinding
 
-class ColorAdapter(private val items: ArrayList<String>) :
+class ColorAdapter(private val items: List<String>) :
     RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
     private var selectedPosition = -1
     private var lastSelectedPosition = -1

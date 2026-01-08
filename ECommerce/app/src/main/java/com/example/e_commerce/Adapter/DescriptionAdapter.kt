@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.e_commerce.databinding.ViewholderDescriptionBinding
 
 class DescriptionAdapter(
-    private val items: ArrayList<String>
+    private val items: List<String>
 ) : RecyclerView.Adapter<DescriptionAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ViewholderDescriptionBinding) :
         RecyclerView.ViewHolder(binding.root)
