@@ -23,7 +23,7 @@ import { OrderDetailEntity } from '../../../modules/orders/entities/order-detail
 import { OrderEntity } from '../../../modules/orders/entities/order.entity';
 import { ProductDetailsEntity } from '../../../modules/product/entities/product-details.entity';
 import { ProductEntity } from '../../../modules/product/entities/product.entity';
-import { ProductImageTypeEnum } from '../../../modules/product/enums/product-image.type.enum';
+import { ProductImageTypeEnum } from '../../../modules/product/enums/product-image-type.enum';
 import { ProductStatusEnum } from '../../../modules/product/enums/product-status.enum';
 import { RoleEntity } from '../../../modules/role/entities/role.entity';
 import { UserDetailEntity } from '../../../modules/user/entities/user-detail.entity';

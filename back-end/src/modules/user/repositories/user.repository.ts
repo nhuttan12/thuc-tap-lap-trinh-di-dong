@@ -237,7 +237,7 @@ export class UserRepository {
 	 * @modifies 2025-12-31
 	 * @version 1.0.4
 	 */
-	async createUserWithUsernameEmailPassword(
+	async createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
 		username: string,
 		email: string,
 		password: string,
@@ -284,6 +284,17 @@ export class UserRepository {
 		} catch (e) {
 			this.logger.error(
 				`Error in \`createUserWithUsernameEmailPassword\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+	async save(user: UserEntity): Promise<UserEntity> {
+		try {
+			return await this.userRepository.save(user);
+		} catch (e) {
+			this.logger.error(
+				`Error in \`save\`: ${(e as Error).message}`,
 				(e as Error).stack
 			);
 			throw e;

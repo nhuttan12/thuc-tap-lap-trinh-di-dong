@@ -11,7 +11,7 @@ import { Injectable } from '@nestjs/common';
 import { ProductImageEntity } from '../../image/entities/product-image.entity';
 import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 import { ProductEntity } from '../entities/product.entity';
-import { ProductImageTypeEnum } from '../enums/product-image.type.enum';
+import { ProductImageTypeEnum } from '../enums/product-image-type.enum';
 
 @Injectable()
 export class ProductMapper {

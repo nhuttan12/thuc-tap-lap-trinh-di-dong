@@ -17,7 +17,7 @@ import {
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { ImageEntity } from './image.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
-import { ProductImageTypeEnum } from '../../product/enums/product-image.type.enum';
+import { ProductImageTypeEnum } from '../../product/enums/product-image-type.enum';
 import { BrandEntity } from '../../brand/entities/brand.entiy';
 
 @Entity('product_images')

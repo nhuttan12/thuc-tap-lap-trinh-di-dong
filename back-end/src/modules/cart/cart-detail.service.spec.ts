@@ -11,7 +11,7 @@ import { CartDetailMapper } from './mappers/cart-detail.mapper';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CartDetailEntity } from './entities/cart-detail.entity';
-import { CartDetailsStatusEnum } from './enums/cart-details.status.enum';
+import { CartDetailsStatusEnum } from './enums/cart-details-status.enum';
 import { CartEntity } from './entities/cart.entity';
 import { ProductEntity } from '../product/entities/product.entity';
 import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';

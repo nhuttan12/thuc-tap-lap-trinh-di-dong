@@ -17,10 +17,15 @@ import { UserDetailEntity } from './entities/user-detail.entity';
 import { UserController } from './user.controller';
 import { RoleModule } from '../role/role.module';
 import { ConfigModule } from '../../common/config/config.module';
+import { UserAuthenticationEntity } from './entities/user-authentication.entity';
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([UserEntity, UserDetailEntity]),
+		TypeOrmModule.forFeature([
+			UserEntity,
+			UserDetailEntity,
+			UserAuthenticationEntity,
+		]),
 		forwardRef((): typeof ImageModule => ImageModule),
 		RoleModule,
 		ConfigModule,

@@ -7,4 +7,8 @@
     <color name="lightGrey">#ededed</color>
     <color name="grey">#919191</color>
     <color name="darkGrey">#616161</color>
+    <color name="purple_dark">#120222</color>
+    <color name="purple_base">#2A0D3A</color>
+    <color name="purple_accent">#7C4DFF</color>
+    <color name="purple_light">#B388FF</color>
 </resources>

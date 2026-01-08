@@ -8,7 +8,7 @@ import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
 import { DataSource, EntityManager, Repository } from 'typeorm';
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
+import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
 
 export class CartDetailRepository {
 	private readonly logger: Logger = new Logger(CartDetailRepository.name);

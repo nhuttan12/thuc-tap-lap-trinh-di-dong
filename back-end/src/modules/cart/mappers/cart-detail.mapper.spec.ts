@@ -7,10 +7,10 @@
 
 import { CartDetailMapper } from './cart-detail.mapper';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
+import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
 import { ProductStatusEnum } from '../../product/enums/product-status.enum';
 import { ImageStatusEnum } from '../../image/enums/image-status.enum';
-import { ProductImageTypeEnum } from '../../product/enums/product-image.type.enum';
+import { ProductImageTypeEnum } from '../../product/enums/product-image-type.enum';
 import { ImageEntity } from '../../image/entities/image.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
 import { CartEntity } from '../entities/cart.entity';

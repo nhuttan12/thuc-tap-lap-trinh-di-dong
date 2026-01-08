@@ -25,8 +25,6 @@ import { CategoryEntity } from '../../../modules/category/entities/category.enti
 import { CartEntity } from '../../../modules/cart/entities/cart.entity';
 import { CartDetailEntity } from '../../../modules/cart/entities/cart-detail.entity';
 import { UserDetailEntity } from '../../../modules/user/entities/user-detail.entity';
-import { BrandEntity } from '../../../modules/brand/entities/brand.entiy';
-import { WishlistItemEntity } from '../../../modules/wishlist/entities/wishlist-item.entity';
 
 /**
  * Load environment file before readding env
@@ -61,8 +59,6 @@ const AppDataSource = new DataSource({
 		CartEntity,
 		CartDetailEntity,
 		UserDetailEntity,
-		BrandEntity,
-		WishlistItemEntity,
 	],
 });
 
@@ -139,7 +135,7 @@ export async function seed(): Promise<void> {
 
 		logger.log('Seed success...');
 	} catch (e) {
-		console.error('Seeding failed:', e);
+		console.error('❌ Seeding failed:', e);
 	} finally {
 		/**
 		 * Close database connection

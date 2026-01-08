@@ -18,12 +18,16 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { AuthController } from './auth.controller';
 import { AuthMapper } from './mapper/auth.mapper';
+import { UserAuthenticationRepository } from '../user/repositories/user-authentication.repository';
+import { UserAuthenticationEntity } from '../user/entities/user-authentication.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
 	imports: [
 		UserModule,
 		PassportModule,
 		ConfigModule,
+		TypeOrmModule.forFeature([UserAuthenticationEntity]),
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],
@@ -42,6 +46,7 @@ import { AuthMapper } from './mapper/auth.mapper';
 		JwtStrategy,
 		GoogleStrategy,
 		AuthMapper,
+		UserAuthenticationRepository,
 	],
 	exports: [AuthService],
 })
