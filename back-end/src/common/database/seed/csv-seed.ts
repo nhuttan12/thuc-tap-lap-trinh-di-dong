@@ -75,15 +75,16 @@ function toTitleCase(value: string): string {
 /**
  * Brand image map
  */
-const BRAND_IMAGE_MAP: Record<string, string> = {
-	adidas: 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053803/cat1_pybagd.png',
-	puma: 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat3_ascjfk.png',
-	lacoste:
-		'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat6_ceycg7.png',
-	reebok: 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat5_zivadi.png',
-	horizontal:
-		'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat4_r061f5.png',
-};
+const adidasUrl: string =
+	'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053803/cat1_pybagd.png';
+const pumaUrl: string =
+	'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat3_ascjfk.png';
+const reebokUrl: string =
+	'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat5_zivadi.png';
+const lacosteUrl: string =
+	'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat6_ceycg7.png';
+const horizontalUrl: string =
+	'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1756053805/cat5_zivadi.png';
 
 /**
  * Supported product colors which not exist in csv file when data was crawleds
@@ -226,9 +227,19 @@ function buildSizeString(raw: string): string {
  */
 function resolveBrandImageUrl(brandName: string): string {
 	const key = normalizeBrand(brandName);
-	const url = BRAND_IMAGE_MAP[key];
+	let url: string;
 
-	if (!url) {
+	if (key.includes('adidas')) {
+		url = adidasUrl;
+	} else if (key.includes('reebok')) {
+		url = reebokUrl;
+	} else if (key.includes('lacosteUrl')) {
+		url = lacosteUrl;
+	} else if (key.includes('puma')) {
+		url = pumaUrl;
+	} else if (key.includes('horizontal')) {
+		url = horizontalUrl;
+	} else {
 		throw new Error(`Missing brand image mapping for brand "${brandName}"`);
 	}
 

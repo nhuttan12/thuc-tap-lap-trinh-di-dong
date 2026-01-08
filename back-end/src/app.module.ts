@@ -26,6 +26,7 @@ import { ProductModule } from './modules/product/product.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { AppThrottlerModule } from './common/infrastructure/app-throttler.module';
 import { BrandModule } from './modules/brand/brand.module';
+import { HelperModule } from './common/helper/helper.module';
 
 @Module({
 	imports: [
@@ -47,6 +48,7 @@ import { BrandModule } from './modules/brand/brand.module';
 		ProductModule,
 		WishlistModule,
 		BrandModule,
+		HelperModule,
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],

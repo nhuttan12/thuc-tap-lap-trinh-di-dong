@@ -16,6 +16,7 @@ import { ProductImageEntity } from '../image/entities/product-image.entity';
 import { ProductEntity } from './entities/product.entity';
 import { CategoryEntity } from '../category/entities/category.entity';
 import { BadRequestException } from '@nestjs/common';
+import { BrandEntity } from '../brand/entities/brand.entiy';
 
 describe('ProductDetailService', (): void => {
 	let productDetailService: ProductDetailService;
@@ -66,6 +67,7 @@ describe('ProductDetailService', (): void => {
 			description: 'Product Detail 1',
 			rating: 5,
 			price: 100000,
+			brandEntity: {} as BrandEntity,
 			discount: 0,
 			imageList: [
 				{
@@ -90,7 +92,7 @@ describe('ProductDetailService', (): void => {
 			productID: mockProductID,
 			name: 'Product Detail 1',
 			size: ['L', 'XL', 'XXL'],
-			color: 'blue',
+			color: ['blue'],
 			description: 'Product Detail 1',
 			rating: 5,
 			price: 100000,

@@ -12,12 +12,13 @@ import { ProductImageEntity } from '../../image/entities/product-image.entity';
 import { ImageEntity } from '../../image/entities/image.entity';
 import { ProductEntity } from '../entities/product.entity';
 import { CategoryEntity } from '../../category/entities/category.entity';
+import { StringHelper } from '../../../common/helper/string-helper';
 
 describe('ProductDetailMapper', (): void => {
 	let mapper: ProductDetailMapper;
 
 	beforeEach((): void => {
-		mapper = new ProductDetailMapper();
+		mapper = new ProductDetailMapper(new StringHelper());
 	});
 
 	afterEach((): void => {
@@ -71,7 +72,7 @@ describe('ProductDetailMapper', (): void => {
 			discount: 0,
 			rating: 0.0,
 			size: ['L', 'XL', 'XXL'],
-			color: 'blue',
+			color: ['blue'],
 			description: 'mockDescription',
 			imageList: [imageUrl1, imageUrl2, imageUrl3],
 		};

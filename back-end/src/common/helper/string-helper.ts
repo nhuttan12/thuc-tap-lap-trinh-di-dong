@@ -8,7 +8,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ExtractStringByDelimeter {
+export class StringHelper {
 	extractStringByDelimeter(str: string, delimeter: string): string[] {
 		return str.split(delimeter);
 	}

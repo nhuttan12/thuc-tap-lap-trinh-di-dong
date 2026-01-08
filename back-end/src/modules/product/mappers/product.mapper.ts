@@ -8,15 +8,13 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { ProductEntity } from '../entities/product.entity';
-import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 import { ProductImageEntity } from '../../image/entities/product-image.entity';
-import { ExtractStringByDelimeter } from './../../../common/helper/extract-string-by-delimeter';
+import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
+import { ProductEntity } from '../entities/product.entity';
+import { ProductImageTypeEnum } from '../enums/product-image.type.enum';
 
 @Injectable()
 export class ProductMapper {
-	constructor(private readonly extractString: ExtractStringByDelimeter) {}
-
 	/**
 	 * @description Map from Product entity to Product entity response object
 	 * @author Nhut tan
@@ -40,23 +38,12 @@ export class ProductMapper {
 				rating: details?.rating ?? 0,
 
 				imageUrl:
-					product.productImages?.map((img: ProductImageEntity) => {
-						return img.image?.url ?? null;
-					}) ?? [],
-
-				size: details?.size
-					? this.extractString.extractStringByDelimeter(
-							details.size,
-							'; '
-						)
-					: [],
-
-				color: details?.color
-					? this.extractString.extractStringByDelimeter(
-							details.color,
-							'; '
-						)
-					: [],
+					product.productImages?.find((img: ProductImageEntity) => {
+						return (
+							img.image?.url &&
+							img.type === ProductImageTypeEnum.THUMBNAIL
+						);
+					})?.image.url ?? '',
 
 				status: product.status,
 				createdAt: product.createdAt,

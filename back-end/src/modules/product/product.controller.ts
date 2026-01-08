@@ -65,7 +65,7 @@ export class ProductController {
 					request.limit
 				);
 			this.logger.debug(
-				`Get products paging from database: ${JSON.stringify(products, null, 2)}`
+				`Get products paging: ${JSON.stringify(products, null, 2)}`
 			);
 
 			return {
@@ -91,9 +91,9 @@ export class ProductController {
 	 * @since 2025-09-24
 	 * @version 1.0.0
 	 */
-	@Get()
+	@Get('detail')
 	async getProductDetailByProductID(
-		@Body() request: GetProductDetailByProductIdRequestDto
+		@Query() request: GetProductDetailByProductIdRequestDto
 	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
 		try {
 			/**
