@@ -13,7 +13,6 @@ import {
 	Logger,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserRepository } from '../user/repositories/user.repository';
 import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
 import { JwtPayload } from './interface/jwt-payload.interface';
 import { AuthMapper } from './mapper/auth.mapper';
@@ -24,11 +23,10 @@ import { AuthStatusCode } from './status-code/auth.status-code';
 import * as crypto from 'crypto';
 import * as nodemailer from 'nodemailer';
 import * as bcrypt from 'bcryptjs';
-import { UserEntity } from '../user/entities/user.entity';
 import { ForgotPasswordResponseDto } from './dtos/forgot-password-response.dto';
-import {UserAuthenticationRepository} from "../user/repositories/user-authentication.repository";
-import {VerifyOtpResponseDto} from "./dtos/user-verify-otp-response.dto";
-import {ResetPasswordResponseDto} from "./dtos/reset-password-response.dto";
+import { UserAuthenticationRepository } from '../user/repositories/user-authentication.repository';
+import { VerifyOtpResponseDto } from './dtos/user-verify-otp-response.dto';
+import { ResetPasswordResponseDto } from './dtos/reset-password-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +36,7 @@ export class AuthService {
 		private readonly userService: UserService,
 		private readonly jwtService: JwtService,
 		private readonly authMapper: AuthMapper,
-        private readonly userAuthRepo: UserAuthenticationRepository,
+		private readonly userAuthRepo: UserAuthenticationRepository
 	) {}
 
 	/*
@@ -61,7 +59,7 @@ export class AuthService {
 					password
 				);
 			this.logger.debug(
-				`Get \`getUserByUserNameAndPasswordForLogin\` function from user service: ${JSON.stringify(user)}`
+				`Get \`getUserByUserNameAndPasswordForLogin\` function from user service: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -80,14 +78,16 @@ export class AuthService {
 			 */
 			const payload: JwtPayload = this.authMapper.toJwtPayload(user);
 			this.logger.debug(
-				`Mapping user response to jwt payload: ${JSON.stringify(payload)}`
+				`Mapping user response to jwt payload: ${JSON.stringify(payload, null, 2)}`
 			);
 
 			/*
 			 * Sign token and declare to payload
 			 */
 			payload.accessToken = this.jwtService.sign(payload);
-			this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
+			this.logger.debug(
+				`Token after sign: ${JSON.stringify(payload, null, 2)}`
+			);
 
 			/*
 			 * Return jwt payload
@@ -146,7 +146,9 @@ export class AuthService {
 			 */
 			const user: UserEntityResponseDto | null =
 				await this.userService.getUserByEmail(email);
-			this.logger.debug(`Get user by email: ${JSON.stringify(user)}`);
+			this.logger.debug(
+				`Get user by email: ${JSON.stringify(user, null, 2)}`
+			);
 
 			/**
 			 * Check if user is null
@@ -166,7 +168,7 @@ export class AuthService {
 			const userByUsername: UserEntityResponseDto | null =
 				await this.userService.getUserByUsername(username);
 			this.logger.debug(
-				`Get user by username: ${JSON.stringify(userByUsername)}`
+				`Get user by username: ${JSON.stringify(userByUsername, null, 2)}`
 			);
 
 			/**
@@ -193,7 +195,7 @@ export class AuthService {
 					password
 				);
 			this.logger.debug(
-				`Create user with username, email, password: ${JSON.stringify(userCreated)}`
+				`Create user with username, email, password: ${JSON.stringify(userCreated, null, 2)}`
 			);
 
 			/**
@@ -221,7 +223,7 @@ export class AuthService {
 			let user: UserEntityResponseDto | null =
 				await this.userService.getUserByEmail(email);
 			this.logger.debug(
-				`Call \`getUserByEmail\` function from user service: ${JSON.stringify(user)}`
+				`Call \`getUserByEmail\` function from user service: ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -243,14 +245,16 @@ export class AuthService {
 			 */
 			const payload: JwtPayload = this.authMapper.toJwtPayload(user);
 			this.logger.debug(
-				`Mapping user response to jwt payload: ${JSON.stringify(payload)}`
+				`Mapping user response to jwt payload: ${JSON.stringify(payload, null, 2)}`
 			);
 
 			/*
 			 * Sign token and declare to payload
 			 */
 			payload.accessToken = this.jwtService.sign(payload);
-			this.logger.debug(`Token after sign: ${JSON.stringify(payload)}`);
+			this.logger.debug(
+				`Token after sign: ${JSON.stringify(payload, null, 2)}`
+			);
 
 			/*
 			 * Return jwt payload
@@ -265,118 +269,119 @@ export class AuthService {
 		}
 	}
 
-    /**
-     * @description
-     * Gửi OTP về email khi user quên mật khẩu
-     *
-     * @flow
-     * - User nhập email
-     * - Sinh OTP 6 số
-     * - Hash OTP và lưu DB
-     * - Gửi OTP qua email
-     */
-    async forgotPassword(email: string): Promise<ForgotPasswordResponseDto> {
-        // 1. Kiểm tra user tồn tại
-        const user = await this.userService.getUserByEmail(email);
-        if (!user) {
-            throw new BadRequestException('User không tồn tại');
-        }
+	/**
+	 * @description
+	 * Gửi OTP về email khi user quên mật khẩu
+	 *
+	 * @flow
+	 * - User nhập email
+	 * - Sinh OTP 6 số
+	 * - Hash OTP và lưu DB
+	 * - Gửi OTP qua email
+	 */
+	async forgotPassword(email: string): Promise<ForgotPasswordResponseDto> {
+		// 1. Kiểm tra user tồn tại
+		const user = await this.userService.getUserByEmail(email);
+		if (!user) {
+			throw new BadRequestException('User không tồn tại');
+		}
 
-        // 2. Tạo OTP 6 chữ số
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+		// 2. Tạo OTP 6 chữ số
+		const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // 3. Hash OTP
-        const hashedOtp = await bcrypt.hash(otp, 10);
+		// 3. Hash OTP
+		const hashedOtp = await bcrypt.hash(otp, 10);
 
-        // 4. Tạo hoặc cập nhật userAuth
-        let userAuth = await this.userAuthRepo.findByUserId(user.id);
-        if (!userAuth) {
-            userAuth = this.userAuthRepo.create(user.id);
-        }
-        userAuth.resetOtp = hashedOtp;
-        userAuth.resetOtpExpiration = Date.now() + 3 * 60 * 1000; // 3 phút
-        userAuth.resetToken = null; // reset token sẽ cấp sau verify OTP
-        await this.userAuthRepo.save(userAuth);
+		// 4. Tạo hoặc cập nhật userAuth
+		let userAuth = await this.userAuthRepo.findByUserId(user.id);
+		if (!userAuth) {
+			userAuth = this.userAuthRepo.create(user.id);
+		}
+		userAuth.resetOtp = hashedOtp;
+		userAuth.resetOtpExpiration = Date.now() + 3 * 60 * 1000; // 3 phút
+		userAuth.resetToken = null; // reset token sẽ cấp sau verify OTP
+		await this.userAuthRepo.save(userAuth);
 
-        // 5. Gửi OTP bằng nodemailer
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            auth: {
-                user: 'taitanvo16@gmail.com',
-                pass: 'yulu zcuc hnhm yeql',
-            },
-        });
+		// 5. Gửi OTP bằng nodemailer
+		const transporter = nodemailer.createTransport({
+			host: 'smtp.gmail.com',
+			port: 587,
+			secure: false,
+			auth: {
+				user: 'taitanvo16@gmail.com',
+				pass: 'yulu zcuc hnhm yeql',
+			},
+		});
 
-        await transporter.sendMail({
-            from: '"E-Commerce App" <no-reply@app.com>',
-            to: user.email,
-            subject: 'Mã OTP khôi phục mật khẩu',
-            html: `<p>Mã OTP của bạn là: <b>${otp}</b></p>
+		await transporter.sendMail({
+			from: '"E-Commerce App" <no-reply@app.com>',
+			to: user.email,
+			subject: 'Mã OTP khôi phục mật khẩu',
+			html: `<p>Mã OTP của bạn là: <b>${otp}</b></p>
                    <p>OTP có hiệu lực trong 3 phút.</p>`,
-        });
+		});
 
-        return { message: 'OTP đã được gửi về email' };
-    }
+		return { message: 'OTP đã được gửi về email' };
+	}
 
+	/**
+	 * @description
+	 * Xác thực OTP người dùng nhập
+	 *
+	 * @flow
+	 * - So sánh OTP user nhập với OTP hash
+	 * - Nếu đúng → sinh resetToken
+	 * - Xoá OTP
+	 */
+	async verifyOtp(email: string, otp: string): Promise<VerifyOtpResponseDto> {
+		const user = await this.userService.getUserByEmail(email);
+		if (!user) throw new BadRequestException('User không tồn tại');
 
+		const userAuth = await this.userAuthRepo.findByUserId(user.id);
+		if (!userAuth || !userAuth.resetOtp)
+			throw new BadRequestException('OTP không tồn tại');
 
-    /**
-     * @description
-     * Xác thực OTP người dùng nhập
-     *
-     * @flow
-     * - So sánh OTP user nhập với OTP hash
-     * - Nếu đúng → sinh resetToken
-     * - Xoá OTP
-     */
-    async verifyOtp(email: string, otp: string): Promise<VerifyOtpResponseDto> {
-        const user = await this.userService.getUserByEmail(email);
-        if (!user) throw new BadRequestException('User không tồn tại');
+		if (Date.now() > userAuth.resetOtpExpiration!)
+			throw new BadRequestException('OTP đã hết hạn');
 
-        const userAuth = await this.userAuthRepo.findByUserId(user.id);
-        if (!userAuth || !userAuth.resetOtp)
-            throw new BadRequestException('OTP không tồn tại');
+		const isMatch = await bcrypt.compare(otp, userAuth.resetOtp);
+		if (!isMatch) throw new BadRequestException('OTP không đúng');
 
-        if (Date.now() > userAuth.resetOtpExpiration!)
-            throw new BadRequestException('OTP đã hết hạn');
+		// OTP đúng -> tạo reset token
+		const resetToken = crypto.randomBytes(32).toString('hex');
+		userAuth.resetToken = resetToken;
+		userAuth.resetTokenExpiration = Date.now() + 5 * 60 * 1000; // 5 phút
+		userAuth.resetOtp = null; // xóa OTP đã dùng
+		userAuth.resetOtpExpiration = null;
+		await this.userAuthRepo.save(userAuth);
 
-        const isMatch = await bcrypt.compare(otp, userAuth.resetOtp);
-        if (!isMatch) throw new BadRequestException('OTP không đúng');
+		return { token: resetToken };
+	}
 
-        // OTP đúng -> tạo reset token
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        userAuth.resetToken = resetToken;
-        userAuth.resetTokenExpiration = Date.now() + 5 * 60 * 1000; // 5 phút
-        userAuth.resetOtp = null; // xóa OTP đã dùng
-        userAuth.resetOtpExpiration = null;
-        await this.userAuthRepo.save(userAuth);
+	async resetPassword(
+		resetToken: string,
+		newPassword: string
+	): Promise<ResetPasswordResponseDto> {
+		const userAuth = await this.userAuthRepo.findByResetToken(resetToken);
+		if (!userAuth)
+			throw new BadRequestException('Reset token không hợp lệ');
 
-        return { token: resetToken };
-    }
+		if (Date.now() > userAuth.resetTokenExpiration!)
+			throw new BadRequestException('Reset token đã hết hạn');
 
-    async resetPassword(resetToken: string, newPassword: string): Promise<ResetPasswordResponseDto> {
-        const userAuth = await this.userAuthRepo.findByResetToken(resetToken);
-        if (!userAuth) throw new BadRequestException('Reset token không hợp lệ');
+		const user = await this.userService.getUserEntityById(userAuth.userId);
+		if (!user) throw new BadRequestException('User không tồn tại');
 
-        if (Date.now() > userAuth.resetTokenExpiration!)
-            throw new BadRequestException('Reset token đã hết hạn');
+		// Hash password mới
+		const hashedPassword = await bcrypt.hash(newPassword, 10);
+		user.password = hashedPassword;
+		await this.userService.updateUserEntity(user);
 
-        const user = await this.userService.getUserEntityById(userAuth.userId);
-        if (!user) throw new BadRequestException('User không tồn tại');
+		// Xóa reset token
+		userAuth.resetToken = null;
+		userAuth.resetTokenExpiration = null;
+		await this.userAuthRepo.save(userAuth);
 
-        // Hash password mới
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
-        await this.userService.updateUserEntity(user);
-
-        // Xóa reset token
-        userAuth.resetToken = null;
-        userAuth.resetTokenExpiration = null;
-        await this.userAuthRepo.save(userAuth);
-
-        return { message: 'Cập nhật mật khẩu thành công' };
-    }
-
+		return { message: 'Cập nhật mật khẩu thành công' };
+	}
 }

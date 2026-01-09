@@ -8,9 +8,12 @@ import { Injectable } from '@nestjs/common';
 import { ProductDetailsEntity } from '../entities/product-details.entity';
 import { ProductDetailResponseDto } from '../dtos/product-detail-response.dto';
 import { ProductImageEntity } from '../../image/entities/product-image.entity';
+import { StringHelper } from '../../../common/helper/string-helper';
 
 @Injectable()
 export class ProductDetailMapper {
+	constructor(private readonly stringHelper: StringHelper) {}
+
 	toProductDetailResponse(
 		productDetailEntity: ProductDetailsEntity
 	): ProductDetailResponseDto {
@@ -20,8 +23,14 @@ export class ProductDetailMapper {
 			price: productDetailEntity.product.price,
 			discount: productDetailEntity.product.discount,
 			rating: productDetailEntity.rating,
-			size: productDetailEntity.size.split(', '),
-			color: productDetailEntity.color,
+			size: this.stringHelper.extractStringByDelimeter(
+				productDetailEntity.size,
+				'; '
+			),
+			color: this.stringHelper.extractStringByDelimeter(
+				productDetailEntity.color,
+				'; '
+			),
 			description: productDetailEntity.description,
 			imageList: productDetailEntity.product.productImages.map(
 				(productImageEntity: ProductImageEntity): string => {

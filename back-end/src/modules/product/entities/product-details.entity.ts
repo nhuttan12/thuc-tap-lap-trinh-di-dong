@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-05
  * @modifies 2025-09-24
- * @version 1.0.3
+ * @modifies 2025-12-31
+ * @version 1.0.4
  */
 
 import {
@@ -12,15 +13,16 @@ import {
 	JoinColumn,
 	ManyToOne,
 	OneToOne,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 } from 'typeorm';
-import { CategoryEntity } from '../../category/entities/category.entity';
 import { TimestampField } from '../../../common/database/timestamp.field';
+import { BrandEntity } from '../../brand/entities/brand.entiy';
+import { CategoryEntity } from '../../category/entities/category.entity';
 import { ProductEntity } from './product.entity';
 
-@Entity()
+@Entity({ name: 'product_details' })
 export class ProductDetailsEntity extends TimestampField {
-	@PrimaryGeneratedColumn()
+	@PrimaryColumn()
 	id: number;
 
 	@Column()
@@ -56,4 +58,15 @@ export class ProductDetailsEntity extends TimestampField {
 	)
 	@JoinColumn({ name: 'id' })
 	product: ProductEntity;
+
+	@ManyToOne(
+		(): typeof BrandEntity => BrandEntity,
+		(brandEntity: BrandEntity): ProductDetailsEntity[] =>
+			brandEntity.productDetails,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	@JoinColumn({ name: 'brand_id' })
+	brandEntity: BrandEntity;
 }

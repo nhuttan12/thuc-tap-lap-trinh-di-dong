@@ -22,15 +22,15 @@ const productionPath: string = join(cwd(), 'dist', 'migration', '*.js');
 const environment: string | undefined = env.HTTP_ENVIRONMENT;
 
 const options: DataSourceOptions = {
-  type: env.DATABASE_TYPE,
-  host: env.DATABASE_HOST,
-  port: Number(env.DATABASE_PORT),
-  username: env.DATABASE_USERNAME,
-  password: env.DATABASE_PASSWORD,
-  database: env.DATABASE_NAME,
-  logging: true,
-  synchronize: false,
-  migrations: [environment === 'production' ? productionPath : devPath],
+	type: env.DATABASE_TYPE,
+	host: env.DATABASE_HOST,
+	port: Number(env.DATABASE_PORT),
+	username: env.DATABASE_USERNAME,
+	password: env.DATABASE_PASSWORD,
+	database: env.DATABASE_NAME,
+	logging: true,
+	synchronize: false,
+	migrations: [environment === 'production' ? productionPath : devPath],
 } as DataSourceOptions;
 
 export const AppDataSource = new DataSource(options);

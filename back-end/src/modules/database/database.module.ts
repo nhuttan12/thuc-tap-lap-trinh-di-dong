@@ -19,32 +19,32 @@ import { DatabaseType } from 'typeorm';
  * @returns {TypeOrmModuleOptions} TypeORM module options
  */
 export function createTypeOrmModuleOptions(
-  configService: ConfigService,
+	configService: ConfigService
 ): TypeOrmModuleOptions {
-  const databaseConfig: DatabaseConfig = configService.databaseConfig;
+	const databaseConfig: DatabaseConfig = configService.databaseConfig;
 
-  return {
-    type: databaseConfig.type as DatabaseType,
-    host: databaseConfig.host,
-    port: databaseConfig.port,
-    username: databaseConfig.username,
-    password: databaseConfig.password,
-    database: databaseConfig.database,
-    autoLoadEntities: true,
-    synchronize: false,
-  } as TypeOrmModuleOptions;
+	return {
+		type: databaseConfig.type as DatabaseType,
+		host: databaseConfig.host,
+		port: databaseConfig.port,
+		username: databaseConfig.username,
+		password: databaseConfig.password,
+		database: databaseConfig.database,
+		autoLoadEntities: true,
+		synchronize: false,
+	} as TypeOrmModuleOptions;
 }
 
 /**
  * @description TypeORM configuration for database module
  */
 const typeOrmConfiguration: DynamicModule = TypeOrmModule.forRootAsync({
-  imports: [ConfigModule],
-  inject: [ConfigService],
-  useFactory: createTypeOrmModuleOptions,
+	imports: [ConfigModule],
+	inject: [ConfigService],
+	useFactory: createTypeOrmModuleOptions,
 });
 
 @Module({
-  imports: [ConfigModule, typeOrmConfiguration],
+	imports: [ConfigModule, typeOrmConfiguration],
 })
 export class DatabaseModule {}

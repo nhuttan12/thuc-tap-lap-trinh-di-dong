@@ -21,7 +21,7 @@ export class WishlistService {
 	constructor(
 		private readonly wishlistItemRepository: WishlistItemRepository,
 		private readonly wishlistItemMapper: WishlistItemMapper,
-		private readonly buildPagingMetaService: BuildPagingMetaService
+		private readonly buildPagingMetaService: BuildPagingMetaService,
 	) {}
 
 	/**
@@ -47,6 +47,7 @@ export class WishlistService {
 				page,
 				limit
 			);
+			this.logger.debug(`Calculate skip in service ${skip}`);
 
 			/**
 			 * Call `getAllWishlistItems` in `WishlistItemRepository`
@@ -58,7 +59,7 @@ export class WishlistService {
 					limit
 				);
 			this.logger.debug(
-				`Get all wishlist items ${JSON.stringify(wishlistItems)}`
+				`Get all wishlist items ${JSON.stringify(wishlistItems, null, 2)}`
 			);
 
 			/**
@@ -69,7 +70,7 @@ export class WishlistService {
 					wishlistItems
 				);
 			this.logger.debug(
-				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto)}`
+				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto, null, 2)}`
 			);
 
 			return this.buildPagingMetaService.buildPagingResponse(
@@ -99,7 +100,7 @@ export class WishlistService {
 	async addToWishlist(productID: number, userID: number): Promise<boolean> {
 		try {
 			/**
-			 * Check product exist in wishlist
+			 * Get product in wishlist and check product existence in wishlist
 			 */
 			await this.getProductInWishlistByProductIDAndUserID(
 				productID,

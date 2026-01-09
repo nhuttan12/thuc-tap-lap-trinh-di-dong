@@ -1,7 +1,7 @@
 name: tt-mobile
 services:
   postgres:
-    image: postgres:17-alpine
+    image: "postgres@sha256:43735280d1873da7ac9b6e7872b09c34f6d19283fd5f42f3fc22c982fbb0c0b1"
     restart: no
     environment:
       POSTGRES_USER: postgres
@@ -13,7 +13,8 @@ services:
       - ./data/db:/var/lib/postgresql/data
     networks:
       - tt_mobile
-
+volumes:
+  data:
 networks:
   tt_mobile:
     name: tt_mobile

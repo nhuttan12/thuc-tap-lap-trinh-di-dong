@@ -16,7 +16,7 @@ import {
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { CartEntity } from './cart.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
+import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
 
 @Entity('cart_details')
 export class CartDetailEntity extends TimestampField {
@@ -52,6 +52,6 @@ export class CartDetailEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	@JoinColumn({ name: 'cart_id' })
+	@JoinColumn({ name: 'product_id' })
 	product: ProductEntity;
 }

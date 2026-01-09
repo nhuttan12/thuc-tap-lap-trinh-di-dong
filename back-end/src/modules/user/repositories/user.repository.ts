@@ -3,22 +3,21 @@
  * @author Nhut Tan
  * @since 2025-09-08
  * @modifies 2025-09-22
- * @version 1.0.3
+ * @modifies 2025-11-27
+ * @modifies 2025-12-31
+ * @version 1.0.5
  */
 
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/user.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { RoleName } from '../../role/enums/role-name.enum';
-import { ImageEntity } from '../../image/entities/image.entity';
+import { UserEntity } from '../entities/user.entity';
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
 
-	/*
+	/**
 	 * @description constructor of user repository class
 	 * @author Nhut Tan
 	 * @since 2025-09-08
@@ -30,13 +29,15 @@ export class UserRepository {
 		private readonly dataSource: DataSource
 	) {}
 
-	/*
+	/**
 	 * @description Get user by username and password
-	 * @param {username: string, password: string}
+	 * @param username - User username
+	 * @param password - User password
 	 * @return {UserEntity | null}
 	 * @author Nhut Tan
 	 * @since 2025-09-08
-	 * @version 1.0.0
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByUserNameAndPassword(
 		username: string,
@@ -53,7 +54,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get users from database ${JSON.stringify(user)}`
+				`Get users from database ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -69,13 +70,14 @@ export class UserRepository {
 		}
 	}
 
-	/*
+	/**
 	 * @description Get user by username and password
-	 * @param {userID: number}
+	 * @param {number} userID - ID of user
 	 * @return {UserEntity | null}
 	 * @author Nhut Tan
 	 * @since 2025-09-09
-	 * @version 1.0.0
+	 * @modifies 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByUerID(userID: number): Promise<UserEntity | null> {
 		try {
@@ -91,7 +93,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get users from database ${JSON.stringify(user)}`
+				`Get users from database ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -107,13 +109,14 @@ export class UserRepository {
 		}
 	}
 
-	/*
+	/**
 	 * @description Get user by email
-	 * @param {email: string}
+	 * @param email - User email
 	 * @return {UserEntity | null}
 	 * @author Nhut Tan
 	 * @since 2025-09-10
-	 * @version 1.0.0
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByEmail(email: string): Promise<UserEntity | null> {
 		try {
@@ -129,7 +132,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get users from database ${JSON.stringify(user)}`
+				`Get users from database ${JSON.stringify(user, null, 2)}`
 			);
 
 			/*
@@ -145,16 +148,19 @@ export class UserRepository {
 		}
 	}
 
-	/*
+	/**
 	 * @description Create user with Google information
-	 * @param {name: string, email: string, photos: string}
+	 * @param name - User name
+	 * @param email - User email
+	 * @param photos - User photos by url
 	 * @return {UserEntity}
 	 * @author Nhut Tan
 	 * @since 2025-09-10
-	 * @version 1.0.0
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async createNewUserGoogle(
-		name: string,
+		fullName: string,
 		email: string
 	): Promise<UserEntity> {
 		try {
@@ -164,7 +170,7 @@ export class UserRepository {
 					 * Create user entity instance
 					 */
 					const user: UserEntity = tx.create(UserEntity, {
-						name: name,
+						fullName: fullName,
 						email: email,
 					});
 
@@ -185,7 +191,12 @@ export class UserRepository {
 
 	/**
 	 * @description Get user by username
-	 * @param username
+	 * @param username - User username
+	 * @return {UserEntity | null}
+	 * @author Nhut Tan
+	 * @since 2025-09-10
+	 * @modifes 2025-12-31
+	 * @version 1.0.1
 	 */
 	async getUserByUsername(username: string): Promise<UserEntity | null> {
 		try {
@@ -198,7 +209,7 @@ export class UserRepository {
 				},
 			});
 			this.logger.debug(
-				`Get user from database ${JSON.stringify(users)}`
+				`Get user from database ${JSON.stringify(users, null, 2)}`
 			);
 
 			return users;
@@ -216,13 +227,15 @@ export class UserRepository {
 	 * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
 	 * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
 	 * and id is 1
-	 * @param username
-	 * @param email
-	 * @param password
+	 * @param username - User username
+	 * @param email - User email
+	 * @param password - User password
+	 * @return {UserEntity}
 	 * @author Nhut Tan
 	 * @since 2025-09-17
 	 * @modifies 2025-09-22
-	 * @version 1.0.3
+	 * @modifies 2025-12-31
+	 * @version 1.0.4
 	 */
 	async createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
 		username: string,
@@ -280,10 +293,11 @@ export class UserRepository {
 		try {
 			return await this.userRepository.save(user);
 		} catch (e) {
-			this.logger.error(`Error in \`save\`: ${(e as Error).message}`, (e as Error).stack);
+			this.logger.error(
+				`Error in \`save\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
 			throw e;
 		}
 	}
-
-
 }

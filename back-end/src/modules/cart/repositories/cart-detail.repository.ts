@@ -2,13 +2,14 @@
  * @description Cart detail repository
  * @author Nhut Tan
  * @since 2025-09-14
- * @version 1.0.0
+ * @modifies 2026-01-09
+ * @version 1.0.1
  */
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
+import { DataSource, EntityManager, Repository, UpdateResult } from 'typeorm';
+import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
 
 export class CartDetailRepository {
 	private readonly logger: Logger = new Logger(CartDetailRepository.name);
@@ -28,7 +29,8 @@ export class CartDetailRepository {
 	 * and total number of cart details
 	 * @author Nhut Tan
 	 * @since 2025-09-24
-	 * @version 1.0.0
+	 * @modifies 2026-01-09
+	 * @version 1.0.1
 	 */
 	async getCartDetailsByUserID(
 		userID: number,
@@ -48,10 +50,16 @@ export class CartDetailRepository {
 								id: userID,
 							},
 						},
+						status: CartDetailsStatusEnum.ACTIVE,
 					},
 					relations: {
 						cart: {
 							user: true,
+						},
+						product: {
+							productImages: {
+								image: true,
+							},
 						},
 					},
 					skip,
@@ -60,7 +68,9 @@ export class CartDetailRepository {
 						createdAt: 'DESC',
 					},
 				});
-			this.logger.debug(`Cart details: ${JSON.stringify(cartDetails)}`);
+			this.logger.debug(
+				`Cart details: ${JSON.stringify(cartDetails, null, 2)}`
+			);
 
 			/**
 			 * Return data
@@ -125,5 +135,101 @@ export class CartDetailRepository {
 			);
 			throw e;
 		}
+	}
+
+	/**
+	 * @description Remove cart detail from cart
+	 * @param {number} productID - ID of product
+	 * @param {number} cartID - ID of cart
+	 * @return {Promise<UpdateResult>}
+	 */
+	async removeCartDetailFromCart(
+		productID: number,
+		cartID: number
+	): Promise<UpdateResult> {
+		return await this.dataSource.transaction(
+			async (tx: EntityManager): Promise<UpdateResult> => {
+				return await tx.update(
+					CartDetailEntity,
+					{
+						cart: {
+							id: cartID,
+						},
+						product: {
+							id: productID,
+						},
+						status: CartDetailsStatusEnum.ACTIVE,
+					},
+					{
+						status: CartDetailsStatusEnum.DELETED,
+					}
+				);
+			}
+		);
+	}
+
+	/**
+	 * @description Get cart detail by cart ID and user ID
+	 * @param cartID - ID of cart of user
+	 * @param productID - ID of product
+	 * @return {Promise<CartDetailEntity | null>} - Cart detail entity
+	 * @author Nhut Tan
+	 * @since 2026-01-09
+	 * @version 1.0.0
+	 */
+	async getCartDetailByCartIDAndProductID(
+		cartID: number,
+		productID: number
+	): Promise<CartDetailEntity | null> {
+		return await this.cartDetailRepository.findOne({
+			where: {
+				cart: { id: cartID },
+				product: { id: productID },
+				status: CartDetailsStatusEnum.ACTIVE,
+			},
+			relations: {
+				product: {
+					productImages: {
+						image: true,
+					},
+				},
+			},
+		});
+	}
+
+	/**
+	 * @description Update quantity of product in cart detail
+	 * @param cartID - ID of cart of user
+	 * @param productID - ID of product to update quantity
+	 * @param quantity - quantity to update
+	 * @return {Promise<UpdateResult>} - Update result
+	 * @author Nhut Tan
+	 * @since 2026-01-09
+	 * @version 1.0.0
+	 */
+	async updateQuantityOfProductInCartDetail(
+		cartID: number,
+		productID: number,
+		quantity: number
+	): Promise<UpdateResult> {
+		return await this.dataSource.transaction(
+			async (tx: EntityManager): Promise<UpdateResult> => {
+				return await tx.update(
+					CartDetailEntity,
+					{
+						cart: {
+							id: cartID,
+						},
+						product: {
+							id: productID,
+						},
+						status: CartDetailsStatusEnum.ACTIVE,
+					},
+					{
+						quantity: quantity,
+					}
+				);
+			}
+		);
 	}
 }

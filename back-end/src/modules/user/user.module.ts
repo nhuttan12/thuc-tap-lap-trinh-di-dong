@@ -21,7 +21,11 @@ import { UserAuthenticationEntity } from './entities/user-authentication.entity'
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([UserEntity, UserDetailEntity, UserAuthenticationEntity]),
+		TypeOrmModule.forFeature([
+			UserEntity,
+			UserDetailEntity,
+			UserAuthenticationEntity,
+		]),
 		forwardRef((): typeof ImageModule => ImageModule),
 		RoleModule,
 		ConfigModule,

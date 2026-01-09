@@ -13,6 +13,7 @@ import { ConfigService as NestConfigService } from '@nestjs/config';
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { HttpConfig } from './interface/http.interface';
 import { GoogleConfig } from './interface/google.config';
+import { ThrottlerConfig } from './interface/throttler.interface';
 
 @Injectable()
 export class ConfigService {
@@ -40,7 +41,9 @@ export class ConfigService {
 			password: this.config.get<string>('DATABASE_PASSWORD')!,
 			database: this.config.get<string>('DATABASE_NAME')!,
 		};
-		this.logger.debug(`Database config: ${JSON.stringify(databaseConfig)}`);
+		this.logger.debug(
+			`Database config: ${JSON.stringify(databaseConfig, null, 2)}`
+		);
 
 		/*
 		 * Check the object exist, if not, throw Conflict exception
@@ -71,7 +74,9 @@ export class ConfigService {
 			expireTime: this.config.get<string>('HTTP_EXPIRE_TIME')!,
 			saltRounds: this.config.get<number>('HTTP_SALT_ROUNDS_BCRYPT')!,
 		};
-		this.logger.debug(`Http config: ${JSON.stringify(httpConfig)}`);
+		this.logger.debug(
+			`Http config: ${JSON.stringify(httpConfig, null, 2)}`
+		);
 
 		/**
 		 * Check the object exist, if not, throw Conflict exception
@@ -101,7 +106,9 @@ export class ConfigService {
 			callbackURL: this.config.get<string>('GOOGLE_CALLBACK_URL')!,
 			accessType: this.config.get<string>('GOOGLE_ACCESS_TYPE')!,
 		};
-		this.logger.debug(`Http config: ${JSON.stringify(googleConfig)}`);
+		this.logger.debug(
+			`Http config: ${JSON.stringify(googleConfig, null, 2)}`
+		);
 
 		/*
 		 * Check the object exist, if not, throw Conflict exception
@@ -114,5 +121,35 @@ export class ConfigService {
 		 * Return the object
 		 */
 		return googleConfig;
+	}
+
+	/**
+	 * @description Retrieve throttler configuration object.
+	 * Throw ConflictException if the configuration is not found.
+	 * @returns {ThrottlerConfig} The throttler configuration object.
+	 */
+	get throttlerConfig(): ThrottlerConfig {
+		/**
+		 * Retrieve throttler configuration object.
+		 */
+		const throttlerConfig: ThrottlerConfig | undefined = {
+			ttl: Number(this.config.get<number>('THROTTLER_TTL')),
+			limit: Number(this.config.get<number>('THROTTLER_LIMIT')),
+		};
+		this.logger.debug(
+			`Throttler config: ${JSON.stringify(throttlerConfig, null, 2)}`
+		);
+
+		/*
+		 * Check the object exist, if not, throw Conflict exception
+		 */
+		if (!throttlerConfig) {
+			throw new ConflictException('Throttler configuration is not found');
+		}
+
+		/*
+		 * Return the object
+		 */
+		return throttlerConfig;
 	}
 }

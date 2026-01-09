@@ -41,7 +41,7 @@ export class ProductDetailService {
 					productID
 				);
 			this.logger.debug(
-				`Product detail in service: ${JSON.stringify(productDetailEntity)}`
+				`Product detail in service: ${JSON.stringify(productDetailEntity, null, 2)}`
 			);
 
 			/**
@@ -73,7 +73,7 @@ export class ProductDetailService {
 					productDetailEntity
 				);
 			this.logger.debug(
-				`Product detail in response: ${JSON.stringify(productDetailResponseDto)}`
+				`Product detail in response: ${JSON.stringify(productDetailResponseDto, null, 2)}`
 			);
 
 			/**

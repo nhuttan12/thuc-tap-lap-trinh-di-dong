@@ -44,7 +44,7 @@ export class WishlistController {
 		/**
 		 * Get page and limit from request
 		 */
-		this.logger.debug(`Request: ${JSON.stringify(request)}`);
+		this.logger.debug(`Request: ${JSON.stringify(request, null, 2)}`);
 		const { page, limit } = request;
 
 		const response: PagingResponseDto<ProductInWishlistResponseDto> =

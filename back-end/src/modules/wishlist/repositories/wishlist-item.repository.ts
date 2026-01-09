@@ -64,7 +64,7 @@ export class WishlistItemRepository {
 					},
 				});
 			this.logger.debug(
-				`Get all wishlist from database: ${JSON.stringify(wishlistItems)}`
+				`Get all wishlist from database: ${JSON.stringify(wishlistItems, null, 2)}`
 			);
 
 			/**
