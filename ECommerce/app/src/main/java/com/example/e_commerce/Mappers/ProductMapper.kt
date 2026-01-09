@@ -8,29 +8,52 @@
 
 package com.example.e_commerce.Mappers
 
-import com.example.e_commerce.DTOs.ProductDTO
+import com.example.e_commerce.DTOs.Response.ProductDTO
+import com.example.e_commerce.DTOs.Response.ProductDetailDTO
+import com.example.e_commerce.Helper.StringConverter
+import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.Model.ProductModel
 
 object ProductMapper {
-    fun fromDto(dto: ProductDTO): ProductModel {
+    private val stringConverter: StringConverter = StringConverter()
+
+    fun fromProductDTO(productDTO: ProductDTO): ProductModel {
         return ProductModel(
-            id = dto.id,
-            title = dto.name,
-            price = dto.price.toDouble(),
-            picUrl = dto.imageUrl,
-            rating = dto.rating,
+            id = productDTO.id,
+            title = productDTO.name,
+            price = productDTO.price.toDouble(),
+            picUrl = productDTO.imageUrl,
+            rating = productDTO.rating,
         )
     }
 
-    fun fromDtoList(dtos: List<ProductDTO>): ArrayList<ProductModel> {
-        return dtos.map { fromDto(it) }.toCollection(ArrayList())
+    fun fromProductDTOList(productDTOList: List<ProductDTO>): ArrayList<ProductModel> {
+        return productDTOList.map { fromProductDTO(it) }.toCollection(ArrayList())
     }
 
-//    private fun calculateOldPrice(price: Int, discount: Int): Double {
-//        return if (discount > 0) {
-//            price + (price * discount / 100.0)
-//        } else {
-//            price.toDouble()
-//        }
+    fun fromProductDetailDTO(productDetailDTO: ProductDetailDTO): ProductDetailModel {
+        return ProductDetailModel(
+            title = productDetailDTO.name,
+            description = this.stringConverter.splitDescription(productDetailDTO.description),
+            picUrl = ArrayList(productDetailDTO.imageList),
+            size = ArrayList(productDetailDTO.size),
+            color = ArrayList(productDetailDTO.color),
+            price = applyDiscount(productDetailDTO.price.toDouble(), productDetailDTO.discount),
+            oldPrice = productDetailDTO.price.toDouble(),
+            rating = productDetailDTO.rating,
+            numberInCart = 1
+        )
+    }
+
+//    fun fromDtoList(dtos: List<ProductDetailDTO>): ArrayList<ProductDetailModel> {
+//        return dtos.map { fromDto(it) }.toCollection(ArrayList())
 //    }
+
+    fun applyDiscount(price: Double, discount: Int): Double {
+        return if (discount in 1..100) {
+            price * (100 - discount) / 100
+        } else {
+            price
+        }
+    }
 }

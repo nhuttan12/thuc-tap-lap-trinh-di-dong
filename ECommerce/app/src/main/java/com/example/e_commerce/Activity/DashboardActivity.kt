@@ -27,17 +27,26 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.e_commerce.Adapter.BrandsAdapter
 import com.example.e_commerce.Adapter.PopularAdapter
 import com.example.e_commerce.Adapter.SliderAdapter
+import com.example.e_commerce.Helper.CheckToken
+import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.SliderModel
 import com.example.e_commerce.ViewModel.MainViewModel
+import com.example.e_commerce.ViewModel.MainViewModelFactory
 import com.example.e_commerce.databinding.ActivityMainBinding
 import kotlin.math.min
 
 class DashboardActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
-    }
+//    private val viewModel: MainViewModel by lazy {
+//        val tinyDB = TinyDB(this)
+//        val factory = MainViewModelFactory(tinyDB)
+//
+//        ViewModelProvider(this, factory)[MainViewModel::class.java]
+//    }
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var tinyDB: TinyDB
+    private lateinit var checkToken: CheckToken
+    private lateinit var viewModel: MainViewModel
 
     private val brandsAdapter = BrandsAdapter(mutableListOf())
     private val popularAdapter = PopularAdapter(mutableListOf()) { product ->
@@ -49,6 +58,11 @@ class DashboardActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        tinyDB = TinyDB(this)
+        checkToken = CheckToken(tinyDB)
+        val factory = MainViewModelFactory(tinyDB)
+        viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
         initUI()
         observeProductDetail()
@@ -63,7 +77,11 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun initBottomNavigation() {
         binding.cartBtn.setOnClickListener {
-            startActivity(Intent(this, CartActivity::class.java))
+            checkToken.checkTokenOrRedirect(this@DashboardActivity, {
+                startActivity(
+                    Intent(this@DashboardActivity, CartActivity::class.java)
+                )
+            })
         }
     }
 
@@ -108,7 +126,7 @@ class DashboardActivity : AppCompatActivity() {
              * Show text 'Loading brands...'
              */
             if (isLoading) {
-                Toast.makeText(this, "Loading brands...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Đang tải...", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -198,7 +216,6 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun observeProductDetail() {
         viewModel.productDetail.observe(this) { item ->
-            binding.progressBar.visibility = View.GONE
 
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("object", item)
@@ -206,12 +223,11 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         viewModel.loading.observe(this) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isLoading) Toast.makeText(this, "Đang tải", Toast.LENGTH_SHORT).show()
         }
 
         viewModel.error.observe(this) { message ->
-            binding.progressBar.visibility = View.GONE
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, message ?: "Lỗi không xác định", Toast.LENGTH_SHORT).show()
         }
     }
 }

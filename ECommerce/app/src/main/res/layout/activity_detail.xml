@@ -33,7 +33,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/back"
-                    android:contentDescription="@string/buy_now"/>
+                    android:contentDescription="@string/add_to_cart"/>
 
                 <ImageView
                     android:id="@+id/favBtn"
@@ -277,7 +277,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:text="@string/buy_now"
+                    android:text="@string/add_to_cart"
                     android:textColor="@color/white"
                     android:textSize="18sp"/>
 

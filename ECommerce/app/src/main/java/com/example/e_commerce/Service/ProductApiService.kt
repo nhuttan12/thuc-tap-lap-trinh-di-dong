@@ -8,8 +8,8 @@
 
 package com.example.e_commerce.Service
 
-import com.example.e_commerce.DTOs.ProductDTO
-import com.example.e_commerce.DTOs.ProductDetailDTO
+import com.example.e_commerce.DTOs.Response.ProductDTO
+import com.example.e_commerce.DTOs.Response.ProductDetailDTO
 import com.example.e_commerce.Model.ApiSucess
 import com.example.e_commerce.Repository.PagingResponse
 import retrofit2.Response

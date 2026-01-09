@@ -140,7 +140,7 @@ describe('CartDetailService', (): void => {
 		const mockCartDetailResponseDto: CartDetailResponseDto[] = [
 			{
 				id: 1,
-				images: mockUrlImage1,
+				imageUrl: mockUrlImage1,
 				name: 'Mock product 1',
 				price: 100000,
 				discount: 10,
@@ -148,7 +148,7 @@ describe('CartDetailService', (): void => {
 			},
 			{
 				id: 2,
-				images: mockUrlImage2,
+				imageUrl: mockUrlImage2,
 				name: 'Mock product 2',
 				price: 200000,
 				discount: 0,
@@ -156,7 +156,7 @@ describe('CartDetailService', (): void => {
 			},
 			{
 				id: 3,
-				images: mockUrlImage3,
+				imageUrl: mockUrlImage3,
 				name: 'Mock product 3',
 				price: 300000,
 				discount: 5,
@@ -290,7 +290,7 @@ describe('CartDetailService', (): void => {
 		};
 		const mockCartDetailResponseDto: CartDetailResponseDto = {
 			id: 1,
-			images: mockUrlImage1,
+			imageUrl: mockUrlImage1,
 			name: 'Mock product 1',
 			price: 100000,
 			discount: 10,

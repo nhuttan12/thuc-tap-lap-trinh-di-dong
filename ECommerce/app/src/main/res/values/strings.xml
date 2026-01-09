@@ -16,7 +16,7 @@
     <string name="quantity">1</string>
     <string name="select_color">Chọn màu sắc</string>
     <string name="total_price">Tổng giá tiền</string>
-    <string name="buy_now">Mua</string>
+    <string name="add_to_cart">Thêm vào giỏ hàng</string>
     <string name="select_size">Chọn kích thước</string>
     <string name="loading">Đang tải</string>
     <string name="add_to_wishlist">Thêm vào danh sách yêu thích</string>
@@ -31,7 +31,7 @@
     <string name="total">Tổng cộng</string>
     <string name="money">$-</string>
     <string name="welcome">Xin chào quý khách</string>
-    <string name="full_name_user">Jammie</string>
+    <string name="full_name_user" />
     <string name="see_all">Toàn bộ</string>
     <string name="description">Mô tả</string>
 </resources>

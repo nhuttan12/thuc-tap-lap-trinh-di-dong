@@ -2,31 +2,32 @@ package com.example.e_commerce.Helper
 
 import android.content.Context
 import android.widget.Toast
+import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.Model.ProductDetailModel
 
 class ManagementCart(val context: Context) {
 
     private val tinyDB = TinyDB(context)
 
-    fun insert(item: ProductDetailModel) {
-        var listFood = getListCart()
-        val existAlready = listFood.any { it.title == item.title }
-        val index = listFood.indexOfFirst { it.title == item.title }
+//    fun insert(item: ProductDetailModel) {
+//        var listFood = getListCart()
+//        val existAlready = listFood.any { it.title == item.title }
+//        val index = listFood.indexOfFirst { it.title == item.title }
+//
+//        if (existAlready) {
+//            listFood[index].numberInCart = item.numberInCart
+//        } else {
+//            listFood.add(item)
+//        }
+//        tinyDB.putListObject("CartList", listFood)
+//        Toast.makeText(context, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+//    }
 
-        if (existAlready) {
-            listFood[index].numberInCart = item.numberInCart
-        } else {
-            listFood.add(item)
-        }
-        tinyDB.putListObject("CartList", listFood)
-        Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show()
-    }
-
-    fun getListCart(): ArrayList<ProductDetailModel> {
+    fun getListCart(): ArrayList<CartItemModel> {
         return tinyDB.getListObject("CartList")
     }
 
-    fun minusItem(listFood: ArrayList<ProductDetailModel>, position: Int, listener: ChangeNumberItemsListener) {
+    fun minusItem(listFood: ArrayList<CartItemModel>, position: Int, listener: ChangeNumberItemsListener) {
         if (listFood[position].numberInCart == 1) {
             listFood.removeAt(position)
         } else {
@@ -36,7 +37,7 @@ class ManagementCart(val context: Context) {
         listener.onChanged()
     }
 
-    fun plusItem(listFood: ArrayList<ProductDetailModel>, position: Int, listener: ChangeNumberItemsListener) {
+    fun plusItem(listFood: List<CartItemModel>, position: Int, listener: ChangeNumberItemsListener) {
         listFood[position].numberInCart++
         tinyDB.putListObject("CartList", listFood)
         listener.onChanged()

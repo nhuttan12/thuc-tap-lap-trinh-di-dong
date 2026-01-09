@@ -37,4 +37,8 @@ object ApiClient {
     val brandService: BrandApiService by lazy {
         retrofit.create(BrandApiService::class.java)
     }
+
+    val cartService: CartApiService by lazy {
+        retrofit.create(CartApiService::class.java)
+    }
 }

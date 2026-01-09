@@ -9,9 +9,8 @@
 package com.example.e_commerce.Repository
 
 import android.util.Log
-import com.example.e_commerce.DTOs.ProductDTO
-import com.example.e_commerce.DTOs.ProductDetailDTO
-import com.example.e_commerce.Mappers.ProductDetailMapper
+import com.example.e_commerce.DTOs.Response.ProductDTO
+import com.example.e_commerce.DTOs.Response.ProductDetailDTO
 import com.example.e_commerce.Mappers.ProductMapper
 import com.example.e_commerce.Model.ApiSucess
 import com.example.e_commerce.Model.ProductDetailModel
@@ -31,6 +30,9 @@ class ProductRepository : BaseRepository() {
 
     /**
      * @description Call api and handle result
+     *
+     * @param [Int] [limit] - limit for paging
+     * @param [Int] [page] - current page
      *
      * @return [NetworkResult] result of brand list
      *
@@ -65,7 +67,7 @@ class ProductRepository : BaseRepository() {
             handleApiResponse(response) { pagingDto ->
                 PagingResponse(
                     meta = pagingDto.meta,
-                    data = ProductMapper.fromDtoList(pagingDto.data)
+                    data = ProductMapper.fromProductDTOList(pagingDto.data)
                 )
             }
         } catch (e: IOException) {
@@ -111,7 +113,7 @@ class ProductRepository : BaseRepository() {
              * Handle response
              */
             handleApiResponse(response) { productDetail ->
-                ProductDetailMapper.fromDto(productDetail)
+                ProductMapper.fromProductDetailDTO(productDetail)
             }
         } catch (e: IOException) {
             Log.e(TAG, "Network error while loading products", e)

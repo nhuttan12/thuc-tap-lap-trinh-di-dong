@@ -72,4 +72,17 @@ export class ProductRepository {
 			throw e;
 		}
 	}
+
+	/**
+	 * @description Get product by id
+	 * @param {number} productID - ID of product
+	 * @return {ProductEntity | null}
+	 */
+	async getProductByProductID(
+		productID: number
+	): Promise<ProductEntity | null> {
+		return await this.productRepository.findOne({
+			where: { id: productID },
+		});
+	}
 }

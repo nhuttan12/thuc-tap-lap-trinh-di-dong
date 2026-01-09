@@ -79,6 +79,16 @@ export class CartRepository {
 						},
 						status: CartStatusEnum.ACTIVE,
 					},
+					relations: {
+						user: true,
+						cartDetails: {
+							product: {
+								productImages: {
+									image: true,
+								},
+							},
+						},
+					},
 				});
 			this.logger.debug(
 				`Get cart by user ID and ACTIVE status from database: ${JSON.stringify(cartEntity, null, 2)}`

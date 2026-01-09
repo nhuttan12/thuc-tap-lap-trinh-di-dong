@@ -21,7 +21,7 @@ export class WishlistService {
 	constructor(
 		private readonly wishlistItemRepository: WishlistItemRepository,
 		private readonly wishlistItemMapper: WishlistItemMapper,
-		private readonly buildPagingMetaService: BuildPagingMetaService
+		private readonly buildPagingMetaService: BuildPagingMetaService,
 	) {}
 
 	/**

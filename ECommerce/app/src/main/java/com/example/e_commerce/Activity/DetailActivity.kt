@@ -9,7 +9,6 @@ package com.example.e_commerce.Activity
 
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +18,8 @@ import com.example.e_commerce.Adapter.DescriptionAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
 import com.example.e_commerce.Adapter.SizeAdapter
 import com.example.e_commerce.Helper.ManagementCart
+import com.example.e_commerce.Helper.CheckToken
+import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.databinding.ActivityDetailBinding
 import java.text.DecimalFormat
@@ -28,6 +29,8 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var item: ProductDetailModel
     private lateinit var managementCart: ManagementCart
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
+    private lateinit var tinyDB: TinyDB
+    private val checkToken = CheckToken(tinyDB)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +45,7 @@ class DetailActivity : AppCompatActivity() {
         setupPicsList()
         setupColorsList()
         setupSizeList()
+        tinyDB = TinyDB(this)
     }
 
     private fun setupSizeList() {
@@ -105,7 +109,9 @@ class DetailActivity : AppCompatActivity() {
         }
 
         addToCartBtn.setOnClickListener {
-            managementCart.insert(item)
+            checkToken.checkTokenOrRedirect(this@DetailActivity) {
+//                managementCart.insert(item)
+            }
         }
     }
 

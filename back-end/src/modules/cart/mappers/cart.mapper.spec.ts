@@ -76,7 +76,7 @@ describe('CartMapper', (): void => {
 
 	const cartDetailResponseDto: CartDetailResponseDto = {
 		id: 1,
-		images: 'https://mocking-image.jpg',
+		imageUrl: 'https://mocking-image.jpg',
 		name: 'Product 1',
 		price: 100000,
 		quantity: 1,

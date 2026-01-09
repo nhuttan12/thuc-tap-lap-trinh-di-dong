@@ -121,7 +121,7 @@ describe('CartService', (): void => {
 				.spyOn(cartService['logger'], 'error')
 				.mockImplementation((): void => {});
 
-			const result: CartResponseDto = await cartService.addProductToCart(
+			const result: string = await cartService.addProductToCart(
 				mockUserID,
 				mockProductID,
 				mockQuantity
@@ -160,7 +160,7 @@ describe('CartService', (): void => {
 				id: 1,
 				quantity: 1,
 				name: mockProductName,
-				images: mockProductImage,
+				imageUrl: mockProductImage,
 				discount: mockDiscount,
 				price: mockPrice,
 			};
@@ -192,7 +192,7 @@ describe('CartService', (): void => {
 			/**
 			 * Call function addProductToCart
 			 */
-			const result: CartResponseDto = await cartService.addProductToCart(
+			const result: string = await cartService.addProductToCart(
 				mockUserID,
 				mockProductID,
 				mockQuantity
@@ -222,7 +222,7 @@ describe('CartService', (): void => {
 				id: 1,
 				quantity: 1,
 				name: mockProductName,
-				images: mockProductImage,
+				imageUrl: mockProductImage,
 				discount: mockDiscount,
 				price: mockPrice,
 			};
@@ -284,7 +284,7 @@ describe('CartService', (): void => {
 				id: 1,
 				quantity: 1,
 				name: mockProductName,
-				images: mockProductImage,
+				imageUrl: mockProductImage,
 				discount: mockDiscount,
 				price: mockPrice,
 			};

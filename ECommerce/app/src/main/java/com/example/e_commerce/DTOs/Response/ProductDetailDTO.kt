@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-package com.example.e_commerce.DTOs
+package com.example.e_commerce.DTOs.Response
 
 import com.squareup.moshi.JsonClass
 

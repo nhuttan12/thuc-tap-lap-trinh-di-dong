@@ -52,6 +52,6 @@ export class CartDetailEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	@JoinColumn({ name: 'cart_id' })
+	@JoinColumn({ name: 'product_id' })
 	product: ProductEntity;
 }

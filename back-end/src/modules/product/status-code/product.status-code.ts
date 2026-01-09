@@ -27,4 +27,10 @@ export class ProductStatusCode extends BaseStatusCode {
 			'PRD_003',
 			'Product ID must not be empty'
 		);
+	static readonly PRODUCT_NOT_FOUND: ProductStatusCode =
+		new ProductStatusCode(
+			HttpStatus.NOT_FOUND,
+			'PRD_004',
+			'Product not found'
+		);
 }

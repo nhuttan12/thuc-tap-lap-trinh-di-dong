@@ -5,13 +5,15 @@
  * @version 1.0.0
  */
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ProductRepository } from './repositories/product.repository';
 import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductMapper } from './mappers/product.mapper';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
+import { RoleStatusCode } from '../role/status-code/role.status-code';
+import { ProductStatusCode } from './status-code/product.status-code';
 
 @Injectable()
 export class ProductService {
@@ -74,5 +76,33 @@ export class ProductService {
 			);
 			throw e;
 		}
+	}
+
+	/**
+	 * @description Get product by ID
+	 * @param {number} productID - ID of product
+	 */
+	async getProductByProductID(
+		productID: number
+	): Promise<ProductEntityResponseDto> {
+		/**
+		 * Call `getProductByProductID` in product repository
+		 */
+		const product: ProductEntity | null =
+			await this.productRepository.getProductByProductID(productID);
+		this.logger.debug(
+			`Call \`getProductByProductID\` in product repository ${JSON.stringify(product, null, 2)}`
+		);
+
+		if (!product) {
+			this.logger.debug(`Product ID ${productID} not found`);
+			throw new NotFoundException({
+				statusCode: ProductStatusCode.PRODUCT_NOT_FOUND.statusCode,
+				customCode: ProductStatusCode.PRODUCT_NOT_FOUND.customCode,
+				message: ProductStatusCode.PRODUCT_NOT_FOUND.message,
+			});
+		}
+
+		return this.productMapper.toProductEntityResponseDto(product);
 	}
 }

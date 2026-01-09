@@ -8,22 +8,19 @@
 import { Injectable } from '@nestjs/common';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
 import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto';
+import { ProductImageTypeEnum } from '../../product/enums/product-image-type.enum';
+import { ProductImageEntity } from '../../image/entities/product-image.entity';
 
 @Injectable()
 export class CartDetailMapper {
 	toCartDetailsResponseDto(
 		cartDetailsEntity: CartDetailEntity[]
 	): CartDetailResponseDto[] {
-		return cartDetailsEntity.map((cartDetailEntity: CartDetailEntity) => {
-			return {
-				id: cartDetailEntity.id,
-				quantity: cartDetailEntity.quantity,
-				discount: cartDetailEntity.product.discount,
-				price: cartDetailEntity.product.price,
-				name: cartDetailEntity.product.name,
-				images: cartDetailEntity.product.productImages[0].image.url,
-			};
-		});
+		return cartDetailsEntity.map(
+			(cartDetailEntity: CartDetailEntity): CartDetailResponseDto => {
+				return this.toCartDetailResponseDto(cartDetailEntity);
+			}
+		);
 	}
 
 	toCartDetailResponseDto(
@@ -35,7 +32,11 @@ export class CartDetailMapper {
 			discount: cartDetailEntity.product.discount,
 			price: cartDetailEntity.product.price,
 			name: cartDetailEntity.product.name,
-			images: cartDetailEntity.product.productImages[0].image.url,
+			imageUrl:
+				cartDetailEntity.product.productImages.find(
+					(productImage: ProductImageEntity): boolean =>
+						productImage.type === ProductImageTypeEnum.THUMBNAIL
+				)?.image.url ?? '',
 		};
 	}
 }

@@ -2,30 +2,44 @@ package com.example.e_commerce.Activity
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.e_commerce.Adapter.CartAdapter
 import com.example.e_commerce.Helper.ChangeNumberItemsListener
 import com.example.e_commerce.Helper.ManagementCart
+import com.example.e_commerce.Helper.TinyDB
+import com.example.e_commerce.Model.CartItemModel
+import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.databinding.ActivityCartBinding
 import kotlin.math.roundToInt
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var managementCart: ManagementCart
+    private lateinit var cartAdapter: CartAdapter
     private var tax: Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        // Init TinyDB
+        val tinyDB = TinyDB(this)
+
+        // Init ViewModel
+        mainViewModel = MainViewModel(tinyDB)
+
         managementCart = ManagementCart(this)
 
         initView()
-        initCartList()
-        calculateCart()
+        initCartListObservers()
+
+        mainViewModel.loadUserCart(limit = 10, page = 1)
     }
 
     private fun initView() {
@@ -34,34 +48,47 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun initCartList() {
-        binding.apply {
-            viewCart.layoutManager =
-                LinearLayoutManager(this@CartActivity, LinearLayoutManager.VERTICAL, false)
+    private fun initCartListObservers() {
+        mainViewModel.cartItem.observe(this) { list ->
+            setupCartRecyclerView(list)
+            calculateCart(list)
+        }
 
+        mainViewModel.loading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        mainViewModel.error.observe(this) { message ->
+            Toast.makeText(this, message ?: "Lỗi không xác định", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun setupCartRecyclerView(cartItemModels: List<CartItemModel>) {
+        binding.apply {
+            viewCart.layoutManager = LinearLayoutManager(this@CartActivity)
             viewCart.adapter = CartAdapter(
-                managementCart.getListCart(),
+                ArrayList(cartItemModels),
                 this@CartActivity,
                 object : ChangeNumberItemsListener {
                     override fun onChanged() {
-                        calculateCart()
+                        mainViewModel.loadUserCart(limit = 50, page = 1)
                     }
-                })
+                }
+            )
 
-            emptyTxt.visibility =
-                if (managementCart.getListCart().isEmpty()) View.VISIBLE else View.GONE
-
-            scrollView2.visibility =
-                if (managementCart.getListCart().isEmpty()) View.GONE else View.VISIBLE
+            emptyTxt.visibility = if (cartItemModels.isEmpty()) View.VISIBLE else View.GONE
+            scrollView2.visibility = if (cartItemModels.isEmpty()) View.GONE else View.VISIBLE
         }
     }
 
-    private fun calculateCart() {
+
+    private fun calculateCart(cartItemModels: List<CartItemModel>) {
         val percentTax: Double = 0.02
         val delivery: Double = 10.0
-        tax = ((managementCart.getTotalFee() * percentTax) * 100).roundToInt() / 100.0
-        val total = ((managementCart.getTotalFee() + tax + delivery) * 100).roundToInt() / 100
-        val itemTotal = (managementCart.getTotalFee() * 100).roundToInt() / 100
+        val itemTotal = cartItemModels.sumOf { it.price * it.numberInCart }
+        tax = ((itemTotal * percentTax) * 100).roundToInt() / 100.0
+        val total = ((itemTotal + tax + delivery) * 100).roundToInt() / 100
 
         with(binding) {
             totalFeeTxt.text = "$itemTotal đồng"

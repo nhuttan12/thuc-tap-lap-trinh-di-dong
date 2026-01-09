@@ -113,7 +113,7 @@ describe('CartDetailMapper', (): void => {
 			discount: 0,
 			price: 100000,
 			name: 'Product 1',
-			images: 'https://example.com/image.jpg',
+			imageUrl: 'https://example.com/image.jpg',
 		},
 		{
 			id: 2,
@@ -121,7 +121,7 @@ describe('CartDetailMapper', (): void => {
 			discount: 0.5,
 			price: 120000,
 			name: 'Product 2',
-			images: 'https://example.com/image2.jpg',
+			imageUrl: 'https://example.com/image2.jpg',
 		},
 	];
 
@@ -169,7 +169,7 @@ describe('CartDetailMapper', (): void => {
 		discount: 0,
 		price: 100000,
 		name: 'Product 1',
-		images: 'https://example.com/image.jpg',
+		imageUrl: 'https://example.com/image.jpg',
 	};
 
 	/**

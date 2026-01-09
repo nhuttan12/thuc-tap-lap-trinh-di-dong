@@ -9,11 +9,12 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Helper.ChangeNumberItemsListener
 import com.example.e_commerce.Helper.ManagementCart
-import com.example.e_commerce.Model.ProductDetailModel
+import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.databinding.ViewholderCartBinding
+import kotlin.math.roundToInt
 
 class CartAdapter(
-    private val listItemSelected: ArrayList<ProductDetailModel>,
+    private val listItemSelected: ArrayList<CartItemModel>,
     context: Context,
     var changeNumberItemsListener: ChangeNumberItemsListener? = null
 ) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
@@ -35,7 +36,7 @@ class CartAdapter(
         val item = listItemSelected[position]
         holder.binding.titleTxt.text = item.title
         holder.binding.feeEachItemTxt.text = "${item.price}"
-        holder.binding.totalEachItem.text = "${Math.round(item.numberInCart * item.price)}"
+        holder.binding.totalEachItem.text = "${(item.numberInCart * item.price).roundToInt()}"
         holder.binding.numberItemTxt.text = item.numberInCart.toString()
 
         Glide.with(holder.itemView.context).load(item.picUrl[0]).apply(
@@ -54,12 +55,15 @@ class CartAdapter(
         }
 
         holder.binding.minusCartBtn.setOnClickListener {
-            managementCart.minusItem(listItemSelected, position, object : ChangeNumberItemsListener {
-                override fun onChanged() {
-                    notifyDataSetChanged()
-                    changeNumberItemsListener?.onChanged()
-                }
-            })
+            managementCart.minusItem(
+                listItemSelected,
+                position,
+                object : ChangeNumberItemsListener {
+                    override fun onChanged() {
+                        notifyDataSetChanged()
+                        changeNumberItemsListener?.onChanged()
+                    }
+                })
         }
     }
 

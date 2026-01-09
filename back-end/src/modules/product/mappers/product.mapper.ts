@@ -12,6 +12,7 @@ import { ProductImageEntity } from '../../image/entities/product-image.entity';
 import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 import { ProductEntity } from '../entities/product.entity';
 import { ProductImageTypeEnum } from '../enums/product-image-type.enum';
+import { ProductDetailsEntity } from '../entities/product-details.entity';
 
 @Injectable()
 export class ProductMapper {
@@ -25,30 +26,38 @@ export class ProductMapper {
 	toProductEntityListResponseDto(
 		products: ProductEntity[]
 	): ProductEntityResponseDto[] {
-		return products.map((product: ProductEntity) => {
-			const details = product.productDetailsEntity;
+		return products.map(
+			(product: ProductEntity): ProductEntityResponseDto => {
+				return this.toProductEntityResponseDto(product);
+			}
+		);
+	}
 
-			return {
-				id: product.id,
-				name: product.name,
-				price: product.price,
+	toProductEntityResponseDto(
+		product: ProductEntity
+	): ProductEntityResponseDto {
+		const details: ProductDetailsEntity = product.productDetailsEntity;
 
-				discount: product.discount ?? 0,
-				description: details?.description ?? '',
-				rating: details?.rating ?? 0,
+		return {
+			id: product.id,
+			name: product.name,
+			price: product.price,
 
-				imageUrl:
-					product.productImages?.find((img: ProductImageEntity) => {
-						return (
-							img.image?.url &&
-							img.type === ProductImageTypeEnum.THUMBNAIL
-						);
-					})?.image.url ?? '',
+			discount: product.discount ?? 0,
+			description: details?.description ?? '',
+			rating: details?.rating ?? 0,
 
-				status: product.status,
-				createdAt: product.createdAt,
-				updatedAt: product.updatedAt,
-			};
-		});
+			imageUrl:
+				product.productImages?.find((img: ProductImageEntity) => {
+					return (
+						img.image?.url &&
+						img.type === ProductImageTypeEnum.THUMBNAIL
+					);
+				})?.image.url ?? '',
+
+			status: product.status,
+			createdAt: product.createdAt,
+			updatedAt: product.updatedAt,
+		};
 	}
 }
