@@ -36,17 +36,15 @@ import com.example.e_commerce.databinding.ActivityMainBinding
 import kotlin.math.min
 
 class DashboardActivity : AppCompatActivity() {
-//    private val viewModel: MainViewModel by lazy {
-//        val tinyDB = TinyDB(this)
-//        val factory = MainViewModelFactory(tinyDB)
-//
-//        ViewModelProvider(this, factory)[MainViewModel::class.java]
-//    }
+    private val tinyDB: TinyDB by lazy { TinyDB(this) }
+
+    private val viewModel: MainViewModel by lazy {
+        val factory = MainViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[MainViewModel::class.java]
+    }
+    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var tinyDB: TinyDB
-    private lateinit var checkToken: CheckToken
-    private lateinit var viewModel: MainViewModel
 
     private val brandsAdapter = BrandsAdapter(mutableListOf())
     private val popularAdapter = PopularAdapter(mutableListOf()) { product ->
@@ -58,11 +56,6 @@ class DashboardActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        tinyDB = TinyDB(this)
-        checkToken = CheckToken(tinyDB)
-        val factory = MainViewModelFactory(tinyDB)
-        viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
         initUI()
         observeProductDetail()
@@ -89,6 +82,12 @@ class DashboardActivity : AppCompatActivity() {
         binding.recyclerViewRecommendation.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewRecommendation.adapter = popularAdapter
         binding.progressBarRecommendation.visibility = View.VISIBLE
+
+        binding.allProdcts.setOnClickListener {
+            startActivity(
+                Intent(this@DashboardActivity, ProductListActivity::class.java)
+            )
+        }
 
         viewModel.popular.observe(this) { data ->
             popularAdapter.updateDate(data)

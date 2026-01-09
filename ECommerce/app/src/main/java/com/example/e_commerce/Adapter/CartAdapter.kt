@@ -15,8 +15,8 @@ import kotlin.math.roundToInt
 
 class CartAdapter(
     private val listItemSelected: ArrayList<CartItemModel>,
-    context: Context,
-    var changeNumberItemsListener: ChangeNumberItemsListener? = null
+    private val context: Context,
+    private val changeNumberItemsListener: ChangeNumberItemsListener? = null
 ) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
     private val managementCart = ManagementCart(context)
 
@@ -68,4 +68,11 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int = listItemSelected.size
+
+    fun updateData(newList: List<CartItemModel>) {
+        this.listItemSelected.clear()
+        this.listItemSelected.addAll(newList)
+        notifyDataSetChanged()
+    }
+
 }

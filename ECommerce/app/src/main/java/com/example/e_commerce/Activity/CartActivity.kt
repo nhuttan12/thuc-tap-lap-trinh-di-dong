@@ -19,8 +19,20 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var managementCart: ManagementCart
-    private lateinit var cartAdapter: CartAdapter
+
     private var tax: Double = 0.0
+
+    /**
+     * Init cart adapter with empty data list
+     */
+    private val cartAdapter: CartAdapter by lazy {
+        CartAdapter(arrayListOf(), this, object :
+            ChangeNumberItemsListener {
+            override fun onChanged() {
+                mainViewModel.loadUserCart(limit = 10, page = 1)
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +40,15 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
-        // Init TinyDB
+        /**
+         * Using view model provider to initialize
+         */
         val tinyDB = TinyDB(this)
-
-        // Init ViewModel
         mainViewModel = MainViewModel(tinyDB)
 
-        managementCart = ManagementCart(this)
-
+        /**
+         * Init view
+         */
         initView()
         initCartListObservers()
 
@@ -46,12 +59,21 @@ class CartActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener {
             finish()
         }
+
+        binding.viewCart.layoutManager = LinearLayoutManager(this)
+        binding.viewCart.adapter = cartAdapter
     }
 
     private fun initCartListObservers() {
         mainViewModel.cartItem.observe(this) { list ->
-            setupCartRecyclerView(list)
-            calculateCart(list)
+//            setupCartRecyclerView(list)
+            if (list != null) {
+                cartAdapter.updateData(list)
+                calculateCart(list)
+            }
+
+            binding.emptyTxt.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+            binding.scrollView2.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
         }
 
         mainViewModel.loading.observe(this) { isLoading ->
@@ -76,9 +98,6 @@ class CartActivity : AppCompatActivity() {
                     }
                 }
             )
-
-            emptyTxt.visibility = if (cartItemModels.isEmpty()) View.VISIBLE else View.GONE
-            scrollView2.visibility = if (cartItemModels.isEmpty()) View.GONE else View.VISIBLE
         }
     }
 
