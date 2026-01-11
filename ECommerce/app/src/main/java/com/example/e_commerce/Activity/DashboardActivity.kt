@@ -68,12 +68,15 @@ class DashboardActivity : AppCompatActivity() {
         initBottomNavigation()
     }
 
-    private fun initBottomNavigation() {
-        binding.cartBtn.setOnClickListener {
+    private fun initBottomNavigation() = with(binding) {
+        homeBtn.isEnabled = false
+        cartBtn.setOnClickListener {
+            cartBtn.isEnabled=false
             checkToken.checkTokenOrRedirect(this@DashboardActivity, {
                 startActivity(
                     Intent(this@DashboardActivity, CartActivity::class.java)
                 )
+                cartBtn.isEnabled=true
             })
         }
     }
@@ -93,6 +96,7 @@ class DashboardActivity : AppCompatActivity() {
             popularAdapter.updateDate(data)
             binding.progressBarRecommendation.visibility = View.GONE
         }
+
         viewModel.loadPopular()
     }
 

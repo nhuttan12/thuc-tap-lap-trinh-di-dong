@@ -43,7 +43,7 @@ class CartRepository(
             /**
              * Get token
              */
-            val token: String = tinyDB.getToken()!!
+            val token: String = tinyDB.getValidToken()!!
 
             /**
              * Call api to load brands
@@ -100,7 +100,7 @@ class CartRepository(
             /**
              * Get token
              */
-            val token: String = tinyDB.getToken()!!
+            val token: String = tinyDB.getValidToken()!!
 
             /**
              * Call api to load brands

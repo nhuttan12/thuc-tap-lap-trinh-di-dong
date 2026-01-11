@@ -25,7 +25,9 @@ import com.example.e_commerce.Repository.BannerRepository
 import com.example.e_commerce.Repository.BrandRepository
 import com.example.e_commerce.Repository.CartRepository
 import com.example.e_commerce.Repository.MainRepository
+import com.example.e_commerce.Repository.PagingResponse
 import com.example.e_commerce.Repository.ProductRepository
+import com.example.e_commerce.Repository.WishlistRepository
 import com.example.e_commerce.Result.NetworkResult
 import kotlinx.coroutines.launch
 
@@ -37,6 +39,7 @@ class MainViewModel(
         bannerRepository = BannerRepository(),
         productRepository = ProductRepository(),
         cartRepository = CartRepository(tinyDB),
+        wishlistRepository = WishlistRepository(tinyDB)
     )
     private val TAG = "MainViewModel"
 
@@ -45,7 +48,10 @@ class MainViewModel(
     private val _popular = MutableLiveData<List<ProductModel>>()
     private val _productDetail = MutableLiveData<ProductDetailModel>()
     private val _cartItem = MutableLiveData<List<CartItemModel>>()
+    private val _wishlistItem = MutableLiveData<List<ProductModel>>()
     private val _addProductToCartMsg: MutableLiveData<String> = MutableLiveData<String>()
+    private val _addProductToWishlist: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val _removeProductFromWishlist: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private var _error = MutableLiveData<String>()
     private var _loading: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
@@ -54,6 +60,9 @@ class MainViewModel(
     val popular: LiveData<List<ProductModel>> get() = _popular
     val productDetail: LiveData<ProductDetailModel> get() = _productDetail
     val addProductToCartMsg: LiveData<String> get() = _addProductToCartMsg
+    val wishlistItem: LiveData<List<ProductModel>> get() = _wishlistItem
+    val addProductToWishlistMsg: LiveData<Boolean> get() = _addProductToWishlist
+    val removeProductFromWishlistMsg: LiveData<Boolean> get() = _removeProductFromWishlist
     val cartItem: LiveData<List<CartItemModel>> get() = _cartItem
     val error: LiveData<String> get() = _error
     val loading: MutableLiveData<Boolean> get() = _loading
@@ -239,6 +248,102 @@ class MainViewModel(
                 repository.addProductToCart(productID = productID, quantity = quantity)) {
                 is NetworkResult.Success -> {
                     _addProductToCartMsg.value = result.data
+                }
+
+                is NetworkResult.Error -> {
+                    _error.value = result.message
+                }
+
+                NetworkResult.Loading -> Unit
+            }
+
+            /**
+             * After handle result
+             * Set loading to false
+             */
+            _loading.value = false
+        }
+    }
+
+    fun loadWishlist(limit: Int, page: Int) {
+        viewModelScope.launch {
+            /**
+             * Set loading to true
+             */
+            _loading.value = true
+
+            /**
+             * Call repository to load brands
+             * Handle result
+             */
+            when (val result: NetworkResult<PagingResponse<ProductModel>> =
+                repository.loadWishlist(limit = limit, page = page)) {
+                is NetworkResult.Success -> {
+                    _wishlistItem.value = result.data.data
+                }
+
+                is NetworkResult.Error -> {
+                    _error.value = result.message
+                }
+
+                NetworkResult.Loading -> Unit
+            }
+
+            /**
+             * After handle result
+             * Set loading to false
+             */
+            _loading.value = false
+        }
+    }
+
+    fun addProductToWishlist(productID: Int) {
+        viewModelScope.launch {
+            /**
+             * Set loading to true
+             */
+            _loading.value = true
+
+            /**
+             * Call repository to load brands
+             * Handle result
+             */
+            when (val result: NetworkResult<Boolean> =
+                repository.addProductToWishlist(productID = productID)) {
+                is NetworkResult.Success -> {
+                    _addProductToWishlist.value = result.data
+                }
+
+                is NetworkResult.Error -> {
+                    _error.value = result.message
+                }
+
+                NetworkResult.Loading -> Unit
+            }
+
+            /**
+             * After handle result
+             * Set loading to false
+             */
+            _loading.value = false
+        }
+    }
+
+    fun removeProductFromWishlist(productID: Int) {
+        viewModelScope.launch {
+            /**
+             * Set loading to true
+             */
+            _loading.value = true
+
+            /**
+             * Call repository to load brands
+             * Handle result
+             */
+            when (val result: NetworkResult<Boolean> =
+                repository.removeWishlistItem(productID = productID)) {
+                is NetworkResult.Success -> {
+                    _removeProductFromWishlist.value = result.data
                 }
 
                 is NetworkResult.Error -> {

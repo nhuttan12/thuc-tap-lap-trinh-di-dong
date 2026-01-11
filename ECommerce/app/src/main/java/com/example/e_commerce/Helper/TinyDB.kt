@@ -1,11 +1,13 @@
 package com.example.e_commerce.Helper
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
+import androidx.core.content.edit
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.Provider.MoshiProvider
@@ -16,6 +18,9 @@ import java.io.IOException
 class TinyDB(context: Context) {
     private val preferences: SharedPreferences =
         context.getSharedPreferences("APP_PREF", Context.MODE_PRIVATE)
+
+    private val ACCESS_TOKEN = "ACCESS_TOKEN"
+    private val KEY_EXPIRE_AT = "EXPIRE_AT"
 
     private var defaultImageDir: String? = null
     private var lastImagePath: String = ""
@@ -182,7 +187,32 @@ class TinyDB(context: Context) {
 //    fun getAll(): Map<String, *> =
 //        preferences.all
 
-    fun getToken(): String? {
-        return preferences.getString("ACCESS_TOKEN", null)
+    fun setToken(token: String, expireAtMillis: Long) {
+        preferences.edit {
+            putString(ACCESS_TOKEN, token)
+            putLong(KEY_EXPIRE_AT, expireAtMillis)
+        }
+    }
+
+    fun isTokenExpired(): Boolean {
+        val expireAt = preferences.getLong(KEY_EXPIRE_AT, 0L)
+        if (expireAt == 0L) return true
+
+        return System.currentTimeMillis() >= expireAt
+    }
+
+    fun getValidToken(): String? {
+        if (isTokenExpired()) {
+            clearToken()
+            return null
+        }
+        return preferences.getString(ACCESS_TOKEN, null)
+    }
+
+    fun clearToken() {
+        preferences.edit {
+            remove(ACCESS_TOKEN)
+            remove(KEY_EXPIRE_AT)
+        }
     }
 }

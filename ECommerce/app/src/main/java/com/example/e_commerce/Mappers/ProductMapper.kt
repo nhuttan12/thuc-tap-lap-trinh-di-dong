@@ -10,6 +10,7 @@ package com.example.e_commerce.Mappers
 
 import com.example.e_commerce.DTOs.Response.ProductDTO
 import com.example.e_commerce.DTOs.Response.ProductDetailDTO
+import com.example.e_commerce.DTOs.Response.ProductInWishlistResponseDto
 import com.example.e_commerce.Helper.StringConverter
 import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.Model.ProductModel
@@ -55,5 +56,19 @@ object ProductMapper {
         } else {
             price
         }
+    }
+
+    fun fromProductInWishlistResponseDto(productInWishlistResponseDto: ProductInWishlistResponseDto): ProductModel {
+        return ProductModel(
+            id = productInWishlistResponseDto.id,
+            title = productInWishlistResponseDto.name,
+            picUrl = productInWishlistResponseDto.imageUrl,
+            price = productInWishlistResponseDto.price,
+            rating = productInWishlistResponseDto.rating
+        )
+    }
+
+    fun fromProductInWishlistResponseDtoList(productInWishlistResponseDtoList: List<ProductInWishlistResponseDto>): List<ProductModel> {
+        return productInWishlistResponseDtoList.map { fromProductInWishlistResponseDto(it) }
     }
 }

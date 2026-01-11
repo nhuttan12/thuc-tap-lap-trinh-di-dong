@@ -24,6 +24,7 @@ class MainRepository(
     private val productRepository: ProductRepository,
     private val bannerRepository: BannerRepository,
     private val cartRepository: CartRepository,
+    private val wishlistRepository: WishlistRepository,
 ) {
     /**
      * @description Call api and handle result
@@ -94,5 +95,39 @@ class MainRepository(
      */
     suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<String> {
         return cartRepository.addProductToCart(productID = productID, quantity = quantity)
+    }
+
+    /**
+     * @description Load wishlist for each user
+     *
+     * @param [Int] [limit] - limit for paging
+     * @param [Int] [page] - current page
+     *
+     * @return [NetworkResult] result of wishlist
+     */
+    suspend fun loadWishlist(limit: Int, page: Int): NetworkResult<PagingResponse<ProductModel>> {
+        return wishlistRepository.loadWishlist(limit = limit, page = page)
+    }
+
+    /**
+     * @description Add product to wishlist
+     *
+     * @param [Int] [productID] - ID of product to add to wishlist
+     *
+     * @return [NetworkResult] result of add product to wishlist
+     */
+    suspend fun addProductToWishlist(productID: Int): NetworkResult<Boolean> {
+        return wishlistRepository.addProductToWishlist(productID = productID)
+    }
+
+    /**
+     * @description Remove product to wishlist
+     *
+     * @param [Int] [productID] - ID of product to add to wishlist
+     *
+     * @return [NetworkResult] result of remove wishlist item
+     */
+    suspend fun removeWishlistItem(productID: Int): NetworkResult<Boolean> {
+        return wishlistRepository.removeWishlistItem(productID = productID)
     }
 }

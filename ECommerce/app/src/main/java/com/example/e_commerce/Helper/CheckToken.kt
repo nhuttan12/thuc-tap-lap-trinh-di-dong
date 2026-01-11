@@ -20,7 +20,7 @@ class CheckToken(private val tinyDB: TinyDB) {
     private val TAG: String = "CheckToken"
 
     fun checkTokenOrRedirect(context: Context, onTokenValid: () -> Unit) {
-        val token: String? = tinyDB.getToken()
+        val token: String? = tinyDB.getValidToken()
 
         /**
          * Checking current token
