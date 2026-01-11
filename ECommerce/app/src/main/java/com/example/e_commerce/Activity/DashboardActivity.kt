@@ -77,6 +77,7 @@ class DashboardActivity : AppCompatActivity() {
                     Intent(this@DashboardActivity, CartActivity::class.java)
                 )
                 cartBtn.isEnabled=true
+                finish()
             })
         }
     }

@@ -39,11 +39,13 @@ class CartAdapter(
         holder.binding.totalEachItem.text = "${(item.numberInCart * item.price).roundToInt()}"
         holder.binding.numberItemTxt.text = item.numberInCart.toString()
 
-        Glide.with(holder.itemView.context).load(item.picUrl[0]).apply(
-            RequestOptions().transform(
-                CenterCrop()
-            )
-        ).into(holder.binding.pic)
+        Glide.with(holder.itemView.context)
+            .load(item.picUrl)
+            .apply(
+                RequestOptions().transform(
+                    CenterCrop()
+                )
+            ).into(holder.binding.pic)
 
         holder.binding.plusCartBtn.setOnClickListener {
             managementCart.plusItem(listItemSelected, position, object : ChangeNumberItemsListener {

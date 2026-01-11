@@ -121,7 +121,9 @@ class ProductListActivity : AppCompatActivity() {
                 Intent(this@ProductListActivity, DashboardActivity::class.java)
             )
             homeBtn.isEnabled = true
+            finish()
         }
+
         cartBtn.setOnClickListener {
             cartBtn.isEnabled = false
             checkToken.checkTokenOrRedirect(this@ProductListActivity, {
@@ -130,6 +132,7 @@ class ProductListActivity : AppCompatActivity() {
                 )
                 cartBtn.isEnabled = true
             })
+            finish()
         }
     }
 }

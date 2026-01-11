@@ -8,12 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.e_commerce.Helper.CheckToken
+import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
+    private val tinyDB: TinyDB by lazy { TinyDB(this) }
+    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -25,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setUpSignUpEvent() {
         val tvSignUp = findViewById<TextView>(R.id.tvSignUp)
         tvSignUp.setOnClickListener {
-            val intent = Intent(this,RegisterActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
     }
@@ -54,8 +59,11 @@ class LoginActivity : AppCompatActivity() {
                 val json = JSONObject(response)
                 val accessToken = json.optString("accessToken")
 
+                val expireAt = checkToken.decodeJwtExpireAt(accessToken)
+
                 if (accessToken.isNotEmpty()) {
-                    saveToken(accessToken)
+//                    saveToken(accessToken)
+                    tinyDB.setToken(accessToken, expireAt)
 
                     Toast.makeText(
                         this,
@@ -119,11 +127,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveToken(token: String) {
-        val sharedPreferences = getSharedPreferences("APP_PREF", MODE_PRIVATE)
-        sharedPreferences
-            .edit()
-            .putString("ACCESS_TOKEN", token)
-            .apply()
-    }
+//    private fun saveToken(token: String) {
+//        val sharedPreferences = getSharedPreferences("APP_PREF", MODE_PRIVATE)
+//        sharedPreferences
+//            .edit()
+//            .putString("ACCESS_TOKEN", token)
+//            .apply()
+//    }
 }

@@ -66,7 +66,6 @@ class CartActivity : AppCompatActivity() {
 
     private fun initCartListObservers() {
         mainViewModel.cartItem.observe(this) { list ->
-//            setupCartRecyclerView(list)
             if (list != null) {
                 cartAdapter.updateData(list)
                 calculateCart(list)
@@ -109,11 +108,13 @@ class CartActivity : AppCompatActivity() {
         tax = ((itemTotal * percentTax) * 100).roundToInt() / 100.0
         val total = ((itemTotal + tax + delivery) * 100).roundToInt() / 100
 
+        val formatter = java.text.DecimalFormat("#,###")
+
         with(binding) {
-            totalFeeTxt.text = "$itemTotal đồng"
-            taxTxt.text = "$tax đồng"
-            deliveryTxt.text = "$delivery đồng"
-            totalTxt.text = "$total đồng"
+            totalFeeTxt.text = "${formatter.format(itemTotal)} đồng"
+            taxTxt.text = "${formatter.format(tax)} đồng"
+            deliveryTxt.text = "${formatter.format(delivery)} đồng"
+            totalTxt.text = "${formatter.format(total)} đồng"
         }
     }
 }
