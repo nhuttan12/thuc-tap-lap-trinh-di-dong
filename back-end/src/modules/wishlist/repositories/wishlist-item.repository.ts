@@ -173,13 +173,13 @@ export class WishlistItemRepository {
 						);
 						throw new NotFoundException({
 							statusCode:
-								WishlistStatusCode.WishlistItemNotFound
+								WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND
 									.statusCode,
 							customCode:
-								WishlistStatusCode.WishlistItemNotFound
+								WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND
 									.customCode,
 							message:
-								WishlistStatusCode.WishlistItemNotFound.message,
+								WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
 						});
 					}
 

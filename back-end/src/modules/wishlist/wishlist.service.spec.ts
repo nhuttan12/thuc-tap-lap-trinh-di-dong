@@ -147,7 +147,7 @@ describe('WishlistService', (): void => {
 			[
 				{
 					id: 1,
-					image: mockImageUrl1,
+					imageUrl: mockImageUrl1,
 					rating: 0,
 					discount: 0,
 					name: 'Product 1',
@@ -157,7 +157,7 @@ describe('WishlistService', (): void => {
 				},
 				{
 					id: 2,
-					image: mockImageUrl2,
+					imageUrl: mockImageUrl2,
 					rating: 3,
 					discount: 5,
 					name: 'Product 2',
@@ -167,7 +167,7 @@ describe('WishlistService', (): void => {
 				},
 				{
 					id: 3,
-					image: mockImageUrl3,
+					imageUrl: mockImageUrl3,
 					rating: 5,
 					discount: 10,
 					name: 'Product 3',
