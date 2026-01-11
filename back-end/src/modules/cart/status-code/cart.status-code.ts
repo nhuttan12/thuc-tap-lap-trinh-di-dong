@@ -79,4 +79,10 @@ export class CartStatusCode extends BaseStatusCode {
 			'CART_012',
 			'Update cart detail failed'
 		);
+	static readonly REMOVE_PRODUCT_FROM_CART_SUCCESS: CartStatusCode =
+		new CartStatusCode(
+			HttpStatus.OK,
+			'CART_013',
+			'Remove product from cart success'
+		);
 }

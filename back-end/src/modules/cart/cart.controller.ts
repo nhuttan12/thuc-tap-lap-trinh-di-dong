@@ -30,6 +30,7 @@ import { GetCartByUserIdRequestDto } from './dtos/get-cart-by-user-id-request.dt
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
 import { MessageResponseDto } from '../../common/dtos/response/message-response.dto';
+import { response } from 'express';
 
 @Controller('carts')
 @UseGuards(JwtAuthGuard)
@@ -118,10 +119,39 @@ export class CartController {
 		return response;
 	}
 
-	// @Post('remove')
-	// async removeFromCart(
-	// 	@User() payload: JwtPayload,
-	// 	@Body() request: RemoveFromCartRequestDto
-	// ): Promise<SuccessResponseDto<CartResponseDto>> {}
+	@Post('remove')
+	async removeFromCart(
+		@User() payload: JwtPayload,
+		@Body() request: RemoveFromCartRequestDto
+	): Promise<SuccessResponseDto<boolean>> {
+		/**
+		 * Call 'removeProductFromCart' from 'cartService'
+		 */
+		const updateResult: boolean =
+			await this.cartService.removeProductFromCart(
+				request.productID,
+				payload.id
+			);
+		this.logger.debug(
+			`Call 'removeProductFromCart' from 'cartService': ${JSON.stringify(updateResult, null, 2)}`
+		);
 
+		/**
+		 * Building response to return to api
+		 */
+		const repsonse: SuccessResponseDto<boolean> = {
+			data: updateResult,
+			message: CartStatusCode.REMOVE_PRODUCT_FROM_CART_SUCCESS.message,
+			statusCode:
+				CartStatusCode.REMOVE_PRODUCT_FROM_CART_SUCCESS.customCode,
+		};
+		this.logger.debug(
+			`Building response to return to api: ${JSON.stringify(repsonse, null, 2)}`
+		);
+
+		/**
+		 * Returning response
+		 */
+		return repsonse;
+	}
 }

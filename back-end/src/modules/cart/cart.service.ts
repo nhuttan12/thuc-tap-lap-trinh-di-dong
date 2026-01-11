@@ -14,6 +14,11 @@ import { CartDetailService } from './cart-detail.service';
 import { CartStatusCode } from './status-code/cart.status-code';
 import { CartDetailEntity } from './entities/cart-detail.entity';
 import { AuthStatusCode } from '../auth/status-code/auth.status-code';
+import { CartResponseDto } from './dtos/cart-response.dto';
+import { ProductEntityResponseDto } from '../product/dtos/product-entity-response.dto';
+import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
+import { ProductService } from '../product/product.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class CartService {
@@ -21,7 +26,9 @@ export class CartService {
 
 	constructor(
 		private readonly cartRepository: CartRepository,
-		private readonly cartDetailService: CartDetailService
+		private readonly cartDetailService: CartDetailService,
+		private readonly productService: ProductService,
+		private readonly userService: UserService
 	) {}
 
 	/**
@@ -44,7 +51,7 @@ export class CartService {
 			 * Get cart by user ID and ACTIVE status
 			 */
 			const existingCartEntity: CartEntity | null =
-				await this.cartRepository.getActiveCartByUserID(userID);
+				await this.getActiveCartByUserIDOrReturnNull(userID);
 			this.logger.debug(
 				`Get cart by user ID and ACTIVE status: ${JSON.stringify(existingCartEntity, null, 2)}`
 			);
@@ -75,23 +82,7 @@ export class CartService {
 				/**
 				 * Get cart entity after create new cart and cart detail
 				 */
-				const newCartAfterCreated: CartEntity | null =
-					await this.cartRepository.getActiveCartByUserID(userID);
-
-				/**
-				 * Checking cart existence after created
-				 */
-				if (!newCartAfterCreated) {
-					/**
-					 * Logging error and throw exception
-					 */
-					this.logger.debug('Cart not found after created');
-					throw new ConflictException({
-						message: CartStatusCode.CART_NOT_FOUND.message,
-						statusCode: CartStatusCode.CART_NOT_FOUND.statusCode,
-						customCode: CartStatusCode.CART_NOT_FOUND.customCode,
-					});
-				}
+				await this.getActiveCartByUserIDOrThrow(userID);
 
 				return CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode;
 			} else {
@@ -119,28 +110,7 @@ export class CartService {
 					/**
 					 * Get new cart after adding new cart detail to existing cart
 					 */
-					const newCartAfterCreated: CartEntity | null =
-						await this.cartRepository.getActiveCartByUserID(userID);
-					this.logger.debug(
-						`Get new cart after adding new cart detail to existing cart: ${JSON.stringify(newCartAfterCreated, null, 2)}`
-					);
-
-					/**
-					 * Checking cart existence after created
-					 */
-					if (!newCartAfterCreated) {
-						/**
-						 * Logging error and throw exception
-						 */
-						this.logger.debug('Cart not found after created');
-						throw new ConflictException({
-							message: CartStatusCode.CART_NOT_FOUND.message,
-							statusCode:
-								CartStatusCode.CART_NOT_FOUND.customCode,
-							customCode:
-								CartStatusCode.CART_NOT_FOUND.customCode,
-						});
-					}
+					await this.getActiveCartByUserIDOrThrow(userID);
 				} else {
 					/**
 					 * Get cart detail by card ID and product ID
@@ -187,35 +157,83 @@ export class CartService {
 		}
 	}
 
-	// async removeProductFromCart(
-	// 	productID: number,
-	// 	userID: number
-	// ): Promise<CartResponseDto> {
-	// 	/**
-	// 	 * Check product existence
-	// 	 */
-	// 	const product: ProductEntityResponseDto =
-	// 		await this.productService.getProductByProductID(productID);
-	// 	this.logger.debug(
-	// 		`Check product existence: ${JSON.stringify(product, null, 2)}`
-	// 	);
-	//
-	// 	/**
-	// 	 * Check user existence
-	// 	 */
-	// 	const user: UserEntityResponseDto =
-	// 		await this.userService.getUserByUserID(userID);
-	// 	this.logger.debug(
-	// 		`Check user existence: ${JSON.stringify(user, null, 2)}`
-	// 	);
-	//
-	// 	/**
-	// 	 * Remove cart detail
-	// 	 */
-	// 	const updateResult: boolean =
-	// 		await this.cartDetailService.removeCartDetailFromCart(
-	// 			productID,
-	// 			car
-	// 		);
-	// }
+	/**
+	 * @description Get active by user ID, if not found, return null
+	 * @param userID - ID of user to get cart
+	 * @return {Promise<CartEntity | null>}
+	 */
+	async getActiveCartByUserIDOrReturnNull(
+		userID: number
+	): Promise<CartEntity | null> {
+		return await this.cartRepository.getActiveCartByUserID(userID);
+	}
+
+	/**
+	 * @description Get actvie cart by user ID, if not found, then throw exception
+	 * @param userID - ID of user to get cart
+	 * @return {Promise<CartEntity>}
+	 */
+	async getActiveCartByUserIDOrThrow(userID: number): Promise<CartEntity> {
+		/**
+		 * Call 'getActiveCartByUserID' in 'cartRepository'
+		 */
+		const cart: CartEntity | null =
+			await this.cartRepository.getActiveCartByUserID(userID);
+		this.logger.debug(
+			`Call 'getActiveCartByUserID' in 'cartRepository': ${JSON.stringify(cart, null, 2)}`
+		);
+
+		/**
+		 * If cart not exist, then throw
+		 */
+		if (!cart) {
+			this.logger.warn('Cart not found');
+			throw new ConflictException({
+				message: CartStatusCode.CART_NOT_FOUND.message,
+				statusCode: CartStatusCode.CART_NOT_FOUND.statusCode,
+				customCode: CartStatusCode.CART_NOT_FOUND.customCode,
+			});
+		}
+
+		/**
+		 * Return cart
+		 */
+		return cart;
+	}
+
+	/**
+	 * @description Remove product from cart
+	 * @param productID - ID of product to remove from cart
+	 * @param userID - ID of user's cart
+	 */
+	async removeProductFromCart(
+		productID: number,
+		userID: number
+	): Promise<boolean> {
+		/**
+		 * Check product existence
+		 */
+		const product: ProductEntityResponseDto =
+			await this.productService.getProductByProductID(productID);
+		this.logger.debug(
+			`Check product existence: ${JSON.stringify(product, null, 2)}`
+		);
+
+		/**
+		 * Get cart by user IO
+		 */
+		const cart: CartEntity =
+			await this.getActiveCartByUserIDOrThrow(userID);
+
+		/**
+		 * Remove cart detail
+		 */
+		const updateResult: boolean =
+			await this.cartDetailService.removeCartDetailFromCart(
+				productID,
+				cart.id
+			);
+
+		return updateResult;
+	}
 }
