@@ -6,19 +6,17 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.e_commerce.Adapter.Action.OnCartItemActionListener
 import com.example.e_commerce.Adapter.CartAdapter
-import com.example.e_commerce.Helper.ChangeNumberItemsListener
-import com.example.e_commerce.Helper.ManagementCart
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.CartItemModel
-import com.example.e_commerce.ViewModel.MainViewModel
+import com.example.e_commerce.ViewModel.CartViewModel
 import com.example.e_commerce.databinding.ActivityCartBinding
 import kotlin.math.roundToInt
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var managementCart: ManagementCart
+    private lateinit var cartViewModel: CartViewModel
 
     private var tax: Double = 0.0
 
@@ -26,16 +24,23 @@ class CartActivity : AppCompatActivity() {
      * Init cart adapter with empty data list
      */
     private val cartAdapter: CartAdapter by lazy {
-        CartAdapter(arrayListOf(), this, object :
-            ChangeNumberItemsListener {
-            override fun onChanged() {
-                mainViewModel.loadUserCart(limit = 10, page = 1)
-            }
-        })
+        CartAdapter(
+            listItemSelected = arrayListOf(),
+            context = this,
+            listener = object : OnCartItemActionListener {
+                override fun onIncrease(item: CartItemModel) {
+                    cartViewModel.onIncrease(item)
+                }
+
+                override fun onDecrease(item: CartItemModel) {
+                    cartViewModel.onDecrease(item)
+                }
+            })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityCartBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
@@ -44,7 +49,7 @@ class CartActivity : AppCompatActivity() {
          * Using view model provider to initialize
          */
         val tinyDB = TinyDB(this)
-        mainViewModel = MainViewModel(tinyDB)
+        cartViewModel = CartViewModel(tinyDB)
 
         /**
          * Init view
@@ -52,7 +57,7 @@ class CartActivity : AppCompatActivity() {
         initView()
         initCartListObservers()
 
-        mainViewModel.loadUserCart(limit = 10, page = 1)
+        cartViewModel.loadUserCart(limit = 20, page = 1)
     }
 
     private fun initView() {
@@ -65,41 +70,22 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initCartListObservers() {
-        mainViewModel.cartItem.observe(this) { list ->
-            if (list != null) {
-                cartAdapter.updateData(list)
-                calculateCart(list)
-            }
+        cartViewModel.cartItem.observe(this) { list ->
+            cartAdapter.updateData(list)
+            calculateCart(list)
 
             binding.emptyTxt.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
             binding.scrollView2.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
         }
 
-        mainViewModel.loading.observe(this) { isLoading ->
+        cartViewModel.loading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        mainViewModel.error.observe(this) { message ->
+        cartViewModel.error.observe(this) { message ->
             Toast.makeText(this, message ?: "Lỗi không xác định", Toast.LENGTH_SHORT).show()
         }
-
     }
-
-    private fun setupCartRecyclerView(cartItemModels: List<CartItemModel>) {
-        binding.apply {
-            viewCart.layoutManager = LinearLayoutManager(this@CartActivity)
-            viewCart.adapter = CartAdapter(
-                ArrayList(cartItemModels),
-                this@CartActivity,
-                object : ChangeNumberItemsListener {
-                    override fun onChanged() {
-                        mainViewModel.loadUserCart(limit = 50, page = 1)
-                    }
-                }
-            )
-        }
-    }
-
 
     private fun calculateCart(cartItemModels: List<CartItemModel>) {
         val percentTax: Double = 0.02

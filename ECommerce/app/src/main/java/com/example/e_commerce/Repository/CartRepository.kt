@@ -2,6 +2,8 @@ package com.example.e_commerce.Repository
 
 import android.util.Log
 import com.example.e_commerce.DTOs.Request.AddProductToCartRequestDto
+import com.example.e_commerce.DTOs.Request.RemoveProductFromCartRequestDto
+import com.example.e_commerce.DTOs.Request.UpdateQuantityCartDetailRequestDto
 import com.example.e_commerce.DTOs.Response.CartDetailResponseDto
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Mappers.CartMapper
@@ -69,12 +71,12 @@ class CartRepository(
                 )
             }
         } catch (e: IOException) {
-            Log.e(TAG, "Network error while loading brands, limit=$limit", e)
+            Log.e(TAG, "Network error while loading carts, limit=$limit", e)
             NetworkResult.Error(503, "Network error")
         } catch (e: HttpException) {
             Log.e(
                 TAG,
-                "HTTP ${e.code()} while loading brands, limit=$limit",
+                "HTTP ${e.code()} while loading carts, limit=$limit",
                 e
             )
             NetworkResult.Error(e.code(), "Server error")
@@ -93,7 +95,8 @@ class CartRepository(
      * @throws [HttpException] if server error occurs
      *
      * @since 2025-12-24
-     * @version 1.0.0
+     * @modifies 2026-01-12
+     * @version 1.0.1
      */
     suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<String> {
         return try {
@@ -118,14 +121,123 @@ class CartRepository(
         } catch (e: IOException) {
             Log.e(
                 TAG,
-                "Network error while loading brands, productID=$productID , quantity=$quantity",
+                "Network error while adding product to cart, productID=$productID , quantity=$quantity",
                 e
             )
             NetworkResult.Error(503, "Network error")
         } catch (e: HttpException) {
             Log.e(
                 TAG,
-                "HTTP ${e.code()} while loading brands, productID=$productID , quantity=$quantity",
+                "HTTP ${e.code()} while adding product to cart, productID=$productID , quantity=$quantity",
+                e
+            )
+            NetworkResult.Error(e.code(), "Server error")
+        }
+    }
+
+    /**
+     * @description Call api to remove product from cart and handle result
+     *
+     * @param [Int] [cartDetailID] - ID of cart detail of user
+     *
+     * @return [NetworkResult]
+     *
+     * @throws [IOException] if network error occurs
+     * @throws [HttpException] if server error occurs
+     *
+     * @since 2026-01-12
+     * @version 1.0.0
+     */
+    suspend fun removeProductFromCart(cartDetailID: Int): NetworkResult<Boolean> {
+        return try {
+            /**
+             * Get token
+             */
+            val token: String = tinyDB.getValidToken()!!
+
+            /**
+             * Call api to load brands
+             * Handle result
+             */
+            val response: Response<ApiSucess<Boolean>> =
+                ApiClient.cartService.removeProductFromCart(
+                    token = "Bearer $token",
+                    RemoveProductFromCartRequestDto(cartDetailID = cartDetailID)
+                );
+
+            Log.d(TAG, "Add product to card ${response.body()?.data}")
+
+            handleApiResponse(response) { it }
+        } catch (e: IOException) {
+            Log.e(
+                TAG,
+                "Network error while remove product from cart, cartDetailID=$cartDetailID",
+                e
+            )
+            NetworkResult.Error(503, "Network error")
+        } catch (e: HttpException) {
+            Log.e(
+                TAG,
+                "HTTP ${e.code()} while remove product from cart, cartDetailID=$cartDetailID",
+                e
+            )
+            NetworkResult.Error(e.code(), "Server error")
+        }
+    }
+
+    /**
+     * @description Call api to update quantity of product from cart and handle result
+     *
+     * @param [Int] [cartDetailID] - ID of cart detail of user
+     * @param [Int] [quantity] - quantity of product to update
+     *
+     * @return [NetworkResult] - Cart item model for rendering in view
+     *
+     * @throws [IOException] if network error occurs
+     * @throws [HttpException] if server error occurs
+     *
+     * @since 2026-01-12
+     * @version 1.0.0
+     */
+    suspend fun updateQuantityOfCartDetail(
+        cartDetailID: Int,
+        quantity: Int
+    ): NetworkResult<CartItemModel> {
+        return try {
+            /**
+             * Get token
+             */
+            val token: String = tinyDB.getValidToken()!!
+
+            /**
+             * Call api to load brands
+             * Handle result
+             */
+            val response: Response<ApiSucess<CartDetailResponseDto>> =
+                ApiClient.cartService.updateQuantityOfCartDetail(
+                    token = "Bearer $token",
+                    UpdateQuantityCartDetailRequestDto(
+                        cartDetailID = cartDetailID,
+                        quantity = quantity
+                    )
+                );
+
+            Log.d(TAG, "Add product to card ${response.body()?.data}")
+
+            handleApiResponse(response) { responseDto ->
+                CartMapper.fromCartDetailResponseDto(responseDto)
+            }
+        } catch (e: IOException) {
+            Log.e(
+                TAG,
+                "Network error while remove product from cart, cartDetailID=$cartDetailID",
+                e
+            )
+            NetworkResult.Error(503, "Network error")
+        } catch (e: HttpException) {
+            Log.e(
+                TAG,
+                "HTTP ${e.code()} while remove product from cart, cartDetailID=$cartDetailID",
                 e
             )
             NetworkResult.Error(e.code(), "Server error")

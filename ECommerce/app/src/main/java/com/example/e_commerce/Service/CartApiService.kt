@@ -1,6 +1,8 @@
 package com.example.e_commerce.Service
 
 import com.example.e_commerce.DTOs.Request.AddProductToCartRequestDto
+import com.example.e_commerce.DTOs.Request.RemoveProductFromCartRequestDto
+import com.example.e_commerce.DTOs.Request.UpdateQuantityCartDetailRequestDto
 import com.example.e_commerce.DTOs.Response.CartDetailResponseDto
 import com.example.e_commerce.Model.ApiSucess
 import com.example.e_commerce.Repository.PagingResponse
@@ -24,4 +26,14 @@ interface CartApiService {
         @Header("Authorization") token: String,
         @Body() request: AddProductToCartRequestDto
     ): Response<ApiSucess<String>>
+
+    suspend fun removeProductFromCart(
+        @Header("Authorization") token: String,
+        @Body() request: RemoveProductFromCartRequestDto
+    ): Response<ApiSucess<Boolean>>
+
+    suspend fun updateQuantityOfCartDetail(
+        @Header("Authorization") token: String,
+        @Body() request: UpdateQuantityCartDetailRequestDto
+    ): Response<ApiSucess<CartDetailResponseDto>>
 }

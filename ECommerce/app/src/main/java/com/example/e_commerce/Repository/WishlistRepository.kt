@@ -101,8 +101,8 @@ class WishlistRepository(
      * @throws [HttpException] if server error occurs
      *
      * @author @nhuttan12
-     * @since 2026-01-11
-     * @version 1.0.0
+     * @modifies 2026-01-12
+     * @version 1.0.1
      */
     suspend fun addProductToWishlist(productID: Int): NetworkResult<Boolean> {
         return try {
@@ -127,12 +127,12 @@ class WishlistRepository(
              */
             handleApiResponse(response) { it }
         } catch (e: IOException) {
-            Log.e(TAG, "Network error while loading brands, productID=$productID", e)
+            Log.e(TAG, "Network error while adding product to wishlist, productID=$productID", e)
             NetworkResult.Error(503, "Network error")
         } catch (e: HttpException) {
             Log.e(
                 TAG,
-                "HTTP ${e.code()} while loading brands, productID=$productID",
+                "HTTP ${e.code()} while adding product to wishlist, productID=$productID",
                 e
             )
             NetworkResult.Error(e.code(), "Server error")

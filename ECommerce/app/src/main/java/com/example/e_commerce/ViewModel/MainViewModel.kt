@@ -47,9 +47,7 @@ class MainViewModel(
     private val _banners = MutableLiveData<List<SliderModel>>()
     private val _popular = MutableLiveData<List<ProductModel>>()
     private val _productDetail = MutableLiveData<ProductDetailModel>()
-    private val _cartItem = MutableLiveData<List<CartItemModel>>()
     private val _wishlistItem = MutableLiveData<List<ProductModel>>()
-    private val _addProductToCartMsg: MutableLiveData<String> = MutableLiveData<String>()
     private val _addProductToWishlist: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private val _removeProductFromWishlist: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private var _error = MutableLiveData<String>()
@@ -59,11 +57,9 @@ class MainViewModel(
     val banners: LiveData<List<SliderModel>> get() = _banners
     val popular: LiveData<List<ProductModel>> get() = _popular
     val productDetail: LiveData<ProductDetailModel> get() = _productDetail
-    val addProductToCartMsg: LiveData<String> get() = _addProductToCartMsg
     val wishlistItem: LiveData<List<ProductModel>> get() = _wishlistItem
     val addProductToWishlistMsg: LiveData<Boolean> get() = _addProductToWishlist
     val removeProductFromWishlistMsg: LiveData<Boolean> get() = _removeProductFromWishlist
-    val cartItem: LiveData<List<CartItemModel>> get() = _cartItem
     val error: LiveData<String> get() = _error
     val loading: MutableLiveData<Boolean> get() = _loading
 
@@ -185,69 +181,6 @@ class MainViewModel(
             when (val result = repository.loadProductDetail(productID)) {
                 is NetworkResult.Success -> {
                     _productDetail.value = result.data
-                }
-
-                is NetworkResult.Error -> {
-                    _error.value = result.message
-                }
-
-                NetworkResult.Loading -> Unit
-            }
-
-            /**
-             * After handle result
-             * Set loading to false
-             */
-            _loading.value = false
-        }
-    }
-
-    fun loadUserCart(limit: Int, page: Int) {
-        viewModelScope.launch {
-            /**
-             * Set loading to true
-             */
-            _loading.value = true
-
-            /**
-             * Call repository to load brands
-             * Handle result
-             */
-            when (val result = repository.loadCart(limit = limit, page = page)) {
-                is NetworkResult.Success -> {
-                    _cartItem.value = result.data.data
-                }
-
-                is NetworkResult.Error -> {
-                    _error.value = result.message
-                }
-
-                NetworkResult.Loading -> Unit
-            }
-
-            /**
-             * After handle result
-             * Set loading to false
-             */
-            _loading.value = false
-        }
-    }
-
-    fun addProductToCart(productID: Int, quantity: Int) {
-        viewModelScope.launch {
-            /**
-             * Set loading to true
-             */
-            _loading.value = true
-
-            /**
-             * Call repository to load brands
-             * Handle result
-             */
-            when (val result =
-                repository.addProductToCart(productID = productID, quantity = quantity)) {
-                is NetworkResult.Success -> {
-                    _addProductToCartMsg.value = result.data
                 }
 
                 is NetworkResult.Error -> {
