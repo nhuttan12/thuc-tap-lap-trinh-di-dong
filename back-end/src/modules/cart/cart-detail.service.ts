@@ -16,6 +16,8 @@ import { CartDetailMapper } from './mappers/cart-detail.mapper';
 import { UpdateResult } from 'typeorm';
 import { ProductStatusCode } from '../product/status-code/product.status-code';
 import { CartStatusCode } from './status-code/cart.status-code';
+import { UserStatusCode } from '../user/status-code/user.status-code';
+import { CartService } from './cart.service';
 
 @Injectable()
 export class CartDetailService {
@@ -56,7 +58,7 @@ export class CartDetailService {
 			 * Calling `getCartDetailsByUserID` from `CartDetailRepository`
 			 */
 			const [cartDetails, total]: [CartDetailEntity[], number] =
-				await this.cartDetailRepository.getCartDetailsByUserID(
+				await this.cartDetailRepository.getCartDetailListByUserID(
 					userID,
 					skip,
 					limit
@@ -69,7 +71,7 @@ export class CartDetailService {
 			 * Convert `CartDetailEntity` to `CartDetailResponseDto`
 			 */
 			const cartDetailsResponseDto: CartDetailResponseDto[] =
-				this.cartDetailMapper.toCartDetailsResponseDto(cartDetails);
+				this.cartDetailMapper.toCartDetailListResponseDto(cartDetails);
 			this.logger.debug(
 				`Convert \`CartDetailEntity\` to \`CartDetailResponseDto\`: ${JSON.stringify(cartDetailsResponseDto, null, 2)}`
 			);
@@ -149,21 +151,21 @@ export class CartDetailService {
 	/**
 	 * @description Remove cart detail from cart then check row effect
 	 * and return boolean
-	 * @param {number} productID - ID of product
-	 * @param {number} cartID - ID of cart
+	 * @param {number} cartDetailID - ID of cart detail of user's cart
+	 * @param {number} userID - ID of user
 	 * @return {Promise<boolean>}
 	 */
 	async removeCartDetailFromCart(
-		productID: number,
-		cartID: number
+		cartDetailID: number,
+		userID: number
 	): Promise<boolean> {
 		/**
 		 * Call `removeCartDetailFromCart` from `CartDetailRepository`
 		 */
 		const updateResult: UpdateResult =
 			await this.cartDetailRepository.removeCartDetailFromCart(
-				productID,
-				cartID
+				cartDetailID,
+				userID
 			);
 		this.logger.debug(
 			`Remove cart detail from cart result: ${JSON.stringify(updateResult, null, 2)}`
@@ -247,5 +249,111 @@ export class CartDetailService {
 			);
 
 		return (updateResult.affected ?? 0) > 0;
+	}
+
+	/**
+	 * @description Get cart detail by cart detail ID and user ID,
+	 * if not exist, return null
+	 * @param cartDetailID - ID of cart detail of user
+	 * @param userID - ID of user
+	 */
+	async getCartDetailByCartDetailIDAndUserIDOrReturnNull(
+		cartDetailID: number,
+		userID: number
+	): Promise<CartDetailEntity | null> {
+		/**
+		 * Call 'getCartDetailByCartDetailIDAndUserID' in 'cartDetailRepository'
+		 */
+		return await this.cartDetailRepository.getCartDetailByCartDetailIDAndUserID(
+			cartDetailID,
+			userID
+		);
+	}
+
+	async getCartDetailByCartDetailIDAndUserIDOrThrow(
+		cartDetailID: number,
+		userID: number
+	): Promise<CartDetailEntity> {
+		/**
+		 * Call 'getCartDetailByCartDetailIDAndUserID' in 'cartDetailRepository'
+		 */
+		const cartDetail: CartDetailEntity | null =
+			await this.cartDetailRepository.getCartDetailByCartDetailIDAndUserID(
+				cartDetailID,
+				userID
+			);
+		this.logger.debug(
+			`Call 'getCartDetailByCartDetailIDAndUserID' in 'cartDetailRepository': ${JSON.stringify(cartDetail, null, 2)}`
+		);
+
+		/**
+		 * If not exist throw NotFoundException
+		 */
+		if (!cartDetail) {
+			this.logger.warn('cartDetail not found');
+			throw new NotFoundException({
+				statusCode: CartStatusCode.CART_DETAIL_NOT_FOUND.statusCode,
+				customCode: CartStatusCode.CART_DETAIL_NOT_FOUND.customCode,
+				message: CartStatusCode.CART_DETAIL_NOT_FOUND.message,
+			});
+		}
+
+		return cartDetail;
+	}
+
+	async updateQuantityCartDetail(
+		cartDetailID: number,
+		userID: number,
+		quantity: number
+	): Promise<CartDetailResponseDto> {
+		/**
+		 * Get cart detail, if not exist, throw NotFoundException
+		 */
+		const cartDetail: CartDetailEntity =
+			await this.getCartDetailByCartDetailIDAndUserIDOrThrow(
+				cartDetailID,
+				userID
+			);
+		this.logger.debug(
+			`Get cart detail: ${JSON.stringify(cartDetail, null, 2)}`
+		);
+
+		/**
+		 * Update quantity of product in cart
+		 */
+		const updateResult: boolean =
+			await this.updateQuantityOfProductInCartDetail(
+				cartDetail.cart.id,
+				cartDetail.product.id,
+				quantity
+			);
+		this.logger.debug(
+			`Update quantity of product in cart: ${JSON.stringify(updateResult, null, 2)}`
+		);
+
+		/**
+		 * Get cart detail response
+		 */
+		const cartDetailAfterUpdate: CartDetailEntity =
+			await this.getCartDetailByCartIDAndProductIDOrThrow(
+				cartDetail.cart.id,
+				cartDetail.product.id
+			);
+
+		/**
+		 * Mapping to CartDetailResponseDto from CartDetailEntity
+		 */
+		const cartDetailResponse: CartDetailResponseDto =
+			this.cartDetailMapper.toCartDetailResponseDto(
+				cartDetailAfterUpdate
+			);
+		this.logger.debug(
+			`Mapping to CartDetailResponseDto from CartDetailEntity: ${JSON.stringify(cartDetailResponse, null, 2)}`
+		);
+
+		/**
+		 * Return
+		 */
+		return cartDetailResponse;
 	}
 }

@@ -45,7 +45,7 @@ export class CartService {
 		productID: number,
 		userID: number,
 		quantity: number
-	): Promise<string> {
+	): Promise<boolean> {
 		try {
 			/**
 			 * Get cart by user ID and ACTIVE status
@@ -84,7 +84,7 @@ export class CartService {
 				 */
 				await this.getActiveCartByUserIDOrThrow(userID);
 
-				return CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode;
+				return true;
 			} else {
 				/**
 				 * If cart already exist, adding new cart detail to existing cart
@@ -146,7 +146,7 @@ export class CartService {
 					}
 				}
 
-				return CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode;
+				return true;
 			}
 		} catch (e) {
 			this.logger.error(
@@ -203,36 +203,31 @@ export class CartService {
 
 	/**
 	 * @description Remove product from cart
-	 * @param productID - ID of product to remove from cart
+	 * @param cartDetailID - ID of cart detail reference to ID of product
 	 * @param userID - ID of user's cart
 	 */
 	async removeProductFromCart(
-		productID: number,
+		cartDetailID: number,
 		userID: number
 	): Promise<boolean> {
 		/**
-		 * Check product existence
+		 * Get cart detail by cart detail ID and user ID
 		 */
-		const product: ProductEntityResponseDto =
-			await this.productService.getProductByProductID(productID);
-		this.logger.debug(
-			`Check product existence: ${JSON.stringify(product, null, 2)}`
-		);
-
-		/**
-		 * Get cart by user IO
-		 */
-		const cart: CartEntity =
-			await this.getActiveCartByUserIDOrThrow(userID);
+		const cartDetail: CartDetailEntity =
+			await this.cartDetailService.getCartDetailByCartDetailIDAndUserIDOrThrow(
+				cartDetailID,
+				userID
+			);
 
 		/**
 		 * Remove cart detail
 		 */
 		const updateResult: boolean =
 			await this.cartDetailService.removeCartDetailFromCart(
-				productID,
-				cart.id
+				cartDetail.id,
+				userID
 			);
+		this.logger.debug(`Remove cart detail result: ${updateResult}`);
 
 		return updateResult;
 	}

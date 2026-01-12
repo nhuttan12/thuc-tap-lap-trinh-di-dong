@@ -32,7 +32,7 @@ export class CartDetailRepository {
 	 * @modifies 2026-01-09
 	 * @version 1.0.1
 	 */
-	async getCartDetailsByUserID(
+	async getCartDetailListByUserID(
 		userID: number,
 		skip: number,
 		take: number
@@ -139,31 +139,32 @@ export class CartDetailRepository {
 
 	/**
 	 * @description Remove cart detail from cart
-	 * @param {number} productID - ID of product
-	 * @param {number} cartID - ID of cart
+	 * @param {number} cartDetailID - ID of cart detail of user's cart
+	 * @param {number} userID - ID of user
 	 * @return {Promise<UpdateResult>}
 	 */
 	async removeCartDetailFromCart(
-		productID: number,
-		cartID: number
+		cartDetailID: number,
+		userID: number
 	): Promise<UpdateResult> {
 		return await this.dataSource.transaction(
 			async (tx: EntityManager): Promise<UpdateResult> => {
-				return await tx.update(
-					CartDetailEntity,
-					{
-						cart: {
-							id: cartID,
-						},
-						product: {
-							id: productID,
-						},
+				return await tx
+					.createQueryBuilder()
+					.update(CartDetailEntity)
+					.set({ status: CartDetailsStatusEnum.DELETED })
+					.where('id = :id', { id: cartDetailID })
+					.andWhere('status = :status', {
 						status: CartDetailsStatusEnum.ACTIVE,
-					},
-					{
-						status: CartDetailsStatusEnum.DELETED,
-					}
-				);
+					})
+					.andWhere(
+						`
+						cart_id = (
+							SELECT c.id FROM carts c WHERE c.user_id = :userID
+							)`
+					)
+					.setParameters({ userID })
+					.execute();
 			}
 		);
 	}
@@ -231,5 +232,40 @@ export class CartDetailRepository {
 				);
 			}
 		);
+	}
+
+	/**
+	 * @description Get cart detail by cart detail ID and user ID
+	 * @param cartDetailID - ID of cart detail of user
+	 * @param userID - ID of user
+	 * @return {Promise<CartDetailEntity | null>}
+	 * @author Nhut Tan
+	 * @since 2026-01-12
+	 * @version 1.0.0
+	 */
+	async getCartDetailByCartDetailIDAndUserID(
+		cartDetailID: number,
+		userID: number
+	): Promise<CartDetailEntity | null> {
+		const cartDetail: CartDetailEntity | null =
+			await this.cartDetailRepository.findOne({
+				where: {
+					id: cartDetailID,
+					cart: {
+						user: {
+							id: userID,
+						},
+					},
+				},
+				relations: {
+					product: true,
+					cart: true,
+				},
+			});
+		this.logger.debug(
+			`Get cart detail by cart detail ID and user ID in repository: ${JSON.stringify(cartDetailID, null, 2)}`
+		);
+
+		return cartDetail;
 	}
 }

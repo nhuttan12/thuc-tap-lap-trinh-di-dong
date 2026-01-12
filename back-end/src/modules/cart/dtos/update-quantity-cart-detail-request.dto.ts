@@ -1,7 +1,7 @@
 /**
- * @description Dto request for remove product from cart
+ * @description Dto request for update quantity cart detail
  * @author Nhut Tan
- * @since 2026-01-09
+ * @since 2026-01-12
  * @version 1.0.0
  */
 
@@ -9,7 +9,7 @@ import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, Min } from 'class-validator';
 import { CartStatusCode } from '../status-code/cart.status-code';
 
-export class RemoveFromCartRequestDto {
+export class UpdateQuantityCartDetailRequestDto {
 	@Type(() => Number)
 	@IsInt({ message: CartStatusCode.PRODUCT_ID_MUST_BE_INTEGER.customCode })
 	@IsNotEmpty({
@@ -18,5 +18,15 @@ export class RemoveFromCartRequestDto {
 	@Min(1, {
 		message: CartStatusCode.PRODUCT_ID_MUST_BE_A_POSITIVE_NUMBER.customCode,
 	})
-	productID: number;
+	cartDetailID: number;
+
+	@Type(() => Number)
+	@IsInt({ message: CartStatusCode.QUANTITY_MUST_BE_INTEGER.customCode })
+	@IsNotEmpty({
+		message: CartStatusCode.QUANTITY_MUST_NOT_BE_EMPTY.customCode,
+	})
+	@Min(1, {
+		message: CartStatusCode.QUANTITY_MUST_BE_A_POSITIVE_NUMBER.customCode,
+	})
+	quantity: number;
 }

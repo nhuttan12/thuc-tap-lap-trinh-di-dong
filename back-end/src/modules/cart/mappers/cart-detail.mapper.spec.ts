@@ -177,7 +177,7 @@ describe('CartDetailMapper', (): void => {
 	 */
 	it('should mapping CartDetailEntity[] to CartDetailResponseDto[]', (): void => {
 		const result: CartDetailResponseDto[] =
-			cartDetailMapper.toCartDetailsResponseDto(cartDetailsEntity);
+			cartDetailMapper.toCartDetailListResponseDto(cartDetailsEntity);
 
 		expect(result).toEqual(cartDetailsResponseDto);
 	});
@@ -198,7 +198,7 @@ describe('CartDetailMapper', (): void => {
 	it('should not mutate the CartDetailEntity[] original after mapping', (): void => {
 		const originalCopy: CartDetailEntity[] = cloneDeep(cartDetailsEntity);
 
-		cartDetailMapper.toCartDetailsResponseDto(cartDetailsEntity);
+		cartDetailMapper.toCartDetailListResponseDto(cartDetailsEntity);
 
 		expect(cartDetailsEntity).toEqual(originalCopy);
 	});
