@@ -2,7 +2,8 @@
  * @description Product list activity loading data to recycler view
  * @author @nhuttan12
  * @since 2026-01-10
- * @version 1.0.0
+ * @modifies 2026-01-12
+ * @version 1.0.1
  */
 
 package com.example.e_commerce.Activity
@@ -19,23 +20,37 @@ import com.example.e_commerce.Adapter.PopularAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.Enum.ProductListType
+import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.ViewModel.MainViewModelFactory
+import com.example.e_commerce.ViewModel.WishlistViewModel
+import com.example.e_commerce.ViewModel.WishlistViewModelFactory
 import com.example.e_commerce.databinding.ActivityProductListBinding
 
 class ProductListActivity : AppCompatActivity() {
     private val tinyDB: TinyDB by lazy { TinyDB(this) }
     private lateinit var type: ProductListType
+    private var productList: List<ProductModel> = emptyList()
+    private var pendingWishlistProductID: Int? = null
 
     private val viewModel: MainViewModel by lazy {
         val factory = MainViewModelFactory(tinyDB)
         ViewModelProvider(this, factory)[MainViewModel::class.java]
     }
+
+    private val wishlistViewModel: WishlistViewModel by lazy {
+        val factory = WishlistViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[WishlistViewModel::class.java]
+    }
+
     private lateinit var binding: ActivityProductListBinding
     private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
-    private val popularAdapter = PopularAdapter(mutableListOf()) { product ->
-        loadProductDetailAndNavigate(product.id)
-    }
+
+    //    private val popularAdapter = PopularAdapter(items = mutableListOf(), ) { product ->
+//        loadProductDetailAndNavigate(product.id)
+//    }
+
+    private lateinit var popularAdapter: PopularAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +76,18 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun initProductList() {
         binding.recyclerViewProductList.layoutManager = GridLayoutManager(this, 2)
+
+        popularAdapter = PopularAdapter(
+            items = mutableListOf(),
+            listType = type,
+            onItemClick = { productModel ->
+                loadProductDetailAndNavigate(productModel.id)
+            },
+            onWishlistClick = { productModel ->
+                toggleWishlist(productModel)
+            }
+        )
+
         binding.recyclerViewProductList.adapter = popularAdapter
         binding.progressBarProductList.visibility = View.VISIBLE
 
@@ -75,12 +102,13 @@ class ProductListActivity : AppCompatActivity() {
             }
 
             ProductListType.WISHLIST -> {
-                viewModel.wishlistItem.observe(this) {
+                wishlistViewModel.wishlistItem.observe(this) {
+                    productList = it
                     popularAdapter.updateDate(it)
                     binding.progressBarProductList.visibility = View.GONE
                 }
 
-                viewModel.loadWishlist(page = 1, limit = 10)
+                wishlistViewModel.loadWishlist(page = 1, limit = 10)
             }
 
             ProductListType.PRODUCT -> {
@@ -96,6 +124,7 @@ class ProductListActivity : AppCompatActivity() {
     private fun loadProductDetailAndNavigate(productID: Int) {
         viewModel.loadProductDetail(productID)
     }
+
 
     private fun observeProductDetail() {
         viewModel.productDetail.observe(this) { item ->
@@ -115,12 +144,11 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() = with(binding) {
-        cartBtn.setOnClickListener {
-            cartBtn.isEnabled = false
+        homeBtn.setOnClickListener {
+            homeBtn.isEnabled = false
             startActivity(
                 Intent(this@ProductListActivity, DashboardActivity::class.java)
             )
-            homeBtn.isEnabled = true
             finish()
         }
 
@@ -130,9 +158,53 @@ class ProductListActivity : AppCompatActivity() {
                 startActivity(
                     Intent(this@ProductListActivity, CartActivity::class.java)
                 )
-                cartBtn.isEnabled = true
+                finish()
             })
-            finish()
         }
+
+        wishlistBtn.isEnabled = false
+    }
+
+    private fun toggleWishlist(product: ProductModel) {
+        pendingWishlistProductID = product.id
+
+        if (product.isInWishlist) {
+            wishlistViewModel.removeProductFromWishlist(product.id)
+        } else {
+            wishlistViewModel.addProductToWishlist(product.id)
+        }
+    }
+
+    private fun observeWishlist() {
+        wishlistViewModel.addProductToWishlistMsg.observe(this) { success ->
+            if (success == true) {
+                updateWishlistState(productID = null, isInWishlist = true)
+            }
+        }
+
+        wishlistViewModel.removeProductFromWishlistMsg.observe(this) { success ->
+            if (success == true) {
+                updateWishlistState(productID = null, isInWishlist = false)
+            }
+        }
+    }
+
+    private fun updateWishlistState(productID: Int?, isInWishlist: Boolean) {
+//        val id = productID ?: pendingWishlistProductID ?: return
+//
+//        val updatedList = popularAdapter.currentItems().map {
+//            if (it.id == id) {
+//                it.copy(isInWishlist = isInWishlist)
+//            } else it
+//        }
+//
+//        popularAdapter.updateDate(updatedList)
+
+        productList = productList.map {
+            if (it.id == productID) it.copy(isInWishlist = isInWishlist)
+            else it
+        }
+
+        popularAdapter.updateDate(productList)
     }
 }

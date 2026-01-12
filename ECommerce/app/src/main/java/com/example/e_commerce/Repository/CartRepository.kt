@@ -2,7 +2,6 @@ package com.example.e_commerce.Repository
 
 import android.util.Log
 import com.example.e_commerce.DTOs.Request.AddProductToCartRequestDto
-import com.example.e_commerce.DTOs.Request.RemoveProductFromCartRequestDto
 import com.example.e_commerce.DTOs.Request.UpdateQuantityCartDetailRequestDto
 import com.example.e_commerce.DTOs.Response.CartDetailResponseDto
 import com.example.e_commerce.Helper.TinyDB
@@ -162,10 +161,10 @@ class CartRepository(
             val response: Response<ApiSucess<Boolean>> =
                 ApiClient.cartService.removeProductFromCart(
                     token = "Bearer $token",
-                    RemoveProductFromCartRequestDto(cartDetailID = cartDetailID)
+                    cartDetailID = cartDetailID
                 );
 
-            Log.d(TAG, "Add product to card ${response.body()?.data}")
+            Log.d(TAG, "Remove product to card ${response.body()?.data}")
 
             handleApiResponse(response) { it }
         } catch (e: IOException) {
@@ -222,7 +221,7 @@ class CartRepository(
                     )
                 );
 
-            Log.d(TAG, "Add product to card ${response.body()?.data}")
+            Log.d(TAG, "Update quantity of cart detail ${response.body()?.data}")
 
             handleApiResponse(response) { responseDto ->
                 CartMapper.fromCartDetailResponseDto(responseDto)

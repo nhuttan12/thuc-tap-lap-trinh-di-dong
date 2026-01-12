@@ -8,20 +8,27 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Activity.DetailActivity
+import com.example.e_commerce.Model.Enum.ProductListType
 import com.example.e_commerce.Model.ProductModel
+import com.example.e_commerce.R
 import com.example.e_commerce.databinding.ViewholderRecommendedBinding
 import java.text.DecimalFormat
 
 class PopularAdapter(
     private val items: MutableList<ProductModel>,
-    private val onItemClick: (ProductModel) -> Unit
+    private val listType: ProductListType,
+    private val onItemClick: (ProductModel) -> Unit,
+    private val onWishlistClick: ((ProductModel) -> Unit)? = null
 ) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
+
     fun updateDate(newData: List<ProductModel>) {
         items.clear()
         items.addAll(newData)
         notifyDataSetChanged()
     }
+
+    fun currentItems(): List<ProductModel> = items
 
     inner class ViewHolder(val binding: ViewholderRecommendedBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -50,13 +57,34 @@ class PopularAdapter(
             ratingTxt.text = item.rating.toString()
 
             Glide
-                .with(holder.itemView.context)
+                .with(root.context)
                 .load(item.picUrl)
                 .apply(
                     RequestOptions().transform(
                         CenterCrop()
                     )
                 ).into(pic)
+
+            when (listType) {
+                ProductListType.WISHLIST -> {
+                    addToWishlist.setColorFilter(
+                        root.context.getColor(R.color.red)
+                    )
+                    addToWishlist.isEnabled = false
+                }
+
+                else -> {
+                    addToWishlist.setColorFilter(
+                        root.context.getColor(
+                            if (item.isInWishlist) R.color.red else R.color.grey
+                        )
+                    )
+
+                    addToWishlist.setOnClickListener {
+                        onWishlistClick?.invoke(item)
+                    }
+                }
+            }
 
             root.setOnClickListener {
                 onItemClick(item)

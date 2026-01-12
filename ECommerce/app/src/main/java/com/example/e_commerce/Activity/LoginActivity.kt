@@ -71,8 +71,11 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
+//                    startActivity(
+//                        Intent(this, SplashActivity::class.java)
+//                    )
                     startActivity(
-                        Intent(this, SplashActivity::class.java)
+                        Intent(this, DashboardActivity::class.java)
                     )
                     finish()
                 } else {

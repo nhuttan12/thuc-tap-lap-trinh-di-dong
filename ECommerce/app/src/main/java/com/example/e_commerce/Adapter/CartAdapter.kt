@@ -33,6 +33,9 @@ class CartAdapter(
     override fun onBindViewHolder(holder: CartAdapter.ViewHolder, position: Int) {
         val item = listItemSelected[position]
 
+        holder.binding.plusCartBtn.isEnabled = !item.isUpdating
+        holder.binding.minusCartBtn.isEnabled = !item.isUpdating
+
         holder.binding.titleTxt.text = item.title
         holder.binding.feeEachItemTxt.text = "${item.price}"
         holder.binding.totalEachItem.text = "${(item.numberInCart * item.price).roundToInt()}"

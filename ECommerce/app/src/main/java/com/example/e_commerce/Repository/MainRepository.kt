@@ -66,38 +66,4 @@ class MainRepository(
     suspend fun loadProductDetail(productID: Int): NetworkResult<ProductDetailModel> {
         return productRepository.getProductDetailByProductID(productID)
     }
-
-    /**
-     * @description Load wishlist for each user
-     *
-     * @param [Int] [limit] - limit for paging
-     * @param [Int] [page] - current page
-     *
-     * @return [NetworkResult] result of wishlist
-     */
-    suspend fun loadWishlist(limit: Int, page: Int): NetworkResult<PagingResponse<ProductModel>> {
-        return wishlistRepository.loadWishlist(limit = limit, page = page)
-    }
-
-    /**
-     * @description Add product to wishlist
-     *
-     * @param [Int] [productID] - ID of product to add to wishlist
-     *
-     * @return [NetworkResult] result of add product to wishlist
-     */
-    suspend fun addProductToWishlist(productID: Int): NetworkResult<Boolean> {
-        return wishlistRepository.addProductToWishlist(productID = productID)
-    }
-
-    /**
-     * @description Remove product to wishlist
-     *
-     * @param [Int] [productID] - ID of product to add to wishlist
-     *
-     * @return [NetworkResult] result of remove wishlist item
-     */
-    suspend fun removeWishlistItem(productID: Int): NetworkResult<Boolean> {
-        return wishlistRepository.removeWishlistItem(productID = productID)
-    }
 }

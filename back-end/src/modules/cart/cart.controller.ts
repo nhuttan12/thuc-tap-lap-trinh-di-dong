@@ -8,6 +8,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Logger,
 	Post,
@@ -30,8 +31,6 @@ import { RemoveProductFromCartRequestDto } from './dtos/remove-product-from-cart
 import { GetCartByUserIdRequestDto } from './dtos/get-cart-by-user-id-request.dto';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
-import { MessageResponseDto } from '../../common/dtos/response/message-response.dto';
-import { response } from 'express';
 import { UpdateQuantityCartDetailRequestDto } from './dtos/update-quantity-cart-detail-request.dto';
 
 @Controller('carts')
@@ -123,10 +122,10 @@ export class CartController {
 		return response;
 	}
 
-	@Post('remove')
+	@Delete('remove')
 	async removeFromCart(
 		@User() payload: JwtPayload,
-		@Body() request: RemoveProductFromCartRequestDto
+		@Query() request: RemoveProductFromCartRequestDto
 	): Promise<SuccessResponseDto<boolean>> {
 		/**
 		 * Call 'removeProductFromCart' from 'cartService'

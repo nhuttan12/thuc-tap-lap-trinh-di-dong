@@ -1,3 +1,10 @@
+/**
+ * @description Cart view model
+ * @author @nhuttan12
+ * @since 2026-01-12
+ * @version 1.0.0
+ */
+
 package com.example.e_commerce.ViewModel
 
 import androidx.lifecycle.LiveData
@@ -50,7 +57,7 @@ class CartViewModel(
              */
             when (val result = repository.loadCart(limit = limit, page = page)) {
                 is NetworkResult.Success -> {
-                    _cartItem.value = result.data.data
+                    mergeAfterReload(result.data.data)
                 }
 
                 is NetworkResult.Error -> {
@@ -115,6 +122,7 @@ class CartViewModel(
                 repository.removeProductFromCart(cartDetailID = cartDetailID)) {
                 is NetworkResult.Success -> {
                     _removeProductFromCart.value = result.data
+                    loadUserCart(20, 1)
                 }
 
                 is NetworkResult.Error -> {
@@ -150,6 +158,7 @@ class CartViewModel(
                 )) {
                 is NetworkResult.Success -> {
                     _updateQuantityProductDetail.value = result.data
+                    loadUserCart(20, 1)
                 }
 
                 is NetworkResult.Error -> {
@@ -168,6 +177,8 @@ class CartViewModel(
     }
 
     fun onIncrease(item: CartItemModel) {
+        markItemUpdating(item.id, true)
+
         updateQuantityOfCartDetail(
             cartDetailID = item.id,
             quantity = item.numberInCart + 1
@@ -175,6 +186,8 @@ class CartViewModel(
     }
 
     fun onDecrease(item: CartItemModel) {
+        markItemUpdating(item.id, true)
+
         if (item.numberInCart <= 1) {
             removeProductFromCart(item.id)
         } else {
@@ -182,6 +195,22 @@ class CartViewModel(
                 cartDetailID = item.id,
                 quantity = item.numberInCart - 1
             )
+        }
+    }
+
+    private fun markItemUpdating(cartDetailID: Int, updating: Boolean) {
+        val current = _cartItem.value ?: return
+
+        _cartItem.value = current.map {
+            if (it.id == cartDetailID) {
+                it.copy(isUpdating = updating)
+            } else it
+        }
+    }
+
+    private fun mergeAfterReload(newList: List<CartItemModel>) {
+        _cartItem.value = newList.map {
+            it.copy(isUpdating = false)
         }
     }
 }
