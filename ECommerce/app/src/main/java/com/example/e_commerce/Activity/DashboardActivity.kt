@@ -29,10 +29,12 @@ import com.example.e_commerce.Adapter.PopularAdapter
 import com.example.e_commerce.Adapter.SliderAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
+import com.example.e_commerce.Model.Enum.ProductListType
 import com.example.e_commerce.Model.SliderModel
 import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.ViewModel.MainViewModelFactory
 import com.example.e_commerce.databinding.ActivityMainBinding
+import kotlin.math.abs
 import kotlin.math.min
 
 class DashboardActivity : AppCompatActivity() {
@@ -47,9 +49,14 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val brandsAdapter = BrandsAdapter(mutableListOf())
-    private val popularAdapter = PopularAdapter(mutableListOf()) { product ->
-        loadProductDetailAndNavigate(product.id)
-    }
+    private val popularAdapter =
+        PopularAdapter(
+            items = mutableListOf(),
+            listType = ProductListType.POPULAR,
+            onItemClick = { product ->
+                loadProductDetailAndNavigate(product.id)
+            },
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,12 +75,25 @@ class DashboardActivity : AppCompatActivity() {
         initBottomNavigation()
     }
 
-    private fun initBottomNavigation() {
-        binding.cartBtn.setOnClickListener {
+    private fun initBottomNavigation() = with(binding) {
+        homeBtn.isEnabled = false
+
+        cartBtn.setOnClickListener {
+            cartBtn.isEnabled = false
             checkToken.checkTokenOrRedirect(this@DashboardActivity, {
-                startActivity(
-                    Intent(this@DashboardActivity, CartActivity::class.java)
-                )
+                val intent: Intent = Intent(this@DashboardActivity, CartActivity::class.java)
+                startActivity(intent)
+                finish()
+            })
+        }
+
+        wishlistBtn.setOnClickListener {
+            wishlistBtn.isEnabled = false
+            checkToken.checkTokenOrRedirect(this@DashboardActivity, onTokenValid = {
+                val intent: Intent = Intent(this@DashboardActivity, ProductListActivity::class.java)
+                intent.putExtra("TYPE", ProductListType.WISHLIST.name)
+                startActivity(intent)
+                finish()
             })
         }
     }
@@ -84,15 +104,16 @@ class DashboardActivity : AppCompatActivity() {
         binding.progressBarRecommendation.visibility = View.VISIBLE
 
         binding.allProdcts.setOnClickListener {
-            startActivity(
-                Intent(this@DashboardActivity, ProductListActivity::class.java)
-            )
+            val intent: Intent = Intent(this@DashboardActivity, ProductListActivity::class.java)
+            intent.putExtra("TYPE", ProductListType.POPULAR.name)
+            startActivity(intent)
         }
 
         viewModel.popular.observe(this) { data ->
             popularAdapter.updateDate(data)
             binding.progressBarRecommendation.visibility = View.GONE
         }
+
         viewModel.loadPopular()
     }
 
@@ -160,7 +181,7 @@ class DashboardActivity : AppCompatActivity() {
                 CompositePageTransformer().apply {
                     addTransformer(MarginPageTransformer(16))
                     addTransformer { page, position ->
-                        val scale = 0.85f + (1 - kotlin.math.abs(position)) * 0.15f
+                        val scale = 0.85f + (1 - abs(position)) * 0.15f
                         page.scaleY = scale
                     }
                 }

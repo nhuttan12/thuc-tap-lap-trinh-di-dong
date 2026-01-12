@@ -13,7 +13,7 @@ import { ProductImageEntity } from '../../image/entities/product-image.entity';
 
 @Injectable()
 export class CartDetailMapper {
-	toCartDetailsResponseDto(
+	toCartDetailListResponseDto(
 		cartDetailsEntity: CartDetailEntity[]
 	): CartDetailResponseDto[] {
 		return cartDetailsEntity.map(

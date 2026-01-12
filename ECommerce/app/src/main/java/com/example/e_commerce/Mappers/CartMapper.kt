@@ -6,6 +6,7 @@ import com.example.e_commerce.Model.CartItemModel
 object CartMapper {
     fun fromCartDetailResponseDto(cartDetailResponseDto: CartDetailResponseDto): CartItemModel {
         return CartItemModel(
+            id = cartDetailResponseDto.id,
             title = cartDetailResponseDto.name,
             picUrl = cartDetailResponseDto.imageUrl,
             price = cartDetailResponseDto.price,

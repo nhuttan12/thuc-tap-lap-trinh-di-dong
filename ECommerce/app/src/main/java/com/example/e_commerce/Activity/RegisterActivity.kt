@@ -10,17 +10,20 @@ import com.android.volley.toolbox.Volley
 import com.example.e_commerce.R
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
+import com.example.e_commerce.Helper.CheckToken
+import com.example.e_commerce.Helper.TinyDB
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import org.json.JSONObject
 
 class RegisterActivity : AppCompatActivity() {
-    private lateinit var emailLayout : TextInputLayout
-    private lateinit var userNameLayout : TextInputLayout
-    private lateinit var passwordLayout : TextInputLayout
-    private lateinit var rePasswordLayout : TextInputLayout
-
+    private lateinit var emailLayout: TextInputLayout
+    private lateinit var userNameLayout: TextInputLayout
+    private lateinit var passwordLayout: TextInputLayout
+    private lateinit var rePasswordLayout: TextInputLayout
+    private val tinyDB: TinyDB by lazy { TinyDB(this) }
+    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +53,12 @@ class RegisterActivity : AppCompatActivity() {
             val rePassword = edtRePassword.text.toString()
 
             // Validate dữ liệu
-            if (!validateRegister( email, username, password, rePassword)) {
+            if (!validateRegister(email, username, password, rePassword)) {
                 return@setOnClickListener
             }
 
             //GỬi đăng ký
-            sendRegisterRequest( email, username, password,rePassword)
+            sendRegisterRequest(email, username, password, rePassword)
         }
 
     }
@@ -157,7 +160,10 @@ class RegisterActivity : AppCompatActivity() {
                 val json = JSONObject(it)
                 val token = json.optString("accessToken")
 
-                saveToken(token)
+                val expireAt = checkToken.decodeJwtExpireAt(token)
+
+//                saveToken(token)
+                tinyDB.setToken(token, expireAt)
 
                 Toast.makeText(this, "Đăng ký & đăng nhập thành công", Toast.LENGTH_SHORT).show()
 
@@ -176,10 +182,10 @@ class RegisterActivity : AppCompatActivity() {
         Volley.newRequestQueue(this).add(request)
     }
 
-    private fun saveToken(token: String) {
-        getSharedPreferences("APP_PREF", MODE_PRIVATE)
-            .edit()
-            .putString("ACCESS_TOKEN", token)
-            .apply()
-    }
+//    private fun saveToken(token: String) {
+//        getSharedPreferences("APP_PREF", MODE_PRIVATE)
+//            .edit()
+//            .putString("ACCESS_TOKEN", token)
+//            .apply()
+//    }
 }

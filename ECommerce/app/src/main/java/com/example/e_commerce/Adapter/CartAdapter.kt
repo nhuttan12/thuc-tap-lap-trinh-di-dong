@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.example.e_commerce.Helper.ChangeNumberItemsListener
-import com.example.e_commerce.Helper.ManagementCart
+import com.example.e_commerce.Adapter.Action.OnCartItemActionListener
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.databinding.ViewholderCartBinding
 import kotlin.math.roundToInt
@@ -16,9 +15,8 @@ import kotlin.math.roundToInt
 class CartAdapter(
     private val listItemSelected: ArrayList<CartItemModel>,
     private val context: Context,
-    private val changeNumberItemsListener: ChangeNumberItemsListener? = null
+    private val listener: OnCartItemActionListener
 ) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
-    private val managementCart = ManagementCart(context)
 
     class ViewHolder(val binding: ViewholderCartBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -34,36 +32,33 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: CartAdapter.ViewHolder, position: Int) {
         val item = listItemSelected[position]
+
+        holder.binding.plusCartBtn.isEnabled = !item.isUpdating
+        holder.binding.minusCartBtn.isEnabled = !item.isUpdating
+
         holder.binding.titleTxt.text = item.title
         holder.binding.feeEachItemTxt.text = "${item.price}"
         holder.binding.totalEachItem.text = "${(item.numberInCart * item.price).roundToInt()}"
         holder.binding.numberItemTxt.text = item.numberInCart.toString()
 
-        Glide.with(holder.itemView.context).load(item.picUrl[0]).apply(
-            RequestOptions().transform(
-                CenterCrop()
-            )
-        ).into(holder.binding.pic)
+        Glide.with(holder.itemView.context)
+            .load(item.picUrl)
+            .apply(
+                RequestOptions().transform(
+                    CenterCrop()
+                )
+            ).into(holder.binding.pic)
 
         holder.binding.plusCartBtn.setOnClickListener {
-            managementCart.plusItem(listItemSelected, position, object : ChangeNumberItemsListener {
-                override fun onChanged() {
-                    notifyDataSetChanged()
-                    changeNumberItemsListener?.onChanged()
-                }
-            })
+            val pos = holder.bindingAdapterPosition
+            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+            listener.onIncrease(listItemSelected[pos])
         }
 
         holder.binding.minusCartBtn.setOnClickListener {
-            managementCart.minusItem(
-                listItemSelected,
-                position,
-                object : ChangeNumberItemsListener {
-                    override fun onChanged() {
-                        notifyDataSetChanged()
-                        changeNumberItemsListener?.onChanged()
-                    }
-                })
+            val pos = holder.bindingAdapterPosition
+            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+            listener.onDecrease(listItemSelected[pos])
         }
     }
 

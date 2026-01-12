@@ -18,12 +18,12 @@ export class WishlistItemMapper {
 			return {
 				id: wishlistItem.id,
 				name: wishlistItem.product.name,
-				image: wishlistItem.product.productImages[0].image.url,
+				imageUrl: wishlistItem.product.productImages[0].image.url,
 				price: wishlistItem.product.price,
 				discount: wishlistItem.product.discount,
 				rating: wishlistItem.product.productDetailsEntity.rating,
-				createdAt: wishlistItem.createdAt,
-				updatedAt: wishlistItem.updatedAt,
+				createdAt: wishlistItem.createdAt.toString(),
+				updatedAt: wishlistItem.updatedAt.toString(),
 			};
 		});
 	}

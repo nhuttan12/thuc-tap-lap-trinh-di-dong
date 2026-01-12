@@ -24,6 +24,7 @@ class MainRepository(
     private val productRepository: ProductRepository,
     private val bannerRepository: BannerRepository,
     private val cartRepository: CartRepository,
+    private val wishlistRepository: WishlistRepository,
 ) {
     /**
      * @description Call api and handle result
@@ -64,35 +65,5 @@ class MainRepository(
      */
     suspend fun loadProductDetail(productID: Int): NetworkResult<ProductDetailModel> {
         return productRepository.getProductDetailByProductID(productID)
-    }
-
-    /**
-     * @description Call api and handle result
-     *
-     * @param [Int] [limit] - limit of carts to load
-     * @param [Int] [page] - current page
-     *
-     * @return [NetworkResult] result of brand list
-     */
-    suspend fun loadCart(
-        limit: Int,
-        page: Int
-    ): NetworkResult<PagingResponse<CartItemModel>> {
-        return cartRepository.loadCart(
-            limit = 10,
-            page = 1
-        )
-    }
-
-    /**
-     * @description Call api and handle result
-     *
-     * @param [Int] [productID] - ID of product
-     * @param [Int] [quantity] - quantity of product
-     *
-     * @return [NetworkResult]
-     */
-    suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<String> {
-        return cartRepository.addProductToCart(productID = productID, quantity = quantity)
     }
 }

@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.e_commerce.Activity.LoginActivity
+import org.json.JSONObject
 
 class CheckToken(private val tinyDB: TinyDB) {
     /**
@@ -19,8 +20,8 @@ class CheckToken(private val tinyDB: TinyDB) {
      */
     private val TAG: String = "CheckToken"
 
-    fun checkTokenOrRedirect(context: Context, onTokenValid: () -> Unit) {
-        val token: String? = tinyDB.getToken()
+    fun checkTokenOrRedirect(activity: Activity, onTokenValid: () -> Unit) {
+        val token: String? = tinyDB.getValidToken()
 
         /**
          * Checking current token
@@ -28,23 +29,29 @@ class CheckToken(private val tinyDB: TinyDB) {
         Log.d(TAG, "Check current token -> $token")
 
         if (token.isNullOrEmpty()) {
-            /**
-             * Redirect to login activity if no token
-             */
-            val intent = Intent(context, LoginActivity::class.java)
-
-            /**
-             * If no token, need flag
-             */
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
-            context.startActivity(intent)
-
-            if (context is Activity) {
-                context.finish()
-            }
+            val intent = Intent(activity, LoginActivity::class.java)
+            activity.startActivity(intent)
+            activity.finish()
         } else {
             onTokenValid()
         }
     }
+
+    fun decodeJwtExpireAt(token: String): Long {
+        val parts = token.split(".")
+        if (parts.size != 3) return 0L
+
+        val payload = String(
+            android.util.Base64.decode(
+                parts[1],
+                android.util.Base64.URL_SAFE
+            )
+        )
+
+        val json = JSONObject(payload)
+        val expSeconds = json.optLong("exp", 0L)
+
+        return expSeconds * 1000
+    }
+
 }

@@ -17,7 +17,6 @@ import com.example.e_commerce.Adapter.ColorAdapter
 import com.example.e_commerce.Adapter.DescriptionAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
 import com.example.e_commerce.Adapter.SizeAdapter
-import com.example.e_commerce.Helper.ManagementCart
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.ProductDetailModel
@@ -27,7 +26,6 @@ import java.text.DecimalFormat
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var item: ProductDetailModel
-    private lateinit var managementCart: ManagementCart
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
 
     private val tinyDB: TinyDB by lazy { TinyDB(this) }
@@ -38,8 +36,6 @@ class DetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        managementCart = ManagementCart(this)
 
         item = intent.getSerializableExtra("object") as? ProductDetailModel
             ?: throw IllegalArgumentException("Không tìm thấy sản phẩm")

@@ -8,9 +8,11 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Logger,
 	Post,
+	Put,
 	Query,
 	UseGuards,
 } from '@nestjs/common';
@@ -25,11 +27,11 @@ import { CartStatusCode } from './status-code/cart.status-code';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../role/decorators/role.decorator';
 import { RoleName } from '../role/enums/role-name.enum';
-import { RemoveFromCartRequestDto } from './dtos/remove-from-cart-request.dto';
+import { RemoveProductFromCartRequestDto } from './dtos/remove-product-from-cart-request.dto';
 import { GetCartByUserIdRequestDto } from './dtos/get-cart-by-user-id-request.dto';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { CartDetailResponseDto } from './dtos/cart-detail-response.dto';
-import { MessageResponseDto } from '../../common/dtos/response/message-response.dto';
+import { UpdateQuantityCartDetailRequestDto } from './dtos/update-quantity-cart-detail-request.dto';
 
 @Controller('carts')
 @UseGuards(JwtAuthGuard)
@@ -55,7 +57,7 @@ export class CartController {
 	async addProductToCart(
 		@User() payload: JwtPayload,
 		@Body() request: AddProductToCartRequestDto
-	): Promise<MessageResponseDto<string>> {
+	): Promise<SuccessResponseDto<boolean>> {
 		/**
 		 * Get productID and quantity from the request
 		 */
@@ -69,15 +71,17 @@ export class CartController {
 		/**
 		 * Calling `addProductToCart` from `CartService`
 		 */
-		await this.cartService.addProductToCart(productID, id, quantity);
+		const addProductToCartResult: boolean =
+			await this.cartService.addProductToCart(productID, id, quantity);
 
 		/**
 		 * Returning response
 		 */
-		return new MessageResponseDto<string>(
-			CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode,
-			CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.message
-		);
+		return {
+			data: addProductToCartResult,
+			statusCode: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.customCode,
+			message: CartStatusCode.ADD_PRODUCT_TO_CART_SUCCESS.message,
+		};
 	}
 
 	@Get()
@@ -118,10 +122,72 @@ export class CartController {
 		return response;
 	}
 
-	// @Post('remove')
-	// async removeFromCart(
-	// 	@User() payload: JwtPayload,
-	// 	@Body() request: RemoveFromCartRequestDto
-	// ): Promise<SuccessResponseDto<CartResponseDto>> {}
+	@Delete('remove')
+	async removeFromCart(
+		@User() payload: JwtPayload,
+		@Query() request: RemoveProductFromCartRequestDto
+	): Promise<SuccessResponseDto<boolean>> {
+		/**
+		 * Call 'removeProductFromCart' from 'cartService'
+		 */
+		const updateResult: boolean =
+			await this.cartService.removeProductFromCart(
+				request.cartDetailID,
+				payload.id
+			);
+		this.logger.debug(
+			`Call 'removeProductFromCart' from 'cartService': ${JSON.stringify(updateResult, null, 2)}`
+		);
 
+		/**
+		 * Building response to return to api
+		 */
+		const response: SuccessResponseDto<boolean> = {
+			data: updateResult,
+			message: CartStatusCode.REMOVE_PRODUCT_FROM_CART_SUCCESS.message,
+			statusCode:
+				CartStatusCode.REMOVE_PRODUCT_FROM_CART_SUCCESS.customCode,
+		};
+		this.logger.debug(
+			`Building response to return to api: ${JSON.stringify(response, null, 2)}`
+		);
+
+		/**
+		 * Returning response
+		 */
+		return response;
+	}
+
+	@Put('update')
+	async updateQuantityOfCartDetail(
+		@User() payload: JwtPayload,
+		@Body() request: UpdateQuantityCartDetailRequestDto
+	): Promise<SuccessResponseDto<CartDetailResponseDto>> {
+		/**
+		 * Call 'updateQuantityCartDetail' in 'cartDetailService'
+		 */
+		const cartDetail: CartDetailResponseDto =
+			await this.cartDetailService.updateQuantityCartDetail(
+				request.cartDetailID,
+				payload.id,
+				request.quantity
+			);
+		this.logger.debug(
+			`Call 'updateQuantityCartDetail' in 'cartDetailService': ${JSON.stringify(cartDetail, null, 2)}`
+		);
+
+		/**
+		 * Build response
+		 */
+		const response: SuccessResponseDto<CartDetailResponseDto> = {
+			message: CartStatusCode.UPDATE_CART_DETAIL_SUCCESS.message,
+			statusCode: CartStatusCode.UPDATE_CART_DETAIL_SUCCESS.customCode,
+			data: cartDetail,
+		};
+		this.logger.debug(
+			`Building response: ${JSON.stringify(response, null, 2)}`
+		);
+
+		return response;
+	}
 }
