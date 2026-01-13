@@ -28,8 +28,8 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var item: ProductDetailModel
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
 
-    private val tinyDB: TinyDB by lazy { TinyDB(this) }
-    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
+    private lateinit var tinyDB: TinyDB
+    private lateinit var checkToken: CheckToken
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +39,9 @@ class DetailActivity : AppCompatActivity() {
 
         item = intent.getSerializableExtra("object") as? ProductDetailModel
             ?: throw IllegalArgumentException("Không tìm thấy sản phẩm")
+
+        tinyDB = TinyDB(applicationContext)
+        checkToken = CheckToken(tinyDB)
 
         setupViews()
         setupPicsList()

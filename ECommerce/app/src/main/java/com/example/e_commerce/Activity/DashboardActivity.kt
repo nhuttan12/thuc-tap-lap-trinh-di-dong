@@ -38,31 +38,40 @@ import kotlin.math.abs
 import kotlin.math.min
 
 class DashboardActivity : AppCompatActivity() {
-    private val tinyDB: TinyDB by lazy { TinyDB(this) }
+    private lateinit var tinyDB: TinyDB
 
     private val viewModel: MainViewModel by lazy {
         val factory = MainViewModelFactory(tinyDB)
         ViewModelProvider(this, factory)[MainViewModel::class.java]
     }
-    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
+    private lateinit var checkToken: CheckToken
+    private lateinit var popularAdapter: PopularAdapter
 
     private lateinit var binding: ActivityMainBinding
 
     private val brandsAdapter = BrandsAdapter(mutableListOf())
-    private val popularAdapter =
-        PopularAdapter(
-            items = mutableListOf(),
-            listType = ProductListType.POPULAR,
-            onItemClick = { product ->
-                loadProductDetailAndNavigate(product.id)
-            },
-        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        tinyDB = TinyDB(applicationContext)
+        checkToken = CheckToken(tinyDB)
+
+        popularAdapter =
+            PopularAdapter(
+                activity = this,
+                items = mutableListOf(),
+                checkToken = checkToken,
+                listType = ProductListType.POPULAR,
+                onItemClick = { product ->
+                    loadProductDetailAndNavigate(product.id)
+                },
+            )
 
         initUI()
         observeProductDetail()

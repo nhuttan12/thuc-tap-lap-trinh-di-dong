@@ -167,7 +167,7 @@ class WishlistRepository(
             val response: Response<ApiSucess<Boolean>> =
                 ApiClient.wishlistService.removeWishlistItem(
                     token = "Bearer $token",
-                    request = RemoveProductFromWishlistDto(productID)
+                    request = RemoveProductFromWishlistDto(wishlistItemID = productID)
                 );
             Log.d(TAG, "Remove product from wishlist response: ${response.body()?.data}")
 

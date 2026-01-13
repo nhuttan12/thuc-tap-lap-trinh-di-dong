@@ -8,5 +8,5 @@
 package com.example.e_commerce.DTOs.Request
 
 data class RemoveProductFromWishlistDto(
-    val productID: Int
+    val wishlistItemID: Int
 )

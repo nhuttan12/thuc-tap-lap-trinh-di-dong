@@ -19,5 +19,5 @@ data class ProductModel(
     var picUrl: String = "",
     var price: Double = 0.0,
     var rating: Double = 0.0,
-    val isInWishlist: Boolean = false
+    var isInWishlist: Boolean = false
 ) : Serializable
