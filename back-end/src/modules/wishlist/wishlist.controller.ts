@@ -124,8 +124,8 @@ export class WishlistController {
 		 * Call `removeWishlistItem` in `WishlistService`
 		 */
 		const removeResult: boolean =
-			await this.wishlistService.removeWishlistItem(
-				request.productID,
+			await this.wishlistService.removeProductFromWishlist(
+				request.wishlistItemID,
 				payload.id
 			);
 		this.logger.debug(
@@ -135,11 +135,12 @@ export class WishlistController {
 		/**
 		 * Create response
 		 */
-		const response: SuccessResponseDto<boolean> = new SuccessResponseDto(
-			WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.message,
-			WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.customCode,
-			removeResult
-		);
+		const response: SuccessResponseDto<boolean> = {
+			message: WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.message,
+			statusCode:
+				WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.customCode,
+			data: removeResult,
+		};
 		this.logger.debug(
 			`Create response: ${JSON.stringify(response, null, 2)}`
 		);

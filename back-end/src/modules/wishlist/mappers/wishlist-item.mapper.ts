@@ -12,19 +12,29 @@ import { ProductInWishlistResponseDto } from '../dtos/product-in-wishlist-respon
 @Injectable()
 export class WishlistItemMapper {
 	toProductInWishlistListResponseDto(
-		wishlistItems: WishlistItemEntity[]
+		wishlistItemList: WishlistItemEntity[]
 	): ProductInWishlistResponseDto[] {
-		return wishlistItems.map((wishlistItem: WishlistItemEntity) => {
-			return {
-				id: wishlistItem.id,
-				name: wishlistItem.product.name,
-				imageUrl: wishlistItem.product.productImages[0].image.url,
-				price: wishlistItem.product.price,
-				discount: wishlistItem.product.discount,
-				rating: wishlistItem.product.productDetailsEntity.rating,
-				createdAt: wishlistItem.createdAt.toString(),
-				updatedAt: wishlistItem.updatedAt.toString(),
-			};
-		});
+		return wishlistItemList.map(
+			(
+				wishlistItem: WishlistItemEntity
+			): ProductInWishlistResponseDto => {
+				return this.totoProductInWishlistResponseDto(wishlistItem);
+			}
+		);
+	}
+
+	totoProductInWishlistResponseDto(
+		wishlistItem: WishlistItemEntity
+	): ProductInWishlistResponseDto {
+		return {
+			id: wishlistItem.id,
+			name: wishlistItem.product.name,
+			imageUrl: wishlistItem.product.productImages[0].image.url,
+			price: wishlistItem.product.price,
+			discount: wishlistItem.product.discount,
+			rating: wishlistItem.product.productDetailsEntity.rating,
+			createdAt: wishlistItem.createdAt.toString(),
+			updatedAt: wishlistItem.updatedAt.toString(),
+		};
 	}
 }

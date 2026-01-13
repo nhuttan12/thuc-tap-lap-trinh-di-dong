@@ -14,5 +14,5 @@ export class RemoveProductFromWishlistDto {
 	@IsNotEmpty({
 		message: WishlistStatusCode.PRODUCT_ID_IS_NOT_EMPTY.customCode,
 	})
-	productID: number;
+	wishlistItemID: number;
 }

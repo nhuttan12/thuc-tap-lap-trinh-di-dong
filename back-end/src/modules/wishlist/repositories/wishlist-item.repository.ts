@@ -7,10 +7,9 @@
  */
 import { InjectRepository } from '@nestjs/typeorm';
 import { WishlistItemEntity } from '../entities/wishlist-item.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
-import { Logger, NotFoundException } from '@nestjs/common';
+import { DataSource, EntityManager, Repository, UpdateResult } from 'typeorm';
+import { Logger } from '@nestjs/common';
 import { WishlistStatusEnum } from '../enums/wishlist-status.enum';
-import { WishlistStatusCode } from '../status-code/wishlist.status-code';
 
 export class WishlistItemRepository {
 	private readonly logger: Logger = new Logger(WishlistItemRepository.name);
@@ -131,67 +130,33 @@ export class WishlistItemRepository {
 
 	/**
 	 * @description Remove (soft delete) wishlist item
-	 * @param {number} productID - ID of product
+	 * @param {number} wishlistItemID - ID of wishlist item reference to Fproduct
 	 * @param {number} userID - ID of user
 	 * @return {Promise<WishlistItemEntity>} - Wishlist item entity
 	 * @author Nhut Tan
 	 * @since 2025-09-23
 	 * @version 1.0.0
 	 */
-	async removeWishlistItem(
-		productID: number,
+	async removeWishlistItemWithWishlistItemIDAndUserID(
+		wishlistItemID: number,
 		userID: number
-	): Promise<WishlistItemEntity> {
+	): Promise<UpdateResult> {
 		try {
 			return await this.dataSource.transaction(
-				async (tx: EntityManager): Promise<WishlistItemEntity> => {
-					/**
-					 * Get wishlist item by productID and userID
-					 */
-					const wishlistItemEntity: WishlistItemEntity | null =
-						await tx.findOne(WishlistItemEntity, {
-							where: {
-								product: {
-									id: productID,
-								},
-								user: {
-									id: userID,
-								},
-								status: WishlistStatusEnum.ACTIVE,
+				async (tx: EntityManager): Promise<UpdateResult> => {
+					return await tx.update(
+						WishlistItemEntity,
+						{
+							id: wishlistItemID,
+							user: {
+								id: userID,
 							},
-						});
-
-					/**
-					 * Check if wishlist item not exists
-					 */
-					if (!wishlistItemEntity) {
-						/**
-						 * Log error, and throwing error
-						 */
-						this.logger.error(
-							`Wishlist item with product id ${productID} and user id ${userID} not found`
-						);
-						throw new NotFoundException({
-							statusCode:
-								WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND
-									.statusCode,
-							customCode:
-								WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND
-									.customCode,
-							message:
-								WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
-						});
-					}
-
-					/**
-					 * Set new status
-					 */
-					wishlistItemEntity.status = WishlistStatusEnum.DELETED;
-
-					/**
-					 * Save it to the database
-					 */
-					return tx.save(wishlistItemEntity);
+							status: WishlistStatusEnum.ACTIVE,
+						},
+						{
+							status: WishlistStatusEnum.DELETED,
+						}
+					);
 				}
 			);
 		} catch (e) {
@@ -228,6 +193,35 @@ export class WishlistItemRepository {
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getWishlistItemByProductIDAndUserID\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Get wishlist item by wishlist item ID and user ID
+	 * @author Nhut Tan
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async getWishlistItemByWishlistItemIDAndUserID(
+		wishlistItemID: number,
+		userID: number
+	): Promise<WishlistItemEntity | null> {
+		try {
+			return await this.wishlistItemRepository.findOne({
+				where: {
+					id: wishlistItemID,
+					user: {
+						id: userID,
+					},
+					status: WishlistStatusEnum.ACTIVE,
+				},
+			});
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getWishlistItemByWishlistItemIDAndUserID\`: ${(e as Error).message}`,
 				(e as Error).stack
 			);
 			throw e;

@@ -10,6 +10,7 @@ import {
 	ConflictException,
 	Injectable,
 	Logger,
+	NotFoundException,
 } from '@nestjs/common';
 import { WishlistItemRepository } from './repositories/wishlist-item.repository';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
@@ -19,6 +20,7 @@ import { WishlistStatusCode } from './status-code/wishlist.status-code';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { AuthStatusCode } from '../auth/status-code/auth.status-code';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class WishlistService {
@@ -208,44 +210,33 @@ export class WishlistService {
 
 	/**
 	 * @description Remove product from wishlist
-	 * @param {number} productID - ID of product
+	 * @param {number} wishlistItemID - ID of product
 	 * @param {number} userID - ID of user
 	 * @return {Promise<boolean>} - True if product removed from wishlist successfully
 	 * @since 2025-09-24
 	 * @version 1.0.0
 	 */
-	async removeWishlistItem(
-		productID: number,
+	async removeProductFromWishlist(
+		wishlistItemID: number,
 		userID: number
 	): Promise<boolean> {
 		try {
 			/**
-			 * Call `removeWishlistItem` in `WishlistItemRepository`
+			 * Get wishlist item with wishlist item ID and user ID
 			 */
-			const wishlistItemEntity: WishlistItemEntity | null =
-				await this.wishlistItemRepository.removeWishlistItem(
-					productID,
+			const wishlistItemEntity: WishlistItemEntity =
+				await this.getWishlistItemByWishlistItemIDAndUserIDOrThrow(
+					wishlistItemID,
 					userID
 				);
 
 			/**
-			 * Check if `wishlistItemEntity` is null
+			 * Call `removeWishlistItem` in `WishlistItemRepository`
 			 */
-			if (!wishlistItemEntity) {
-				/**
-				 * Log error, and throwing error
-				 */
-				this.logger.warn('Product not in wishlist');
-				throw new BadRequestException({
-					statusCode:
-						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
-					customCode:
-						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
-					message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
-				});
-			}
-
-			return true;
+			return await this.removeWishlistItemWithWishlistItemIDAndUserID(
+				wishlistItemEntity.id,
+				userID
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`removeWishlistItem\`: ${(e as Error).message}`,
@@ -253,5 +244,70 @@ export class WishlistService {
 			);
 			throw e;
 		}
+	}
+
+	/**
+	 * @description Remove wishlist item
+	 * @param wishlistItemID - ID of wishlist item reference to product
+	 * @param userID - ID of user
+	 * @return {Promise<boolean>} - True if wishlist item removed successfully
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async removeWishlistItemWithWishlistItemIDAndUserID(
+		wishlistItemID: number,
+		userID: number
+	): Promise<boolean> {
+		const removeWishlistResult: UpdateResult =
+			await this.wishlistItemRepository.removeWishlistItemWithWishlistItemIDAndUserID(
+				wishlistItemID,
+				userID
+			);
+
+		return (removeWishlistResult.affected ?? 0) > 0;
+	}
+
+	/**
+	 * @description Get wishlist item by wishlist item ID and user ID
+	 * @param wishlistItemID - ID of wishlist item reference to product
+	 * @param userID - ID of user
+	 * @return {Promise<WishlistItemEntity>} - Wishlist item entity
+	 * @throws {NotFoundException} - If wishlist item not found
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async getWishlistItemByWishlistItemIDAndUserIDOrThrow(
+		wishlistItemID: number,
+		userID: number
+	): Promise<WishlistItemEntity> {
+		/**
+		 * Call `getWishlistItemByWishlistItemIDAndUserID` in `WishlistItemRepository`
+		 */
+		const wishlistItem: WishlistItemEntity | null =
+			await this.wishlistItemRepository.getWishlistItemByWishlistItemIDAndUserID(
+				wishlistItemID,
+				userID
+			);
+		this.logger.debug(
+			`Call \`getWishlistItemByWishlistItemIDAndUserID\` in \`WishlistItemRepository\`: ${JSON.stringify(wishlistItem, null, 2)}`
+		);
+
+		/**
+		 * Check if wishlist item not exists
+		 */
+		if (!wishlistItem) {
+			this.logger.warn(
+				`Wishlist item with wishlist item id ${wishlistItemID} and user id ${userID} not found`
+			);
+			throw new NotFoundException({
+				statusCode:
+					WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
+				customCode:
+					WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
+				message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
+			});
+		}
+
+		return wishlistItem;
 	}
 }
