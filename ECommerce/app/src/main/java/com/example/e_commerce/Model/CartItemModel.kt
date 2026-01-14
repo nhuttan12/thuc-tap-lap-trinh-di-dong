@@ -1,9 +1,7 @@
 package com.example.e_commerce.Model
 
 import com.squareup.moshi.JsonClass
-import java.io.Serializable
 
-@JsonClass(generateAdapter = true)
 data class CartItemModel(
     var id: Int = 0,
     var title: String = "",
@@ -11,4 +9,4 @@ data class CartItemModel(
     var price: Double = 0.0,
     var numberInCart: Int = 1,
     var isUpdating: Boolean = false
-) : Serializable
+)

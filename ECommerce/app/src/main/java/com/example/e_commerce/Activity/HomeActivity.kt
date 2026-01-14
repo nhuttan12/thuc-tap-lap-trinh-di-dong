@@ -30,26 +30,51 @@ import com.example.e_commerce.Adapter.SliderAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.Enum.ProductListType
+import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.Model.SliderModel
-import com.example.e_commerce.ViewModel.MainViewModel
-import com.example.e_commerce.ViewModel.MainViewModelFactory
+import com.example.e_commerce.ViewModel.BannerViewModel
+import com.example.e_commerce.ViewModel.BannerViewModelFactory
+import com.example.e_commerce.ViewModel.BrandViewModel
+import com.example.e_commerce.ViewModel.BrandViewModelFactory
+import com.example.e_commerce.ViewModel.ProductViewModel
+import com.example.e_commerce.ViewModel.ProductViewModelFactory
+import com.example.e_commerce.ViewModel.WishlistViewModel
+import com.example.e_commerce.ViewModel.WishlistViewModelFactory
 import com.example.e_commerce.databinding.ActivityMainBinding
 import kotlin.math.abs
 import kotlin.math.min
 
-class DashboardActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private lateinit var tinyDB: TinyDB
 
-    private val viewModel: MainViewModel by lazy {
-        val factory = MainViewModelFactory(tinyDB)
-        ViewModelProvider(this, factory)[MainViewModel::class.java]
+    private val productViewModel: ProductViewModel by lazy {
+        val factory = ProductViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[ProductViewModel::class.java]
     }
+
+    private val brandViewModel: BrandViewModel by lazy {
+        val factory = BrandViewModelFactory()
+        ViewModelProvider(this, factory)[BrandViewModel::class.java]
+    }
+
+    private val bannerViewModel: BannerViewModel by lazy {
+        val factory = BannerViewModelFactory()
+        ViewModelProvider(this, factory)[BannerViewModel::class.java]
+    }
+
+    private val wishlistViewModel: WishlistViewModel by lazy {
+        val factory = WishlistViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[WishlistViewModel::class.java]
+    }
+
+    private var pendingWishlistProductID: Int? = null
+
     private lateinit var checkToken: CheckToken
     private lateinit var popularAdapter: PopularAdapter
 
     private lateinit var binding: ActivityMainBinding
 
-    private val brandsAdapter = BrandsAdapter(mutableListOf())
+    private val brandsAdapter = BrandsAdapter(items = mutableListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,59 +96,80 @@ class DashboardActivity : AppCompatActivity() {
                 onItemClick = { product ->
                     loadProductDetailAndNavigate(product.id)
                 },
+                onWishlistClick = { product ->
+                    checkToken.checkTokenOrRedirect(this) {
+                        toggleWishlist(product)
+                    }
+                }
             )
 
         initUI()
-        observeProductDetail()
+        observeWishlist()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.cartBtn.isEnabled = true
+        binding.wishlistBtn.isEnabled = true
+        binding.homeBtn.isEnabled = true
     }
 
     private fun initUI() {
         initBrands()
+        initRecommendation()
         initBanner()
-        initRecommended()
         initBottomNavigation()
     }
 
     private fun initBottomNavigation() = with(binding) {
-        homeBtn.isEnabled = false
+        homeBtn.setOnClickListener { }
 
         cartBtn.setOnClickListener {
             cartBtn.isEnabled = false
-            checkToken.checkTokenOrRedirect(this@DashboardActivity, {
-                val intent: Intent = Intent(this@DashboardActivity, CartActivity::class.java)
+            checkToken.checkTokenOrRedirect(this@HomeActivity, onTokenValid = {
+                val intent: Intent = Intent(this@HomeActivity, CartActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
-                finish()
             })
         }
 
         wishlistBtn.setOnClickListener {
             wishlistBtn.isEnabled = false
-            checkToken.checkTokenOrRedirect(this@DashboardActivity, onTokenValid = {
-                val intent: Intent = Intent(this@DashboardActivity, ProductListActivity::class.java)
+            checkToken.checkTokenOrRedirect(this@HomeActivity, onTokenValid = {
+                val intent: Intent = Intent(this@HomeActivity, ProductListActivity::class.java)
                 intent.putExtra("TYPE", ProductListType.WISHLIST.name)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
-                finish()
             })
         }
     }
 
-    private fun initRecommended() {
+    private fun initRecommendation() {
         binding.recyclerViewRecommendation.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewRecommendation.adapter = popularAdapter
         binding.progressBarRecommendation.visibility = View.VISIBLE
 
         binding.allProdcts.setOnClickListener {
-            val intent: Intent = Intent(this@DashboardActivity, ProductListActivity::class.java)
+            val intent: Intent = Intent(this@HomeActivity, ProductListActivity::class.java)
             intent.putExtra("TYPE", ProductListType.POPULAR.name)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
 
-        viewModel.popular.observe(this) { data ->
-            popularAdapter.updateDate(data)
+        productViewModel.popular.observe(this) { data ->
             binding.progressBarRecommendation.visibility = View.GONE
+            popularAdapter.updateDate(data)
         }
 
-        viewModel.loadPopular()
+        productViewModel.popularLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                Toast.makeText(this, "Đang hiển thị danh sách sản phẩm", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+        productViewModel.loadPopular(limit = 10, page = 1)
     }
 
     private fun initBrands() {
@@ -139,37 +185,38 @@ class DashboardActivity : AppCompatActivity() {
         binding.recyclerViewBrands.adapter = brandsAdapter
 
         /**
-         * Observing the data from view model
-         */
-        viewModel.brands.observe(this) { data ->
-            brandsAdapter.updateData(data)
-        }
-
-        /**
          * Change visibility of progress bar to true when loading data from view model
          */
-        viewModel.loading.observe(this) { isLoading ->
+        brandViewModel.loading.observe(this) { isLoading ->
             binding.progressBarBrands.visibility = if (isLoading) View.VISIBLE else View.GONE
 
             /**
              * Show text 'Loading brands...'
              */
             if (isLoading) {
-                Toast.makeText(this, "Đang tải...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Đang hiển thị thương hiệu sản phẩm", Toast.LENGTH_SHORT)
+                    .show()
             }
+        }
+
+        /**
+         * Observing the data from view model
+         */
+        brandViewModel.brands.observe(this) { data ->
+            brandsAdapter.updateData(data)
         }
 
         /**
          * Show error message whether if error occurs when loading data from view model
          */
-        viewModel.error.observe(this) { message ->
+        brandViewModel.error.observe(this) { message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
         /**
          * Call load brands from view model
          */
-        viewModel.loadBrands(limit = 10)
+        brandViewModel.loadBrands(limit = 10)
     }
 
     private fun setUpBanners(imageList: List<SliderModel>) {
@@ -220,12 +267,12 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun initBanner() {
         binding.progressBarBanner.visibility = View.VISIBLE
-        viewModel.banners.observe(this) { items ->
+        bannerViewModel.banners.observe(this) { items ->
             setUpBanners(items)
             binding.progressBarBanner.visibility = View.GONE
         }
 
-        viewModel.loadBanners()
+        bannerViewModel.loadBanners()
     }
 
     private fun buildInfiniteList(data: List<SliderModel>): List<SliderModel> {
@@ -240,23 +287,47 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun loadProductDetailAndNavigate(productID: Int) {
-        viewModel.loadProductDetail(productID)
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.EXTRA_PRODUCT_ID, productID)
+        startActivity(intent)
     }
 
-    private fun observeProductDetail() {
-        viewModel.productDetail.observe(this) { item ->
+    private fun toggleWishlist(product: ProductModel) {
+        pendingWishlistProductID = product.id
 
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("object", item)
-            startActivity(intent)
+        if (product.isInWishlist) {
+            wishlistViewModel.removeProductFromWishlist(product.id)
+        } else {
+            wishlistViewModel.addProductToWishlist(product.id)
+        }
+    }
+
+    private fun observeWishlist() {
+        wishlistViewModel.addProductToWishlistMsg.observe(this) { success ->
+            if (success == true) {
+                updateWishlistState(true)
+            } else {
+                Toast.makeText(this, "Thêm wishlist thất bại", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) Toast.makeText(this, "Đang tải", Toast.LENGTH_SHORT).show()
+        wishlistViewModel.removeProductFromWishlistMsg.observe(this) { success ->
+            if (success == true) {
+                updateWishlistState(false)
+            } else {
+                Toast.makeText(this, "Xoá wishlist thất bại", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateWishlistState(isInWishlist: Boolean) {
+        val id = pendingWishlistProductID ?: return
+
+        val updatedList = popularAdapter.currentItems().map {
+            if (it.id == id) it.copy(isInWishlist = isInWishlist)
+            else it
         }
 
-        viewModel.error.observe(this) { message ->
-            Toast.makeText(this, message ?: "Lỗi không xác định", Toast.LENGTH_SHORT).show()
-        }
+        popularAdapter.updateDate(updatedList)
     }
 }

@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.e_commerce.Helper.TinyDB
 
-class MainViewModelFactory(
+class ProductViewModelFactory(
     private val tinyDB: TinyDB
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(tinyDB) as T
+            return ProductViewModel(tinyDB) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

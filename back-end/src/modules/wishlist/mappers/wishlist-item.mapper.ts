@@ -18,16 +18,16 @@ export class WishlistItemMapper {
 			(
 				wishlistItem: WishlistItemEntity
 			): ProductInWishlistResponseDto => {
-				return this.totoProductInWishlistResponseDto(wishlistItem);
+				return this.toProductInWishlistResponseDto(wishlistItem);
 			}
 		);
 	}
 
-	totoProductInWishlistResponseDto(
+	toProductInWishlistResponseDto(
 		wishlistItem: WishlistItemEntity
 	): ProductInWishlistResponseDto {
 		return {
-			id: wishlistItem.id,
+			productID: wishlistItem.product.id,
 			name: wishlistItem.product.name,
 			imageUrl: wishlistItem.product.productImages[0].image.url,
 			price: wishlistItem.product.price,

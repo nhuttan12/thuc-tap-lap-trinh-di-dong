@@ -29,6 +29,7 @@ export class ProductService {
 	 * Get products with pagination
 	 * @param {number} page - The page number (1-based)
 	 * @param {number} limit - Number of items per page
+	 * @param {number} userID - ID of user, its optional
 	 * @returns {Promise<PagingResponseDto<ProductEntityResponseDto>>} Paginated list of products
 	 * @author Nhut Tan
 	 * @since 2025-09-15
@@ -37,7 +38,8 @@ export class ProductService {
 	 */
 	async getProductsPaging(
 		page: number,
-		limit: number
+		limit: number,
+		userID?: number
 	): Promise<PagingResponseDto<ProductEntityResponseDto>> {
 		try {
 			/**
@@ -52,7 +54,11 @@ export class ProductService {
 			 * Calling `getProductsPaging` from `ProductRepository`
 			 */
 			const [products, total]: [ProductEntity[], number] =
-				await this.productRepository.getProductsPaging(limit, skip);
+				await this.productRepository.getProductsPaging(
+					limit,
+					skip,
+					userID
+				);
 
 			/*
 			 * Convert `ProductEntity` to `ProductEntityResponseDto`

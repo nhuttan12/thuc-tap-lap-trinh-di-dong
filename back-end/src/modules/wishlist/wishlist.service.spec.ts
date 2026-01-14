@@ -146,34 +146,34 @@ describe('WishlistService', (): void => {
 		const mockProductInWishlistResponseDto: ProductInWishlistResponseDto[] =
 			[
 				{
-					id: 1,
+					wishlistID: 1,
 					imageUrl: mockImageUrl1,
 					rating: 0,
 					discount: 0,
 					name: 'Product 1',
 					price: 100000,
-					createdAt: mockCurrentDate,
-					updatedAt: mockCurrentDate,
+					createdAt: mockCurrentDate.toString(),
+					updatedAt: mockCurrentDate.toString(),
 				},
 				{
-					id: 2,
+					wishlistID: 2,
 					imageUrl: mockImageUrl2,
 					rating: 3,
 					discount: 5,
 					name: 'Product 2',
 					price: 200000,
-					createdAt: mockCurrentDate,
-					updatedAt: mockCurrentDate,
+					createdAt: mockCurrentDate.toString(),
+					updatedAt: mockCurrentDate.toString(),
 				},
 				{
-					id: 3,
+					wishlistID: 3,
 					imageUrl: mockImageUrl3,
 					rating: 5,
 					discount: 10,
 					name: 'Product 3',
 					price: 400000,
-					createdAt: mockCurrentDate,
-					updatedAt: mockCurrentDate,
+					createdAt: mockCurrentDate.toString(),
+					updatedAt: mockCurrentDate.toString(),
 				},
 			];
 		const mockPagingResponse: PagingResponseDto<ProductInWishlistResponseDto> =
@@ -374,7 +374,7 @@ describe('WishlistService', (): void => {
 			 */
 			const spyGetProductInWishlistByProductIDAndUserID = jest.spyOn(
 				mockWishlistService,
-				'getProductInWishlistByProductIDAndUserID'
+				'getProductInWishlistByProductIDAndUserIDOrNull'
 			);
 			const spyAddToWishlist = jest.spyOn(
 				mockWishlistService,
@@ -451,7 +451,7 @@ describe('WishlistService', (): void => {
 			 */
 			const spyGetProductInWishlistByProductIDAndUserID = jest.spyOn(
 				mockWishlistService,
-				'getProductInWishlistByProductIDAndUserID'
+				'getProductInWishlistByProductIDAndUserIDOrNull'
 			);
 			const spyLoggerError = jest
 				.spyOn(mockWishlistService['logger'], 'error')
@@ -544,7 +544,7 @@ describe('WishlistService', (): void => {
 			 * Assert equal
 			 */
 			const result: WishlistItemEntity | null =
-				await mockWishlistService.getProductInWishlistByProductIDAndUserID(
+				await mockWishlistService.getProductInWishlistByProductIDAndUserIDOrNull(
 					mockProductID,
 					mockUserID
 				);
@@ -590,7 +590,7 @@ describe('WishlistService', (): void => {
 			 * Assert throw error
 			 */
 			await expect(
-				mockWishlistService.getProductInWishlistByProductIDAndUserID(
+				mockWishlistService.getProductInWishlistByProductIDAndUserIDOrNull(
 					mockProductID,
 					mockUserID
 				)
@@ -650,7 +650,7 @@ describe('WishlistService', (): void => {
 			 * Assert throw error
 			 */
 			await expect(
-				mockWishlistService.getProductInWishlistByProductIDAndUserID(
+				mockWishlistService.getProductInWishlistByProductIDAndUserIDOrNull(
 					mockProductID,
 					mockUserID
 				)

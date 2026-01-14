@@ -69,6 +69,9 @@ export class ImageService {
 		 */
 		const imageResponseDto: ImageEntityResponse =
 			this.imageMapper.toImageEntityResponse(imageEntity);
+		this.logger.debug(
+			`Mapping image entity to image response dto: ${JSON.stringify(imageResponseDto, null, 2)}`
+		);
 
 		return imageResponseDto;
 	}

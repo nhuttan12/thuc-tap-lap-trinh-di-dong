@@ -16,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.startBtn.setOnClickListener {
-            startActivity(Intent(this@SplashActivity, DashboardActivity::class.java))
+            startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
         }
     }
 }

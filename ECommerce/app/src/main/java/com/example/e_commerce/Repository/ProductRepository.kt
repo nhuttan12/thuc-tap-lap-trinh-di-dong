@@ -11,6 +11,7 @@ package com.example.e_commerce.Repository
 import android.util.Log
 import com.example.e_commerce.DTOs.Response.ProductDTO
 import com.example.e_commerce.DTOs.Response.ProductDetailDTO
+import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Mappers.ProductMapper
 import com.example.e_commerce.Model.ApiSucess
 import com.example.e_commerce.Model.ProductDetailModel
@@ -22,7 +23,9 @@ import retrofit2.Response
 import java.io.IOException
 import kotlin.collections.forEachIndexed
 
-class ProductRepository : BaseRepository() {
+class ProductRepository(
+    private val tinyDB: TinyDB
+) : BaseRepository() {
     /**
      * @description Tag for logging
      */
@@ -49,13 +52,21 @@ class ProductRepository : BaseRepository() {
     ): NetworkResult<PagingResponse<ProductModel>> {
         return try {
             /**
+             * Get token
+             */
+            val token: String? = tinyDB.getValidToken()
+
+            val bearerToken: String? = token?.let { "Bearer $it" }
+
+            /**
              * Call api to get products paging
              * Handle result
              */
             val response: Response<ApiSucess<PagingResponse<ProductDTO>>> =
                 ApiClient.productService.getProducts(
                     limit = limit,
-                    page = page
+                    page = page,
+                    token = bearerToken
                 )
             response.body()?.data?.data?.forEachIndexed { index, brand ->
                 Log.d(TAG, "Product $index: ${brand}")

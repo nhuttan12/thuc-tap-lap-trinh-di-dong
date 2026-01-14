@@ -6,7 +6,7 @@
  */
 
 export class ProductInWishlistResponseDto {
-	id: number;
+	productID: number;
 	name: string;
 	imageUrl: string;
 	price: number;

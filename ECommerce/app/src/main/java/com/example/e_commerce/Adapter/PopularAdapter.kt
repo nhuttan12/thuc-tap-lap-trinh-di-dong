@@ -68,37 +68,19 @@ class PopularAdapter(
                     )
                 ).into(pic)
 
-//            when (listType) {
-//                ProductListType.WISHLIST -> {
-                    val isInWishlist = item.isInWishlist
+            val isInWishlist = item.isInWishlist
 
-                    addToWishlist.isEnabled = true
-                    addToWishlist.isSelected = false
-                    addToWishlist.isActivated = isInWishlist
+            addToWishlist.isEnabled = true
+            addToWishlist.isSelected = false
+            addToWishlist.isActivated = isInWishlist
 
-                    addToWishlist.setOnClickListener {
-                        onWishlistClick?.invoke(item)
-                    }
+            addToWishlist.setOnClickListener {
+                onWishlistClick?.invoke(item)
+            }
 
-                    root.setOnClickListener {
-                        onItemClick(item)
-                    }
-//                }
-
-//                else -> {
-//                    addToWishlist.isEnabled = true
-//
-//                    addToWishlist.setOnClickListener {
-//                        checkToken.checkTokenOrRedirect(activity) {
-//                            onWishlistClick?.invoke(item)
-//                        }
-//                    }
-//
-//                    root.setOnClickListener {
-//                        onItemClick(item)
-//                    }
-//                }
-//            }
+            root.setOnClickListener {
+                onItemClick(item)
+            }
 
             root.setOnClickListener {
                 onItemClick(item)

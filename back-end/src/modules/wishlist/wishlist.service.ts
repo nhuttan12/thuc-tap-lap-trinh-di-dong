@@ -21,6 +21,7 @@ import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.se
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { AuthStatusCode } from '../auth/status-code/auth.status-code';
 import { UpdateResult } from 'typeorm';
+import { ProductStatusCode } from '../product/status-code/product.status-code';
 
 @Injectable()
 export class WishlistService {
@@ -111,7 +112,7 @@ export class WishlistService {
 			 * Get product in wishlist and check product existence in wishlist item
 			 */
 			const wishlistExistence: WishlistItemEntity | null =
-				await this.getProductInWishlistByProductIDAndUserID(
+				await this.getProductInWishlistByProductIDAndUserIDOrNull(
 					productID,
 					userID
 				);
@@ -173,7 +174,8 @@ export class WishlistService {
 	}
 
 	/**
-	 * @description Get product in wishlist by product ID and user ID
+	 * @description Get product in wishlist by product ID and user ID,
+	 * return null if not exist
 	 * @param {number} productID - ID of product
 	 * @param {number} userID - ID of user
 	 * @return {Promise<WishlistItemEntity | null>} - Wishlist item entity if product in wishlist, null otherwise
@@ -181,7 +183,7 @@ export class WishlistService {
 	 * @date 2025-09-23
 	 * @version 1.0.0
 	 */
-	async getProductInWishlistByProductIDAndUserID(
+	async getProductInWishlistByProductIDAndUserIDOrNull(
 		productID: number,
 		userID: number
 	): Promise<WishlistItemEntity | null> {
@@ -209,15 +211,66 @@ export class WishlistService {
 	}
 
 	/**
+	 * @description Get product in wishlist by product ID and user ID,
+	 * throw error if not exist
+	 * @param {number} productID - ID of product
+	 * @param {number} userID - ID of user
+	 * @return {Promise<WishlistItemEntity | null>} - Wishlist item entity if product in wishlist, null otherwise
+	 * @author Nhut Tan
+	 * @date 2025-09-23
+	 * @version 1.0.0
+	 */
+	async getProductInWishlistByProductIDAndUserIDOrThrow(
+		productID: number,
+		userID: number
+	): Promise<WishlistItemEntity> {
+		try {
+			/**
+			 * Call `getWishlistItemByProductIDAndUserID` in `WishlistItemRepository`
+			 */
+			const wishlistItemEntity: WishlistItemEntity | null =
+				await this.wishlistItemRepository.getWishlistItemByProductIDAndUserID(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				`Call \`getWishlistItemByProductIDAndUserID\` in \`WishlistItemRepository\`: ${JSON.stringify(wishlistItemEntity, null, 2)}`
+			);
+
+			/**
+			 * Check wishlist item exist
+			 */
+			if (!wishlistItemEntity) {
+				this.logger.debug('Wishlist item not exist');
+				throw new NotFoundException({
+					statusCode:
+						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
+					customCode:
+						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
+					message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
+				});
+			}
+
+			return wishlistItemEntity;
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getProductInWishlistByProductIDAndUserID\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
 	 * @description Remove product from wishlist
-	 * @param {number} wishlistItemID - ID of product
+	 * @param {number} productID - ID of product
 	 * @param {number} userID - ID of user
 	 * @return {Promise<boolean>} - True if product removed from wishlist successfully
 	 * @since 2025-09-24
 	 * @version 1.0.0
 	 */
 	async removeProductFromWishlist(
-		wishlistItemID: number,
+		productID: number,
 		userID: number
 	): Promise<boolean> {
 		try {
@@ -225,10 +278,13 @@ export class WishlistService {
 			 * Get wishlist item with wishlist item ID and user ID
 			 */
 			const wishlistItemEntity: WishlistItemEntity =
-				await this.getWishlistItemByWishlistItemIDAndUserIDOrThrow(
-					wishlistItemID,
+				await this.getProductInWishlistByProductIDAndUserIDOrThrow(
+					productID,
 					userID
 				);
+			this.logger.debug(
+				`Get wishlist item with wishlist item ID and user ID: ${JSON.stringify(wishlistItemEntity, null, 2)}`
+			);
 
 			/**
 			 * Call `removeWishlistItem` in `WishlistItemRepository`

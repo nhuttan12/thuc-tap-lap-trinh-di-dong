@@ -121,7 +121,7 @@ describe('CartService', (): void => {
 				.spyOn(cartService['logger'], 'error')
 				.mockImplementation((): void => {});
 
-			const result: string = await cartService.addProductToCart(
+			const result: boolean = await cartService.addProductToCart(
 				mockUserID,
 				mockProductID,
 				mockQuantity
@@ -192,7 +192,7 @@ describe('CartService', (): void => {
 			/**
 			 * Call function addProductToCart
 			 */
-			const result: string = await cartService.addProductToCart(
+			const result: boolean = await cartService.addProductToCart(
 				mockUserID,
 				mockProductID,
 				mockQuantity

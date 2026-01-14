@@ -22,8 +22,8 @@ import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.Enum.ProductListType
 import com.example.e_commerce.Model.ProductModel
-import com.example.e_commerce.ViewModel.MainViewModel
-import com.example.e_commerce.ViewModel.MainViewModelFactory
+import com.example.e_commerce.ViewModel.ProductViewModel
+import com.example.e_commerce.ViewModel.ProductViewModelFactory
 import com.example.e_commerce.ViewModel.WishlistViewModel
 import com.example.e_commerce.ViewModel.WishlistViewModelFactory
 import com.example.e_commerce.databinding.ActivityProductListBinding
@@ -36,9 +36,9 @@ class ProductListActivity : AppCompatActivity() {
     private var productList: List<ProductModel> = emptyList()
     private var pendingWishlistProductID: Int? = null
 
-    private val viewModel: MainViewModel by lazy {
-        val factory = MainViewModelFactory(tinyDB)
-        ViewModelProvider(this, factory)[MainViewModel::class.java]
+    private val productViewModel: ProductViewModel by lazy {
+        val factory = ProductViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[ProductViewModel::class.java]
     }
 
     private val wishlistViewModel: WishlistViewModel by lazy {
@@ -90,8 +90,15 @@ class ProductListActivity : AppCompatActivity() {
             )
 
         initUI()
-        observeProductDetail()
         observeWishlist()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.cartBtn.isEnabled = true
+        binding.wishlistBtn.isEnabled = true
+        binding.homeBtn.isEnabled = true
     }
 
     private fun initUI() {
@@ -122,12 +129,12 @@ class ProductListActivity : AppCompatActivity() {
 
         when (type) {
             ProductListType.POPULAR -> {
-                viewModel.popular.observe(this) {
+                productViewModel.popular.observe(this) {
                     popularAdapter.updateDate(it)
                     binding.progressBarProductList.visibility = View.GONE
                 }
 
-                viewModel.loadPopular()
+                productViewModel.loadPopular(limit = 10, page = 1)
             }
 
             ProductListType.WISHLIST -> {
@@ -155,47 +162,29 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     private fun loadProductDetailAndNavigate(productID: Int) {
-        viewModel.loadProductDetail(productID)
-    }
-
-
-    private fun observeProductDetail() {
-        viewModel.productDetail.observe(this) { item ->
-
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("object", item)
-            startActivity(intent)
-        }
-
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) Toast.makeText(this, "Đang tải", Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.error.observe(this) { message ->
-            Toast.makeText(this, message ?: "Lỗi không xác định", Toast.LENGTH_SHORT).show()
-        }
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.EXTRA_PRODUCT_ID, productID)
+        startActivity(intent)
     }
 
     private fun initBottomNavigation() = with(binding) {
         homeBtn.setOnClickListener {
             homeBtn.isEnabled = false
-            startActivity(
-                Intent(this@ProductListActivity, DashboardActivity::class.java)
-            )
-            finish()
+            val intent: Intent = Intent(this@ProductListActivity, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
         }
 
         cartBtn.setOnClickListener {
             cartBtn.isEnabled = false
             checkToken.checkTokenOrRedirect(this@ProductListActivity, {
-                startActivity(
-                    Intent(this@ProductListActivity, CartActivity::class.java)
-                )
-                finish()
+                val intent: Intent = Intent(this@ProductListActivity, CartActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
             })
         }
 
-        wishlistBtn.isEnabled = false
+        wishlistBtn.setOnClickListener { }
     }
 
     private fun toggleWishlist(product: ProductModel) {

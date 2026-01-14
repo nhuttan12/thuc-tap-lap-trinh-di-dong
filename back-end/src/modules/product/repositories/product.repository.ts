@@ -7,10 +7,11 @@
  */
 
 import { ProductEntity } from '../entities/product.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger } from '@nestjs/common';
 import { ProductStatusEnum } from '../enums/product-status.enum';
+import { WishlistStatusEnum } from '../../wishlist/enums/wishlist-status.enum';
 
 export class ProductRepository {
 	private readonly logger: Logger = new Logger(ProductRepository.name);
@@ -25,6 +26,7 @@ export class ProductRepository {
 	 * @description Get products paging
 	 * @param {number} take - Number of items to take
 	 * @param {number} skip - Number of items to skip
+	 * @param {number} userID - ID of user whether if have token (login)
 	 * @return {Promise<[ProductEntity[], number]>}
 	 * @author Nhut Tan
 	 * @since 2025-09-15
@@ -33,29 +35,41 @@ export class ProductRepository {
 	 */
 	async getProductsPaging(
 		take: number,
-		skip: number
+		skip: number,
+		userID?: number
 	): Promise<[ProductEntity[], number]> {
 		try {
 			/**
-			 * Get products from database
+			 * No token condition
 			 */
-			const [products, total] = await this.productRepository.findAndCount(
-				{
-					where: {
-						status: ProductStatusEnum.ACTIVE,
-					},
-					relations: {
-						productImages: {
-							image: true,
-						},
-					},
-					take,
-					skip,
-					order: {
-						createdAt: 'DESC',
-					},
-				}
-			);
+			const qb: SelectQueryBuilder<ProductEntity> = this.productRepository
+				.createQueryBuilder('product')
+				.leftJoinAndSelect('product.productImages', 'productImages')
+				.leftJoinAndSelect('productImages.image', 'image')
+				.where('product.status = :productStatus', {
+					productStatus: ProductStatusEnum.ACTIVE,
+				})
+				.orderBy('product.createdAt', 'DESC')
+				.take(take)
+				.skip(skip);
+			this.logger.verbose('No token condition');
+
+			if (userID) {
+				this.logger.verbose(`Having token condition: ${userID}`);
+				qb.leftJoinAndSelect(
+					'product.wishlistItems',
+					'wishlist',
+					'wishlist.status = :wishlistStatus',
+					{ wishlistStatus: WishlistStatusEnum.ACTIVE }
+				).leftJoinAndSelect(
+					'wishlist.user',
+					'user',
+					'user.id = :userID',
+					{ userID: userID }
+				);
+			}
+
+			const [products, total] = await qb.getManyAndCount();
 			this.logger.debug(
 				`Get products paging from database: ${JSON.stringify(products, null, 2)}`
 			);

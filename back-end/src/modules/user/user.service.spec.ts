@@ -26,6 +26,7 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { ImageEntity } from '../image/entities/image.entity';
 import { ProductImageEntity } from '../image/entities/product-image.entity';
 import { ImageStatusEnum } from '../image/enums/image-status.enum';
+import { BrandEntity } from '../brand/entities/brand.entiy';
 
 describe('UserService', (): void => {
 	let userService: UserService;
@@ -801,6 +802,7 @@ describe('UserService', (): void => {
 			productImage: {} as ProductImageEntity,
 			userImage: {} as UserImageEntity,
 			status: ImageStatusEnum.ACTIVE,
+			brand: {} as BrandEntity,
 			createdAt: mockCurrentDate,
 			updatedAt: mockCurrentDate,
 		};

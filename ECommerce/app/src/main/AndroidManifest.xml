@@ -46,7 +46,7 @@
             android:name=".Activity.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".Activity.DashboardActivity"
+            android:name=".Activity.HomeActivity"
             android:exported="true" />
         <activity
             android:name=".Activity.ForgotPasswordActivity"

@@ -4,17 +4,18 @@
  * @since 2025-09-16
  * @modifies 2025-09-17
  * @modifies 2025-12-26
- * @version 1.0.2
+ * @modifies 2026-01-14
+ * @version 1.0.3
  */
 
 import {
-	Body,
 	Controller,
 	Get,
 	HttpCode,
 	HttpStatus,
 	Logger,
 	Query,
+	UseGuards,
 } from '@nestjs/common';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
@@ -26,6 +27,9 @@ import { ProductDetailService } from './product-detail.service';
 import { ProductService } from './product.service';
 import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
 import { ProductStatusCode } from './status-code/product.status-code';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
+import { UserOptional } from '../user/decorators/user-optional.decorator';
+import { JwtPayload } from '../auth/interface/jwt-payload.interface';
 
 @Controller('products')
 export class ProductController {
@@ -38,6 +42,8 @@ export class ProductController {
 
 	/**
 	 * @description Get products paging
+	 * @param {JwtPayload | null} user - Get user's token is optional,
+	 * if not exist, return null
 	 * @param {GetProductsPagingRequest} request - Get products paging request
 	 * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
 	 * @author Nhut Tan
@@ -45,8 +51,10 @@ export class ProductController {
 	 * @version 1.0.0
 	 */
 	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get()
 	async getProducts(
+		@UserOptional() user: JwtPayload | null,
 		@Query() request: GetProductsPagingRequest
 	): Promise<
 		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
@@ -62,7 +70,8 @@ export class ProductController {
 			const products: PagingResponseDto<ProductEntityResponseDto> =
 				await this.productService.getProductsPaging(
 					request.page,
-					request.limit
+					request.limit,
+					user?.id
 				);
 			this.logger.debug(
 				`Get products paging: ${JSON.stringify(products, null, 2)}`

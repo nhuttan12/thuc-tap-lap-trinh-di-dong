@@ -93,17 +93,45 @@ export class WishlistController {
 		/**
 		 * Call `addToWishlist` in `WishlistService`
 		 */
-		const response: boolean = await this.wishlistService.addToWishlist(
-			request.productID,
-			payload.id
+		const addToWishlistResult: boolean =
+			await this.wishlistService.addToWishlist(
+				request.productID,
+				payload.id
+			);
+		this.logger.debug(
+			`Call \`addToWishlist\` in \`WishlistService\`: ${JSON.stringify(addToWishlistResult, null, 2)}`
 		);
 
-		return {
-			data: response,
-			message: WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_SUCCESS.message,
-			statusCode:
-				WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_SUCCESS.customCode,
+		/**
+		 * Build status code and message response base on add product to wishlist result
+		 */
+		const messageResponse: string = addToWishlistResult
+			? WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_SUCCESS.message
+			: WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED.message;
+		this.logger.debug(
+			`Build message response: ${JSON.stringify(messageResponse, null, 2)}`
+		);
+
+		const statusCodeResponse: string = addToWishlistResult
+			? WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_SUCCESS.customCode
+			: WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED.customCode;
+		this.logger.debug(
+			`Build status code response: ${JSON.stringify(statusCodeResponse, null, 2)}`
+		);
+
+		/**
+		 * Create response for api
+		 */
+		const response: SuccessResponseDto<boolean> = {
+			data: addToWishlistResult,
+			message: messageResponse,
+			statusCode: statusCodeResponse,
 		};
+		this.logger.debug(
+			`Create response for api: ${JSON.stringify(response, null, 2)}`
+		);
+
+		return response;
 	}
 
 	/**
@@ -125,7 +153,7 @@ export class WishlistController {
 		 */
 		const removeResult: boolean =
 			await this.wishlistService.removeProductFromWishlist(
-				request.wishlistItemID,
+				request.productID,
 				payload.id
 			);
 		this.logger.debug(
@@ -133,12 +161,28 @@ export class WishlistController {
 		);
 
 		/**
+		 * Build status code and message response base on remove result
+		 */
+		const messageResponse: string = removeResult
+			? WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.message
+			: WishlistStatusCode.REMOVE_WISHLIST_ITEM_FAILED.message;
+		this.logger.debug(
+			`Build message response: ${JSON.stringify(messageResponse, null, 2)}`
+		);
+
+		const statusCodeResponse: string = removeResult
+			? WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.customCode
+			: WishlistStatusCode.REMOVE_WISHLIST_ITEM_FAILED.customCode;
+		this.logger.debug(
+			`Build status code response: ${JSON.stringify(statusCodeResponse, null, 2)}`
+		);
+
+		/**
 		 * Create response
 		 */
 		const response: SuccessResponseDto<boolean> = {
-			message: WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.message,
-			statusCode:
-				WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.customCode,
+			message: messageResponse,
+			statusCode: statusCodeResponse,
 			data: removeResult,
 		};
 		this.logger.debug(

@@ -20,11 +20,12 @@ object ProductMapper {
 
     fun fromProductDTO(productDTO: ProductDTO): ProductModel {
         return ProductModel(
-            id = productDTO.id,
+            id = productDTO.productID,
             title = productDTO.name,
             price = productDTO.price.toDouble(),
             picUrl = productDTO.imageUrl,
             rating = productDTO.rating,
+            isInWishlist = productDTO.isInWishlist
         )
     }
 
@@ -60,7 +61,7 @@ object ProductMapper {
 
     fun fromProductInWishlistResponseDto(productInWishlistResponseDto: ProductInWishlistResponseDto): ProductModel {
         return ProductModel(
-            id = productInWishlistResponseDto.id,
+            id = productInWishlistResponseDto.productID,
             title = productInWishlistResponseDto.name,
             picUrl = productInWishlistResponseDto.imageUrl,
             price = productInWishlistResponseDto.price,
