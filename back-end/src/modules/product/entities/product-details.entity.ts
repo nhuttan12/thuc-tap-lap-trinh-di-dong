@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-05
  * @modifies 2025-09-24
- * @version 1.0.3
+ * @modifies 2025-12-31
+ * @version 1.0.4
  */
 
 import {
@@ -11,16 +12,16 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
-	OneToOne, PrimaryColumn,
-	PrimaryGeneratedColumn,
+	OneToOne,
+	PrimaryColumn,
 } from 'typeorm';
-import { CategoryEntity } from '../../category/entities/category.entity';
 import { TimestampField } from '../../../common/database/timestamp.field';
+import { CategoryEntity } from '../../category/entities/category.entity';
 import { ProductEntity } from './product.entity';
 
-@Entity('product_details')
+@Entity({ name: 'product_details' })
 export class ProductDetailsEntity extends TimestampField {
-	@PrimaryColumn() ///thay doi cho nay
+	@PrimaryColumn()
 	id: number;
 
 	@Column()
@@ -56,6 +57,4 @@ export class ProductDetailsEntity extends TimestampField {
 	)
 	@JoinColumn({ name: 'id' })
 	product: ProductEntity;
-
-	//
 }

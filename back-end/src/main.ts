@@ -56,7 +56,7 @@ async function bootstrap() {
 	const port: number | undefined = nestConfigService.get<number>('HTTP_PORT');
 
 	// Listen to port
-	await app.listen(port ?? 3000);
+	await app.listen(port ?? 8080);
 }
 
 bootstrap();

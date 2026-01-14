@@ -5,21 +5,24 @@
  * @version 1.0.0
  */
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { DataSource, In } from 'typeorm';
 import { ProductRepository } from './repositories/product.repository';
-import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductMapper } from './mappers/product.mapper';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
-import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
-import { DataSource } from 'typeorm';
-import {ProductDetailsEntity} from "./entities/product-details.entity";
-import {ProductImageEntity} from "../image/entities/product-image.entity";
+import { ProductDetailRepository } from './repositories/product-detail.repository';
+import { ProductDetailsEntity } from "./entities/product-details.entity";
+import { ProductImageEntity } from "../image/entities/product-image.entity";
 import { ProductStatusEnum } from './enums/product-status.enum';
-import {ProductImageTypeEnum} from "./enums/product-image.type.enum";
+import { ProductImageTypeEnum } from "./enums/product-image.type.enum";
 import { CategoryEntity } from '../category/entities/category.entity';
 import { ImageStatusEnum } from '../image/enums/image-status.enum';
-import {ImageEntity} from "../image/entities/image.entity";
+import { ImageEntity } from "../image/entities/image.entity";
+import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
+import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
+import {CategoryStatusEnum} from "../category/enums/category-status.enum";
+
 @Injectable()
 export class ProductService {
 	private readonly logger: Logger = new Logger(ProductService.name);
@@ -28,205 +31,216 @@ export class ProductService {
 		private dataSource: DataSource,
 		private readonly productRepository: ProductRepository,
 		private readonly productMapper: ProductMapper,
-		private readonly buildPagingMetaService: BuildPagingMetaService
+		private readonly buildPagingMetaService: BuildPagingMetaService,
+		private readonly productDetailRepository: ProductDetailRepository,
+	) { }
 
-	) {}
-
-
+	/**
+	 * CREATE PRODUCT (ADMIN)
+	 */
 	async createProductAdmin(body: any): Promise<ProductEntity> {
-		const queryRunner = this.dataSource.createQueryRunner();
-		await queryRunner.connect();
-		await queryRunner.startTransaction();
+		const qr = this.dataSource.createQueryRunner();
+		await qr.connect();
+		await qr.startTransaction();
 
 		try {
-			// 1. Tìm category
-			const categoryId = body.productDetailsEntity?.category_id || body.category_id;
-			if (!categoryId) throw new Error('category_id is required');
+			// 1. VALIDATE CATEGORY ✅
+			const categoryId = body.productDetailsEntity?.category_id ?? body.category_id;
+			if (!categoryId) throw new BadRequestException('category_id is required');
 
-			const category = await queryRunner.manager.findOne(CategoryEntity, {
-				where: { id: categoryId },
+			const category = await qr.manager.findOne(CategoryEntity, {
+				where: { id: categoryId, status: CategoryStatusEnum.ACTIVE }
 			});
-			if (!category) throw new Error(`Category id=${categoryId} not found`);
+			if (!category) throw new BadRequestException(`Category id=${categoryId} not found or inactive`);
 
-			// 2. Tạo Product
-			const product = new ProductEntity();
-			product.name = body.name;
-			product.price = body.price;
-			product.discount = body.discount ?? 0;
-			product.status = ProductStatusEnum.ACTIVE;
+			// 2. INSERT PRODUCT
+			const productResult = await qr.manager
+				.createQueryBuilder()
+				.insert()
+				.into(ProductEntity)
+				.values({
+					name: body.name,
+					price: Number(body.price),
+					discount: body.discount ?? 0,
+					status: body.status ?? ProductStatusEnum.ACTIVE
+				})
+				.execute();
 
-			// 3. Tạo ProductDetails
-			const details = new ProductDetailsEntity();
-			details.size = body.productDetailsEntity?.size || body.size || 'M';
-			details.color = body.productDetailsEntity?.color || body.color || 'Đen';
-			details.rating = body.productDetailsEntity?.rating || body.rating || 0;
-			details.description = body.productDetailsEntity?.description || body.description || '';
-			details.categoryEntity = category;
+			const productId = productResult.identifiers[0].id;
 
-			//Gán details cho product
-			product.productDetailsEntity = details;
+			// 🔥 3. INSERT DETAILS - RAW SQL ✅
+			await qr.manager.query(`
+         INSERT INTO product_details (id, size, color, description, rating, category_id, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      `, [
+				productId,
+				Array.isArray(body.size) ? body.size.join(',') : (body.size ?? '37').toString(),
+				body.color ?? 'Đen',
+				body.description ?? '',
+				body.rating ?? 0,
+				categoryId
+			]);
 
-			// 4. Tạo ảnh
-			if (body.productImages && body.productImages.length > 0) {
-				product.productImages = body.productImages.map((img: any) => {
-					const pi = new ProductImageEntity();
+			await qr.commitTransaction();
 
-					const type = img.type?.toUpperCase();
-					pi.type =
-						type === 'BANNER'
-							? ProductImageTypeEnum.BANNER
-							: type === 'PRODUCT'
-								? ProductImageTypeEnum.PRODUCT
-								: ProductImageTypeEnum.THUMBNAIL;
+			return await this.dataSource.manager.findOneOrFail(ProductEntity, {
+				where: { id: productId },
+				relations: ['productDetailsEntity', 'productDetailsEntity.categoryEntity']
+			});
 
-					// Tạo ImageEntity với status
-					const imageEntity = new ImageEntity();
-					imageEntity.url = img.image?.url || img.url;
-					imageEntity.status = ImageStatusEnum.ACTIVE;
-
-					pi.image = imageEntity;
-
-
-					return pi;
-				});
-			}
-
-			// 5. Lưu tất cả (cascade sẽ tự lưu details và images)
-			const savedProduct = await queryRunner.manager.save(ProductEntity, product);
-			await queryRunner.commitTransaction();
-
-			return savedProduct;
-
-		} catch (err) {
-			await queryRunner.rollbackTransaction();
-			this.logger.error('Create product failed', err);
-			throw err;
+		} catch (e) {
+			await qr.rollbackTransaction();
+			throw e;
 		} finally {
-			await queryRunner.release();
+			await qr.release();
 		}
 	}
 
-	// UPDATE PRODUCT ADMIN
-	async updateProductAdmin(id: number, body: any): Promise<ProductEntity> {
-		const queryRunner = this.dataSource.createQueryRunner();
-		await queryRunner.connect();
-		await queryRunner.startTransaction();
+
+	/**
+	 * UPDATE PRODUCT (ADMIN)
+	 */
+	async updateProductAdmin(id: number, body: any): Promise<{ id: number }> {
+		const qr = this.dataSource.createQueryRunner();
+		await qr.connect();
+		await qr.startTransaction();
 
 		try {
-			// Tìm product + load relations
-			const product = await queryRunner.manager.findOne(ProductEntity, {
+			// 1. UPDATE PRODUCT (basic info)
+			const productUpdate: any = {};
+			if (body.name !== undefined) productUpdate.name = body.name;
+			if (body.price !== undefined) productUpdate.price = Number(body.price);
+			if (body.discount !== undefined) productUpdate.discount = Number(body.discount);
+			if (body.status !== undefined) productUpdate.status = body.status;
+
+			if (Object.keys(productUpdate).length > 0) {
+				await qr.manager.update(ProductEntity, id, productUpdate);
+			}
+
+			// 🔥 2. UPDATE DETAILS - SINGLE Raw SQL (FORCE ALL FIELDS!)
+			const sizeVal = body.productDetailsEntity?.size ?? body.size ?? '';
+			const colorVal = body.productDetailsEntity?.color ?? body.color ?? '';
+			const descVal = body.productDetailsEntity?.description ?? body.description ?? '';
+			const ratingVal = Number(body.productDetailsEntity?.rating ?? body.rating ?? 0);
+			const catId = body.productDetailsEntity?.category_id ?? body.category_id;
+
+			await qr.manager.query(`
+         UPDATE product_details 
+         SET 
+            size = $1,
+            color = $2, 
+            description = $3,
+            rating = $4,
+            category_id = COALESCE($5, category_id),
+            updated_at = NOW()
+         WHERE id = $6
+      `, [
+				Array.isArray(sizeVal) ? sizeVal.join(',') : String(sizeVal),
+				colorVal,
+				descVal,
+				ratingVal,
+				catId || null,  // NULL-safe
+				id
+			]);
+
+			await qr.commitTransaction();
+
+			// 3. RETURN FRESH DATA với relations
+			return await this.dataSource.manager.findOneOrFail(ProductEntity, {
 				where: { id },
-				relations: ['productDetailsEntity', 'productImages', 'productImages.image'],
+				relations: [
+					'productDetailsEntity',
+					'productDetailsEntity.categoryEntity',
+					'productImages',
+					'productImages.image'
+				]
 			});
 
-			if (!product) throw new Error(`Product id=${id} not found`);
-
-			// Cập nhật thông tin cơ bản
-			product.name = body.name ?? product.name;
-			product.price = body.price ?? product.price;
-			product.discount = body.discount ?? product.discount;
-
-			// Cập nhật ProductDetails
-			if (body.productDetailsEntity) {
-				if (!product.productDetailsEntity) {
-					product.productDetailsEntity = new ProductDetailsEntity();
-				}
-				const details = product.productDetailsEntity;
-				details.size = body.productDetailsEntity.size ?? details.size;
-				details.color = body.productDetailsEntity.color ?? details.color;
-				details.rating = body.productDetailsEntity.rating ?? details.rating;
-				details.description = body.productDetailsEntity.description ?? details.description;
-
-				if (body.productDetailsEntity.category_id) {
-					const category = await queryRunner.manager.findOne(CategoryEntity, {
-						where: { id: body.productDetailsEntity.category_id },
-					});
-					if (!category) throw new Error('Category not found');
-					details.categoryEntity = category;
-				}
-			}
-
-			// Cập nhật ảnh: xóa cũ, thêm mới (nếu có)
-			if (body.productImages) {
-				// Xóa ảnh cũ
-				if (product.productImages?.length) {
-					await queryRunner.manager.remove(product.productImages);
-				}
-				// Thêm ảnh mới
-				product.productImages = body.productImages.map((img: any) => {
-					const pi = new ProductImageEntity();
-					const type = img.type?.toUpperCase();
-					pi.type =
-						type === 'BANNER'
-							? ProductImageTypeEnum.BANNER
-							: type === 'PRODUCT'
-								? ProductImageTypeEnum.PRODUCT
-								: ProductImageTypeEnum.THUMBNAIL;
-
-					const imageEntity = new ImageEntity();
-					imageEntity.url = img.url || img.image?.url;
-					imageEntity.status = ImageStatusEnum.ACTIVE;
-
-					pi.image = imageEntity;
-					pi.product = product;
-					return pi;
-				});
-			}
-
-			const updated = await queryRunner.manager.save(ProductEntity, product);
-			await queryRunner.commitTransaction();
-			return updated;
-		} catch (err) {
-			await queryRunner.rollbackTransaction();
-			throw err;
+		} catch (e) {
+			await qr.rollbackTransaction();
+			this.logger.error(`Update product ${id} failed:`, e);
+			throw e;
 		} finally {
-			await queryRunner.release();
+			await qr.release();
 		}
 	}
 
-// SOFT DELETE PRODUCT
+	/**
+	 * DELETE PRODUCT (ADMIN - Soft delete)
+	 */
 	async deleteProductAdmin(id: number): Promise<void> {
-		const queryRunner = this.dataSource.createQueryRunner();
-		await queryRunner.connect();
-		await queryRunner.startTransaction();
 		try {
-			const product = await queryRunner.manager.findOne(ProductEntity, { where: { id } });
-			if (!product) throw new Error(`Product id=${id} not found`);
+			this.logger.debug(`Soft deleting product ${id}`);
 
-			product.status = ProductStatusEnum.DELETED;
-			await queryRunner.manager.save(product);
-			await queryRunner.commitTransaction();
-		} catch (err) {
-			await queryRunner.rollbackTransaction();
-			throw err;
-		} finally {
-			await queryRunner.release();
-		}
-	}
+			// Check if product exists first
+			const product = await this.dataSource.manager.findOne(ProductEntity, {
+				where: { id },
+			});
 
-// UPDATE STATUS (ACTIVE / INACTIVE)
-	async updateProductStatus(id: number, status: string): Promise<void> {
-		const queryRunner = this.dataSource.createQueryRunner();
-		await queryRunner.connect();
-		await queryRunner.startTransaction();
-		try {
-			const product = await queryRunner.manager.findOne(ProductEntity, { where: { id } });
-			if (!product) throw new Error(`Product id=${id} not found`);
-
-			if (!Object.values(ProductStatusEnum).includes(status as ProductStatusEnum)) {
-				throw new Error('Invalid status');
+			if (!product) {
+				throw new BadRequestException(`Product id=${id} not found`);
 			}
 
-			product.status = status as ProductStatusEnum;
-			await queryRunner.manager.save(product);
-			await queryRunner.commitTransaction();
-		} catch (err) {
-			await queryRunner.rollbackTransaction();
-			throw err;
-		} finally {
-			await queryRunner.release();
+			const result = await this.dataSource.manager.update(
+				ProductEntity,
+				id,
+				{ status: ProductStatusEnum.DELETED },
+			);
+
+			if (!result.affected) {
+				throw new BadRequestException(`Failed to delete product id=${id}`);
+			}
+
+			this.logger.debug(`Product ${id} soft deleted successfully`);
+
+		} catch (e) {
+			this.logger.error(`Delete product ${id} failed`, e);
+			throw e;
 		}
 	}
+
+	/**
+	 * UPDATE PRODUCT STATUS (ADMIN)
+	 */
+	async updateProductStatus(id: number, status: string): Promise<{ id: number }> {
+		const qr = this.dataSource.createQueryRunner();
+		await qr.connect();
+		await qr.startTransaction();
+
+		try {
+			if (!Object.values(ProductStatusEnum).includes(status as ProductStatusEnum)) {
+				throw new BadRequestException('Invalid status');
+			}
+
+			const product = await qr.manager.findOneOrFail(ProductEntity, {
+				where: { id },
+				relations: ['productDetailsEntity'],
+			});
+
+			// product.status = status as ProductStatusEnum;
+			await qr.manager.save(product);
+
+			await qr.commitTransaction();
+
+			return await this.dataSource.manager.findOneOrFail(ProductEntity, {
+				where: { id },
+				relations: [
+					'productDetailsEntity',
+					'productDetailsEntity.categoryEntity',
+					'productImages',
+					'productImages.image',
+				],
+			});
+		} catch (e) {
+			await qr.rollbackTransaction();
+			throw e;
+		} finally {
+			await qr.release();
+		}
+	}
+
+
+
 
 	/**
 	 * Get products with pagination
@@ -252,14 +266,14 @@ export class ProductService {
 			);
 
 			/*
-			 * Calling `getProductsPaging` from `ProductRepository`
-			 */
+             * Calling `getProductsPaging` from `ProductRepository`
+             */
 			const [products, total]: [ProductEntity[], number] =
 				await this.productRepository.getProductsPaging(limit, skip);
 
 			/*
-			 * Convert `ProductEntity` to `ProductEntityResponseDto`
-			 */
+             * Convert `ProductEntity` to `ProductEntityResponseDto`
+             */
 			const productResponse: ProductEntityResponseDto[] =
 				this.productMapper.toProductEntityListResponseDto(products);
 

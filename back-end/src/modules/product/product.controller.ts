@@ -47,51 +47,31 @@ export class ProductController {
 	@HttpCode(HttpStatus.OK)
 	@Get()
 	async getProducts(
-		@Body() request: GetProductsPagingRequest
-	): Promise<
-		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
-	> {
+		@Query('page') page = 1,
+		@Query('limit') limit = 10
+	): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
 		try {
-			this.logger.debug(
-				`Get products paging: ${JSON.stringify(request)}`
-			);
+			const currentPage = Number(page) > 0 ? Number(page) : 1;
+			const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
 
-			/**
-			 * Calling `getProductsPaging` from `ProductService`
-			 */
-			const products: PagingResponseDto<ProductEntityResponseDto> =
-				await this.productService.getProductsPaging(
-					request.page,
-					request.limit
-				);
-			this.logger.debug(
-				`Get products paging from database: ${JSON.stringify(products)}`
-			);
+			this.logger.debug(`[PUBLIC] Get products: page=${currentPage}, limit=${currentLimit}`);
+
+			const products = await this.productService.getProductsPaging(currentPage, currentLimit);
 
 			return {
 				data: products,
-				message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
-				statusCode:
-					ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
+				message: 'Lấy danh sách sản phẩm thành công',
+				statusCode: 'PRD_001',
 			};
 		} catch (e) {
-			this.logger.error(
-				`Error in \`getProductsPaging\`: ${(e as Error).message}`,
-				(e as Error).stack
-			);
+			this.logger.error(`Error in getProducts: ${(e as Error).message}`, (e as Error).stack);
 			throw e;
 		}
 	}
 
 	/**
-	 * @description Get product detail by product ID
-	 * @param {number} request - Request to get the product detail by product ID
-	 * @returns {Promise<SuccessResponseDto<ProductDetailResponseDto>>} - Success response
-	 * @author Nhut Tan
-	 * @since 2025-09-24
-	 * @version 1.0.0
+	 * ADMIN endpoint: Lấy danh sách sản phẩm cho admin
 	 */
-
 	@Get('admin')
 	async getProductsForAdmin(
 		@Query('page') page = 1,
@@ -116,78 +96,70 @@ export class ProductController {
 		}
 	}
 
-	//create product
-	@Post('admin')
-	@HttpCode(HttpStatus.CREATED)
-	async createProductForAdmin(@Body() body: any) {
-		return this.productService.createProductAdmin(body);
-	}
-
-
-	//find product
-	@Get()
+	/**
+	 * Get product detail by ID (public)
+	 */
+	@Get(':id')
 	async getProductDetailByProductID(
-		@Body() request: GetProductDetailByProductIdRequestDto
+		@Param('id') productID: number
 	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
 		try {
-			/**
-			 * Get productID from the request
-			 */
-			const { productID } = request;
 			this.logger.debug(`Get product detail by product ID: ${productID}`);
 
-			/**
-			 * Calling `getProductDetailByProductID` from `ProductDetailService`
-			 */
 			const productDetail: ProductDetailResponseDto =
-				await this.productDetailService.getProductDetailByProductID(
-					productID
-				);
-			this.logger.debug(
-				`Get product detail by product ID: ${JSON.stringify(productDetail)}`
-			);
+				await this.productDetailService.getProductDetailByProductID(productID);
 
 			return {
 				data: productDetail,
-				message:
-					ProductDetailStatusCode
-						.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.message,
-				statusCode:
-					ProductDetailStatusCode
-						.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.customCode,
+				message: 'Lấy chi tiết sản phẩm thành công',
+				statusCode: 'PRD_002',
 			};
 		} catch (e) {
-			this.logger.error(
-				`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
-				(e as Error).stack
-			);
+			this.logger.error(`Error in getProductDetailByProductID: ${(e as Error).message}`, (e as Error).stack);
 			throw e;
 		}
 	}
 
-	// product.controller.ts - thêm các endpoint
+	/**
+	 * ADMIN: Tạo sản phẩm mới
+	 */
 
-// Cập nhật sản phẩm
+	@Post('admin')
+	@HttpCode(HttpStatus.CREATED)
+	async createProductForAdmin(@Body() body: any): Promise<{
+		data: { id: number };
+		message: string;
+		statusCode: string
+	}> {
+		const createdProduct = await this.productService.createProductAdmin(body);
+		return {
+			data: createdProduct,
+			message: 'Tạo sản phẩm thành công',
+			statusCode: 'PRD_ADMIN_003',
+		};
+	}
+
+
+	/**
+	 * ADMIN: Cập nhật sản phẩm
+	 */
 	@Put('admin/:id')
 	@HttpCode(HttpStatus.OK)
 	async updateProductForAdmin(
 		@Param('id') id: number,
 		@Body() body: any
-	): Promise<SuccessResponseDto<ProductEntity>> {
-		try {
-			const updatedProduct = await this.productService.updateProductAdmin(id, body);
-			return {
-				data: updatedProduct,
-				message: 'Cập nhật sản phẩm thành công',
-				statusCode: 'PRD_ADMIN_004',
-			};
-		} catch (e) {
-			this.logger.error(`Error updating product: ${e.message}`, e.stack);
-			throw e;
-		}
+	): Promise<{ data: { id: number }; message: string; statusCode: string }> {  // ← ProductEntity
+		const updatedProduct = await this.productService.updateProductAdmin(id, body);
+		return {
+			data: updatedProduct,
+			message: 'Cập nhật sản phẩm thành công',
+			statusCode: 'PRD_ADMIN_004',
+		};
 	}
 
-// Xóa sản phẩm (soft delete - đổi status)
+	/**
+	 * ADMIN: Xóa sản phẩm (soft delete)
+	 */
 	@Delete('admin/:id')
 	@HttpCode(HttpStatus.OK)
 	async deleteProductForAdmin(
@@ -206,23 +178,27 @@ export class ProductController {
 		}
 	}
 
-// Cập nhật status
+	/**
+	 * ADMIN: Cập nhật status
+	 */
+	@Patch('admin/:id/status')
+	@HttpCode(HttpStatus.OK)
 	@Patch('admin/:id/status')
 	@HttpCode(HttpStatus.OK)
 	async updateProductStatus(
 		@Param('id') id: number,
 		@Body('status') status: string
-	): Promise<SuccessResponseDto<any>> {
+	): Promise<{ data: { id: number }; message: string; statusCode: string }> {
 		try {
-			await this.productService.updateProductStatus(id, status);
+			const updatedProduct = await this.productService.updateProductStatus(id, status);
 			return {
-				data: { id, status },
+				data: updatedProduct,  // ✅ FULL ProductEntity → UI update ngay!
 				message: 'Cập nhật trạng thái thành công',
 				statusCode: 'PRD_ADMIN_006',
 			};
 		} catch (e) {
-			this.logger.error(`Error updating status: ${e.message}`, e.stack);
 			throw e;
 		}
 	}
+
 }

@@ -1,18 +1,18 @@
-package com.example.admin.Fragment
+package com.example.admin.fragment
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.admin.R
-import com.example.admin.databinding.FragmentUserListBinding
+import com.example.admin.databinding.FragmentOrderListBinding
 
-class UserListFragment : Fragment(R.layout.fragment_user_list) {
+class OrderListFragment : Fragment(R.layout.fragment_order_list) {
 
-    private var binding: FragmentUserListBinding? = null
+    private var binding: FragmentOrderListBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentUserListBinding.bind(view)
+        binding = FragmentOrderListBinding.bind(view)
     }
 
     override fun onDestroyView() {

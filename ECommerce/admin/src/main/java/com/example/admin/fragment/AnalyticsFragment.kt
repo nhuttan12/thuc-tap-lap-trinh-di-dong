@@ -1,4 +1,4 @@
-package com.example.admin.Fragment
+package com.example.admin.fragment
 
 import android.os.Bundle
 import android.view.View

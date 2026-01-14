@@ -7,6 +7,8 @@
  */
 
 import {
+	BadRequestException,
+	ConflictException,
 	ForbiddenException,
 	Injectable,
 	Logger,
@@ -25,11 +27,15 @@ import { RoleName } from '../role/enums/role-name.enum';
 import { RoleResponseDto } from '../role/dtos/role-response.dto';
 import { ConfigService } from '../../common/config/config.service';
 import * as bcrypt from 'bcrypt';
+import {UpdateUserAdminDto} from "./dtos/update-user-admin.dto";
+import {CreateUserAdminDto} from "./dtos/create-user-admin.dto";
+import { RoleRepository } from '../role/repositories/role.repository';
 
 @Injectable()
 export class UserService {
 	private readonly logger: Logger = new Logger(UserService.name);
 	private readonly salt: number;
+
 
 	constructor(
 		private readonly userRepository: UserRepository,
@@ -37,6 +43,8 @@ export class UserService {
 		private readonly imageService: ImageService,
 		private readonly roleService: RoleService,
 		private readonly configService: ConfigService
+
+
 	) {
 		this.salt = this.configService.httpConfig.saltRounds;
 	}
@@ -379,4 +387,98 @@ export class UserService {
 			throw e;
 		}
 	}
+
+
+
+	//////////ADMIN
+
+	async getUsersForAdmin(
+		page: number,
+		limit: number,
+		keyword?: string
+	) {
+		return this.userRepository.getUsersPagingForAdmin(
+			page,
+			limit,
+			keyword
+		);
+	}
+
+	async getUserDetailForAdmin(userId: number) {
+		const user = await this.userRepository.findUserDetailForAdmin(userId);
+
+		if (!user) {
+			throw new NotFoundException({
+				statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
+				customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+				message: UserStatusCode.USER_NOT_FOUND.message,
+			});
+		}
+
+		return this.userMapper.toUserResponseDto(user);
+	}
+
+	async createUserByAdmin(
+		dto: CreateUserAdminDto
+	): Promise<UserEntityResponseDto> {
+
+		// 1. Check email
+		if (await this.getUserByEmail(dto.email)) {
+			throw new ConflictException('Email already exists');
+		}
+
+		// 2. Check username
+		if (await this.getUserByUsername(dto.username)) {
+			throw new ConflictException('Username already exists');
+		}
+
+		// 3. ✅ LẤY ROLE THEO NAME
+		const role = await this.roleService.getRoleByName(dto.roleName);
+		if (!role) {
+			throw new BadRequestException(`Role ${dto.roleName} not found`);
+		}
+
+		// 4. Create user
+		const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+		const user = await this.userRepository.createUserWithUsernameEmailPassword(
+			dto.username,
+			dto.email,
+			await bcrypt.hash(dto.password, 10),
+			role.id,
+			1
+		);
+
+
+		return this.getUserByUserID(user.id);
+	}
+
+
+	async updateUserForAdmin(
+		userId: number,
+		body: UpdateUserAdminDto
+	) {
+		const user = await this.userRepository.getUserByUerID(userId);
+
+		if (!user) {
+			throw new NotFoundException({
+				statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
+				customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+				message: UserStatusCode.USER_NOT_FOUND.message,
+			});
+		}
+
+		if (body.status) {
+			user.status = body.status;
+		}
+
+		if (body.roleId) {
+			user.role = { id: body.roleId } as any;
+		}
+
+
+		await this.userRepository.save(user);
+		return this.userMapper.toUserResponseDto(user);
+	}
+
 }

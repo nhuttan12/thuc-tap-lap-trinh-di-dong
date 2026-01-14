@@ -5,17 +5,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <!-- Toolbar -->
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="@color/white"-->
-<!--            android:title="Quản lý người dùng"-->
-<!--            android:titleTextColor="@android:color/white"-->
-<!--            app:navigationIcon="@drawable/ic_back"-->
-<!--            app:navigationIconTint="@android:color/white" />-->
-
     <!-- Search Bar -->
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -23,21 +12,18 @@
             android:layout_margin="16dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:startIconDrawable="@drawable/ic_search"
-            app:startIconTint="@color/text_secondary"
             app:boxCornerRadiusTopStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:hintTextColor="@color/text_secondary">
+            app:boxCornerRadiusBottomEnd="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtSearch"
+                android:id="@+id/edtSearchUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Tìm kiếm người dùng..."
-                android:inputType="text"
-                android:imeOptions="actionSearch" android:minHeight="50dp"/>
-
+                android:imeOptions="actionSearch"
+                android:minHeight="50dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -48,14 +34,16 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+    <!-- ✅ ĐÚNG ID -->
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerProducts"
+            android:id="@+id/recyclerUsers"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+    <!-- ✅ FAB cho User -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddProduct"
+            android:id="@+id/fabAddUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

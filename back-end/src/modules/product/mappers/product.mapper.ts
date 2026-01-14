@@ -38,7 +38,7 @@ export class ProductMapper {
 			name: product.name,
 			price: product.price,
 			discount: product.discount,
-			imageUrl: imageUrl, // ← Đã fix
+			imageUrl: imageUrl,
 			status: product.status,
 			createdAt: product.createdAt,
 			updatedAt: product.updatedAt,

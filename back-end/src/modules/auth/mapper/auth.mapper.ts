@@ -16,7 +16,7 @@ export class AuthMapper {
 		return {
 			id: user.id,
 			email: user.email,
-			role: user.role,
+			role: user.role.toUpperCase(),
 			accessToken: '',
 		};
 	}

@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { RoleEntity } from '../../role/entities/role.entity';
 import { RoleName } from '../../role/enums/role-name.enum';
 import { ImageEntity } from '../../image/entities/image.entity';
+import {UserStatus} from "../enums/user-status.enum";
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
@@ -276,4 +277,70 @@ export class UserRepository {
 			throw e;
 		}
 	}
+
+
+	/////////ADmin
+
+	async getUsersPagingForAdmin(
+		page: number,
+		limit: number,
+		keyword?: string
+	) {
+		const qb = this.userRepository.createQueryBuilder('user')
+			.leftJoinAndSelect('user.role', 'role')
+			.skip((page - 1) * limit)
+			.take(limit)
+			.orderBy('user.createdAt', 'DESC');
+
+		if (keyword) {
+			qb.andWhere(
+				'user.username LIKE :kw OR user.email LIKE :kw',
+				{ kw: `%${keyword}%` }
+			);
+		}
+
+		const [items, total] = await qb.getManyAndCount();
+
+		return {
+			items,
+			total,
+			page,
+			limit,
+		};
+	}
+
+	async findUserDetailForAdmin(userId: number): Promise<UserEntity | null> {
+		return this.userRepository.findOne({
+			where: { id: userId },
+			relations: {
+				role: true,
+				userDetail: true,
+			},
+		});
+	}
+
+	async createUserByAdmin(
+		username: string,
+		email: string,
+		password: string,
+		fullName: string,
+		roleId: number
+	): Promise<UserEntity> {
+		return this.userRepository.save(
+			this.userRepository.create({
+				username,
+				email,
+				password,
+				fullName,
+				role: { id: roleId },
+				status: UserStatus.ACTIVE,
+
+			})
+		);
+	}
+
+	async save(user: UserEntity): Promise<UserEntity> {
+		return this.userRepository.save(user);
+	}
+
 }
