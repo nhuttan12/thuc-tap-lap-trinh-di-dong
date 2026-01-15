@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pageBtn"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_margin="4dp"
+    android:gravity="center"
+    android:text="1"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    android:background="@drawable/pagination_btn_bg"
+    android:textColor="@color/white" />

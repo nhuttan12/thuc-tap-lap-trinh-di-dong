@@ -17,6 +17,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.e_commerce.Adapter.PaginationAdapter
 import com.example.e_commerce.Adapter.PopularAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
@@ -34,7 +36,6 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var checkToken: CheckToken
     private lateinit var type: ProductListType
     private var productList: List<ProductModel> = emptyList()
-    private var pendingWishlistProductID: Int? = null
 
     private val productViewModel: ProductViewModel by lazy {
         val factory = ProductViewModelFactory(tinyDB)
@@ -49,6 +50,7 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
 
     private lateinit var popularAdapter: PopularAdapter
+    private lateinit var paginationAdapter: PaginationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +106,7 @@ class ProductListActivity : AppCompatActivity() {
     private fun initUI() {
         initProductList()
         initBottomNavigation()
+        initPagination()
 
         binding.backBtn.setOnClickListener { finish() }
     }
@@ -131,6 +134,7 @@ class ProductListActivity : AppCompatActivity() {
             ProductListType.POPULAR -> {
                 productViewModel.popular.observe(this) {
                     popularAdapter.updateDate(it)
+                    paginationAdapter.update(totalPages = 10, currentPage = productViewModel.currentPage)
                     binding.progressBarProductList.visibility = View.GONE
                 }
 
@@ -138,13 +142,11 @@ class ProductListActivity : AppCompatActivity() {
             }
 
             ProductListType.WISHLIST -> {
-                wishlistViewModel.wishlistItem.observe(this) {
-                    val wishlistProducts = it.map {
-                        it.copy(isInWishlist = true)
-                    }
+                wishlistViewModel.wishlistItem.observe(this) { items ->
+                    productList = items
 
-                    productList = wishlistProducts
-                    popularAdapter.updateDate(wishlistProducts)
+                    wishlistViewModel.loadWishlistIds()
+
                     binding.progressBarProductList.visibility = View.GONE
                 }
 
@@ -161,9 +163,21 @@ class ProductListActivity : AppCompatActivity() {
         }
     }
 
+    private fun initPagination() {
+        binding.recyclerViewPagination.layoutManager = LinearLayoutManager(this,
+            LinearLayoutManager.HORIZONTAL, false)
+
+        val paginationAdapter = PaginationAdapter(totalPages = 10, currentPage = 1) { page ->
+            productViewModel.loadPopular(limit = 10, page = page)
+        }
+
+        binding.recyclerViewPagination.adapter = paginationAdapter
+    }
+
     private fun loadProductDetailAndNavigate(productID: Int) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(DetailActivity.EXTRA_PRODUCT_ID, productID)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
 
@@ -188,55 +202,25 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     private fun toggleWishlist(product: ProductModel) {
-        pendingWishlistProductID = product.id
-        Log.d(TAG, "pendingWishlistProductID: $pendingWishlistProductID")
-        Log.d(TAG, "Is in wishlist: ${product.isInWishlist}")
-
         if (product.isInWishlist) {
             wishlistViewModel.removeProductFromWishlist(productID = product.id)
+            Log.d(TAG, "Remove product from wishlist with productID: $product.id")
         } else {
             wishlistViewModel.addProductToWishlist(productID = product.id)
+            Log.d(TAG, "Add product to wishlist with productID: $product.id")
         }
     }
 
     private fun observeWishlist() {
-        wishlistViewModel.addProductToWishlistMsg.observe(this) { success ->
-            if (success == true) {
-                updateWishlistState(isInWishlist = true)
-            } else {
-                Log.d(TAG, "Thêm sản phẩm vào danh sách yêu thích thất bại")
-                Toast.makeText(
-                    this,
-                    "Thêm sản phẩm vào danh sách yêu thích thất bại",
-                    Toast.LENGTH_SHORT
-                ).show()
+        wishlistViewModel.wishlistIds.observe(this) { ids ->
+            if (type == ProductListType.WISHLIST) {
+                val updated =
+                    productList
+                        .filter { ids.contains(it.id) }
+                        .map { it.copy(isInWishlist = true) }
+
+                popularAdapter.updateDate(updated)
             }
         }
-
-        wishlistViewModel.removeProductFromWishlistMsg.observe(this) { success ->
-            if (success == true && type == ProductListType.WISHLIST) {
-                updateWishlistState(isInWishlist = false)
-                popularAdapter.removeItemById(productId = pendingWishlistProductID!!)
-            } else {
-                Log.d(TAG, "Xoá sản phẩm khỏi danh sách yêu thích thất bại")
-                Toast.makeText(
-                    this,
-                    "Xoá sản phẩm khỏi danh sách yêu thích thất bại",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    private fun updateWishlistState(isInWishlist: Boolean) {
-        val id = pendingWishlistProductID ?: return
-
-        val updatedList = popularAdapter.currentItems().map {
-            if (it.id == id) {
-                it.copy(isInWishlist = isInWishlist)
-            } else it
-        }
-
-        popularAdapter.updateDate(updatedList)
     }
 }

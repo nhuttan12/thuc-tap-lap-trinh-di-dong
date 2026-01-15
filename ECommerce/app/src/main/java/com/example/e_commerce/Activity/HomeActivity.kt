@@ -13,6 +13,7 @@ package com.example.e_commerce.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -45,6 +46,7 @@ import kotlin.math.abs
 import kotlin.math.min
 
 class HomeActivity : AppCompatActivity() {
+    private val TAG = "HomeActivity"
     private lateinit var tinyDB: TinyDB
 
     private val productViewModel: ProductViewModel by lazy {
@@ -66,8 +68,6 @@ class HomeActivity : AppCompatActivity() {
         val factory = WishlistViewModelFactory(tinyDB)
         ViewModelProvider(this, factory)[WishlistViewModel::class.java]
     }
-
-    private var pendingWishlistProductID: Int? = null
 
     private lateinit var checkToken: CheckToken
     private lateinit var popularAdapter: PopularAdapter
@@ -109,6 +109,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        wishlistViewModel.loadWishlistIds()
 
         binding.cartBtn.isEnabled = true
         binding.wishlistBtn.isEnabled = true
@@ -289,45 +291,46 @@ class HomeActivity : AppCompatActivity() {
     private fun loadProductDetailAndNavigate(productID: Int) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(DetailActivity.EXTRA_PRODUCT_ID, productID)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
 
     private fun toggleWishlist(product: ProductModel) {
-        pendingWishlistProductID = product.id
-
-        if (product.isInWishlist) {
-            wishlistViewModel.removeProductFromWishlist(product.id)
-        } else {
-            wishlistViewModel.addProductToWishlist(product.id)
-        }
+        checkToken.checkTokenOrRedirect(this@HomeActivity, onTokenValid = {
+            if (product.isInWishlist) {
+                wishlistViewModel.removeProductFromWishlist(product.id)
+                Log.d(TAG, "Remove product from wishlist: ${product.id}")
+            } else {
+                wishlistViewModel.addProductToWishlist(product.id)
+                Log.d(TAG, "Add product to wishlist: ${product.id}")
+            }
+        })
     }
 
     private fun observeWishlist() {
-        wishlistViewModel.addProductToWishlistMsg.observe(this) { success ->
-            if (success == true) {
-                updateWishlistState(true)
-            } else {
-                Toast.makeText(this, "Thêm wishlist thất bại", Toast.LENGTH_SHORT).show()
+//        wishlistViewModel.addProductToWishlistMsg.observe(this) { success ->
+//            if (success == true) {
+//                Log.d(TAG, "Add product to wishlist success: ${pendingWishlistProductID}")
+//            } else {
+//                Toast.makeText(this, "Thêm wishlist thất bại", Toast.LENGTH_SHORT).show()
+//                Log.d(TAG, "Add product to wishlist failed: ${pendingWishlistProductID}")
+//            }
+//        }
+//
+//        wishlistViewModel.removeProductFromWishlistMsg.observe(this) { success ->
+//            if (success == true) {
+//                Log.d(TAG, "Remove product to wishlist success: ${pendingWishlistProductID}")
+//            } else {
+//                Toast.makeText(this, "Xoá wishlist thất bại", Toast.LENGTH_SHORT).show()
+//                Log.d(TAG, "Remove product to wishlist failed: ${pendingWishlistProductID}")
+//            }
+//        }
+
+        wishlistViewModel.wishlistIds.observe(this) { ids ->
+            val updated = popularAdapter.currentItems().map {
+                it.copy(isInWishlist = ids.contains(it.id))
             }
+            popularAdapter.updateDate(updated)
         }
-
-        wishlistViewModel.removeProductFromWishlistMsg.observe(this) { success ->
-            if (success == true) {
-                updateWishlistState(false)
-            } else {
-                Toast.makeText(this, "Xoá wishlist thất bại", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun updateWishlistState(isInWishlist: Boolean) {
-        val id = pendingWishlistProductID ?: return
-
-        val updatedList = popularAdapter.currentItems().map {
-            if (it.id == id) it.copy(isInWishlist = isInWishlist)
-            else it
-        }
-
-        popularAdapter.updateDate(updatedList)
     }
 }

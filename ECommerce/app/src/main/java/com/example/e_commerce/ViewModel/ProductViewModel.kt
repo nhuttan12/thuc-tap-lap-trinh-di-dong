@@ -26,6 +26,8 @@ class ProductViewModel(
 ) : ViewModel() {
     private val repository = ProductRepository(tinyDB)
     private val TAG = "ProductViewModel"
+    var currentPage: Int = 1
+        private set
 
     private val _popular = MutableLiveData<List<ProductModel>>()
     val popular: LiveData<List<ProductModel>> get() = _popular

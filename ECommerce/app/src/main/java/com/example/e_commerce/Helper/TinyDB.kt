@@ -11,6 +11,7 @@ import androidx.core.content.edit
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.Provider.MoshiProvider
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
@@ -106,8 +107,21 @@ class TinyDB(context: Context) {
             TextUtils.split(preferences.getString(key, ""), "‚‗‚").toList()
         )
 
-//    fun getListInt(key: String): ArrayList<Int> =
-//        getListString(key).map { it.toInt() }.toCollection(ArrayList())
+    fun getListInt(key: String): ArrayList<Int> {
+        val json = preferences.getString(key, null) ?: return arrayListOf()
+        val list = arrayListOf<Int>()
+
+        try {
+            val jsonArray = JSONArray(json)
+            for (i in 0 until jsonArray.length()) {
+                list.add(jsonArray.getInt(i))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return list
+    }
 //
 //    fun getListLong(key: String): ArrayList<Long> =
 //        getListString(key).map { it.toLong() }.toCollection(ArrayList())
@@ -154,8 +168,12 @@ class TinyDB(context: Context) {
     fun putListString(key: String, list: List<String>) =
         putString(key, TextUtils.join("‚‗‚", list))
 
-//    fun putListInt(key: String, list: List<Int>) =
-//        putListString(key, list.map { it.toString() })
+    fun putListInt(key: String, list: List<Int>) {
+        val jsonArray = JSONArray()
+        list.forEach { jsonArray.put(it) }
+
+        preferences.edit().putString(key, jsonArray.toString()).apply()
+    }
 //
 //    fun putListLong(key: String, list: List<Long>) =
 //        putListString(key, list.map { it.toString() })

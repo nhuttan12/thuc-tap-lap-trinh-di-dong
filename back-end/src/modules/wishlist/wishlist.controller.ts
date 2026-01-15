@@ -90,6 +90,9 @@ export class WishlistController {
 		@User() payload: JwtPayload,
 		@Body() request: AddProductToWishlistRequestDto
 	): Promise<SuccessResponseDto<boolean>> {
+		this.logger.verbose('Enter add wishlist controller');
+		this.logger.debug(`Request: ${JSON.stringify(request, null, 2)}`);
+
 		/**
 		 * Call `addToWishlist` in `WishlistService`
 		 */
@@ -148,6 +151,9 @@ export class WishlistController {
 		@User() payload: JwtPayload,
 		@Body() request: RemoveProductFromWishlistDto
 	): Promise<SuccessResponseDto<boolean>> {
+		this.logger.verbose('Enter remove wishlist controller');
+		this.logger.debug(`Request: ${JSON.stringify(request, null, 2)}`);
+
 		/**
 		 * Call `removeWishlistItem` in `WishlistService`
 		 */
