@@ -113,7 +113,7 @@ describe('LocalStrategy', (): void => {
 
 		expect(loggerSpy).toHaveBeenCalledTimes(1);
 		expect(loggerSpy).toHaveBeenCalledWith(
-			`User after validate: ${JSON.stringify(mockPayload)}`
+			`User after validate: ${JSON.stringify(mockPayload, null, 2)}`
 		);
 	});
 });

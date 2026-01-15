@@ -16,7 +16,7 @@ import { cloneDeep } from 'lodash';
 import { CartDetailResponseDto } from '../dtos/cart-detail-response.dto';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
+import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
 
 describe('CartMapper', (): void => {
 	let cartMapper: CartMapper;
@@ -76,7 +76,7 @@ describe('CartMapper', (): void => {
 
 	const cartDetailResponseDto: CartDetailResponseDto = {
 		id: 1,
-		images: 'https://mocking-image.jpg',
+		imageUrl: 'https://mocking-image.jpg',
 		name: 'Product 1',
 		price: 100000,
 		quantity: 1,

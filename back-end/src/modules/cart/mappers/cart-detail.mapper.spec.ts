@@ -7,10 +7,10 @@
 
 import { CartDetailMapper } from './cart-detail.mapper';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
-import { CartDetailsStatusEnum } from '../enums/cart-details.status.enum';
+import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
 import { ProductStatusEnum } from '../../product/enums/product-status.enum';
 import { ImageStatusEnum } from '../../image/enums/image-status.enum';
-import { ProductImageTypeEnum } from '../../product/enums/product-image.type.enum';
+import { ProductImageTypeEnum } from '../../product/enums/product-image-type.enum';
 import { ImageEntity } from '../../image/entities/image.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
 import { CartEntity } from '../entities/cart.entity';
@@ -113,7 +113,7 @@ describe('CartDetailMapper', (): void => {
 			discount: 0,
 			price: 100000,
 			name: 'Product 1',
-			images: 'https://example.com/image.jpg',
+			imageUrl: 'https://example.com/image.jpg',
 		},
 		{
 			id: 2,
@@ -121,7 +121,7 @@ describe('CartDetailMapper', (): void => {
 			discount: 0.5,
 			price: 120000,
 			name: 'Product 2',
-			images: 'https://example.com/image2.jpg',
+			imageUrl: 'https://example.com/image2.jpg',
 		},
 	];
 
@@ -169,7 +169,7 @@ describe('CartDetailMapper', (): void => {
 		discount: 0,
 		price: 100000,
 		name: 'Product 1',
-		images: 'https://example.com/image.jpg',
+		imageUrl: 'https://example.com/image.jpg',
 	};
 
 	/**
@@ -177,7 +177,7 @@ describe('CartDetailMapper', (): void => {
 	 */
 	it('should mapping CartDetailEntity[] to CartDetailResponseDto[]', (): void => {
 		const result: CartDetailResponseDto[] =
-			cartDetailMapper.toCartDetailsResponseDto(cartDetailsEntity);
+			cartDetailMapper.toCartDetailListResponseDto(cartDetailsEntity);
 
 		expect(result).toEqual(cartDetailsResponseDto);
 	});
@@ -198,7 +198,7 @@ describe('CartDetailMapper', (): void => {
 	it('should not mutate the CartDetailEntity[] original after mapping', (): void => {
 		const originalCopy: CartDetailEntity[] = cloneDeep(cartDetailsEntity);
 
-		cartDetailMapper.toCartDetailsResponseDto(cartDetailsEntity);
+		cartDetailMapper.toCartDetailListResponseDto(cartDetailsEntity);
 
 		expect(cartDetailsEntity).toEqual(originalCopy);
 	});

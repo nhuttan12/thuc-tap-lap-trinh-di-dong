@@ -1,4 +1,4 @@
 export class TimestampResponseDto {
-  createdAt: string;
-  updatedAt: string;
+	createdAt: string;
+	updatedAt: string;
 }

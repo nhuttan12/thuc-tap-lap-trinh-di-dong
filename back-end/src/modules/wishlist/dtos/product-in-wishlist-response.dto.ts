@@ -5,13 +5,13 @@
  * @version 1.0.0
  */
 
-import { TimestampField } from '../../../common/database/timestamp.field';
-
-export class ProductInWishlistResponseDto extends TimestampField {
+export class ProductInWishlistResponseDto {
 	id: number;
 	name: string;
-	image: string;
+	imageUrl: string;
 	price: number;
 	discount: number;
 	rating: number;
+	createdAt: string;
+	updatedAt: string;
 }

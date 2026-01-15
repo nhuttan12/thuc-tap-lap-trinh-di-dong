@@ -23,6 +23,9 @@ import { ImageModule } from './modules/image/image.module';
 import { OrderModule } from './modules/orders/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
+import { AppThrottlerModule } from './common/infrastructure/app-throttler.module';
+import { BrandModule } from './modules/brand/brand.module';
+import { HelperModule } from './common/helper/helper.module';
 import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
@@ -43,7 +46,9 @@ import { PaymentModule } from './modules/payment/payment.module';
 		OrderModule,
 		ProductModule,
 		WishlistModule,
-		PaymentModule
+		PaymentModule,
+		BrandModule,
+		HelperModule,
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],

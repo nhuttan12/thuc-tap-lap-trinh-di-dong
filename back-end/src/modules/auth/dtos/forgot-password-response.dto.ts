@@ -6,5 +6,5 @@
  */
 
 export class ForgotPasswordResponseDto {
-    message: string;
+	message: string;
 }

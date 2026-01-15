@@ -52,7 +52,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		const user: UserEntityResponseDto =
 			await this.userService.getUserByUserID(payload.id);
 		this.logger.debug(
-			`Get user by calling \`getUserByUserID\` function from user service: ${JSON.stringify(user)}`
+			`Get user by calling \`getUserByUserID\` function from user service: ${JSON.stringify(user, null, 2)}`
 		);
 
 		/*
@@ -71,7 +71,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		 */
 		const jwtPayload: JwtPayload = this.authMapper.toJwtPayload(user);
 		this.logger.debug(
-			`Convert user response to jwt payload: ${JSON.stringify(jwtPayload)}`
+			`Convert user response to jwt payload: ${JSON.stringify(jwtPayload, null, 2)}`
 		);
 
 		return jwtPayload;

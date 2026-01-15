@@ -11,7 +11,7 @@ import { TimestampField } from '../../../common/database/timestamp.field';
 import { UserEntity } from '../../user/entities/user.entity';
 import { RoleStatus } from '../enums/role-status.enum';
 
-@Entity('roles')
+@Entity({ name: 'roles' })
 export class RoleEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
 	id: number;

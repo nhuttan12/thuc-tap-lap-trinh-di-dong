@@ -6,7 +6,7 @@
  * @version 1.0.2
  */
 
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from './entities/product.entity';
 import { ProductDetailsEntity } from './entities/product-details.entity';
@@ -26,7 +26,7 @@ import { ProductDetailService } from './product-detail.service';
 	imports: [
 		TypeOrmModule.forFeature([ProductEntity, ProductDetailsEntity]),
 		CategoryModule,
-		CartModule,
+		forwardRef(() => CartModule),
 		OrderModule,
 		HelperModule,
 	],

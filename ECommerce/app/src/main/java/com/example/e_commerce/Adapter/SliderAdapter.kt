@@ -39,15 +39,15 @@ class SliderAdapter(
 
     override fun onBindViewHolder(holder: SliderViewHolder, position: Int) {
         holder.setImage(sliderItems[position], context = holder.itemView.context)
-        if (position == sliderItems.lastIndex - 1) {
-            viewPager2.post(runnable)
-        }
+//        if (position == sliderItems.lastIndex - 1) {
+//            viewPager2.post(runnable)
+//        }
     }
 
     override fun getItemCount(): Int = sliderItems.size
 
-    private val runnable = Runnable {
-        sliderItems = sliderItems
-        notifyDataSetChanged()
-    }
+//    private val runnable = Runnable {
+//        sliderItems = sliderItems
+//        notifyDataSetChanged()
+//    }
 }

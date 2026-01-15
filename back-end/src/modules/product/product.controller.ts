@@ -3,7 +3,8 @@
  * @author Nhut Tan
  * @since 2025-09-16
  * @modifies 2025-09-17
- * @version 1.0.1
+ * @modifies 2025-12-26
+ * @version 1.0.2
  */
 
 import {
@@ -13,17 +14,18 @@ import {
 	HttpCode,
 	HttpStatus,
 	Logger,
+	Query,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
-import { GetProductsPagingRequest } from './dtos/get-products-paging-request';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
-import { ProductStatusCode } from './status-code/product.status-code';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
-import { ProductDetailService } from './product-detail.service';
-import { ProductDetailResponseDto } from './dtos/product-detail-response.dto';
-import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
 import { GetProductDetailByProductIdRequestDto } from './dtos/get-product-detail-by-product-id-request.dto';
+import { GetProductsPagingRequest } from './dtos/get-products-paging-request';
+import { ProductDetailResponseDto } from './dtos/product-detail-response.dto';
+import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
+import { ProductDetailService } from './product-detail.service';
+import { ProductService } from './product.service';
+import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
+import { ProductStatusCode } from './status-code/product.status-code';
 
 @Controller('products')
 export class ProductController {
@@ -45,13 +47,13 @@ export class ProductController {
 	@HttpCode(HttpStatus.OK)
 	@Get()
 	async getProducts(
-		@Body() request: GetProductsPagingRequest
+		@Query() request: GetProductsPagingRequest
 	): Promise<
 		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
 	> {
 		try {
 			this.logger.debug(
-				`Get products paging: ${JSON.stringify(request)}`
+				`Get products paging: ${JSON.stringify(request, null, 2)}`
 			);
 
 			/**
@@ -63,7 +65,7 @@ export class ProductController {
 					request.limit
 				);
 			this.logger.debug(
-				`Get products paging from database: ${JSON.stringify(products)}`
+				`Get products paging: ${JSON.stringify(products, null, 2)}`
 			);
 
 			return {
@@ -89,9 +91,9 @@ export class ProductController {
 	 * @since 2025-09-24
 	 * @version 1.0.0
 	 */
-	@Get()
+	@Get('detail')
 	async getProductDetailByProductID(
-		@Body() request: GetProductDetailByProductIdRequestDto
+		@Query() request: GetProductDetailByProductIdRequestDto
 	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
 		try {
 			/**
@@ -108,7 +110,7 @@ export class ProductController {
 					productID
 				);
 			this.logger.debug(
-				`Get product detail by product ID: ${JSON.stringify(productDetail)}`
+				`Get product detail by product ID: ${JSON.stringify(productDetail, null, 2)}`
 			);
 
 			return {

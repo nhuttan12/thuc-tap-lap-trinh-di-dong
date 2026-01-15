@@ -21,4 +21,16 @@ export class ProductStatusCode extends BaseStatusCode {
 			'PRD_002',
 			'Product ID must be an integer'
 		);
+	static readonly PRODUCT_ID_MUST_NOT_BE_EMPTY: ProductStatusCode =
+		new ProductStatusCode(
+			HttpStatus.BAD_REQUEST,
+			'PRD_003',
+			'Product ID must not be empty'
+		);
+	static readonly PRODUCT_NOT_FOUND: ProductStatusCode =
+		new ProductStatusCode(
+			HttpStatus.NOT_FOUND,
+			'PRD_004',
+			'Product not found'
+		);
 }

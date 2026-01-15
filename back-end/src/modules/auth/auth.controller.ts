@@ -33,9 +33,9 @@ import { CatchEverythingFilter } from '../../common/filter/catch-everything.filt
 import { ForgotPasswordResponseDto } from './dtos/forgot-password-response.dto';
 import { VerifyOtpResponseDto } from './dtos/user-verify-otp-response.dto';
 import { ResetPasswordResponseDto } from './dtos/reset-password-response.dto';
-import {ForgotPasswordRequestDto} from "./dtos/forgot-pw-request.dto";
-import {VerifyOtpRequestDto} from "./dtos/verify-otp-request.dto";
-import {ResetPasswordRequestDto} from "./dtos/reset-pw-request.dto";
+import { ForgotPasswordRequestDto } from './dtos/forgot-pw-request.dto';
+import { VerifyOtpRequestDto } from './dtos/verify-otp-request.dto';
+import { ResetPasswordRequestDto } from './dtos/reset-pw-request.dto';
 
 @Controller('auth')
 @UseFilters(CatchEverythingFilter)
@@ -138,6 +138,9 @@ export class AuthController {
 	async resetPassword(
 		@Body() body: ResetPasswordRequestDto
 	): Promise<ResetPasswordResponseDto> {
-		return this.authService.resetPassword(body.resetToken, body.newPassword);
+		return this.authService.resetPassword(
+			body.resetToken,
+			body.newPassword
+		);
 	}
 }

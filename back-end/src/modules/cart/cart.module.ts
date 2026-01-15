@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CartEntity } from './entities/cart.entity';
 import { CartDetailEntity } from './entities/cart-detail.entity';
@@ -16,11 +16,16 @@ import { CartDetailRepository } from './repositories/cart-detail.repository';
 import { CartDetailService } from './cart-detail.service';
 import { HelperModule } from '../../common/helper/helper.module';
 import { CartMapper } from './mappers/cart.mapper';
+import { ProductModule } from '../product/product.module';
+import { UserModule } from '../user/user.module';
+import { CartController } from './cart.controller';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([CartEntity, CartDetailEntity]),
 		HelperModule,
+		forwardRef(() => ProductModule),
+		UserModule,
 	],
 	providers: [
 		CartService,
@@ -31,6 +36,6 @@ import { CartMapper } from './mappers/cart.mapper';
 		CartDetailMapper,
 	],
 	exports: [],
-	controllers: [],
+	controllers: [CartController],
 })
 export class CartModule {}
