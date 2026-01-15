@@ -12,23 +12,39 @@ import {
 	Entity,
 	JoinColumn,
 	OneToOne,
+	PrimaryColumn,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
-@Entity()
+@Entity({name: 'user_details'})
 export class UserDetailEntity extends TimestampField {
-	@PrimaryGeneratedColumn()
+	@PrimaryColumn()
 	id: number;
 
-	@Column()
-	address1: string;
+	@Column({
+		name: 'address_1',
+		type: 'text',
+		nullable: true,
+	})
+	address1: string | undefined;
 
-	@Column()
-	address2: string;
+	@Column({
+		name: 'address_2',
+		type: 'text',
+		nullable: true,
+	})
+	address2: string | undefined;
 
-	@Column()
-	address3: string;
+	@Column({
+		name: 'address_3',
+		type: 'text',
+		nullable: true,
+	})
+	address3: string | undefined;
+
+	@Column({ name: 'phone_number', type: 'varchar', nullable: true })
+	phoneNumber: string | undefined;
 
 	@OneToOne(
 		(): typeof UserEntity => UserEntity,

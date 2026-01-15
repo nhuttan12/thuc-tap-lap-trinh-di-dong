@@ -196,6 +196,9 @@ export class UserRepository {
 				where: {
 					username: username,
 				},
+				relations: {
+					role: true,
+				},
 			});
 			this.logger.debug(
 				`Get user from database ${JSON.stringify(users)}`
@@ -285,5 +288,36 @@ export class UserRepository {
 		}
 	}
 
+	async getProfileByUserId(userId: number): Promise<UserEntity | null> {
+		return await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoinAndSelect('user.userDetail', 'userDetail')
+			.leftJoinAndSelect('user.userImages', 'userImages')
+			.leftJoinAndSelect('userImages.image', 'image')
+			.where('user.id = :userId', { userId })
+			.orderBy('userImages.createdAt', 'DESC')
+			.getOne();
+	}
+
+	/**
+	 * @description Update password by user id
+	 */
+	async updatePassword(userId: number, hashedPassword: string): Promise<void> {
+		try {
+			await this.userRepository.update(
+				{ id: userId },
+				{
+					password: hashedPassword,
+					updatedAt: new Date(),
+				}
+			);
+		} catch (e) {
+			this.logger.error(
+				`Error in updatePassword: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
 
 }

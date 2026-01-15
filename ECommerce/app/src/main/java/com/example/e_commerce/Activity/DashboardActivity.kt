@@ -18,8 +18,7 @@ import com.example.e_commerce.Model.SliderModel
 import com.example.e_commerce.R
 import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.Runnable
+import android.widget.ImageView
 
 class DashboardActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by lazy {
@@ -37,6 +36,14 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+
+        val profileBtn = findViewById<ImageView>(R.id.profileBtn)
+        profileBtn.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     private fun initUI() {

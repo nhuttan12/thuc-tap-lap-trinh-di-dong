@@ -23,6 +23,7 @@ import { ImageModule } from './modules/image/image.module';
 import { OrderModule } from './modules/orders/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
 	imports: [
@@ -42,6 +43,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
 		OrderModule,
 		ProductModule,
 		WishlistModule,
+		PaymentModule
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],

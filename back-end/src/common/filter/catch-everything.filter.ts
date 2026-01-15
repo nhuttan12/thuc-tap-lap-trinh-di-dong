@@ -28,40 +28,50 @@ export class CatchEverythingFilter implements ExceptionFilter {
 		 */
 		const ctx: HttpArgumentsHost = host.switchToHttp();
 
-		let res: any = null;
-		let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
+        /**
+         * Get deffault request and response
+         */
+        const request = ctx.getRequest<Request>();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const response = ctx.getResponse();
 
-		/**
-		 * Get response and http status from exception
-		 */
-		if (exception instanceof HttpException) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
-			res = exception.getResponse();
-			httpStatus = exception.getStatus();
-		}
+        /**
+         * Get deffault status and message
+         */
+        let status: number = HttpStatus.INTERNAL_SERVER_ERROR;
+        let message: string = 'Internal server error';
 
-		const isStringResponse: boolean = typeof res === 'string';
+        /**
+         * Get response and http status from exception
+         */
+        if (exception instanceof HttpException) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
+            const res = exception.getResponse();
+            status = exception.getStatus();
 
-		/**
-		 * Create response body
-		 */
-		const responseBody =
-			!res || isStringResponse
-				? {
-						statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-						timestamp: new Date().toISOString(),
-						message: 'Internal server error',
-					}
-				: {
-						statusCode: httpStatus,
-						timestamp: new Date().toISOString(),
-						path: httpAdapter.getRequestUrl(
-							ctx.getRequest<Request>()
-						) as string,
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-						message: res.customCode || res.message,
-					};
 
-		httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+            if (typeof res === 'string') {
+                message = res;
+            } else if (typeof res === 'object' && res != null) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                message = (res as any).message ?? message;
+            }
+        } else {
+            console.error('Unhandled exception:', exception);
+        }
+
+        /**
+         * Create response body
+         */
+        httpAdapter.reply(
+            response,
+            {
+                statusCode: status,
+                timestamp: new Date().toISOString(),
+                path: request.url,
+                message,
+            },
+            status
+        );
 	}
 }

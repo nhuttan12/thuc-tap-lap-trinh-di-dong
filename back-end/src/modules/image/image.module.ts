@@ -16,6 +16,7 @@ import { ProductImageEntity } from './entities/product-image.entity';
 import { UserImageEntity } from './entities/user-image.entity';
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
+import { CloudinaryProvider } from '../../common/config/cloudinany/cloudanary.provider';
 
 @Module({
 	imports: [
@@ -27,7 +28,7 @@ import { UserModule } from '../user/user.module';
 		ProductModule,
 		forwardRef((): typeof UserModule => UserModule),
 	],
-	providers: [ImageService, ImageMapper, ImageRepository],
-	exports: [ImageService],
+	providers: [ImageService, ImageMapper, ImageRepository,CloudinaryProvider],
+	exports: [ImageService, CloudinaryProvider],
 })
 export class ImageModule {}
