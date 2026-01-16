@@ -1,11 +1,3 @@
-/*
- * @description Order detail entity
- * @author Nhut Tan
- * @since 2025-09-05
- * @modifies 2025-09-14
- * @version 1.0.2
- */
-
 import {
 	Column,
 	Entity,
@@ -23,20 +15,19 @@ export class OrderDetailEntity extends TimestampField {
 	id: number;
 
 	@ManyToOne(
-		(): typeof OrderEntity => OrderEntity,
-		(orderEntity: OrderEntity): OrderDetailEntity[] =>
-			orderEntity.orderDetails,
+		() => OrderEntity,
+		(order) => order.orderDetails,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
+			onDelete: 'CASCADE',
 		}
 	)
 	@JoinColumn({ name: 'order_id' })
 	order: OrderEntity;
 
 	@ManyToOne(
-		(): typeof ProductEntity => ProductEntity,
-		(productEntity: ProductEntity): OrderDetailEntity[] =>
-			productEntity.orderDetails,
+		() => ProductEntity,
+		(product) => product.orderDetails,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}

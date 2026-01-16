@@ -1,6 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateOrderDto } from './create-order.dto';
-import { IsEnum, IsOptional, IsInt, IsPositive } from 'class-validator';
+import { CreateOrderDto, CreateOrderItemDto } from './create-order.dto';
+import { IsEnum, IsOptional, IsInt, IsPositive, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { OrderStatusEnum } from '../enums/order-status.enum';
 
 export class UpdateOrderDto extends PartialType(CreateOrderDto) {
@@ -20,4 +21,11 @@ export class UpdateOrderDto extends PartialType(CreateOrderDto) {
     @IsOptional()
     @IsEnum(OrderStatusEnum)
     status?: OrderStatusEnum;
+
+    @ApiProperty({ type: [CreateOrderItemDto], description: 'Danh sách sản phẩm', required: false })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CreateOrderItemDto)
+    items?: CreateOrderItemDto[];
 }

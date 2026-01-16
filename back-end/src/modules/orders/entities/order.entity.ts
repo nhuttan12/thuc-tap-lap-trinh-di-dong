@@ -1,16 +1,9 @@
-/*
- * @description Order entity
- * @author Nhut Tan
- * @since 2025-09-05
- * @modifies 2025-09-14
- * @version 1.0.2
- */
-
 import {
 	Column,
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
@@ -24,8 +17,8 @@ export class OrderEntity extends TimestampField {
 	id: number;
 
 	@ManyToOne(
-		(): typeof UserEntity => UserEntity,
-		(userEntity: UserEntity): OrderEntity[] => userEntity.order,
+		() => UserEntity,
+		(user) => user.order,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
@@ -36,13 +29,16 @@ export class OrderEntity extends TimestampField {
 	@Column()
 	price: number;
 
-	@Column()
+	@Column({
+		type: 'enum',
+		enum: OrderStatusEnum,
+		default: OrderStatusEnum.ACTIVE,
+	})
 	status: OrderStatusEnum;
 
-	@ManyToOne(
-		(): typeof OrderDetailEntity => OrderDetailEntity,
-		(orderDetailEntity: OrderDetailEntity): OrderEntity =>
-			orderDetailEntity.order,
+	@OneToMany(
+		() => OrderDetailEntity,
+		(orderDetail) => orderDetail.order,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}

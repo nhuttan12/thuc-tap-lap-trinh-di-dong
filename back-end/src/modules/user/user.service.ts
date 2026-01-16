@@ -432,7 +432,7 @@ export class UserService {
 			throw new ConflictException('Username already exists');
 		}
 
-		// 3. ✅ LẤY ROLE THEO NAME
+		// 3. LẤY ROLE THEO NAME
 		const role = await this.roleService.getRoleByName(dto.roleName);
 		if (!role) {
 			throw new BadRequestException(`Role ${dto.roleName} not found`);

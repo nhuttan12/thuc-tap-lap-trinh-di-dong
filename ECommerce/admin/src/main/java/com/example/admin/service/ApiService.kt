@@ -1,5 +1,6 @@
 package com.example.admin.service
 
+import android.util.Log
 import com.example.admin.AdminApplication
 import com.example.admin.utils.TokenManager
 import okhttp3.Interceptor
@@ -14,11 +15,32 @@ object ApiService {
     private const val BASE_URL: String = "http://10.0.2.2:8080/"
     // Hoặc: "http://192.168.1.5:3000/"
 
+    // Tạo auth interceptor
+    private val authInterceptor = Interceptor { chain ->
+        val token = TokenManager.get(AdminApplication.context)
+        Log.d("AuthInterceptor", "Token: $token") // Thêm log để debug
+
+        val requestBuilder = chain.request().newBuilder()
+
+        // Thêm Authorization header nếu có token
+        if (!token.isNullOrEmpty()) {
+            requestBuilder.addHeader("Authorization", "Bearer $token")
+        }
+
+        // Thêm các header khác
+        requestBuilder.addHeader("Content-Type", "application/json")
+        requestBuilder.addHeader("Accept", "application/json")
+
+        chain.proceed(requestBuilder.build())
+    }
+
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
+    // THÊM authInterceptor vào client
     private val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(authInterceptor) // THÊM DÒNG NÀY
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -26,7 +48,7 @@ object ApiService {
 
     private val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient)
+            .client(okHttpClient) // Client đã có interceptor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -38,19 +60,17 @@ object ApiService {
         retrofit.create(UserApiService::class.java)
     }
 
-    val authService: AuthApiService =
-            retrofit.create(AuthApiService::class.java)
-
-    val interceptor = Interceptor { chain ->
-        val token = TokenManager.get(AdminApplication.context)
-
-        val request = chain.request().newBuilder().apply {
-            if (!token.isNullOrEmpty()) {
-                addHeader("Authorization", "Bearer $token")
-            }
-        }.build()
-
-        chain.proceed(request)
+    val authService: AuthApiService by lazy {
+        retrofit.create(AuthApiService::class.java)
     }
 
+    // Hàm để update token khi login
+    fun updateToken(token: String) {
+        TokenManager.save(AdminApplication.context, token)
+    }
+
+    // Hàm để clear token khi logout
+    fun clearToken() {
+        TokenManager.clear(AdminApplication.context)
+    }
 }

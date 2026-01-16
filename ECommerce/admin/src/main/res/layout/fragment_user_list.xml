@@ -34,6 +34,24 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+    <!-- Thêm vào fragment_user_list.xml -->
+    <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Danh sách người dùng trống"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="32dp" />
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:visibility="gone" />
     <!-- ✅ ĐÚNG ID -->
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerUsers"

@@ -1,7 +1,5 @@
 package com.example.admin.service
 
-import com.example.admin.dto.ApiSuccess
-import com.example.admin.dto.PagingResponse
 import com.example.admin.dto.UserDTO
 import retrofit2.Response
 import retrofit2.http.*
@@ -13,30 +11,37 @@ interface UserApiService {
             @Query("page") page: Int = 1,
             @Query("limit") limit: Int = 20,
             @Query("keyword") keyword: String? = null
-    ): Response<ApiSuccess<PagingResponse<UserDTO>>>
+    ): Response<UserListResponse>
 
     @GET("admin/users/{id}")
     suspend fun getUserDetail(
             @Path("id") id: Int
-    ): Response<ApiSuccess<UserDTO>>
+    ): Response<UserDTO>
 
-    @PUT("admin/users")
+    @POST("admin/users")
     suspend fun createUser(
             @Body body: CreateUserRequest
-    ): Response<ApiSuccess<UserDTO>>
+    ): Response<UserDTO>
 
     @PUT("admin/users/{id}")
     suspend fun updateUser(
             @Path("id") id: Int,
             @Body body: UpdateUserRequest
-    ): Response<ApiSuccess<UserDTO>>
+    ): Response<UserDTO>
 
-    @PATCH("admin/users/{id}/status")
+    @PUT("admin/users/{id}/status")
     suspend fun updateUserStatus(
             @Path("id") id: Int,
             @Body body: Map<String, String>
-    ): Response<ApiSuccess<UserDTO>>
+    ): Response<UserDTO>
 
+    // Response DTOs
+    data class UserListResponse(
+            val items: List<UserDTO>,
+            val total: Int,
+            val page: String,
+            val limit: String
+    )
 
     data class CreateUserRequest(
             val username: String,
@@ -51,5 +56,4 @@ interface UserApiService {
             val roleId: Int? = null,
             val status: String? = null
     )
-
 }
