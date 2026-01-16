@@ -65,6 +65,8 @@
                 android:drawableEnd="@drawable/search_icon"
                 android:drawablePadding="12dp"
                 android:ems="10"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
                 android:hint="@string/searchHintText"
                 android:inputType="text"
                 android:padding="12sp"

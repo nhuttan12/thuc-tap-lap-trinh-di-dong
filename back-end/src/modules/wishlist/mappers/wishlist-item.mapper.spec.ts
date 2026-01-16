@@ -83,7 +83,7 @@ describe('WishlistItemMapper', (): void => {
 		const mockProductInWishlistResponseDto: ProductInWishlistResponseDto[] =
 			[
 				{
-					wishlistID: 1,
+					productID: 1,
 					name: 'test 1',
 					price: 100000,
 					discount: 0,
@@ -93,7 +93,7 @@ describe('WishlistItemMapper', (): void => {
 					updatedAt: mockCurrentDate.toString(),
 				},
 				{
-					wishlistID: 2,
+					productID: 2,
 					name: 'test 2',
 					price: 200000,
 					discount: 10,

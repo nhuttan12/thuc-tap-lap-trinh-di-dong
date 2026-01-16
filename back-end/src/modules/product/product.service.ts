@@ -111,4 +111,62 @@ export class ProductService {
 
 		return this.productMapper.toProductEntityResponseDto(product);
 	}
+
+	/**
+	 * @description Get product paging by name
+	 * @param productName - Name of product
+	 * @param page - Page for pagination
+	 * @param limit - Limitation product per page
+	 * @param {number} userID - ID of user, its optional
+	 * @return {Promise<PagingResponseDto<ProductEntityResponseDto>>}
+	 */
+	async getProductsPagingByProductName(
+		productName: string,
+		page: number,
+		limit: number,
+		userID?: number
+	): Promise<PagingResponseDto<ProductEntityResponseDto>> {
+		try {
+			/**
+			 * Calculate skip and take
+			 */
+			const skip: number = this.buildPagingMetaService.calculateSkip(
+				page,
+				limit
+			);
+
+			/*
+			 * Calling `getProductsPaging` from `ProductRepository`
+			 */
+			const [products, total]: [ProductEntity[], number] =
+				await this.productRepository.getProductsPagingByProductName(
+					productName,
+					limit,
+					skip,
+					userID
+				);
+
+			/*
+			 * Convert `ProductEntity` to `ProductEntityResponseDto`
+			 */
+			const productResponse: ProductEntityResponseDto[] =
+				this.productMapper.toProductEntityListResponseDto(products);
+
+			/**
+			 * Build pagination response
+			 */
+			return this.buildPagingMetaService.buildPagingResponse(
+				productResponse,
+				page,
+				limit,
+				total
+			);
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getProductByProductName\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
 }

@@ -11,7 +11,7 @@ import com.example.e_commerce.DTOs.Request.AddProductToWishlistRequestDto
 import com.example.e_commerce.DTOs.Request.RemoveProductFromWishlistDto
 import com.example.e_commerce.DTOs.Response.ProductInWishlistResponseDto
 import com.example.e_commerce.Model.ApiSucess
-import com.example.e_commerce.Repository.PagingResponse
+import com.example.e_commerce.DTOs.Response.PagingResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

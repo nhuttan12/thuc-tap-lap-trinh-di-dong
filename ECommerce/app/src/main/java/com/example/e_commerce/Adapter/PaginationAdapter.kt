@@ -2,52 +2,80 @@ package com.example.e_commerce.Adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.e_commerce.Model.PageItem
+import com.example.e_commerce.R
 import com.example.e_commerce.databinding.ViewholderPaginationButtonBinding
 
 class PaginationAdapter(
-    private var totalPages: Int,
-    private var currentPage: Int,
     private val onPageClick: (Int) -> Unit
 ) : RecyclerView.Adapter<PaginationAdapter.PageViewHolder>() {
-    inner class PageViewHolder(
-        val binding: ViewholderPaginationButtonBinding
-    ) : RecyclerView.ViewHolder(binding.root)
+    private val items = mutableListOf<PageItem>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
+    fun submit(itemsNew: List<PageItem>) {
+        items.clear()
+        items.addAll(itemsNew)
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PaginationAdapter.PageViewHolder {
         val binding = ViewholderPaginationButtonBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-
         return PageViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
-        val page = position + 1
+        holder.bind(items[position], onPageClick)
+    }
 
-        with(holder.binding) {
-            pageBtn.text = page.toString()
-            pageBtn.isSelected = page == currentPage
-            pageBtn.setOnClickListener {
-                if (page != currentPage) {
-                    currentPage = page
-                    notifyDataSetChanged()
-                    onPageClick(page)
+    override fun getItemCount(): Int = items.size
+
+    inner class PageViewHolder(
+        private val binding: ViewholderPaginationButtonBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: PageItem, onClick: (Int) -> Unit) {
+            val btn = binding.pageBtn
+
+            when (item) {
+                PageItem.Prev -> {
+                    btn.setText(R.string.decreaseNumber)
+                    btn.isSelected = false
+                    btn.setOnClickListener {
+                        onClick(-1)
+                    }
+                }
+
+                PageItem.Next -> {
+                    btn.setText(R.string.increaseNumber)
+                    btn.isSelected = false
+                    btn.setOnClickListener {
+                        onClick(-2)
+                    }
+                }
+
+                is PageItem.Page -> {
+                    btn.text = item.page.toString()
+                    btn.isSelected = item.isCurrent
+                    btn.setOnClickListener {
+                        onClick(item.page)
+                    }
+                }
+
+                is PageItem.Last -> {
+                    btn.text = item.page.toString()
+                    btn.isSelected = false
+                    btn.setOnClickListener {
+                        onClick(item.page)
+                    }
                 }
             }
         }
-    }
-
-    override fun getItemCount(): Int {
-        return totalPages
-    }
-
-    fun update(totalPages: Int, currentPage: Int) {
-        this.totalPages = totalPages
-        this.currentPage = currentPage
-        notifyDataSetChanged()
     }
 }

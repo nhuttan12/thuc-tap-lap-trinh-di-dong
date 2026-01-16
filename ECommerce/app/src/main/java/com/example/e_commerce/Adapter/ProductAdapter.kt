@@ -1,7 +1,6 @@
 package com.example.e_commerce.Adapter
 
 import android.app.Activity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,14 +13,14 @@ import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.databinding.ViewholderProductCardBinding
 import java.text.DecimalFormat
 
-class PopularAdapter(
+class ProductAdapter(
     private val activity: Activity,
     private val items: MutableList<ProductModel>,
     private val listType: ProductListType,
     private val checkToken: CheckToken,
     private val onItemClick: (ProductModel) -> Unit,
     private val onWishlistClick: ((ProductModel) -> Unit)? = null
-) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
     private val TAG = "PopularAdapter"
 
@@ -41,7 +40,7 @@ class PopularAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PopularAdapter.ViewHolder {
+    ): ProductAdapter.ViewHolder {
         val binding = ViewholderProductCardBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
@@ -49,7 +48,7 @@ class PopularAdapter(
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: PopularAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductAdapter.ViewHolder, position: Int) {
         val item = items[position]
 
         print("Item: $item")

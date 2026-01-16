@@ -9,19 +9,21 @@
 package com.example.e_commerce.Activity
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.e_commerce.Adapter.PaginationAdapter
-import com.example.e_commerce.Adapter.PopularAdapter
+import com.example.e_commerce.Adapter.ProductAdapter
+import com.example.e_commerce.Helper.CenterItemDecoration
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
+import com.example.e_commerce.Mappers.PagingMapper
 import com.example.e_commerce.Model.Enum.ProductListType
 import com.example.e_commerce.Model.ProductModel
 import com.example.e_commerce.ViewModel.ProductViewModel
@@ -35,6 +37,7 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var tinyDB: TinyDB
     private lateinit var checkToken: CheckToken
     private lateinit var type: ProductListType
+    private lateinit var searchQuery: String
     private var productList: List<ProductModel> = emptyList()
 
     private val productViewModel: ProductViewModel by lazy {
@@ -49,7 +52,7 @@ class ProductListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProductListBinding
 
-    private lateinit var popularAdapter: PopularAdapter
+    private lateinit var productAdapter: ProductAdapter
     private lateinit var paginationAdapter: PaginationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,115 +66,111 @@ class ProductListActivity : AppCompatActivity() {
         checkToken = CheckToken(tinyDB)
 
         type = ProductListType.valueOf(
-            intent.getStringExtra("TYPE") ?: ProductListType.POPULAR.name
+            intent.getStringExtra("TYPE") ?: ProductListType.PRODUCT.name
         )
 
-        popularAdapter =
-            PopularAdapter(
-                activity = this,
-                items = mutableListOf(),
-                checkToken = checkToken,
-                listType = type,
-                onItemClick = { product ->
-                    loadProductDetailAndNavigate(product.id)
-                },
-                onWishlistClick = { product ->
-                    when (type) {
-                        ProductListType.WISHLIST -> {
-                            toggleWishlist(product)
-                        }
-
-                        else -> {
-                            checkToken.checkTokenOrRedirect(this) {
-                                toggleWishlist(product)
-                            }
-                        }
-                    }
-
-                }
-            )
+        searchQuery = intent.getStringExtra("SEARCH_QUERY") ?: ""
 
         initUI()
-        observeWishlist()
     }
 
     override fun onResume() {
         super.onResume()
+        wishlistViewModel.loadWishlistIds()
 
-        binding.cartBtn.isEnabled = true
-        binding.wishlistBtn.isEnabled = true
-        binding.homeBtn.isEnabled = true
+//        binding.cartBtn.isEnabled = true
+//        binding.wishlistBtn.isEnabled = true
+//        binding.homeBtn.isEnabled = true
     }
 
     private fun initUI() {
+        wishlistViewModel.loadWishlistIds()
+
         initProductList()
-        initBottomNavigation()
-        initPagination()
+//        initBottomNavigation()
+        observeData()
+        observeWishlist()
+        loadData(page = 1)
 
         binding.backBtn.setOnClickListener { finish() }
     }
 
     private fun initProductList() {
-        binding.recyclerViewProductList.layoutManager = GridLayoutManager(this, 2)
-
-        popularAdapter = PopularAdapter(
+        productAdapter = ProductAdapter(
             activity = this,
-            checkToken = checkToken,
             items = mutableListOf(),
+            checkToken = checkToken,
             listType = type,
-            onItemClick = { productModel ->
-                loadProductDetailAndNavigate(productModel.id)
+            onItemClick = {
+                loadProductDetailAndNavigate(it.id)
             },
-            onWishlistClick = { productModel ->
-                toggleWishlist(productModel)
+            onWishlistClick = { product ->
+                when (type) {
+                    ProductListType.WISHLIST -> {
+                        toggleWishlist(product)
+                    }
+
+                    else -> {
+                        checkToken.checkTokenOrRedirect(this) {
+                            toggleWishlist(product)
+                        }
+                    }
+                }
             }
         )
 
-        binding.recyclerViewProductList.adapter = popularAdapter
+
+        paginationAdapter = PaginationAdapter { page ->
+            val current = productViewModel.pagingMeta.value?.page ?: 1
+
+            val targetPage = when (page) {
+                -1 -> current - 1
+                -2 -> current + 1
+                else -> page
+            }
+
+            loadData(page = targetPage)
+        }
+
+//        val concatAdapter = ConcatAdapter(
+//            ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build(),
+//            productAdapter,
+//            paginationAdapter
+//        )
+
+//        binding.recyclerViewProductList.layoutManager = GridLayoutManager(this@ProductListActivity, 2).apply {
+//            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//                override fun getSpanSize(position: Int): Int {
+//                    return when {
+//                        position < productAdapter.itemCount -> 1
+//                        else -> 2
+//                    }
+//                }
+//            }
+//        }
+
+//        binding.recyclerViewProductList.adapter = concatAdapter
+        binding.recyclerViewProductList.apply {
+            layoutManager = GridLayoutManager(this@ProductListActivity, 2)
+            adapter = productAdapter
+        }
+
+        binding.recyclerViewPagination.apply {
+            layoutManager = LinearLayoutManager(
+                this@ProductListActivity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter = paginationAdapter
+        }
+
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+
+        binding.recyclerViewPagination.addItemDecoration(
+            CenterItemDecoration(itemWidth = screenWidth)
+        )
+
         binding.progressBarProductList.visibility = View.VISIBLE
-
-        when (type) {
-            ProductListType.POPULAR -> {
-                productViewModel.popular.observe(this) {
-                    popularAdapter.updateDate(it)
-                    paginationAdapter.update(totalPages = 10, currentPage = productViewModel.currentPage)
-                    binding.progressBarProductList.visibility = View.GONE
-                }
-
-                productViewModel.loadPopular(limit = 10, page = 1)
-            }
-
-            ProductListType.WISHLIST -> {
-                wishlistViewModel.wishlistItem.observe(this) { items ->
-                    productList = items
-
-                    wishlistViewModel.loadWishlistIds()
-
-                    binding.progressBarProductList.visibility = View.GONE
-                }
-
-                wishlistViewModel.loadWishlist(page = 1, limit = 10)
-            }
-
-            ProductListType.PRODUCT -> {
-                TODO("Not yet implemented")
-            }
-
-            ProductListType.SEARCH -> {
-                TODO("Not yet implemented")
-            }
-        }
-    }
-
-    private fun initPagination() {
-        binding.recyclerViewPagination.layoutManager = LinearLayoutManager(this,
-            LinearLayoutManager.HORIZONTAL, false)
-
-        val paginationAdapter = PaginationAdapter(totalPages = 10, currentPage = 1) { page ->
-            productViewModel.loadPopular(limit = 10, page = page)
-        }
-
-        binding.recyclerViewPagination.adapter = paginationAdapter
     }
 
     private fun loadProductDetailAndNavigate(productID: Int) {
@@ -181,25 +180,25 @@ class ProductListActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun initBottomNavigation() = with(binding) {
-        homeBtn.setOnClickListener {
-            homeBtn.isEnabled = false
-            val intent: Intent = Intent(this@ProductListActivity, HomeActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
-
-        cartBtn.setOnClickListener {
-            cartBtn.isEnabled = false
-            checkToken.checkTokenOrRedirect(this@ProductListActivity, {
-                val intent: Intent = Intent(this@ProductListActivity, CartActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
-            })
-        }
-
-        wishlistBtn.setOnClickListener { }
-    }
+//    private fun initBottomNavigation() = with(binding) {
+//        homeBtn.setOnClickListener {
+//            homeBtn.isEnabled = false
+//            val intent: Intent = Intent(this@ProductListActivity, HomeActivity::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//            startActivity(intent)
+//        }
+//
+//        cartBtn.setOnClickListener {
+//            cartBtn.isEnabled = false
+//            checkToken.checkTokenOrRedirect(this@ProductListActivity, {
+//                val intent: Intent = Intent(this@ProductListActivity, CartActivity::class.java)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                startActivity(intent)
+//            })
+//        }
+//
+//        wishlistBtn.setOnClickListener { }
+//    }
 
     private fun toggleWishlist(product: ProductModel) {
         if (product.isInWishlist) {
@@ -213,14 +212,64 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun observeWishlist() {
         wishlistViewModel.wishlistIds.observe(this) { ids ->
-            if (type == ProductListType.WISHLIST) {
-                val updated =
-                    productList
-                        .filter { ids.contains(it.id) }
-                        .map { it.copy(isInWishlist = true) }
-
-                popularAdapter.updateDate(updated)
+            val updated = productAdapter.currentItems().map {
+                it.copy(isInWishlist = ids.contains(it.id))
             }
+
+            productAdapter.updateDate(updated)
+        }
+    }
+
+    private fun loadData(page: Int) {
+        when (type) {
+            ProductListType.PRODUCT -> {
+                productViewModel.loadProductList(
+                    limit = 10,
+                    page = page
+                )
+            }
+
+            ProductListType.SEARCH -> {
+                productViewModel.loadProductListByName(
+                    limit = 10,
+                    page = page,
+                    productName = searchQuery
+                )
+            }
+
+            ProductListType.WISHLIST -> {
+                wishlistViewModel.loadWishlist(page = page, limit = 10)
+            }
+        }
+    }
+
+    private fun observeData() {
+        productViewModel.products.observe(this) {
+            if (type == ProductListType.PRODUCT) {
+                productAdapter.updateDate(it)
+                binding.progressBarProductList.visibility = View.GONE
+            }
+        }
+
+        productViewModel.productsByName.observe(this) {
+            if (type == ProductListType.SEARCH) {
+                productAdapter.updateDate(it)
+                binding.progressBarProductList.visibility = View.GONE
+            }
+        }
+
+        wishlistViewModel.wishlistItem.observe(this) {
+            if (type == ProductListType.WISHLIST) {
+                productList = it
+                productAdapter.updateDate(it)
+                binding.progressBarProductList.visibility = View.GONE
+            }
+        }
+
+        productViewModel.pagingMeta.observe(this) {
+            paginationAdapter.submit(
+                PagingMapper.toPageItem(it)
+            )
         }
     }
 }

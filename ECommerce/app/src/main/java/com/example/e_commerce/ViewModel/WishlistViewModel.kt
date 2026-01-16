@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.ProductModel
-import com.example.e_commerce.Repository.PagingResponse
+import com.example.e_commerce.DTOs.Response.PagingResponse
 import com.example.e_commerce.Repository.WishlistRepository
 import com.example.e_commerce.Result.NetworkResult
 import kotlinx.coroutines.launch

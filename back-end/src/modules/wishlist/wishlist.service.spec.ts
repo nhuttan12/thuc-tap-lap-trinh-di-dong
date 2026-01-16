@@ -146,7 +146,7 @@ describe('WishlistService', (): void => {
 		const mockProductInWishlistResponseDto: ProductInWishlistResponseDto[] =
 			[
 				{
-					wishlistID: 1,
+					productID: 1,
 					imageUrl: mockImageUrl1,
 					rating: 0,
 					discount: 0,
@@ -156,7 +156,7 @@ describe('WishlistService', (): void => {
 					updatedAt: mockCurrentDate.toString(),
 				},
 				{
-					wishlistID: 2,
+					productID: 2,
 					imageUrl: mockImageUrl2,
 					rating: 3,
 					discount: 5,
@@ -166,7 +166,7 @@ describe('WishlistService', (): void => {
 					updatedAt: mockCurrentDate.toString(),
 				},
 				{
-					wishlistID: 3,
+					productID: 3,
 					imageUrl: mockImageUrl3,
 					rating: 5,
 					discount: 10,

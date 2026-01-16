@@ -15,6 +15,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +27,7 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.example.e_commerce.Adapter.BrandsAdapter
-import com.example.e_commerce.Adapter.PopularAdapter
+import com.example.e_commerce.Adapter.ProductAdapter
 import com.example.e_commerce.Adapter.SliderAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
@@ -70,7 +71,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private lateinit var checkToken: CheckToken
-    private lateinit var popularAdapter: PopularAdapter
+    private lateinit var productAdapter: ProductAdapter
 
     private lateinit var binding: ActivityMainBinding
 
@@ -87,12 +88,12 @@ class HomeActivity : AppCompatActivity() {
         tinyDB = TinyDB(applicationContext)
         checkToken = CheckToken(tinyDB)
 
-        popularAdapter =
-            PopularAdapter(
+        productAdapter =
+            ProductAdapter(
                 activity = this,
                 items = mutableListOf(),
                 checkToken = checkToken,
-                listType = ProductListType.POPULAR,
+                listType = ProductListType.PRODUCT,
                 onItemClick = { product ->
                     loadProductDetailAndNavigate(product.id)
                 },
@@ -104,7 +105,6 @@ class HomeActivity : AppCompatActivity() {
             )
 
         initUI()
-        observeWishlist()
     }
 
     override fun onResume() {
@@ -122,6 +122,8 @@ class HomeActivity : AppCompatActivity() {
         initRecommendation()
         initBanner()
         initBottomNavigation()
+        observeSearch()
+        observeWishlist()
     }
 
     private fun initBottomNavigation() = with(binding) {
@@ -149,29 +151,29 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initRecommendation() {
         binding.recyclerViewRecommendation.layoutManager = GridLayoutManager(this, 2)
-        binding.recyclerViewRecommendation.adapter = popularAdapter
+        binding.recyclerViewRecommendation.adapter = productAdapter
         binding.progressBarRecommendation.visibility = View.VISIBLE
 
         binding.allProdcts.setOnClickListener {
             val intent: Intent = Intent(this@HomeActivity, ProductListActivity::class.java)
-            intent.putExtra("TYPE", ProductListType.POPULAR.name)
+            intent.putExtra("TYPE", ProductListType.PRODUCT.name)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
 
-        productViewModel.popular.observe(this) { data ->
+        productViewModel.products.observe(this) {
             binding.progressBarRecommendation.visibility = View.GONE
-            popularAdapter.updateDate(data)
+            productAdapter.updateDate(it)
         }
 
-        productViewModel.popularLoading.observe(this) { isLoading ->
+        productViewModel.productLoading.observe(this) { isLoading ->
             if (isLoading) {
                 Toast.makeText(this, "Đang hiển thị danh sách sản phẩm", Toast.LENGTH_SHORT)
                     .show()
             }
         }
 
-        productViewModel.loadPopular(limit = 10, page = 1)
+        productViewModel.loadProductList(limit = 10, page = 1)
     }
 
     private fun initBrands() {
@@ -308,29 +310,30 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun observeWishlist() {
-//        wishlistViewModel.addProductToWishlistMsg.observe(this) { success ->
-//            if (success == true) {
-//                Log.d(TAG, "Add product to wishlist success: ${pendingWishlistProductID}")
-//            } else {
-//                Toast.makeText(this, "Thêm wishlist thất bại", Toast.LENGTH_SHORT).show()
-//                Log.d(TAG, "Add product to wishlist failed: ${pendingWishlistProductID}")
-//            }
-//        }
-//
-//        wishlistViewModel.removeProductFromWishlistMsg.observe(this) { success ->
-//            if (success == true) {
-//                Log.d(TAG, "Remove product to wishlist success: ${pendingWishlistProductID}")
-//            } else {
-//                Toast.makeText(this, "Xoá wishlist thất bại", Toast.LENGTH_SHORT).show()
-//                Log.d(TAG, "Remove product to wishlist failed: ${pendingWishlistProductID}")
-//            }
-//        }
-
         wishlistViewModel.wishlistIds.observe(this) { ids ->
-            val updated = popularAdapter.currentItems().map {
+            val updated = productAdapter.currentItems().map {
                 it.copy(isInWishlist = ids.contains(it.id))
             }
-            popularAdapter.updateDate(updated)
+            productAdapter.updateDate(updated)
+        }
+    }
+
+    private fun observeSearch() {
+        binding.editTextText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val keyword = binding.editTextText.text.toString().trim()
+
+                if (keyword.isNotEmpty()) {
+                    val intent: Intent = Intent(this@HomeActivity, ProductListActivity::class.java)
+                    intent.putExtra("TYPE", ProductListType.SEARCH.name)
+                    intent.putExtra("SEARCH_QUERY", keyword)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                }
+                true
+            } else {
+                false
+            }
         }
     }
 }
