@@ -6,33 +6,20 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthApiService {
+    @POST("auth/login")
+    suspend fun login(
+            @Body body: LoginRequest
+    ): Response<LoginResponse>
 
-
-        @POST("auth/login")
-        suspend fun login(
-                @Body body: LoginRequest
-        ): Response<LoginResponse>  // Response trực tiếp, không qua ApiSuccess wrapper
-
-
-        // Thêm logout nếu cần
     @POST("auth/logout")
     suspend fun logout(): Response<ApiSuccess<Unit>>
 
-    // Thêm refresh token nếu cần
-    @POST("auth/refresh-token")
-    suspend fun refreshToken(
-            @Body body: RefreshTokenRequest
-    ): Response<ApiSuccess<LoginResponse>>
+    // Nếu backend không hỗ trợ refresh token, có thể bỏ qua
+    // @POST("auth/refresh-token")
+    // suspend fun refreshToken(
+    //     @Body body: RefreshTokenRequest
+    // ): Response<ApiSuccess<LoginResponse>>
 }
-
-// Định nghĩa data class bên ngoài interface
-
-
-data class RefreshTokenRequest(
-        val refreshToken: String
-)
-
-
 
 data class LoginRequest(
         val username: String,
@@ -45,3 +32,8 @@ data class LoginResponse(
         val role: String,
         val accessToken: String
 )
+
+// Có thể không cần nếu backend không hỗ trợ
+// data class RefreshTokenRequest(
+//     val refreshToken: String
+// )

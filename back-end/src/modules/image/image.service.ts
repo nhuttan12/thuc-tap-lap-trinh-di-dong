@@ -5,7 +5,7 @@
  * @version 1.0.1
  */
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {BadRequestException, Injectable, Logger, NotFoundException} from '@nestjs/common';
 import { ImageRepository } from './repositories/image.repository';
 import { ImageEntity } from './entities/image.entity';
 import { ImageStatusCode } from './status-code/image.status-code';
@@ -102,4 +102,6 @@ export class ImageService {
 
 		return imageResponseDto;
 	}
+
+
 }

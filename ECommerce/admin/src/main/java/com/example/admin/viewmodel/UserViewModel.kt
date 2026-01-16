@@ -1,5 +1,6 @@
 package com.example.admin.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,27 +40,64 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    // Sửa hàm updateUser theo signature mới
-    fun updateUser(
-            id: Int,
-            fullName: String? = null,
-            roleId: Int? = null,
-            status: String? = null
+    fun createUser(
+            username: String,
+            email: String,
+            password: String,
+            fullName: String,
+            roleId: String  // ← ĐỔI thành roleId: Int
     ) {
         viewModelScope.launch {
             try {
                 _loading.value = true
                 _error.value = null
 
-                // Gọi repository với đúng tham số
-                val updatedUser = repository.updateUser(id, fullName, roleId, status)
+                Log.d("UserViewModel", "Creating user: $username, roleId: $roleId")
 
-                // Cập nhật danh sách
+                val newUser = repository.createUser(username, email, password, fullName, roleId)
+                Log.d("UserViewModel", "User created: ${newUser.username}, ID: ${newUser.id}")
+
                 loadUsers()
 
-                // Có thể emit event thành công nếu cần
-                // _updateSuccess.value = true
             } catch (e: Exception) {
+                Log.e("UserViewModel", "Error creating user", e)
+                _error.value = "Lỗi tạo người dùng: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+    // UserViewModel.kt
+    // UserViewModel.kt
+    fun updateUser(
+            id: Int,
+            roleId: Int? = null,
+            status: String? = null,
+            fullName: String? = null,
+            email: String? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+                _error.value = null
+
+
+                Log.d("UserViewModel", "Updating user $id: fullName=$fullName, email=$email, roleId=$roleId, status=$status")
+
+                val updatedUser = repository.updateUser(
+                        id = id,
+                        roleId = roleId,
+                        status = status,
+                        fullName = fullName,  // TRUYỀN fullName
+                        email = email
+                )
+                Log.d("UserViewModel", "User updated: ${updatedUser.username}")
+
+                loadUsers()
+
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error updating user", e)
                 _error.value = e.message ?: "Lỗi cập nhật người dùng"
             } finally {
                 _loading.value = false
@@ -67,7 +105,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    // Hàm riêng cho update status
     fun updateUserStatus(id: Int, status: String) {
         viewModelScope.launch {
             try {
@@ -84,35 +121,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    // Hàm tạo user mới
-    fun createUser(
-            username: String,
-            email: String,
-            password: String,
-            fullName: String,
-            roleId: Int
-    ) {
-        viewModelScope.launch {
-            try {
-                _loading.value = true
-                _error.value = null
-
-                val newUser = repository.createUser(username, email, password, fullName, roleId)
-
-                // Thêm user mới vào danh sách hoặc reload
-                loadUsers()
-
-                // Có thể emit event thành công
-                // _createSuccess.value = newUser
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Lỗi tạo người dùng"
-            } finally {
-                _loading.value = false
-            }
-        }
-    }
-
-    // Hàm lấy chi tiết user
     fun getUserDetail(id: Int, onSuccess: (UserModel) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             try {
@@ -131,7 +139,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    // Clear error
     fun clearError() {
         _error.value = null
     }

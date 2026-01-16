@@ -230,7 +230,7 @@ export class UserRepository {
 		email: string,
 		password: string,
 		roleID: number,
-		imageID: number
+		imageID?: number
 	): Promise<UserEntity> {
 		try {
 			/**
@@ -254,13 +254,13 @@ export class UserRepository {
 						role: {
 							id: roleID,
 						},
-						userImages: [
+						userImages: imageID ? [
 							{
 								image: {
 									id: imageID,
 								},
 							},
-						],
+						] : [],
 					});
 
 					/**
@@ -314,7 +314,7 @@ export class UserRepository {
 			where: { id: userId },
 			relations: {
 				role: true,
-				userDetail: true,
+				// userDetail: true,
 			},
 		});
 	}

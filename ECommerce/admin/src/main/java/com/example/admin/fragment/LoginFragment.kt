@@ -1,11 +1,13 @@
 package com.example.admin.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -29,6 +31,7 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,6 +44,7 @@ class LoginFragment : Fragment() {
         setupLoginButton()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupLoginButton() {
         binding.btnLogin.setOnClickListener {
             val username = binding.edtUsername.text.toString().trim()
@@ -55,76 +59,55 @@ class LoginFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun login(username: String, password: String) {
         lifecycleScope.launch {
             try {
                 showLoading(true)
 
-                Log.d("LoginFragment", "Attempting login for user: $username")
+                Log.d("LoginFragment", "Login attempt: $username")
 
-                // Gửi request login - Sử dụng LoginRequest từ import
                 val response = ApiService.authService.login(
                         LoginRequest(username, password)
                 )
 
-                Log.d("LoginFragment", "Response code: ${response.code()}")
+                Log.d("LoginFragment", "Response: ${response.code()}")
                 Log.d("LoginFragment", "Response body: ${response.body()}")
 
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
 
-                    if (loginResponse != null) {
-                        val token = loginResponse.accessToken
+                    if (loginResponse != null && loginResponse.accessToken.isNotEmpty()) {
+                        // Lưu token
+                        TokenManager.save(requireContext(), loginResponse.accessToken)
 
-                        Log.d("LoginFragment", "Login successful! Token: $token")
-                        Log.d("LoginFragment", "User ID: ${loginResponse.id}, Role: ${loginResponse.role}")
+                        // Log token để debug
+                        Log.d("LoginFragment", "Token saved: ${loginResponse.accessToken.take(50)}...")
+                        Log.d("LoginFragment", "User role: ${loginResponse.role}")
 
-                        if (token.isNotEmpty()) {
-                            // Lưu token
-                            TokenManager.save(requireContext(), token)
-                            // Lưu thông tin user
-                            TokenManager.saveUserInfo(
-                                    requireContext(),
-                                    loginResponse.id,
-                                    loginResponse.role,
-                                    loginResponse.email
-                            )
-                            // Cập nhật token trong ApiService
-                            ApiService.updateToken(token)
-
-                            Toast.makeText(
-                                    requireContext(),
-                                    "Đăng nhập thành công!\nRole: ${loginResponse.role}",
-                                    Toast.LENGTH_SHORT
-                            ).show()
-
-                            navigateToDashboard()
-                        } else {
-                            throw Exception("Token rỗng")
+                        // Kiểm tra token trên jwt.io (debug)
+                        val tokenParts = loginResponse.accessToken.split(".")
+                        if (tokenParts.size == 3) {
+                            try {
+                                val payload = String(java.util.Base64.getDecoder().decode(tokenParts[1]))
+                                Log.d("LoginFragment", "Token payload: $payload")
+                            } catch (e: Exception) {
+                                Log.e("LoginFragment", "Error decoding token: ${e.message}")
+                            }
                         }
-                    } else {
-                        throw Exception("Response body null")
-                    }
-                } else {
-                    val errorCode = response.code()
-                    val errorBody = response.errorBody()?.string()
-                    Log.e("LoginFragment", "Login failed: $errorCode - $errorBody")
 
-                    when (errorCode) {
-                        401 -> throw Exception("Sai tên đăng nhập hoặc mật khẩu")
-                        404 -> throw Exception("Endpoint không tồn tại")
-                        500 -> throw Exception("Lỗi server")
-                        else -> throw Exception("Lỗi HTTP $errorCode: $errorBody")
+                        Toast.makeText(
+                                requireContext(),
+                                "Đăng nhập thành công! Role: ${loginResponse.role}",
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                        navigateToDashboard()
                     }
                 }
-
             } catch (e: Exception) {
-                Log.e("LoginFragment", "Login error: ${e.message}", e)
-                Toast.makeText(
-                        requireContext(),
-                        "Đăng nhập thất bại: ${e.message}",
-                        Toast.LENGTH_LONG
-                ).show()
+                Log.e("LoginFragment", "Login error", e)
+                Toast.makeText(requireContext(), "Đăng nhập thất bại: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
                 showLoading(false)
             }

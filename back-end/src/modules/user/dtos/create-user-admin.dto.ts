@@ -17,8 +17,7 @@ export class CreateUserAdminDto {
     @IsString()
     fullName: string;
 
-    @Type(() => Number)
-    @IsNumber()
+    @IsString()
     roleName: string;
 
     @IsOptional()

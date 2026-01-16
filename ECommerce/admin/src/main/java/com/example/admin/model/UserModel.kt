@@ -8,5 +8,6 @@ data class UserModel(
         val status: String,
         val fullName: String = "",
         val createdAt: String = "",
+        val updatedAt: String = "",
         val roleId: Int? = null
 )

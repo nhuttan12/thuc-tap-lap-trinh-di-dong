@@ -438,21 +438,22 @@ export class UserService {
 			throw new BadRequestException(`Role ${dto.roleName} not found`);
 		}
 
-		// 4. Create user
+		// 4. Hash password
 		const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-		const user = await this.userRepository.createUserWithUsernameEmailPassword(
+		// 5. Tạo user KHÔNG CÓ ẢNH - DÙNG createUserByAdmin từ repository
+		const user = await this.userRepository.createUserByAdmin(
 			dto.username,
 			dto.email,
-			await bcrypt.hash(dto.password, 10),
-			role.id,
-			1
+			hashedPassword,
+			dto.fullName || dto.username,
+			role.id
 		);
 
+		this.logger.debug(`User created successfully without image. ID: ${user.id}`);
 
 		return this.getUserByUserID(user.id);
 	}
-
 
 	async updateUserForAdmin(
 		userId: number,
@@ -468,6 +469,20 @@ export class UserService {
 			});
 		}
 
+		// Cập nhật các trường mới
+		if (body.fullName !== undefined) {
+			user.fullName = body.fullName;
+		}
+
+		if (body.email !== undefined) {
+			// Kiểm tra email trùng
+			const existingUser = await this.getUserByEmail(body.email);
+			if (existingUser && existingUser.id !== userId) {
+				throw new ConflictException('Email already exists');
+			}
+			user.email = body.email;
+		}
+
 		if (body.status) {
 			user.status = body.status;
 		}
@@ -476,6 +491,7 @@ export class UserService {
 			user.role = { id: body.roleId } as any;
 		}
 
+		user.updatedAt = new Date();
 
 		await this.userRepository.save(user);
 		return this.userMapper.toUserResponseDto(user);

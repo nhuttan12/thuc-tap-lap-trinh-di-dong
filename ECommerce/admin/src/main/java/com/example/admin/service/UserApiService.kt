@@ -44,16 +44,20 @@ interface UserApiService {
     )
 
     data class CreateUserRequest(
-            val username: String,
-            val email: String,
-            val password: String,
-            val fullName: String,
-            val roleId: Int
+            @field:Json(name = "username") val username: String,
+            @field:Json(name = "email") val email: String,
+            @field:Json(name = "password") val password: String,
+            @field:Json(name = "fullName") val fullName: String,
+            @field:Json(name = "roleName") val roleName: String
     )
 
+    // UserApiService.kt
     data class UpdateUserRequest(
-            val fullName: String? = null,
-            val roleId: Int? = null,
-            val status: String? = null
+            @field:Json(name = "fullName") val fullName: String? = null,  // ĐỔI TÊN
+            @field:Json(name = "email") val email: String? = null,
+            @field:Json(name = "roleId") val roleId: Int? = null,
+            @field:Json(name = "status") val status: String? = null
     )
 }
+
+annotation class Json(val name: String)
