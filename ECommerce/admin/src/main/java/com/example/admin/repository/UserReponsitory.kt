@@ -142,4 +142,18 @@ class UserRepository(
 
         return onSuccess(body)
     }
+
+   //xoá user
+    suspend fun deleteUser(id: Int): Boolean {
+        val response = api.deleteUser(id)
+
+        if (!response.isSuccessful) {
+            val errorBody = response.errorBody()?.string()
+            Log.e("UserRepository", "Delete user failed: HTTP ${response.code()}: $errorBody")
+            throw Exception("HTTP ${response.code()}: $errorBody")
+        }
+
+        Log.d("UserRepository", "User deleted: ID=$id")
+        return true
+    }
 }

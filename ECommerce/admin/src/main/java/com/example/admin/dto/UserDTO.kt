@@ -12,7 +12,6 @@ data class UserDTO(
         val role: Any? = null
 )
 
-// Role DTO riêng nếu cần
 data class RoleDTO(
         val id: Int,
         val name: String,

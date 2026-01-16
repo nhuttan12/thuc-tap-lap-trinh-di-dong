@@ -58,6 +58,19 @@ interface UserApiService {
             @field:Json(name = "roleId") val roleId: Int? = null,
             @field:Json(name = "status") val status: String? = null
     )
+
+    @DELETE("admin/users/{id}")
+    suspend fun deleteUser(@Path("id") id: Int): Response<DeleteUserResponse>
+
+    data class DeleteUserResponse(
+            @field:Json(name = "data") val data: DeleteData? = null,
+            @field:Json(name = "message") val message: String? = null,
+            @field:Json(name = "statusCode") val statusCode: String? = null
+    )
+
+    data class DeleteData(
+            @field:Json(name = "id") val id: Int
+    )
 }
 
 annotation class Json(val name: String)

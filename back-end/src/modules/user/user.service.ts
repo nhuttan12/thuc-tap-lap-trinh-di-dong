@@ -497,4 +497,40 @@ export class UserService {
 		return this.userMapper.toUserResponseDto(user);
 	}
 
+	async deleteUserForAdmin(userId: number): Promise<void> {
+		const user = await this.userRepository.getUserByUerID(userId);
+
+		if (!user) {
+			throw new NotFoundException({
+				statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
+				customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+				message: UserStatusCode.USER_NOT_FOUND.message,
+			});
+		}
+
+		// Soft delete - chỉ thay đổi status
+		user.status = UserStatus.DELETED;
+		await this.userRepository.save(user);
+	}
+
+	async updateUserStatus(userId: number, status: string): Promise<UserEntityResponseDto> {
+		const user = await this.userRepository.getUserByUerID(userId);
+
+		if (!user) {
+			throw new NotFoundException({
+				statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
+				customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+				message: UserStatusCode.USER_NOT_FOUND.message,
+			});
+		}
+
+		if (!Object.values(UserStatus).includes(status as UserStatus)) {
+			throw new BadRequestException('Invalid status');
+		}
+
+		user.status = status as UserStatus;
+		await this.userRepository.save(user);
+
+		return this.userMapper.toUserResponseDto(user);
+	}
 }

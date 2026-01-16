@@ -45,7 +45,7 @@ class UserViewModel : ViewModel() {
             email: String,
             password: String,
             fullName: String,
-            roleId: String  // ← ĐỔI thành roleId: Int
+            roleId: String
     ) {
         viewModelScope.launch {
             try {
@@ -68,8 +68,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    // UserViewModel.kt
-    // UserViewModel.kt
     fun updateUser(
             id: Int,
             roleId: Int? = null,
@@ -82,14 +80,13 @@ class UserViewModel : ViewModel() {
                 _loading.value = true
                 _error.value = null
 
-
                 Log.d("UserViewModel", "Updating user $id: fullName=$fullName, email=$email, roleId=$roleId, status=$status")
 
                 val updatedUser = repository.updateUser(
                         id = id,
                         roleId = roleId,
                         status = status,
-                        fullName = fullName,  // TRUYỀN fullName
+                        fullName = fullName,
                         email = email
                 )
                 Log.d("UserViewModel", "User updated: ${updatedUser.username}")
@@ -133,6 +130,52 @@ class UserViewModel : ViewModel() {
                 val errorMsg = e.message ?: "Lỗi lấy thông tin người dùng"
                 _error.value = errorMsg
                 onError(errorMsg)
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+    fun searchUsers(keyword: String) {
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+                _error.value = null
+
+                val userList = repository.getUsers(keyword = keyword)
+                _users.value = userList
+
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error searching users", e)
+                _error.value = "Lỗi tìm kiếm: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+    // Delete user - ĐƠN GIẢN HÓA
+    fun deleteUser(id: Int) {
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+                _error.value = null
+
+                // 1. Optimistic update: Xoá ngay trong UI
+                val currentList = _users.value?.toMutableList() ?: mutableListOf()
+                currentList.removeAll { it.id == id }
+                _users.value = currentList
+
+                // 2. Gọi API xoá
+                repository.deleteUser(id)
+
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error deleting user", e)
+
+                // Nếu lỗi, reload toàn bộ list
+                loadUsers()
+
+                _error.value = "Lỗi xoá người dùng: ${e.message}"
             } finally {
                 _loading.value = false
             }

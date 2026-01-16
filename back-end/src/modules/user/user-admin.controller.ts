@@ -5,7 +5,7 @@ import {
     Put,
     Query,
     Body,
-    Logger, Post, ParseIntPipe,
+    Logger, Post, ParseIntPipe, Delete, HttpCode, HttpStatus, Patch,
 } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -48,4 +48,33 @@ export class UserAdminController {
         return this.userService.updateUserForAdmin(id, body);
     }
 
+    @Delete(':id')
+    @HttpCode(HttpStatus.OK)
+    async deleteUser(@Param('id') id: number): Promise<{
+        data: { id: number };
+        message: string;
+        statusCode: string
+    }> {
+        await this.userService.deleteUserForAdmin(id);
+        return {
+            data: { id },
+            message: 'Xóa người dùng thành công',
+            statusCode: 'USER_ADMIN_005',
+        };
+    }
+
+    // Hoặc soft delete bằng status
+    @Patch(':id/status')
+    @HttpCode(HttpStatus.OK)
+    async updateUserStatus(
+        @Param('id') id: number,
+        @Body('status') status: string
+    ): Promise<any> {
+        const user = await this.userService.updateUserStatus(id, status);
+        return {
+            data: user,
+            message: 'Cập nhật trạng thái thành công',
+            statusCode: 'USER_ADMIN_006',
+        };
+    }
 }

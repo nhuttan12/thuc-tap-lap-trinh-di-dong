@@ -280,7 +280,6 @@ export class UserRepository {
 
 
 	/////////ADmin
-
 	async getUsersPagingForAdmin(
 		page: number,
 		limit: number,
@@ -288,6 +287,7 @@ export class UserRepository {
 	) {
 		const qb = this.userRepository.createQueryBuilder('user')
 			.leftJoinAndSelect('user.role', 'role')
+			.where('user.status != :deleted', { deleted: UserStatus.DELETED }) // THÊM FILTER
 			.skip((page - 1) * limit)
 			.take(limit)
 			.orderBy('user.createdAt', 'DESC');

@@ -2,7 +2,7 @@
  *
  */
 
-import { Controller, Get, Logger } from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch} from '@nestjs/common';
 import { UserService } from './user.service';
 import { seed } from '../../common/database/seed/seed';
 
@@ -16,4 +16,6 @@ export class UserController {
 	async seeding(): Promise<void> {
 		await seed();
 	}
+
+
 }

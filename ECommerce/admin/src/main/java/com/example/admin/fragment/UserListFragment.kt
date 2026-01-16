@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.admin.R
@@ -16,7 +16,7 @@ import com.example.admin.databinding.FragmentUserListBinding
 import com.example.admin.model.UserModel
 import com.example.admin.repository.UserRepository
 import com.example.admin.service.ApiService
-import kotlinx.coroutines.launch
+import com.example.admin.viewmodel.UserViewModel
 import java.io.Serializable
 
 class UserListFragment : Fragment() {
@@ -24,6 +24,7 @@ class UserListFragment : Fragment() {
     private lateinit var binding: FragmentUserListBinding
     private lateinit var adapter: UserAdapter
     private lateinit var repository: UserRepository
+    private lateinit var viewModel: UserViewModel  // THÊM ViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -37,15 +38,28 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Init repository
+        // Init repository và ViewModel
         repository = UserRepository(ApiService.userService)
+        viewModel = UserViewModel()  // KHỞI TẠO ViewModel
 
-        // Init adapter với click listener
-        adapter = UserAdapter { user ->
-            Log.d("UserClick", "Click user: ${user.username}, id=${user.id}")
-            // Navigate to edit user form với preloaded data
-            navigateToUserForm(true, user.id, user)
-        }
+        //Setup ViewModel observers
+        setupViewModelObservers()
+
+        // Init adapter với 3 callbacks
+        adapter = UserAdapter(
+                onItemClick = { user ->
+                    Log.d("UserClick", "Item click: ${user.username}, id=${user.id}")
+                    navigateToUserForm(true, user.id, user)
+                },
+                onEditClick = { user ->  // THÊM callback edit
+                    Log.d("UserClick", "Edit click: ${user.username}")
+                    navigateToUserForm(true, user.id, user)
+                },
+                onDeleteClick = { user ->  // THÊM callback delete
+                    Log.d("UserClick", "Delete click: ${user.username}")
+                    showDeleteDialog(user)
+                }
+        )
 
         // Setup RecyclerView
         binding.recyclerUsers.layoutManager = LinearLayoutManager(requireContext())
@@ -66,6 +80,31 @@ class UserListFragment : Fragment() {
         // Setup empty state và progress bar
         setupEmptyState()
     }
+
+    private fun setupViewModelObservers() {
+        // Quan sát loading state
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            showLoading(isLoading)
+        }
+
+        // Quan sát error state
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Quan sát users list
+        viewModel.users.observe(viewLifecycleOwner) { users ->
+            if (users.isEmpty()) {
+                showEmptyState(true, "Danh sách người dùng trống")
+            } else {
+                showEmptyState(false)
+                adapter.submitList(users)
+            }
+        }
+    }
+
 
     private fun setupEmptyState() {
         // Kiểm tra nếu có progress bar và empty state trong layout
@@ -88,6 +127,7 @@ class UserListFragment : Fragment() {
                     val preloadedData = mapOf(
                             "username" to user.username,
                             "email" to user.email,
+                            "fullName" to user.fullName,
                             "role" to user.role,
                             "status" to user.status
                     )
@@ -124,60 +164,31 @@ class UserListFragment : Fragment() {
     }
 
     private fun searchUsers(keyword: String) {
-        lifecycleScope.launch {
-            try {
-                showLoading(true)
-                val users = repository.getUsers(keyword = keyword)
-
-                if (users.isEmpty()) {
-                    showEmptyState(true, "Không tìm thấy người dùng")
-                } else {
-                    showEmptyState(false)
-                    adapter.submitList(users)
-                }
-                showLoading(false)
-
-            } catch (e: Exception) {
-                Log.e("UserListFragment", "Search error: ${e.message}", e)
-                Toast.makeText(
-                        requireContext(),
-                        "Lỗi tìm kiếm: ${e.message}",
-                        Toast.LENGTH_SHORT
-                ).show()
-                showLoading(false)
-            }
-        }
+        viewModel.searchUsers(keyword)
     }
 
     private fun loadUsers(page: Int = 1, limit: Int = 20) {
-        lifecycleScope.launch {
-            try {
-                showLoading(true)
-                Log.d("UserListFragment", "Loading users...")
+        viewModel.loadUsers(page, limit)
+    }
 
-                val users = repository.getUsers(page, limit)
-                Log.d("UserListFragment", "Loaded ${users.size} users")
-
-                if (users.isEmpty()) {
-                    showEmptyState(true, "Danh sách người dùng trống")
-                } else {
-                    showEmptyState(false)
-                    adapter.submitList(users)
+    // THÊM: Hàm hiển thị dialog xác nhận xoá
+    private fun showDeleteDialog(user: UserModel) {
+        AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận xoá")
+                .setMessage("Bạn có chắc muốn xoá người dùng:\n${user.username} (${user.email})?")
+                .setPositiveButton("Xoá") { dialog, _ ->
+                    deleteUser(user.id)
+                    dialog.dismiss()
                 }
+                .setNegativeButton("Huỷ") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+    }
 
-                showLoading(false)
-
-            } catch (e: Exception) {
-                Log.e("UserListFragment", "Load users error: ${e.message}", e)
-                Toast.makeText(
-                        requireContext(),
-                        "Lỗi tải danh sách: ${e.message}",
-                        Toast.LENGTH_LONG
-                ).show()
-                showEmptyState(true, "Lỗi tải danh sách")
-                showLoading(false)
-            }
-        }
+    // THÊM: Hàm xoá user
+    private fun deleteUser(userId: Int) {
+        viewModel.deleteUser(userId)
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -188,7 +199,11 @@ class UserListFragment : Fragment() {
             }
 
             // Ẩn recycler view khi loading
-            binding.recyclerUsers.visibility = if (isLoading) View.GONE else View.VISIBLE
+            if (isLoading) {
+                binding.recyclerUsers.visibility = View.GONE
+            } else {
+                binding.recyclerUsers.visibility = View.VISIBLE
+            }
         } catch (e: Exception) {
             Log.e("UserListFragment", "Error showing loading state", e)
         }
