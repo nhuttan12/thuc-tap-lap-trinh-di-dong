@@ -2,9 +2,8 @@ name: tt-mobile
 
 services:
   postgres:
-    image: postgres:17-alpine
-    container_name: tt-mobile-postgres
-    restart: always
+    image: "postgres@sha256:43735280d1873da7ac9b6e7872b09c34f6d19283fd5f42f3fc22c982fbb0c0b1"
+    restart: no
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234         # đổi thành pass cho khớp .env
@@ -14,32 +13,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - app-network
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: tt-mobile-app
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: 1234           #dổi pass giống .env nhá
-      DB_DATABASE: tt_mobile
-      PORT: 3000
-      DB_SYNCHRONIZE: "false"
-    depends_on:
-      - postgres
-    networks:
-      - app-network
-
+      - tt_mobile
 volumes:
-  postgres_data:
-
+  data:
 networks:
   app-network:
     driver: bridge

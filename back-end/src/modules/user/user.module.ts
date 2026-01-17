@@ -18,13 +18,16 @@ import { UserController } from './user.controller';
 import { RoleModule } from '../role/role.module';
 import { ConfigModule } from '../../common/config/config.module';
 import { UserAdminController } from './user-admin.controller';
-
+import { UserAuthenticationEntity } from './entities/user-authentication.entity';
 
 @Module({
 	imports: [
-		RoleModule,
-		TypeOrmModule.forFeature([UserEntity, UserDetailEntity]),
-		forwardRef(() => ImageModule),
+		TypeOrmModule.forFeature([
+			UserEntity,
+			UserDetailEntity,
+			UserAuthenticationEntity,
+		]),
+		forwardRef((): typeof ImageModule => ImageModule),
 		RoleModule,
 		ConfigModule,
 	],

@@ -7,7 +7,7 @@
 
 export class CartDetailResponseDto {
 	id: number;
-	images: string;
+	imageUrl: string;
 	name: string;
 	price: number;
 	discount: number;

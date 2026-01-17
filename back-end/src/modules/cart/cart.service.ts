@@ -3,16 +3,22 @@
  * @author Nhut Tan
  * @since 2025-09-14
  * @modifies 2025-09-25
- * @version 1.0.1
+ * @modifies 2026-01-09
+ * @version 1.0.2
  */
 
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { CartRepository } from './repositories/cart.repository';
 import { CartEntity } from './entities/cart.entity';
 import { CartDetailService } from './cart-detail.service';
-import { CartResponseDto } from './dtos/cart-response.dto';
-import { CartMapper } from './mappers/cart.mapper';
 import { CartStatusCode } from './status-code/cart.status-code';
+import { CartDetailEntity } from './entities/cart-detail.entity';
+import { AuthStatusCode } from '../auth/status-code/auth.status-code';
+import { CartResponseDto } from './dtos/cart-response.dto';
+import { ProductEntityResponseDto } from '../product/dtos/product-entity-response.dto';
+import { UserEntityResponseDto } from '../user/dtos/user-entity-response.dto';
+import { ProductService } from '../product/product.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class CartService {
@@ -21,7 +27,8 @@ export class CartService {
 	constructor(
 		private readonly cartRepository: CartRepository,
 		private readonly cartDetailService: CartDetailService,
-		private readonly cartMapper: CartMapper
+		private readonly productService: ProductService,
+		private readonly userService: UserService
 	) {}
 
 	/**
@@ -38,15 +45,15 @@ export class CartService {
 		productID: number,
 		userID: number,
 		quantity: number
-	): Promise<CartResponseDto> {
+	): Promise<boolean> {
 		try {
 			/**
 			 * Get cart by user ID and ACTIVE status
 			 */
 			const existingCartEntity: CartEntity | null =
-				await this.cartRepository.getActiveCartByUserID(userID);
+				await this.getActiveCartByUserIDOrReturnNull(userID);
 			this.logger.debug(
-				`Get cart by user ID and ACTIVE status: ${JSON.stringify(existingCartEntity)}`
+				`Get cart by user ID and ACTIVE status: ${JSON.stringify(existingCartEntity, null, 2)}`
 			);
 
 			/**
@@ -60,7 +67,7 @@ export class CartService {
 				const newCartEntity: CartEntity =
 					await this.cartRepository.createCart(userID);
 				this.logger.debug(
-					`New cart entity created: ${JSON.stringify(newCartEntity)}`
+					`New cart entity created: ${JSON.stringify(newCartEntity, null, 2)}`
 				);
 
 				/**
@@ -75,63 +82,71 @@ export class CartService {
 				/**
 				 * Get cart entity after create new cart and cart detail
 				 */
-				const newCartAfterCreated: CartEntity | null =
-					await this.cartRepository.getActiveCartByUserID(userID);
+				await this.getActiveCartByUserIDOrThrow(userID);
 
-				/**
-				 * Checking cart existence after created
-				 */
-				if (!newCartAfterCreated) {
-					/**
-					 * Logging error and throw exception
-					 */
-					this.logger.debug('Cart not found after created');
-					throw new ConflictException({
-						message: CartStatusCode.CART_NOT_FOUND.message,
-						statusCode: CartStatusCode.CART_NOT_FOUND.customCode,
-						customCode: CartStatusCode.CART_NOT_FOUND.customCode,
-					});
-				}
-
-				/**
-				 * Mapping `CartEntity` to `CartResponseDto` and return
-				 */
-				return this.cartMapper.toCartResponseDto(newCartAfterCreated);
+				return true;
 			} else {
 				/**
 				 * If cart already exist, adding new cart detail to existing cart
 				 */
-				await this.cartDetailService.createNewCartDetail(
-					productID,
-					existingCartEntity.id,
-					quantity
-				);
+				const cartDetailExistence: CartDetailEntity | null =
+					await this.cartDetailService.getCartDetailByCartIDAndProductIDOrNull(
+						existingCartEntity.id,
+						productID
+					);
 
 				/**
-				 * Get new cart after adding new cart detail to existing cart
+				 * Checking cart detail existence in cart,
+				 * if not exist, create new cart detail,
+				 * if already exist, update quantity
 				 */
-				const newCartAfterCreated: CartEntity | null =
-					await this.cartRepository.getActiveCartByUserID(userID);
+				if (!cartDetailExistence) {
+					await this.cartDetailService.createNewCartDetail(
+						productID,
+						existingCartEntity.id,
+						quantity
+					);
 
-				/**
-				 * Checking cart existence after created
-				 */
-				if (!newCartAfterCreated) {
 					/**
-					 * Logging error and throw exception
+					 * Get new cart after adding new cart detail to existing cart
 					 */
-					this.logger.debug('Cart not found after created');
-					throw new ConflictException({
-						message: CartStatusCode.CART_NOT_FOUND.message,
-						statusCode: CartStatusCode.CART_NOT_FOUND.customCode,
-						customCode: CartStatusCode.CART_NOT_FOUND.customCode,
-					});
+					await this.getActiveCartByUserIDOrThrow(userID);
+				} else {
+					/**
+					 * Get cart detail by card ID and product ID
+					 */
+					const cartDetail: CartDetailEntity =
+						await this.cartDetailService.getCartDetailByCartIDAndProductIDOrThrow(
+							existingCartEntity.id,
+							productID
+						);
+
+					/**
+					 * Update cart detail with cart ID, product ID, cart detail 's quantity + 1
+					 */
+					const updateResult: boolean =
+						await this.cartDetailService.updateQuantityOfProductInCartDetail(
+							existingCartEntity.id,
+							productID,
+							cartDetail.quantity + 1
+						);
+
+					if (!updateResult) {
+						throw new ConflictException({
+							statusCode:
+								CartStatusCode.UPDATE_CART_DETAIL_FAILED
+									.statusCode,
+							customCode:
+								CartStatusCode.UPDATE_CART_DETAIL_FAILED
+									.customCode,
+							message:
+								CartStatusCode.UPDATE_CART_DETAIL_FAILED
+									.message,
+						});
+					}
 				}
 
-				/**
-				 * Mapping `CartEntity` to `CartResponseDto` and return
-				 */
-				return this.cartMapper.toCartResponseDto(newCartAfterCreated);
+				return true;
 			}
 		} catch (e) {
 			this.logger.error(
@@ -140,5 +155,80 @@ export class CartService {
 			);
 			throw e;
 		}
+	}
+
+	/**
+	 * @description Get active by user ID, if not found, return null
+	 * @param userID - ID of user to get cart
+	 * @return {Promise<CartEntity | null>}
+	 */
+	async getActiveCartByUserIDOrReturnNull(
+		userID: number
+	): Promise<CartEntity | null> {
+		return await this.cartRepository.getActiveCartByUserID(userID);
+	}
+
+	/**
+	 * @description Get actvie cart by user ID, if not found, then throw exception
+	 * @param userID - ID of user to get cart
+	 * @return {Promise<CartEntity>}
+	 */
+	async getActiveCartByUserIDOrThrow(userID: number): Promise<CartEntity> {
+		/**
+		 * Call 'getActiveCartByUserID' in 'cartRepository'
+		 */
+		const cart: CartEntity | null =
+			await this.cartRepository.getActiveCartByUserID(userID);
+		this.logger.debug(
+			`Call 'getActiveCartByUserID' in 'cartRepository': ${JSON.stringify(cart, null, 2)}`
+		);
+
+		/**
+		 * If cart not exist, then throw
+		 */
+		if (!cart) {
+			this.logger.warn('Cart not found');
+			throw new ConflictException({
+				message: CartStatusCode.CART_NOT_FOUND.message,
+				statusCode: CartStatusCode.CART_NOT_FOUND.statusCode,
+				customCode: CartStatusCode.CART_NOT_FOUND.customCode,
+			});
+		}
+
+		/**
+		 * Return cart
+		 */
+		return cart;
+	}
+
+	/**
+	 * @description Remove product from cart
+	 * @param cartDetailID - ID of cart detail reference to ID of product
+	 * @param userID - ID of user's cart
+	 */
+	async removeProductFromCart(
+		cartDetailID: number,
+		userID: number
+	): Promise<boolean> {
+		/**
+		 * Get cart detail by cart detail ID and user ID
+		 */
+		const cartDetail: CartDetailEntity =
+			await this.cartDetailService.getCartDetailByCartDetailIDAndUserIDOrThrow(
+				cartDetailID,
+				userID
+			);
+
+		/**
+		 * Remove cart detail
+		 */
+		const updateResult: boolean =
+			await this.cartDetailService.removeCartDetailFromCart(
+				cartDetail.id,
+				userID
+			);
+		this.logger.debug(`Remove cart detail result: ${updateResult}`);
+
+		return updateResult;
 	}
 }

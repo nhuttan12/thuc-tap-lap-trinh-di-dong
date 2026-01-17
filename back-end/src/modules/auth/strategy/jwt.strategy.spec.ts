@@ -151,7 +151,7 @@ describe('JwtStrategy', () => {
 		await jwtStrategy.validate(payload);
 
 		expect(loggerSpy.mock.calls[0][0]).toBe(
-			`Get user by calling \`getUserByUserID\` function from user service: ${JSON.stringify(user)}`
+			`Get user by calling \`getUserByUserID\` function from user service: ${JSON.stringify(user, null, 2)}`
 		);
 	});
 
@@ -212,7 +212,7 @@ describe('JwtStrategy', () => {
 		await jwtStrategy.validate(payload);
 
 		expect(loggerSpy.mock.calls[1][0]).toBe(
-			`Convert user response to jwt payload: ${JSON.stringify(payloadMapping)}`
+			`Convert user response to jwt payload: ${JSON.stringify(payloadMapping, null, 2)}`
 		);
 	});
 });

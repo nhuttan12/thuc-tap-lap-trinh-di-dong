@@ -5,7 +5,12 @@
  * @version 1.0.0
  */
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+	BadRequestException,
+	ConflictException,
+	Injectable,
+	Logger,
+} from '@nestjs/common';
 import { WishlistItemRepository } from './repositories/wishlist-item.repository';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
 import { WishlistItemEntity } from './entities/wishlist-item.entity';
@@ -13,6 +18,7 @@ import { WishlistItemMapper } from './mappers/wishlist-item.mapper';
 import { WishlistStatusCode } from './status-code/wishlist.status-code';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
+import { AuthStatusCode } from '../auth/status-code/auth.status-code';
 
 @Injectable()
 export class WishlistService {
@@ -47,6 +53,7 @@ export class WishlistService {
 				page,
 				limit
 			);
+			this.logger.debug(`Calculate skip in service ${skip}`);
 
 			/**
 			 * Call `getAllWishlistItems` in `WishlistItemRepository`
@@ -58,7 +65,7 @@ export class WishlistService {
 					limit
 				);
 			this.logger.debug(
-				`Get all wishlist items ${JSON.stringify(wishlistItems)}`
+				`Get all wishlist items ${JSON.stringify(wishlistItems, null, 2)}`
 			);
 
 			/**
@@ -69,7 +76,7 @@ export class WishlistService {
 					wishlistItems
 				);
 			this.logger.debug(
-				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto)}`
+				`Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto, null, 2)}`
 			);
 
 			return this.buildPagingMetaService.buildPagingResponse(
@@ -99,25 +106,61 @@ export class WishlistService {
 	async addToWishlist(productID: number, userID: number): Promise<boolean> {
 		try {
 			/**
-			 * Check product exist in wishlist
+			 * Get product in wishlist and check product existence in wishlist item
 			 */
-			await this.getProductInWishlistByProductIDAndUserID(
-				productID,
-				userID
+			const wishlistExistence: WishlistItemEntity | null =
+				await this.getProductInWishlistByProductIDAndUserID(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				`Get product in wishlist and check product existence in wishlist item: ${JSON.stringify(wishlistExistence, null, 2)}`
 			);
 
 			/**
-			 * Call `createWishlistItem` in `WishlistItemRepository`
+			 * Whether if product not exist in wishlist
 			 */
-			await this.wishlistItemRepository.createWishlistItem(
-				productID,
-				userID
-			);
+			if (!wishlistExistence) {
+				/**
+				 * Call `createWishlistItem` in `WishlistItemRepository` to
+				 * add product to wishlist
+				 */
+				const wishlistCreated: WishlistItemEntity =
+					await this.wishlistItemRepository.createWishlistItem(
+						productID,
+						userID
+					);
+				this.logger.debug(
+					`Call \`createWishlistItem\` in \`WishlistItemRepository\` to add product to wishlist: ${JSON.stringify(wishlistCreated, null, 2)}`
+				);
+
+				/**
+				 * Whether if wishlist after created is null
+				 */
+				if (!wishlistCreated) {
+					this.logger.warn(`Wishlist after created is null`);
+					throw new ConflictException({
+						statusCode:
+							WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED
+								.statusCode,
+						customCode:
+							WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED
+								.customCode,
+						message:
+							WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED
+								.message,
+					});
+				} else {
+					this.logger.debug('Add product to wishlist success');
+					return true;
+				}
+			}
 
 			/**
-			 * If wishlist item created successfully, return true
+			 * Default is failed
 			 */
-			return true;
+			this.logger.debug('Return default is false');
+			return false;
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getAllProductInWishlist\`: ${(e as Error).message}`,
@@ -149,24 +192,9 @@ export class WishlistService {
 					productID,
 					userID
 				);
-
-			/**
-			 * Check wishlist item exist
-			 */
-			if (wishlistItemEntity) {
-				/**
-				 * Log error, and throwing error
-				 */
-				this.logger.warn('Product already in wishlist');
-				throw new BadRequestException({
-					statusCode:
-						WishlistStatusCode.ProductAlreadyInWishlist.statusCode,
-					customCode:
-						WishlistStatusCode.ProductAlreadyInWishlist.customCode,
-					message:
-						WishlistStatusCode.ProductAlreadyInWishlist.message,
-				});
-			}
+			this.logger.debug(
+				`Call \`getWishlistItemByProductIDAndUserID\` in \`WishlistItemRepository\`: ${JSON.stringify(wishlistItemEntity, null, 2)}`
+			);
 
 			return wishlistItemEntity;
 		} catch (e) {
@@ -210,10 +238,10 @@ export class WishlistService {
 				this.logger.warn('Product not in wishlist');
 				throw new BadRequestException({
 					statusCode:
-						WishlistStatusCode.ProductNotInWishlist.statusCode,
+						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
 					customCode:
-						WishlistStatusCode.ProductNotInWishlist.customCode,
-					message: WishlistStatusCode.ProductNotInWishlist.message,
+						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
+					message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
 				});
 			}
 

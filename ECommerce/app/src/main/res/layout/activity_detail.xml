@@ -33,7 +33,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/back"
-                    android:contentDescription="@string/buy_now"/>
+                    android:contentDescription="@string/add_to_cart"/>
 
                 <ImageView
                     android:id="@+id/favBtn"
@@ -221,8 +221,20 @@
                 android:id="@+id/descriptionTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@string/loading" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/description"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/descriptionList"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -265,7 +277,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:text="@string/buy_now"
+                    android:text="@string/add_to_cart"
                     android:textColor="@color/white"
                     android:textSize="18sp"/>
 

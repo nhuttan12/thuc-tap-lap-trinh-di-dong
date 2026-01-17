@@ -16,6 +16,7 @@ import {
 	PrimaryColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
+import { BrandEntity } from '../../brand/entities/brand.entiy';
 import { CategoryEntity } from '../../category/entities/category.entity';
 import { ProductEntity } from './product.entity';
 
@@ -57,4 +58,15 @@ export class ProductDetailsEntity extends TimestampField {
 	)
 	@JoinColumn({ name: 'id' })
 	product: ProductEntity;
+
+	@ManyToOne(
+		(): typeof BrandEntity => BrandEntity,
+		(brandEntity: BrandEntity): ProductDetailsEntity[] =>
+			brandEntity.productDetails,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	@JoinColumn({ name: 'brand_id' })
+	brandEntity: BrandEntity;
 }

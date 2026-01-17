@@ -11,6 +11,7 @@ import { ImageStatusEnum } from '../enums/image-status.enum';
 import { TimestampField } from '../../../common/database/timestamp.field';
 import { ProductImageEntity } from './product-image.entity';
 import { UserImageEntity } from './user-image.entity';
+import { BrandEntity } from '../../brand/entities/brand.entiy';
 
 @Entity('images')
 export class ImageEntity extends TimestampField {
@@ -46,4 +47,13 @@ export class ImageEntity extends TimestampField {
 		}
 	)
 	userImage: UserImageEntity;
+
+	@OneToOne(
+		(): typeof BrandEntity => BrandEntity,
+		(brandEntity: BrandEntity): ImageEntity => brandEntity.image,
+		{
+			cascade: ['insert', 'update', 'soft-remove'],
+		}
+	)
+	brand: BrandEntity;
 }

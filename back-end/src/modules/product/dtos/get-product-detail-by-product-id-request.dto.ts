@@ -4,10 +4,15 @@
  * @since 2025-09-24
  * @version 1.0.0
  */
-import { IsInt } from '@nestjs/class-validator';
+import { IsInt, IsNotEmpty } from 'class-validator';
 import { ProductStatusCode } from '../status-code/product.status-code';
+import { Type } from 'class-transformer';
 
 export class GetProductDetailByProductIdRequestDto {
+	@Type(() => Number)
+	@IsNotEmpty({
+		message: ProductStatusCode.PRODUCT_ID_MUST_NOT_BE_EMPTY.customCode,
+	})
 	@IsInt({
 		message: ProductStatusCode.PRODUCT_ID_MUST_BE_AN_INTEGER.customCode,
 	})

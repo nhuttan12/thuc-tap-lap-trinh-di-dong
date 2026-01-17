@@ -41,11 +41,11 @@ export class RoleService {
 			const role: RoleEntity | null =
 				await this.roleRepository.getRoleByName(name);
 			this.logger.debug(
-				`Call \`getRoleByName\` function from repository: ${JSON.stringify(role)}`
+				`Call \`getRoleByName\` function from repository: ${JSON.stringify(role, null, 2)}`
 			);
 
 			if (!role) {
-				this.logger.error(`Role with name ${name} not found`);
+				this.logger.warn(`Role with name ${name} not found`);
 				throw new NotFoundException({
 					statusCode: RoleStatusCode.ROLE_NOT_FOUND.statusCode,
 					customCode: RoleStatusCode.ROLE_NOT_FOUND.customCode,
@@ -59,7 +59,7 @@ export class RoleService {
 			const roleResponseDto: RoleResponseDto =
 				this.roleMapper.toRoleResponseDto(role);
 			this.logger.debug(
-				`Call \`toRoleResponseDto\` function from mapper: ${JSON.stringify(roleResponseDto)}`
+				`Call \`toRoleResponseDto\` function from mapper: ${JSON.stringify(roleResponseDto, null, 2)}`
 			);
 
 			/*

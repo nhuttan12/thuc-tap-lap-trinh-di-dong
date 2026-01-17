@@ -1,6 +1,6 @@
 [versions]
 agp = "8.1.0"
-kotlin = "2.0.21"
+kotlin = "1.9.24"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -15,7 +15,7 @@ androidxJunit = "1.2.1"
 glide = "4.16.0"
 gson = "2.10.1"
 dotsindicator = "5.1.0"
-
+volley = "1.2.1"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,6 +30,7 @@ androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", vers
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 dotsindicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

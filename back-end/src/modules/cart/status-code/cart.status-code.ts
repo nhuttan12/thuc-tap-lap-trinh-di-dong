@@ -56,4 +56,33 @@ export class CartStatusCode extends BaseStatusCode {
 			'CART_008',
 			'Add product to cart success'
 		);
+	static readonly GET_CART_BY_USER_ID_SUCCESS: CartStatusCode =
+		new CartStatusCode(
+			HttpStatus.OK,
+			'CART_009',
+			'Get cart by user ID success'
+		);
+	static readonly CART_DETAIL_NOT_FOUND: CartStatusCode = new CartStatusCode(
+		HttpStatus.NOT_FOUND,
+		'CART_010',
+		'Cart detail not found'
+	);
+	static readonly UPDATE_CART_DETAIL_SUCCESS: CartStatusCode =
+		new CartStatusCode(
+			HttpStatus.OK,
+			'CART_011',
+			'Update cart detail success'
+		);
+	static readonly UPDATE_CART_DETAIL_FAILED: CartStatusCode =
+		new CartStatusCode(
+			HttpStatus.CONFLICT,
+			'CART_012',
+			'Update cart detail failed'
+		);
+	static readonly REMOVE_PRODUCT_FROM_CART_SUCCESS: CartStatusCode =
+		new CartStatusCode(
+			HttpStatus.OK,
+			'CART_013',
+			'Remove product from cart success'
+		);
 }

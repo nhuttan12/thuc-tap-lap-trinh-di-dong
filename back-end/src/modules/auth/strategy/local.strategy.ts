@@ -41,7 +41,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 			username,
 			password
 		);
-		this.logger.debug(`User after validate: ${JSON.stringify(user)}`);
+		this.logger.debug(
+			`User after validate: ${JSON.stringify(user, null, 2)}`
+		);
 
 		/**
 		 * Return user

@@ -1,3 +1,10 @@
+/**
+ * @description Detail activity for displaying data from view model
+ * @author @nhuttan12
+ * @since 2026-01-08
+ * @version 1.0.0
+ */
+
 package com.example.e_commerce.Activity
 
 import android.graphics.Paint
@@ -7,16 +14,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.e_commerce.Adapter.ColorAdapter
+import com.example.e_commerce.Adapter.DescriptionAdapter
 import com.example.e_commerce.Adapter.PicsAdapter
 import com.example.e_commerce.Adapter.SizeAdapter
-import com.example.e_commerce.Helper.ManagmentCart
-import com.example.e_commerce.Model.ItemModel
+import com.example.e_commerce.Helper.CheckToken
+import com.example.e_commerce.Helper.TinyDB
+import com.example.e_commerce.Model.ProductDetailModel
 import com.example.e_commerce.databinding.ActivityDetailBinding
+import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-    private lateinit var item: ItemModel
-    private lateinit var managmentCart: ManagmentCart
+    private lateinit var item: ProductDetailModel
+    private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
+
+    private val tinyDB: TinyDB by lazy { TinyDB(this) }
+    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +37,8 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        managmentCart = ManagmentCart(this)
-        item = intent.getSerializableExtra("object")!! as ItemModel
+        item = intent.getSerializableExtra("object") as? ProductDetailModel
+            ?: throw IllegalArgumentException("Không tìm thấy sản phẩm")
 
         setupViews()
         setupPicsList()
@@ -59,40 +72,48 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setupViews() = with(binding) {
         titleTxt.text = item.title
-        descriptionTxt.text = item.description
-        priceTxt.text = item.price.toString()
-        oldPriceTxt.text = item.oldPrice.toString()
+        descriptionList.apply {
+            adapter = DescriptionAdapter(item.description)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+
+        priceTxt.text = priceFormat.format(item.price)
+        oldPriceTxt.text = priceFormat.format(item.oldPrice)
         oldPriceTxt.paintFlags = priceTxt.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        ratingTxt.text = "${item.rating} Rating"
+
+        ratingTxt.text = "${item.rating}"
         numberItemTxt.text = item.numberInCart.toString()
+
         updateTotalPrice()
 
-        Glide.with(this@DetailActivity).load(item.picUrl.firstOrNull()).into(picMain)
+        Glide.with(this@DetailActivity)
+            .load(item.picUrl.firstOrNull())
+            .into(picMain)
 
         backBtn.setOnClickListener { finish() }
 
         plusBtn.setOnClickListener {
-            val quantity = item.numberInCart++
-            item.numberInCart = item.numberInCart++
-            numberItemTxt.text = quantity.toString()
+            item.numberInCart++
+            numberItemTxt.text = item.numberInCart.toString()
             updateTotalPrice()
         }
 
         minusBtn.setOnClickListener {
             if (item.numberInCart > 1) {
-                val quantity = item.numberInCart--
-                item.numberInCart = item.numberInCart--
-                numberItemTxt.text = quantity.toString()
+                item.numberInCart--
+                numberItemTxt.text = item.numberInCart.toString()
                 updateTotalPrice()
             }
         }
 
         addToCartBtn.setOnClickListener {
-            managmentCart.insert(item)
+            checkToken.checkTokenOrRedirect(this@DetailActivity) {
+//                managementCart.insert(item)
+            }
         }
     }
 
     private fun updateTotalPrice() = with(binding) {
-        totalPriceTxt.text = (item.price * item.numberInCart).toString()
+        totalPriceTxt.text = priceFormat.format(item.price * item.numberInCart)
     }
 }

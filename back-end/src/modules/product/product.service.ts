@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, NotFoundException } from '@nestjs/common';
 import { DataSource, In } from 'typeorm';
 import { ProductRepository } from './repositories/product.repository';
 import { ProductEntity } from './entities/product.entity';
@@ -22,6 +22,7 @@ import { ImageEntity } from "../image/entities/image.entity";
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
 import {CategoryStatusEnum} from "../category/enums/category-status.enum";
+import { ProductStatusCode } from './status-code/product.status-code';
 
 @Injectable()
 export class ProductService {
@@ -128,21 +129,21 @@ export class ProductService {
 			const catId = body.productDetailsEntity?.category_id ?? body.category_id;
 
 			await qr.manager.query(`
-         UPDATE product_details 
-         SET 
-            size = $1,
-            color = $2, 
-            description = $3,
-            rating = $4,
-            category_id = COALESCE($5, category_id),
-            updated_at = NOW()
-         WHERE id = $6
-      `, [
+				UPDATE product_details 
+				SET 
+					size = $1,
+					color = $2, 
+					description = $3,
+					rating = $4,
+					category_id = COALESCE($5, category_id),
+					updated_at = NOW()
+				WHERE id = $6
+		  `, [
 				Array.isArray(sizeVal) ? sizeVal.join(',') : String(sizeVal),
 				colorVal,
 				descVal,
 				ratingVal,
-				catId || null,  // NULL-safe
+				catId || null,
 				id
 			]);
 
@@ -296,5 +297,33 @@ export class ProductService {
 			);
 			throw e;
 		}
+	}
+
+	/**
+	 * @description Get product by ID
+	 * @param {number} productID - ID of product
+	 */
+	async getProductByProductID(
+		productID: number
+	): Promise<ProductEntityResponseDto> {
+		/**
+		 * Call `getProductByProductID` in product repository
+		 */
+		const product: ProductEntity | null =
+			await this.productRepository.getProductByProductID(productID);
+		this.logger.debug(
+			`Call \`getProductByProductID\` in product repository ${JSON.stringify(product, null, 2)}`
+		);
+
+		if (!product) {
+			this.logger.debug(`Product ID ${productID} not found`);
+			throw new NotFoundException({
+				statusCode: ProductStatusCode.PRODUCT_NOT_FOUND.statusCode,
+				customCode: ProductStatusCode.PRODUCT_NOT_FOUND.customCode,
+				message: ProductStatusCode.PRODUCT_NOT_FOUND.message,
+			});
+		}
+
+		return this.productMapper.toProductEntityResponseDto(product);
 	}
 }

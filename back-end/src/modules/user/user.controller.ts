@@ -5,6 +5,7 @@
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch} from '@nestjs/common';
 import { UserService } from './user.service';
 import { seed } from '../../common/database/seed/seed';
+import { csvSeed } from '../../common/database/seed/csv-seed';
 
 @Controller('user')
 export class UserController {
@@ -16,6 +17,8 @@ export class UserController {
 	async seeding(): Promise<void> {
 		await seed();
 	}
-
-
+	@Get('csv')
+	async csvSeeding(): Promise<void> {
+		await csvSeed();
+	}
 }
