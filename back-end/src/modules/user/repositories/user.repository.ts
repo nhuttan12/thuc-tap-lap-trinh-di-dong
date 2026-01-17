@@ -8,11 +8,14 @@
  * @version 1.0.5
  */
 
-import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, EntityManager, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { UserEntity } from '../entities/user.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { ImageEntity } from '../../image/entities/image.entity';
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
@@ -29,16 +32,16 @@ export class UserRepository {
 		private readonly dataSource: DataSource
 	) {}
 
-	/**
-	 * @description Get user by username and password
-	 * @param username - User username
-	 * @param password - User password
-	 * @return {UserEntity | null}
-	 * @author Nhut Tan
-	 * @since 2025-09-08
-	 * @modifes 2025-12-31
-	 * @version 1.0.1
-	 */
+    /**
+     * @description Get user by username and password
+     * @param username - User username
+     * @param password - User password
+     * @return {UserEntity | null}
+     * @author Nhut Tan
+     * @since 2025-09-08
+     * @modifes 2025-12-31
+     * @version 1.0.1
+     */
 	async getUserByUserNameAndPassword(
 		username: string,
 		password: string
@@ -53,9 +56,9 @@ export class UserRepository {
 					role: true,
 				},
 			});
-			this.logger.debug(
-				`Get users from database ${JSON.stringify(user, null, 2)}`
-			);
+            this.logger.debug(
+                `Get users from database ${JSON.stringify(user, null, 2)}`
+            );
 
 			/*
 			 * Return user to user service
@@ -70,15 +73,15 @@ export class UserRepository {
 		}
 	}
 
-	/**
-	 * @description Get user by username and password
-	 * @param {number} userID - ID of user
-	 * @return {UserEntity | null}
-	 * @author Nhut Tan
-	 * @since 2025-09-09
-	 * @modifies 2025-12-31
-	 * @version 1.0.1
-	 */
+    /**
+     * @description Get user by username and password
+     * @param {number} userID - ID of user
+     * @return {UserEntity | null}
+     * @author Nhut Tan
+     * @since 2025-09-09
+     * @modifies 2025-12-31
+     * @version 1.0.1
+     */
 	async getUserByUerID(userID: number): Promise<UserEntity | null> {
 		try {
 			/*
@@ -92,9 +95,9 @@ export class UserRepository {
 					role: true,
 				},
 			});
-			this.logger.debug(
-				`Get users from database ${JSON.stringify(user, null, 2)}`
-			);
+            this.logger.debug(
+                `Get users from database ${JSON.stringify(user, null, 2)}`
+            );
 
 			/*
 			 * Return user to user service
@@ -109,15 +112,15 @@ export class UserRepository {
 		}
 	}
 
-	/**
-	 * @description Get user by email
-	 * @param email - User email
-	 * @return {UserEntity | null}
-	 * @author Nhut Tan
-	 * @since 2025-09-10
-	 * @modifes 2025-12-31
-	 * @version 1.0.1
-	 */
+    /**
+     * @description Get user by email
+     * @param email - User email
+     * @return {UserEntity | null}
+     * @author Nhut Tan
+     * @since 2025-09-10
+     * @modifes 2025-12-31
+     * @version 1.0.1
+     */
 	async getUserByEmail(email: string): Promise<UserEntity | null> {
 		try {
 			/*
@@ -131,9 +134,9 @@ export class UserRepository {
 					role: true,
 				},
 			});
-			this.logger.debug(
-				`Get users from database ${JSON.stringify(user, null, 2)}`
-			);
+            this.logger.debug(
+                `Get users from database ${JSON.stringify(user, null, 2)}`
+            );
 
 			/*
 			 * Return user to user service
@@ -148,19 +151,18 @@ export class UserRepository {
 		}
 	}
 
-	/**
-	 * @description Create user with Google information
-	 * @param name - User name
-	 * @param email - User email
-	 * @param photos - User photos by url
-	 * @return {UserEntity}
-	 * @author Nhut Tan
-	 * @since 2025-09-10
-	 * @modifes 2025-12-31
-	 * @version 1.0.1
-	 */
+    /**
+     * @description Create user with Google information
+     * @param fullName - User full name
+     * @param email - User email
+     * @return {UserEntity}
+     * @author Nhut Tan
+     * @since 2025-09-10
+     * @modifes 2025-12-31
+     * @version 1.0.1
+     */
 	async createNewUserGoogle(
-		fullName: string,
+        fullName: string,
 		email: string
 	): Promise<UserEntity> {
 		try {
@@ -169,10 +171,10 @@ export class UserRepository {
 					/*
 					 * Create user entity instance
 					 */
-					const user: UserEntity = tx.create(UserEntity, {
-						fullName: fullName,
-						email: email,
-					});
+                    const user: UserEntity = tx.create(UserEntity, {
+                        fullName: fullName,
+                        email: email,
+                    });
 
 					/*
 					 * Save it to database
@@ -189,15 +191,15 @@ export class UserRepository {
 		}
 	}
 
-	/**
-	 * @description Get user by username
-	 * @param username - User username
-	 * @return {UserEntity | null}
-	 * @author Nhut Tan
-	 * @since 2025-09-10
-	 * @modifes 2025-12-31
-	 * @version 1.0.1
-	 */
+    /**
+     * @description Get user by username
+     * @param username - User username
+     * @return {UserEntity | null}
+     * @author Nhut Tan
+     * @since 2025-09-10
+     * @modifes 2025-12-31
+     * @version 1.0.1
+     */
 	async getUserByUsername(username: string): Promise<UserEntity | null> {
 		try {
 			/**
@@ -208,9 +210,9 @@ export class UserRepository {
 					username: username,
 				},
 			});
-			this.logger.debug(
-				`Get user from database ${JSON.stringify(users, null, 2)}`
-			);
+            this.logger.debug(
+                `Get user from database ${JSON.stringify(users, null, 2)}`
+            );
 
 			return users;
 		} catch (e) {
@@ -222,21 +224,23 @@ export class UserRepository {
 		}
 	}
 
-	/**
-	 * @description Create user with username, email and password with default
-	 * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
-	 * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
-	 * and id is 1
-	 * @param username - User username
-	 * @param email - User email
-	 * @param password - User password
-	 * @return {UserEntity}
-	 * @author Nhut Tan
-	 * @since 2025-09-17
-	 * @modifies 2025-09-22
-	 * @modifies 2025-12-31
-	 * @version 1.0.4
-	 */
+    /**
+     * @description Create user with username, email and password with default
+     * role is customer, full name is `Nguười dùng ${uuid}`, default image url is
+     * 'https://res.cloudinary.com/dt3yrf9sx/image/upload/v1758105162/user-circle-isolated-icon-round-600nw-2459622791_zviocb.webp'
+     * and id is 1
+     * @param username - User username
+     * @param email - User email
+     * @param password - User password
+     * @param roleID - ID of role to insert for user
+     * @param imageID - ID for image created before, or can use new image
+     * @return {UserEntity}
+     * @author Nhut Tan
+     * @since 2025-09-17
+     * @modifies 2025-09-22
+     * @modifies 2025-12-31
+     * @version 1.0.4
+     */
 	async createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
 		username: string,
 		email: string,
@@ -293,11 +297,43 @@ export class UserRepository {
 		try {
 			return await this.userRepository.save(user);
 		} catch (e) {
-			this.logger.error(
-				`Error in \`save\`: ${(e as Error).message}`,
-				(e as Error).stack
-			);
-			throw e;
-		}
+            this.logger.error(
+                `Error in \`save\`: ${(e as Error).message}`,
+                (e as Error).stack
+            );
+            throw e;
+        }
 	}
+
+    async getProfileByUserId(userId: number): Promise<UserEntity | null> {
+        return await this.userRepository
+            .createQueryBuilder('user')
+            .leftJoinAndSelect('user.userDetail', 'userDetail')
+            .leftJoinAndSelect('user.userImages', 'userImages')
+            .leftJoinAndSelect('userImages.image', 'image')
+            .where('user.id = :userId', { userId })
+            .orderBy('userImages.createdAt', 'DESC')
+            .getOne();
+    }
+
+    /**
+     * @description Update password by user id
+     */
+    async updatePassword(userId: number, hashedPassword: string): Promise<void> {
+        try {
+            await this.userRepository.update(
+                { id: userId },
+                {
+                    password: hashedPassword,
+                    updatedAt: new Date(),
+                }
+            );
+        } catch (e) {
+            this.logger.error(
+                `Error in updatePassword: ${(e as Error).message}`,
+                (e as Error).stack
+            );
+            throw e;
+        }
+    }
 }

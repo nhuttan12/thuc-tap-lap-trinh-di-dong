@@ -14,6 +14,7 @@ package com.example.e_commerce.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,7 @@ import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.Enum.ProductListType
 import com.example.e_commerce.Model.SliderModel
+import com.example.e_commerce.R
 import com.example.e_commerce.ViewModel.MainViewModel
 import com.example.e_commerce.ViewModel.MainViewModelFactory
 import com.example.e_commerce.databinding.ActivityMainBinding
@@ -66,6 +68,12 @@ class DashboardActivity : AppCompatActivity() {
 
         initUI()
         observeProductDetail()
+
+        val profileBtn = findViewById<ImageView>(R.id.profileBtn)
+        profileBtn.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initUI() {
