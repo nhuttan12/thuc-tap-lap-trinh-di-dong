@@ -44,14 +44,17 @@ export class ProductService {
 		await qr.startTransaction();
 
 		try {
-			// 1. VALIDATE CATEGORY ✅
-			const categoryId = body.productDetailsEntity?.category_id ?? body.category_id;
-			if (!categoryId) throw new BadRequestException('category_id is required');
-
-			const category = await qr.manager.findOne(CategoryEntity, {
-				where: { id: categoryId, status: CategoryStatusEnum.ACTIVE }
-			});
-			if (!category) throw new BadRequestException(`Category id=${categoryId} not found or inactive`);
+			// 1. VALIDATE CATEGORY
+			const categoryId = body.category_id;
+			if (categoryId) {
+				// Validate category nếu có
+				const category = await qr.manager.findOne(CategoryEntity, {
+					where: { id: categoryId, status: CategoryStatusEnum.ACTIVE }
+				});
+				if (!category) {
+					throw new BadRequestException(`Category id=${categoryId} not found or inactive`);
+				}
+			}
 
 			// 2. INSERT PRODUCT
 			const productResult = await qr.manager

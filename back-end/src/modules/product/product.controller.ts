@@ -26,6 +26,7 @@ import { ProductDetailResponseDto } from './dtos/product-detail-response.dto';
 import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
 import { GetProductDetailByProductIdRequestDto } from './dtos/get-product-detail-by-product-id-request.dto';
 import {ProductEntity} from "./entities/product.entity";
+import {UpdateProductAdminDto} from "./dtos/update-product-admin";
 
 @Controller('products')
 export class ProductController {
@@ -143,12 +144,13 @@ export class ProductController {
 	/**
 	 * ADMIN: Cập nhật sản phẩm
 	 */
+	// product.controller.ts
 	@Put('admin/:id')
 	@HttpCode(HttpStatus.OK)
 	async updateProductForAdmin(
 		@Param('id') id: number,
-		@Body() body: any
-	): Promise<{ data: { id: number }; message: string; statusCode: string }> {  // ← ProductEntity
+		@Body() body: UpdateProductAdminDto
+	): Promise<{ data: { id: number }; message: string; statusCode: string }> {
 		const updatedProduct = await this.productService.updateProductAdmin(id, body);
 		return {
 			data: updatedProduct,

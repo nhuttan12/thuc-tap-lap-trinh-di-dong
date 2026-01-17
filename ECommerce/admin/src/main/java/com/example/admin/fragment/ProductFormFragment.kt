@@ -9,17 +9,14 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.admin.databinding.FragmentProductFormBinding
-import com.example.admin.dto.CategoryDTO
-import com.example.admin.dto.ProductDTO
+import com.example.admin.dto.ProductDetailDTO
+import com.example.admin.model.Product
 import com.example.admin.service.ApiService
-import com.example.admin.service.CreateProductRequest
-import com.example.admin.service.ProductDetailsRequest
-import com.example.admin.service.UpdateProductRequest
-import com.google.gson.Gson
-import kotlinx.coroutines.delay
+import com.example.admin.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
 class ProductFormFragment : Fragment() {
@@ -27,13 +24,15 @@ class ProductFormFragment : Fragment() {
     private var _binding: FragmentProductFormBinding? = null
     private val binding get() = _binding!!
 
-//    private val args: ProductFormFragmentArgs by navArgs()
-
     private var isEditMode = false
     private var productId = 0
 
+
     companion object {
         private const val TAG = "ProductFormFragment"
+        private const val DEFAULT_SIZE = "37"
+        private const val DEFAULT_COLOR = "Đen"
+        private const val DEFAULT_CATEGORY_ID = 1
     }
 
     override fun onCreateView(
@@ -45,27 +44,57 @@ class ProductFormFragment : Fragment() {
         return binding.root
     }
 
+
+    private var preloadedData: Map<String, String>? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             isEditMode = bundle.getBoolean("isEditMode", false)
             productId = bundle.getInt("productId", 0)
+
+            // Lấy preloaded data
+            if (bundle.containsKey("preloadedData")) {
+                preloadedData = bundle.getSerializable("preloadedData") as? Map<String, String>
+                Log.d(TAG, "Got preloaded data: $preloadedData")
+            }
         }
 
         setupUI()
-        setupSpinners()
+        setupDropdowns()
         setupListeners()
+        setupInputFilters()
 
         if (isEditMode) {
-            loadProduct(productId)
+            if (preloadedData != null) {
+                // Nếu có preloaded data, dùng luôn (không cần gọi API)
+                loadPreloadedData()
+            } else {
+                // Nếu không có, mới gọi API
+                loadProduct(productId)
+            }
         }
-        setupInputFilters()
     }
 
+    private fun loadPreloadedData() {
+        preloadedData?.let { data ->
+            Log.d(TAG, "Loading preloaded data: $data")
 
+            binding.edtName.setText(data["name"] ?: "")
+            binding.edtPrice.setText(data["price"] ?: "0")
+            binding.edtDiscount.setText(data["discount"] ?: "0")
+            binding.edtSize.setText(data["size"] ?: "")
+            binding.edtColor.setText(data["color"] ?: "")
+            binding.edtDescription.setText(data["description"] ?: "")
+
+            val status = data["status"] ?: "ACTIVE"
+            binding.autoCompleteStatus.setText(status, false)
+
+            // Không cần show loading vì data đã có sẵn
+        }
+    }
     // ---------------- UI ----------------
-
     private fun setupUI() {
         binding.tvScreenTitle.text =
                 if (isEditMode) "Chỉnh sửa sản phẩm" else "Thêm sản phẩm"
@@ -77,26 +106,46 @@ class ProductFormFragment : Fragment() {
             text = "ID: $productId"
             visibility = if (isEditMode) View.VISIBLE else View.GONE
         }
-    }
 
-    private fun setupSpinners() {
-        // Status - chỉ setup 1 lần
-        if (binding.spinnerStatus.adapter == null) {
-            binding.spinnerStatus.adapter = ArrayAdapter(
-                    requireContext(), android.R.layout.simple_spinner_item,
-                    listOf("ACTIVE", "INACTIVE")
-            ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        // KIỂM TRA XEM ID CÓ TỒN TẠI TRƯỚC KHI SỬ DỤNG
+//        try {
+//
+//            val categoryLayout = binding.root.findViewById<View>(R.id.textInputCategory)
+//            categoryLayout?.visibility = View.GONE
+//
+//
+//            if (::binding.isInitialized && (binding.textInputCategory != null)) {
+//                binding.textInputCategory.visibility = View.GONE
+//            }
+//        } catch (e: Exception) {
+//            Log.w(TAG, "textInputCategory not found in layout, skipping hide")
+//        }
+    }
+    private fun setupDropdowns() {
+        // Setup Status dropdown
+        val statuses = listOf("ACTIVE", "INACTIVE", "DRAFT")
+        val statusAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                statuses
+        )
+        binding.autoCompleteStatus.setAdapter(statusAdapter)
+
+        // Set default value cho create mode
+        if (!isEditMode) {
+            binding.autoCompleteStatus.setText("ACTIVE", false)
         }
 
-        // Category - chỉ setup 1 lần
-        if (binding.spinnerCategory.adapter == null) {
-            val categories = listOf("Giày nam", "Giày nữ", "Giày thể thao")
-            binding.spinnerCategory.adapter = ArrayAdapter(
-                    requireContext(), android.R.layout.simple_spinner_item, categories
-            ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
-        }
+        // TODO: Setup Brand dropdown khi có API brands
+        // Tạm thời dùng hardcoded brands
+        val brands = listOf("Nike", "Adidas", "Puma", "Converse", "Vans")
+        val brandAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                brands
+        )
+        binding.autoCompleteBrand.setAdapter(brandAdapter)
     }
-
 
     private fun setupListeners() {
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
@@ -105,163 +154,123 @@ class ProductFormFragment : Fragment() {
     }
 
     // ---------------- LOAD PRODUCT ----------------
-
+    // ProductFormFragment.kt
+    // ProductFormFragment.kt
+    // ProductFormFragment.kt - phần loadProduct
     private fun loadProduct(id: Int) {
-        lifecycleScope.launch {
-            try {
-                val response = ApiService.productService.getProductById(id)
+        val viewModel: ProductViewModel by viewModels()
 
-                if (!response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Không tải được sản phẩm", Toast.LENGTH_SHORT).show()
-                    return@launch
+        viewModel.getProductDetail(
+                id = id,
+                onSuccess = { product ->
+                    bindProductToUI(product)
+                },
+                onError = { error ->
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                 }
+        )
+    }
 
-                val product = response.body()?.data ?: return@launch
-
-                // ✅ Debug: log ra data nhận được
-                Log.d(TAG, "Loaded product: ${Gson().toJson(product)}")
-                Log.d(TAG, "Category from API: id=${product.productDetailsEntity?.categoryEntity?.id}, name=${product.productDetailsEntity?.categoryEntity?.name}")
-
-                bindProductToUI(product)
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Load product error", e)
-                Toast.makeText(requireContext(), "Lỗi tải sản phẩm", Toast.LENGTH_SHORT).show()
+    // ProductFormFragment.kt
+    private fun bindProductToUI(product: Any) {
+        when (product) {
+            is Product -> {
+                // Nếu là Product từ list
+                binding.edtName.setText(product.name)
+                binding.edtPrice.setText(product.price.toString())
+                binding.edtDiscount.setText(product.discount.toString())
+                binding.edtSize.setText(product.size)
+                binding.edtColor.setText(product.color)
+                binding.edtDescription.setText(product.description)
+                binding.autoCompleteStatus.setText(product.status, false)
+            }
+            is ProductDetailDTO -> {
+                // Nếu là ProductDetailDTO từ API detail
+                binding.edtName.setText(product.name)
+                binding.edtPrice.setText(product.price.toString())
+                binding.edtDiscount.setText(product.discount.toString())
+                val sizeText = product.size.filter { it.isNotBlank() }.joinToString(",")
+                binding.edtSize.setText(sizeText)
+                binding.edtColor.setText(product.color)
+                binding.edtDescription.setText(product.description)
+                binding.autoCompleteStatus.setText("ACTIVE", false) // Default
             }
         }
+
+        // Debug log
+        Log.d(TAG, "Product loaded: ${product::class.java.simpleName}")
     }
-
-    private fun bindProductToUI(product: ProductDTO) {
-        binding.edtName.setText(product.name)
-        binding.edtPrice.setText(product.price.toString())
-        binding.edtDiscount.setText(product.discount.toString())
-
-        val details = product.productDetailsEntity
-
-        // description
-        binding.edtDescription.setText(details?.description.orEmpty())
-
-        // ✅ SỬA: size là String, không phải List<String>
-        val sizeText = details?.size ?: ""
-        binding.edtSize.setText(sizeText)
-
-        // color
-        binding.edtColor.setText(details?.color.orEmpty())
-
-        // status
-        val statusIndex = (binding.spinnerStatus.adapter as ArrayAdapter<String>)
-                .getPosition(product.status)
-        binding.spinnerStatus.setSelection(if (statusIndex >= 0) statusIndex else 0)
-
-        // category
-        val categories = listOf(
-                CategoryDTO(1, "Giày nam"),
-                CategoryDTO(2, "Giày nữ"),
-                CategoryDTO(3, "Giày thể thao")
-        )
-
-        val index = categories.indexOfFirst {
-            it.id == details?.categoryEntity?.id
-        }
-
-        if (index >= 0) {
-            binding.spinnerCategory.setSelection(index)
-        } else {
-            binding.spinnerCategory.setSelection(0)
-        }
-    }
-
 
     // ---------------- SAVE ----------------
-
+    // Trong saveProduct() của ProductFormFragment
     private fun saveProduct() {
         if (!validateForm()) return
 
-        binding.progressBar.visibility = View.VISIBLE
-        binding.btnSave.isEnabled = false
+        showLoading(true)
 
         lifecycleScope.launch {
             try {
                 val name = binding.edtName.text.toString().trim()
-                val price = binding.edtPrice.text.toString().toDouble()
+
+                // FIX: Format price đúng cách
+                val priceText = binding.edtPrice.text.toString().trim()
+                val price = priceText.toDoubleOrNull() ?: 0.0
+                // Hoặc nếu backend yêu cầu số nguyên:
+                // val price = priceText.toDoubleOrNull()?.toInt() ?: 0
+
                 val discount = binding.edtDiscount.text.toString().toDoubleOrNull() ?: 0.0
-                val status = binding.spinnerStatus.selectedItem.toString()
+                val status = binding.autoCompleteStatus.text.toString().trim()
                 val sizeString = binding.edtSize.text.toString().trim()
-                val sizeForRequest = if (sizeString.isEmpty()) "" else sizeString
                 val color = binding.edtColor.text.toString().trim()
                 val description = binding.edtDescription.text.toString().trim()
 
-                val categories = listOf(
-                        CategoryDTO(1, "Giày nam"),
-                        CategoryDTO(2, "Giày nữ"),
-                        CategoryDTO(3, "Giày thể thao")
-                )
-                val categoryId = categories[binding.spinnerCategory.selectedItemPosition].id
+                val safeSize = if (sizeString.isBlank()) "37" else sizeString
+                val safeColor = if (color.isBlank()) "Đen" else color
+                val safeDescription = if (description.isBlank()) "" else description
 
-                // ✅ Debug log để kiểm tra data
-                Log.d(TAG, "Saving product: name=$name, price=$price, categoryId=$categoryId")
-                Log.d(TAG, "Size: '$sizeString', Color: '$color', Desc: '$description'")
+                Log.d(TAG, "Saving product: name=$name, price=$price, size=$safeSize, color=$safeColor")
 
                 val response = if (isEditMode) {
-                    // ✅ Cách 1: Gửi category_id ở root level
-                    val updateRequest = UpdateProductRequest(
+                    // UPDATE
+                    val updateRequest = com.example.admin.service.UpdateProductRequest(
                             name = name,
                             price = price,
                             discount = discount,
                             status = status,
-                            // ✅ Gửi ở root level
-                            size = sizeForRequest,
-                            color = color,
-                            description = description,
-                            category_id = categoryId,
-                            // ✅ Và trong productDetailsEntity để đảm bảo
-                            productDetailsEntity = ProductDetailsRequest(
-                                    size = sizeString,
-                                    color = color,
-                                    description = description,
-                                    category_id = categoryId
-                            )
+                            size = safeSize,
+                            color = safeColor,
+                            description = safeDescription
+
                     )
-
-
                     ApiService.productService.updateProduct(productId, updateRequest)
                 } else {
-                    val createRequest = CreateProductRequest(
+                    // CREATE
+                    val createRequest = com.example.admin.service.CreateProductRequest(
                             name = name,
                             price = price,
                             discount = discount,
                             status = status,
-                            category_id = categoryId,
-                            size = sizeString,
-                            color = color,
+                            category_id = DEFAULT_CATEGORY_ID,  // <-- THÊM category_id
+                            size = if (sizeString.isBlank()) DEFAULT_SIZE else sizeString,
+                            color = if (color.isBlank()) DEFAULT_COLOR else color,
                             description = description
                     )
-
-
+                    Log.d(TAG, "Create request: $createRequest")
                     ApiService.productService.createProduct(createRequest)
                 }
 
                 if (response.isSuccessful) {
-                    Toast.makeText(
-                            requireContext(),
-                            if (isEditMode) "Cập nhật thành công" else "Thêm sản phẩm thành công",
-                            Toast.LENGTH_SHORT
-                    ).show()
+                    val message = if (isEditMode) "Cập nhật thành công" else "Thêm sản phẩm thành công"
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 
-                    if (isEditMode) {
-                        // ✅ QUAN TRỌNG: Load lại sau khi update
-                        // Đợi 1 chút để server xử lý xong
-                        delay(300)
-                        loadProduct(productId)
-                    } else {
-                        findNavController().navigateUp()
-                    }
+                    findNavController().navigateUp()
+
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e(TAG, "Server error: $errorBody")
                     Toast.makeText(
                             requireContext(),
-                            "Lỗi: ${response.message()}",
+                            "Lỗi: ${response.message()} - ${errorBody?.take(100)}",
                             Toast.LENGTH_LONG
                     ).show()
                 }
@@ -270,26 +279,46 @@ class ProductFormFragment : Fragment() {
                 Log.e(TAG, "Save product error", e)
                 Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
-                binding.progressBar.visibility = View.GONE
-                binding.btnSave.isEnabled = true
+                showLoading(false)
             }
         }
     }
 
-
     private fun validateForm(): Boolean {
+        var isValid = true
+
+        // Reset errors
+        binding.textInputName.error = null
+        binding.textInputPrice.error = null
+
+        // Validate name
         if (binding.edtName.text.isNullOrBlank()) {
-            binding.edtName.error = "Nhập tên sản phẩm"
-            return false
+            binding.textInputName.error = "Nhập tên sản phẩm"
+            isValid = false
         }
 
+        // Validate price
         val price = binding.edtPrice.text.toString().toDoubleOrNull()
         if (price == null || price <= 0) {
-            binding.edtPrice.error = "Giá phải > 0"
-            return false
+            binding.textInputPrice.error = "Giá phải > 0"
+            isValid = false
         }
 
-        return true
+        // Validate status
+        if (binding.autoCompleteStatus.text.isNullOrBlank()) {
+            binding.autoCompleteStatus.error = "Chọn trạng thái"
+            isValid = false
+        }
+
+        // TODO: Validate brand khi cần
+
+        return isValid
+    }
+
+    private fun showLoading(show: Boolean) {
+        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
+        binding.btnSave.isEnabled = !show
+        binding.btnCancel.isEnabled = !show
     }
 
     override fun onDestroyView() {
@@ -300,7 +329,24 @@ class ProductFormFragment : Fragment() {
     private fun setupInputFilters() {
         binding.edtSize.filters = arrayOf(
                 InputFilter { source, _, _, _, _, _ ->
-                    source.filter { it.isDigit() || it == ',' }
+                    source.filter { it.isDigit() || it == ',' || it == ' ' }
+                }
+        )
+
+        // Thêm cho price để tránh số khoa học
+        binding.edtPrice.filters = arrayOf(
+                InputFilter { source, start, end, dest, dstart, dend ->
+                    val newText = dest.toString().substring(0, dstart) +
+                            source.subSequence(start, end) +
+                            dest.toString().substring(dend)
+
+                    // Chỉ cho phép số và dấu chấm (cho decimal)
+                    val pattern = Regex("^\\d*\\.?\\d*$")
+                    if (pattern.matches(newText)) {
+                        null // Accept
+                    } else {
+                        "" // Reject
+                    }
                 }
         )
     }

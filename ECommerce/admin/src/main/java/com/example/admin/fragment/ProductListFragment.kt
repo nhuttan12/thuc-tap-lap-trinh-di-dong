@@ -1,28 +1,31 @@
 package com.example.admin.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.admin.adapter.ProductAdapter
-import com.example.admin.model.Product
 import com.example.admin.R
+import com.example.admin.adapter.ProductAdapter
 import com.example.admin.databinding.FragmentProductListBinding
-import com.example.admin.mapper.ProductMapper
-import com.example.admin.service.ApiService
+import com.example.admin.model.Product
+import com.example.admin.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class ProductListFragment : Fragment() {
 
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var productAdapter: ProductAdapter
+    private lateinit var adapter: ProductAdapter
+    private lateinit var viewModel: ProductViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -36,105 +39,172 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
-        setupListeners()
+        // Init ViewModel
+        viewModel = ProductViewModel()
+
+        // Setup ViewModel observers
+        setupViewModelObservers()
+
+        // Init adapter với đầy đủ callbacks
+        adapter = ProductAdapter(
+                onItemClick = { product ->
+                    navigateToProductForm(true, product.id, product)
+                },
+                onEditClick = { product ->
+                    navigateToProductForm(true, product.id, product)
+                },
+                onDeleteClick = { product ->
+                    showDeleteDialog(product)
+                }
+        )
+
+        // Setup RecyclerView
+        binding.recyclerProducts.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerProducts.adapter = adapter
+        binding.recyclerProducts.setHasFixedSize(true)
+
+        // Load data
         loadProducts()
-    }
 
-    private fun setupRecyclerView() {
-        productAdapter = ProductAdapter()
-
-        productAdapter.onItemClick = { product: Product ->
-            navigateToEdit(product.id)
+        // Setup FAB
+        binding.fabAddProduct.setOnClickListener {
+            navigateToProductForm(false, 0, null)
         }
 
-        productAdapter.onDeleteClick = { product: Product ->
+        // Setup search
+        setupSearch()
+
+        // Setup empty state
+        setupEmptyState()
+    }
+
+    private fun setupViewModelObservers() {
+        // SỬA: Dùng loading thay vì isLoading
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            showLoading(isLoading)
+        }
+
+        // Quan sát error state
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                viewModel.clearError()
+            }
+        }
+
+        // Quan sát products list
+        viewModel.products.observe(viewLifecycleOwner) { products ->
+            if (products.isEmpty()) {
+                showEmptyState(true, "Danh sách sản phẩm trống")
+            } else {
+                showEmptyState(false)
+                adapter.submitList(products)
+            }
+        }
+    }
+
+    private fun setupEmptyState() {
+        // Kiểm tra nếu có progress bar và empty state trong layout
+        if (binding.progressBar == null) {
+            Log.w("ProductListFragment", "ProgressBar not found in layout")
+        }
+    }
+
+    private fun navigateToProductForm(isEditMode: Boolean, productId: Int, product: Product?) {
+        try {
+            val bundle = Bundle().apply {
+                putBoolean("isEditMode", isEditMode)
+                putInt("productId", productId)
+
+                // Truyền preloaded data nếu có product
+                if (product != null) {
+                    val preloadedData = mapOf(
+                            "name" to product.name,
+                            "price" to product.price.toString(),
+                            "discount" to product.discount.toString(),
+                            "status" to product.status,
+                            "size" to product.size,  // THÊM size
+                            "color" to product.color,  // THÊM color
+                            "description" to product.description  // THÊM description
+                    )
+                    putSerializable("preloadedData", preloadedData as Serializable)
+                }
+            }
+
+            findNavController().navigate(R.id.action_productList_to_productForm, bundle)
+        } catch (e: Exception) {
+            Log.e("ProductListFragment", "Navigation error: ${e.message}", e)
             Toast.makeText(
                     requireContext(),
-                    "Xóa sản phẩm ID = ${product.id}",
+                    "Lỗi mở form sản phẩm: ${e.message}",
                     Toast.LENGTH_SHORT
             ).show()
         }
+    }
 
-        binding.recyclerProducts.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = productAdapter
+    private fun setupSearch() {
+        binding.edtSearch.setOnEditorActionListener { _, _, _ ->
+            val keyword = binding.edtSearch.text.toString().trim()
+            searchProducts(keyword)
+            true
         }
     }
 
-    private fun setupListeners() {
-        binding.fabAddProduct.setOnClickListener {
-            navigateToAdd()
-        }
-
-        binding.edtSearch.setOnEditorActionListener { _, _, _ ->
-            // TODO: search sau
-            false
-        }
+    private fun searchProducts(keyword: String) {
+        // TODO: Implement search trong ViewModel
+        Toast.makeText(requireContext(), "Search: $keyword", Toast.LENGTH_SHORT).show()
     }
 
     private fun loadProducts() {
-        binding.progressBar.visibility = View.VISIBLE
+        viewModel.loadProducts()
+    }
 
+    private fun showDeleteDialog(product: Product) {
+        AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận xoá")
+                .setMessage("Bạn có chắc muốn xoá sản phẩm:\n${product.name}?")
+                .setPositiveButton("Xoá") { dialog, _ ->
+                    deleteProduct(product.id)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Huỷ") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+    }
+
+    private fun deleteProduct(productId: Int) {
         lifecycleScope.launch {
             try {
-                val response = ApiService.productService.getProducts()
-
-                if (response.isSuccessful) {
-                    val products = response.body()
-                            ?.data
-                            ?.data
-                            ?.map { ProductMapper.toProduct(it) }
-                            ?: emptyList<Product>()
-                    productAdapter.submitList(products)
-                } else {
-                    Toast.makeText(
-                            requireContext(),
-                            "Không tải được danh sách sản phẩm",
-                            Toast.LENGTH_SHORT
-                    ).show()
-                }
-
+                // SỬA: Không truyền callback
+                viewModel.deleteProduct(productId)
+                // Hiển thị toast trong observer của error hoặc tự show
+                Toast.makeText(requireContext(), "Đã xoá sản phẩm", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Toast.makeText(
-                        requireContext(),
-                        "Lỗi kết nối server",
-                        Toast.LENGTH_SHORT
-                ).show()
-            } finally {
-                binding.progressBar.visibility = View.GONE
-            }
-        }
-
-        productAdapter.onDeleteClick = { product ->
-            lifecycleScope.launch {
-                try {
-                    val response = ApiService.productService.deleteProduct(product.id)
-                    if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), "Xóa thành công", Toast.LENGTH_SHORT).show()
-                        loadProducts()  // ✅ Reload list
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Lỗi xóa", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun navigateToEdit(productId: Int) {
-        val bundle = Bundle().apply {
-            putBoolean("isEditMode", true)
-            putInt("productId", productId)
-        }
-        findNavController().navigate(R.id.action_productList_to_productForm, bundle)
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.recyclerProducts.visibility = if (isLoading) View.GONE else View.VISIBLE
     }
 
-    private fun navigateToAdd() {
-        val bundle = Bundle().apply {
-            putBoolean("isEditMode", false)
-            putInt("productId", 0)
+    private fun showEmptyState(show: Boolean, message: String? = null) {
+        // Có thể thêm empty state text view nếu cần
+        if (show) {
+            binding.recyclerProducts.visibility = View.GONE
+            // Hiển thị empty state message
+        } else {
+            binding.recyclerProducts.visibility = View.VISIBLE
         }
-        findNavController().navigate(R.id.action_productList_to_productForm, bundle)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh data khi quay lại fragment
+        loadProducts()
     }
 
     override fun onDestroyView() {

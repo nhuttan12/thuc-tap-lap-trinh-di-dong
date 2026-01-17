@@ -3,6 +3,7 @@ package com.example.admin.service
 import com.example.admin.dto.ApiSuccess
 import com.example.admin.dto.PagingResponse
 import com.example.admin.dto.ProductDTO
+import com.example.admin.dto.ProductDetailDTO
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -14,8 +15,11 @@ interface ProductApiService {
             @Query("limit") limit: Int = 20
     ): Response<ApiSuccess<PagingResponse<ProductDTO>>>
 
+    // API PUBLIC - trả về ProductDetailDTO (cho product detail)
     @GET("products/{id}")
-    suspend fun getProductById(@Path("id") id: Int): Response<ApiSuccess<ProductDTO>>
+    suspend fun getProductDetail(
+            @Path("id") id: Int
+    ): Response<ApiSuccess<ProductDetailDTO>>
 
     @POST("products/admin")
     suspend fun createProduct(
@@ -29,34 +33,13 @@ interface ProductApiService {
     ): Response<ApiSuccess<ProductDTO>>
 
     @DELETE("products/admin/{id}")
-    suspend fun deleteProduct(@Path("id") id: Int): Response<ApiSuccess<Void>>
-
-    @PATCH("products/admin/{id}/status")
-    suspend fun updateProductStatus(
-            @Path("id") id: Int,
-            @Body body: Map<String, String>
-    ): Response<ApiSuccess<ProductDTO>>
+    suspend fun deleteProduct(
+            @Path("id") id: Int
+    ): Response<ApiSuccess<Void>>
 }
 
-// UpdateProductRequest.kt
-data class UpdateProductRequest(
-        val name: String? = null,
-        val price: Double? = null,
-        val discount: Double? = null,
-        val status: String? = null,
+// Các data class ĐẶT NGOÀI interface (giống UserApiService)
 
-        // ✅ Các trường ở root level
-        val size: String? = null,
-        val color: String? = null,
-        val description: String? = null,
-        val rating: Float? = null,
-        val category_id: Int? = null,
-
-        // ✅ Và trong productDetailsEntity
-        val productDetailsEntity: ProductDetailsRequest? = null
-)
-
-// CreateProductRequest.kt
 data class CreateProductRequest(
         val name: String,
         val price: Double,
@@ -66,6 +49,19 @@ data class CreateProductRequest(
         val size: String? = null,
         val color: String? = null,
         val description: String? = null
+)
+
+data class UpdateProductRequest(
+        val name: String? = null,
+        val price: Double? = null,
+        val discount: Double? = null,
+        val status: String? = null,
+        val size: String? = null,
+        val color: String? = null,
+        val description: String? = null,
+        val rating: Float? = null,
+        val category_id: Int? = null,
+        val productDetailsEntity: ProductDetailsRequest? = null
 )
 
 data class ProductDetailsRequest(

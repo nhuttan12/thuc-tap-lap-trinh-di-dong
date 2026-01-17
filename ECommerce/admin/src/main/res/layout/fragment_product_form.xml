@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background">
+        android:background="@color/background"
+        android:paddingBottom="8dp">
 
     <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
@@ -56,7 +58,8 @@
             android:id="@+id/tvProductId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="ID: "
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
@@ -66,9 +69,11 @@
 
     <!-- Form Content -->
     <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
+            android:scrollbars="vertical"
             app:layout_constraintTop_toBottomOf="@id/tvProductId"
             app:layout_constraintBottom_toTopOf="@id/btnContainer"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,28 +88,30 @@
             <!-- Tên sản phẩm -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputName"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:hint="Tên sản phẩm *"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:inputType="textCapWords"
                         android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Giá -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputPrice"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:hint="Giá (VNĐ) *"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:errorEnabled="true"
                     app:prefixText="₫ ">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -118,11 +125,11 @@
             <!-- Giảm giá -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputDiscount"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:hint="Giảm giá (%)"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:suffixText="%">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -134,43 +141,66 @@
                         android:text="0" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Danh mục -->
+            <!-- THÊM: Thương hiệu (Brand) -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Thương hiệu *"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputCategory"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:hint="Danh mục"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_marginBottom="16dp"
+                    android:hint="Chọn thương hiệu">
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinnerCategory"
+                <AutoCompleteTextView
+                        android:id="@+id/autoCompleteBrand"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Trạng thái -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Trạng thái *"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputStatus"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:hint="Trạng thái"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_marginBottom="16dp"
+                    android:hint="Chọn trạng thái">
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinnerStatus"
+                <AutoCompleteTextView
+                        android:id="@+id/autoCompleteStatus"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Kích thước -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputSize"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:hint="Kích thước (phân cách bằng dấu phẩy, ví dụ: 35,36,37)"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_marginBottom="16dp"
+                    android:hint="Kích thước (phân cách bằng dấu phẩy)"
+                    app:helperText="Ví dụ: 35,36,37,38"
+                    app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtSize"
@@ -183,38 +213,41 @@
             <!-- Màu sắc -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputColor"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:hint="Màu sắc"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    app:helperText="Ví dụ: Đen, Trắng, Xanh"
+                    app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtColor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:maxLines="1"
-                        />
+                        android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Mô tả -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputDescription"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Mô tả sản phẩm"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_marginBottom="8dp"
+                    android:hint="Mô tả sản phẩm">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtDescription"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
+                        android:layout_height="150dp"
                         android:gravity="top|start"
                         android:inputType="textMultiLine"
-                        android:lines="5"
-                        android:maxLines="10" />
+                        android:lines="6"
+                        android:maxLines="10"
+                        android:minLines="4"
+                        android:scrollbars="vertical" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
@@ -226,7 +259,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -234,26 +268,35 @@
         <!-- Nút Hủy -->
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancel"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:layout_weight="1"
                 android:text="Hủy"
                 android:textSize="16sp"
-                app:cornerRadius="12dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_close"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconSize="20dp"
+                app:iconTint="@color/text_primary" />
 
         <!-- Nút Lưu -->
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:text="Lưu"
                 android:textSize="16sp"
-                app:cornerRadius="12dp"
-                style="@style/Widget.MaterialComponents.Button" />
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_save"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconSize="20dp" />
 
     </LinearLayout>
 
@@ -262,11 +305,21 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/primary_blue_dark"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Error/Success Snackbar Anchor -->
+    <View
+            android:id="@+id/snackbarAnchor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btnContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

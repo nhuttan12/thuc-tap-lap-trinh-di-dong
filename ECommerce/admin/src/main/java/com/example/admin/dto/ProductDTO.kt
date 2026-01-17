@@ -22,7 +22,7 @@ data class ProductDTO(
 data class ProductDetailsDTO(
         val id: Int = 0,
 
-        // ✅ SỬA: Chuyển từ List<String> sang String
+        // SỬA: Chuyển từ List<String> sang String
         @SerializedName("size")
         val size: String = "",
 

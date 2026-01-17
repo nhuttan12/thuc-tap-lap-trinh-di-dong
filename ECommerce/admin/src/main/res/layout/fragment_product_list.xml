@@ -37,6 +37,16 @@
             android:text="Danh sách sản phẩm"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+    <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Danh sách sản phẩm trống"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="32dp" />
     <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"

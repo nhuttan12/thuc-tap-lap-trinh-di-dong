@@ -1,15 +1,14 @@
 import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
-import { IsArray } from 'class-validator';
 
-
-// create-product-admin.dto.ts
-export class CreateProductAdminDto {
+export class UpdateProductAdminDto {
+    @IsOptional()
     @IsString()
-    name: string;
+    name?: string;
 
+    @IsOptional()
     @IsNumber()
     @Min(0)
-    price: number;
+    price?: number;
 
     @IsOptional()
     @IsNumber()
@@ -17,13 +16,13 @@ export class CreateProductAdminDto {
     @Max(100)
     discount?: number;
 
-    @IsOptional()  // THAY ĐỔI: không bắt buộc
+    @IsOptional()
     @IsNumber()
-    category_id?: number;
+    category_id?: number;  // Optional vì có thể không thay đổi category
 
-    @IsOptional()  // THAY ĐỔI: không bắt buộc
-    @IsString()    // CHUYỂN từ string[] thành string
-    size?: string;
+    @IsOptional()
+    @IsString()
+    size?: string;  // CHUYỂN từ string[] thành string (để phù hợp với frontend)
 
     @IsOptional()
     @IsString()
@@ -41,5 +40,5 @@ export class CreateProductAdminDto {
 
     @IsOptional()
     @IsString()
-    status?: string = 'ACTIVE';  // Default value
+    status?: string;  // THÊM status cho update
 }
