@@ -8,10 +8,12 @@
  */
 
 import {
+    BadRequestException,
 	ForbiddenException,
 	Injectable,
 	Logger,
 	NotFoundException,
+	UnauthorizedException,
 } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserEntity } from './entities/user.entity';
@@ -26,6 +28,10 @@ import { RoleName } from '../role/enums/role-name.enum';
 import { RoleResponseDto } from '../role/dtos/role-response.dto';
 import { ConfigService } from '../../common/config/config.service';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserProfileDto } from './dtos/update-user-profile.dto';
+import { UserDetailEntity } from './entities/user-detail.entity';
+import { UserProfileResponseDto } from './dtos/user-profile-response.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 
 @Injectable()
 export class UserService {
@@ -54,31 +60,36 @@ export class UserService {
 	): Promise<UserEntityResponseDto> {
 		try {
 			/*
-			 * Call `getUserByUserNameAndPassword` function from repository
+			 * Call `getUserByUsername` function
 			 */
 			const user: UserEntity | null =
-				await this.userRepository.getUserByUserNameAndPassword(
-					username,
-					password
-				);
+				await this.userRepository.getUserByUsername(username);
 			this.logger.debug(
-				`Call \`getUserByUserNameAndPassword\` function from repository: ${JSON.stringify(user, null, 2)}`
+				`Call \`getUserByUsername\` function: ${JSON.stringify(user)}`
 			);
 
-			/*
-			 * Check user existence
-			 */
 			if (!user) {
 				/*
 				 * If user not found, throw not found exception
 				 */
-				this.logger.warn(
-					`User with username ${username} and password ${password} not found`
-				);
+				this.logger.error(`User with username: ${username} not found`);
 				throw new NotFoundException({
 					statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
 					customCode: UserStatusCode.USER_NOT_FOUND.customCode,
 					message: UserStatusCode.USER_NOT_FOUND.message,
+				});
+			}
+
+			const isPasswordValid: boolean = await bcrypt.compare(
+				password,
+				user.password
+			);
+
+			if (!isPasswordValid) {
+				throw new UnauthorizedException({
+					statusCode: UserStatusCode.INVALID_CREDENTIALS.statusCode,
+					customCode: UserStatusCode.INVALID_CREDENTIALS.customCode,
+					message: UserStatusCode.INVALID_CREDENTIALS.message,
 				});
 			}
 
@@ -88,7 +99,7 @@ export class UserService {
 			const userResponseDto: UserEntityResponseDto =
 				this.userMapper.toUserResponseDto(user);
 			this.logger.debug(
-				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto, null, 2)}`
+				`Convert user entity to user response dto: ${JSON.stringify(userResponseDto)}`
 			);
 
 			return userResponseDto;
@@ -401,5 +412,107 @@ export class UserService {
 	}
 	async getUserEntityById(userId: number): Promise<UserEntity | null> {
 		return await this.userRepository.getUserByUerID(userId);
+	}
+
+	async updateUserProfile(
+		userId: number,
+		dto: UpdateUserProfileDto
+	): Promise<UserProfileResponseDto> {
+		try {
+			const user: UserEntity | null =
+				await this.userRepository.getProfileByUserId(userId);
+			this.logger.debug(
+				`Get user profile ${JSON.stringify(user, null, 2)}`
+			);
+
+			if (!user) {
+				throw new NotFoundException('Không tìm thấy User');
+			}
+
+			/**
+			 * Update UserEntity
+			 */
+			if (dto.fullName !== undefined) {
+				user.fullName = dto.fullName;
+			}
+
+			/**
+			 * Update / Create UserDetail
+			 */
+			if (!user.userDetail) {
+				const userDetail = new UserDetailEntity();
+				userDetail.user = user;
+				userDetail.phoneNumber = dto.phoneNumber;
+				userDetail.address1 = dto.address;
+				user.userDetail = userDetail;
+			} else {
+				if (dto.phoneNumber !== undefined) {
+					user.userDetail.phoneNumber = dto.phoneNumber;
+				}
+				if (dto.address !== undefined) {
+					user.userDetail.address1 = dto.address;
+				}
+			}
+
+			await this.userRepository.save(user);
+
+			return this.getProfile(userId);
+		} catch (e) {
+			this.logger.error(
+				`Lỗi cập nhật Profile: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	async getProfile(userId: number): Promise<UserProfileResponseDto> {
+		const user = await this.userRepository.getProfileByUserId(userId);
+
+		if (!user) {
+			throw new NotFoundException('Không tìm thấy User');
+		}
+
+		return {
+			id: user.id,
+			fullName: user.fullName,
+			email: user.email,
+			phoneNumber: user.userDetail?.phoneNumber ?? null,
+			address: user.userDetail?.address1 ?? null,
+			avatarUrl: user.userImages?.[0]?.image?.url ?? null,
+		};
+	}
+	async changePassword(userId: number, dto: ChangePasswordDto) {
+		const { oldPassword, newPassword, confirmPassword } = dto;
+		// kiểm tra confirmPAssword
+		if (newPassword != confirmPassword) {
+			throw new BadRequestException('Mật khẩu xác nhận không khớp');
+		}
+
+		// Tìm user
+		const user = await this.userRepository.getUserByUerID(userId);
+		if (!user) {
+			throw new NotFoundException('User không tồn tại');
+		}
+
+		//So sánh với mật khẩu cũ
+		const isComparePass = await bcrypt.compare(oldPassword, user.password);
+		if (!isComparePass) {
+			throw new BadRequestException('Mật khẩu cũ không đúng');
+		}
+
+		const isSamePassword = await bcrypt.compare(newPassword, user.password);
+		if (isSamePassword) {
+			throw new BadRequestException('Mật khẩu mới phải khác mật khẩu cũ');
+		}
+
+		// Hash new PAssword
+		const hashPassword = await bcrypt.hash(newPassword, 10);
+
+		// Cập nhật password
+		await this.userRepository.updatePassword(userId, hashPassword);
+		return {
+			message: 'Đổi mật khẩu thành công',
+		};
 	}
 }

@@ -1,10 +1,9 @@
-/**
+/*
  * @description Main module of application
  * @author Nhut Tan
  * @since 2025-08-30
+ * @version 1.0.1
  * @modifies 2025-09-10
- * @modifies 2025-11-27
- * @version 1.0.2
  */
 
 import { Logger, Module } from '@nestjs/common';
@@ -27,6 +26,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { AppThrottlerModule } from './common/infrastructure/app-throttler.module';
 import { BrandModule } from './modules/brand/brand.module';
 import { HelperModule } from './common/helper/helper.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
 	imports: [
@@ -35,7 +35,6 @@ import { HelperModule } from './common/helper/helper.module';
 			envFilePath: '.env.local',
 			validationSchema: envValidationSchema,
 		}),
-		AppThrottlerModule,
 		DatabaseModule,
 		ConfigModule,
 		UserModule,
@@ -47,6 +46,7 @@ import { HelperModule } from './common/helper/helper.module';
 		OrderModule,
 		ProductModule,
 		WishlistModule,
+		PaymentModule,
 		BrandModule,
 		HelperModule,
 	],

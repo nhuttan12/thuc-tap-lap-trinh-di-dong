@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -26,21 +27,20 @@
             android:exported="false" />
         <activity
             android:name=".Activity.SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".Activity.LoginActivity"
             android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activity.RegisterActivity"
@@ -48,15 +48,14 @@
         <activity
             android:name=".Activity.HomeActivity"
             android:exported="true" />
-        <activity
-            android:name=".Activity.ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.ResetPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.OtpActivity"
-            android:exported="false" />
+        <activity android:name=".Activity.ForgotPasswordActivity"
+            android:exported="false"/>
+        <activity android:name=".Activity.ResetPasswordActivity"
+            android:exported="false"/>
+        <activity android:name=".Activity.OtpActivity"
+            android:exported="false"/>
+        <activity android:name=".Activity.ProfileActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
