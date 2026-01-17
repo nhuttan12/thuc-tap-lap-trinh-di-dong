@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
 //                        Intent(this, SplashActivity::class.java)
 //                    )
                     startActivity(
-                        Intent(this, DashboardActivity::class.java)
+                        Intent(this, HomeActivity::class.java)
                     )
                     finish()
                 } else {

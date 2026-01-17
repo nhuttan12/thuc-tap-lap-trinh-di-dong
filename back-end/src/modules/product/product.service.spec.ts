@@ -102,25 +102,29 @@ describe('ProductService', (): void => {
 		];
 		const mockProductResponseList: ProductEntityResponseDto[] = [
 			{
-				id: 1,
+				productID: 1,
 				name: 'Product 1',
 				price: 100000,
 				discount: 0,
 				imageUrl: productImageUrl1,
+				rating: 0,
+				isInWishlist: false,
 				status: ProductStatusEnum.ACTIVE,
 				createdAt: mockCurrentDate,
 				updatedAt: mockCurrentDate,
-			},
+			} as ProductEntityResponseDto,
 			{
-				id: 2,
+				productID: 2,
 				name: 'Product 2',
 				price: 200000,
 				discount: 10,
 				imageUrl: productImageUrl2,
+				rating: 0,
+				isInWishlist: false,
 				status: ProductStatusEnum.ACTIVE,
 				createdAt: mockCurrentDate,
 				updatedAt: mockCurrentDate,
-			},
+			} as ProductEntityResponseDto,
 		];
 		const mockTotal: number = 30;
 		const mockTotalPage: number = 3;

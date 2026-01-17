@@ -82,7 +82,7 @@ export class ProductEntity extends TimestampField {
 	)
 	productImages: ProductImageEntity[];
 
-	@OneToOne(
+	@OneToMany(
 		(): typeof WishlistItemEntity => WishlistItemEntity,
 		(wishlistItemEntity: WishlistItemEntity): ProductEntity =>
 			wishlistItemEntity.product,
@@ -90,5 +90,5 @@ export class ProductEntity extends TimestampField {
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
 	)
-	wishlistItem: WishlistItemEntity;
+	wishlistItems: WishlistItemEntity[];
 }

@@ -7,8 +7,11 @@
 
 package com.example.e_commerce.DTOs.Response
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class ProductInWishlistResponseDto(
-    val id: Int,
+    val productID: Int,
     val name: String,
     val imageUrl: String,
     val price: Double,

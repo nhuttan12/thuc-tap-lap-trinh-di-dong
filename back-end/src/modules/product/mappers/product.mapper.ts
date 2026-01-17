@@ -36,16 +36,12 @@ export class ProductMapper {
 	toProductEntityResponseDto(
 		product: ProductEntity
 	): ProductEntityResponseDto {
-		const details: ProductDetailsEntity = product.productDetailsEntity;
-
 		return {
-			id: product.id,
+			productID: product.id,
 			name: product.name,
 			price: product.price,
 
-			discount: product.discount ?? 0,
-			description: details?.description ?? '',
-			rating: details?.rating ?? 0,
+			rating: product.productDetailsEntity?.rating ?? 0,
 
 			imageUrl:
 				product.productImages?.find((img: ProductImageEntity) => {
@@ -55,9 +51,9 @@ export class ProductMapper {
 					);
 				})?.image.url ?? '',
 
+			isInWishlist: !!product.wishlistItems?.length,
+
 			status: product.status,
-			createdAt: product.createdAt,
-			updatedAt: product.updatedAt,
 		};
 	}
 }

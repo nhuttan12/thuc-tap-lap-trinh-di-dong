@@ -9,8 +9,10 @@ package com.example.e_commerce.Activity
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.e_commerce.Adapter.ColorAdapter
@@ -20,16 +22,27 @@ import com.example.e_commerce.Adapter.SizeAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.ProductDetailModel
+import com.example.e_commerce.ViewModel.ProductViewModel
+import com.example.e_commerce.ViewModel.ProductViewModelFactory
 import com.example.e_commerce.databinding.ActivityDetailBinding
 import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_PRODUCT_ID = "PRODUCT_ID"
+    }
+
     private lateinit var binding: ActivityDetailBinding
     private lateinit var item: ProductDetailModel
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
 
-    private val tinyDB: TinyDB by lazy { TinyDB(this) }
-    private val checkToken: CheckToken by lazy { CheckToken(tinyDB) }
+    private val productViewModel: ProductViewModel by lazy {
+        val factory = ProductViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[ProductViewModel::class.java]
+    }
+
+    private lateinit var tinyDB: TinyDB
+    private lateinit var checkToken: CheckToken
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +50,17 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        item = intent.getSerializableExtra("object") as? ProductDetailModel
-            ?: throw IllegalArgumentException("Không tìm thấy sản phẩm")
+        tinyDB = TinyDB(applicationContext)
+        checkToken = CheckToken(tinyDB)
 
-        setupViews()
-        setupPicsList()
-        setupColorsList()
-        setupSizeList()
+        val productID = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
+        if (productID == -1) {
+            finish()
+            return
+        }
+
+        observeProductDetail()
+        productViewModel.loadProductDetail(productID = productID)
     }
 
     private fun setupSizeList() {
@@ -108,7 +125,6 @@ class DetailActivity : AppCompatActivity() {
 
         addToCartBtn.setOnClickListener {
             checkToken.checkTokenOrRedirect(this@DetailActivity) {
-//                managementCart.insert(item)
             }
         }
     }
@@ -116,4 +132,25 @@ class DetailActivity : AppCompatActivity() {
     private fun updateTotalPrice() = with(binding) {
         totalPriceTxt.text = priceFormat.format(item.price * item.numberInCart)
     }
+
+    private fun observeProductDetail() {
+        productViewModel.productDetail.observe(this) { product ->
+            item = product
+            setupViews()
+            setupPicsList()
+            setupColorsList()
+            setupSizeList()
+        }
+
+        productViewModel.productDetailLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                Toast.makeText(this, "Đang hiển thị thông tin sản phẩm", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        productViewModel.error.observe(this) { message ->
+            Toast.makeText(this, message ?: "Lỗi không xác định", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

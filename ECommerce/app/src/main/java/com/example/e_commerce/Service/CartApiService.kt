@@ -4,7 +4,7 @@ import com.example.e_commerce.DTOs.Request.AddProductToCartRequestDto
 import com.example.e_commerce.DTOs.Request.UpdateQuantityCartDetailRequestDto
 import com.example.e_commerce.DTOs.Response.CartDetailResponseDto
 import com.example.e_commerce.Model.ApiSucess
-import com.example.e_commerce.Repository.PagingResponse
+import com.example.e_commerce.DTOs.Response.PagingResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

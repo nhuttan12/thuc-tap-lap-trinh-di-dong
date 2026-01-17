@@ -22,10 +22,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/wishlist_selector"
         app:layout_constraintStart_toStartOf="@+id/pic"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/btn_3"
-        app:tint="@color/grey" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/priceTxt"

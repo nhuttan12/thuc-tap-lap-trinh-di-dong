@@ -10,6 +10,7 @@ import {
 	ConflictException,
 	Injectable,
 	Logger,
+	NotFoundException,
 } from '@nestjs/common';
 import { WishlistItemRepository } from './repositories/wishlist-item.repository';
 import { ProductInWishlistResponseDto } from './dtos/product-in-wishlist-response.dto';
@@ -19,6 +20,8 @@ import { WishlistStatusCode } from './status-code/wishlist.status-code';
 import { BuildPagingMetaService } from '../../common/helper/build-paging-meta.service';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
 import { AuthStatusCode } from '../auth/status-code/auth.status-code';
+import { UpdateResult } from 'typeorm';
+import { ProductStatusCode } from '../product/status-code/product.status-code';
 
 @Injectable()
 export class WishlistService {
@@ -109,7 +112,7 @@ export class WishlistService {
 			 * Get product in wishlist and check product existence in wishlist item
 			 */
 			const wishlistExistence: WishlistItemEntity | null =
-				await this.getProductInWishlistByProductIDAndUserID(
+				await this.getProductInWishlistByProductIDAndUserIDOrNull(
 					productID,
 					userID
 				);
@@ -171,7 +174,8 @@ export class WishlistService {
 	}
 
 	/**
-	 * @description Get product in wishlist by product ID and user ID
+	 * @description Get product in wishlist by product ID and user ID,
+	 * return null if not exist
 	 * @param {number} productID - ID of product
 	 * @param {number} userID - ID of user
 	 * @return {Promise<WishlistItemEntity | null>} - Wishlist item entity if product in wishlist, null otherwise
@@ -179,7 +183,7 @@ export class WishlistService {
 	 * @date 2025-09-23
 	 * @version 1.0.0
 	 */
-	async getProductInWishlistByProductIDAndUserID(
+	async getProductInWishlistByProductIDAndUserIDOrNull(
 		productID: number,
 		userID: number
 	): Promise<WishlistItemEntity | null> {
@@ -207,36 +211,38 @@ export class WishlistService {
 	}
 
 	/**
-	 * @description Remove product from wishlist
+	 * @description Get product in wishlist by product ID and user ID,
+	 * throw error if not exist
 	 * @param {number} productID - ID of product
 	 * @param {number} userID - ID of user
-	 * @return {Promise<boolean>} - True if product removed from wishlist successfully
-	 * @since 2025-09-24
+	 * @return {Promise<WishlistItemEntity | null>} - Wishlist item entity if product in wishlist, null otherwise
+	 * @author Nhut Tan
+	 * @date 2025-09-23
 	 * @version 1.0.0
 	 */
-	async removeWishlistItem(
+	async getProductInWishlistByProductIDAndUserIDOrThrow(
 		productID: number,
 		userID: number
-	): Promise<boolean> {
+	): Promise<WishlistItemEntity> {
 		try {
 			/**
-			 * Call `removeWishlistItem` in `WishlistItemRepository`
+			 * Call `getWishlistItemByProductIDAndUserID` in `WishlistItemRepository`
 			 */
 			const wishlistItemEntity: WishlistItemEntity | null =
-				await this.wishlistItemRepository.removeWishlistItem(
+				await this.wishlistItemRepository.getWishlistItemByProductIDAndUserID(
 					productID,
 					userID
 				);
+			this.logger.debug(
+				`Call \`getWishlistItemByProductIDAndUserID\` in \`WishlistItemRepository\`: ${JSON.stringify(wishlistItemEntity, null, 2)}`
+			);
 
 			/**
-			 * Check if `wishlistItemEntity` is null
+			 * Check wishlist item exist
 			 */
 			if (!wishlistItemEntity) {
-				/**
-				 * Log error, and throwing error
-				 */
-				this.logger.warn('Product not in wishlist');
-				throw new BadRequestException({
+				this.logger.debug('Wishlist item not exist');
+				throw new NotFoundException({
 					statusCode:
 						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
 					customCode:
@@ -245,7 +251,48 @@ export class WishlistService {
 				});
 			}
 
-			return true;
+			return wishlistItemEntity;
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getProductInWishlistByProductIDAndUserID\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Remove product from wishlist
+	 * @param {number} productID - ID of product
+	 * @param {number} userID - ID of user
+	 * @return {Promise<boolean>} - True if product removed from wishlist successfully
+	 * @since 2025-09-24
+	 * @version 1.0.0
+	 */
+	async removeProductFromWishlist(
+		productID: number,
+		userID: number
+	): Promise<boolean> {
+		try {
+			/**
+			 * Get wishlist item with wishlist item ID and user ID
+			 */
+			const wishlistItemEntity: WishlistItemEntity =
+				await this.getProductInWishlistByProductIDAndUserIDOrThrow(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				`Get wishlist item with wishlist item ID and user ID: ${JSON.stringify(wishlistItemEntity, null, 2)}`
+			);
+
+			/**
+			 * Call `removeWishlistItem` in `WishlistItemRepository`
+			 */
+			return await this.removeWishlistItemWithWishlistItemIDAndUserID(
+				wishlistItemEntity.id,
+				userID
+			);
 		} catch (e) {
 			this.logger.error(
 				`Error in \`removeWishlistItem\`: ${(e as Error).message}`,
@@ -253,5 +300,70 @@ export class WishlistService {
 			);
 			throw e;
 		}
+	}
+
+	/**
+	 * @description Remove wishlist item
+	 * @param wishlistItemID - ID of wishlist item reference to product
+	 * @param userID - ID of user
+	 * @return {Promise<boolean>} - True if wishlist item removed successfully
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async removeWishlistItemWithWishlistItemIDAndUserID(
+		wishlistItemID: number,
+		userID: number
+	): Promise<boolean> {
+		const removeWishlistResult: UpdateResult =
+			await this.wishlistItemRepository.removeWishlistItemWithWishlistItemIDAndUserID(
+				wishlistItemID,
+				userID
+			);
+
+		return (removeWishlistResult.affected ?? 0) > 0;
+	}
+
+	/**
+	 * @description Get wishlist item by wishlist item ID and user ID
+	 * @param wishlistItemID - ID of wishlist item reference to product
+	 * @param userID - ID of user
+	 * @return {Promise<WishlistItemEntity>} - Wishlist item entity
+	 * @throws {NotFoundException} - If wishlist item not found
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async getWishlistItemByWishlistItemIDAndUserIDOrThrow(
+		wishlistItemID: number,
+		userID: number
+	): Promise<WishlistItemEntity> {
+		/**
+		 * Call `getWishlistItemByWishlistItemIDAndUserID` in `WishlistItemRepository`
+		 */
+		const wishlistItem: WishlistItemEntity | null =
+			await this.wishlistItemRepository.getWishlistItemByWishlistItemIDAndUserID(
+				wishlistItemID,
+				userID
+			);
+		this.logger.debug(
+			`Call \`getWishlistItemByWishlistItemIDAndUserID\` in \`WishlistItemRepository\`: ${JSON.stringify(wishlistItem, null, 2)}`
+		);
+
+		/**
+		 * Check if wishlist item not exists
+		 */
+		if (!wishlistItem) {
+			this.logger.warn(
+				`Wishlist item with wishlist item id ${wishlistItemID} and user id ${userID} not found`
+			);
+			throw new NotFoundException({
+				statusCode:
+					WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
+				customCode:
+					WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
+				message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
+			});
+		}
+
+		return wishlistItem;
 	}
 }

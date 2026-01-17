@@ -4,17 +4,18 @@
  * @since 2025-09-16
  * @modifies 2025-09-17
  * @modifies 2025-12-26
- * @version 1.0.2
+ * @modifies 2026-01-14
+ * @version 1.0.3
  */
 
 import {
-	Body,
 	Controller,
 	Get,
 	HttpCode,
 	HttpStatus,
 	Logger,
 	Query,
+	UseGuards,
 } from '@nestjs/common';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
 import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
@@ -26,6 +27,10 @@ import { ProductDetailService } from './product-detail.service';
 import { ProductService } from './product.service';
 import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
 import { ProductStatusCode } from './status-code/product.status-code';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
+import { UserOptional } from '../user/decorators/user-optional.decorator';
+import { JwtPayload } from '../auth/interface/jwt-payload.interface';
+import { GetProductsPagingByNameRequestDto } from './dtos/get-products-paging-by-name-request.dto';
 
 @Controller('products')
 export class ProductController {
@@ -38,6 +43,8 @@ export class ProductController {
 
 	/**
 	 * @description Get products paging
+	 * @param {JwtPayload | null} user - Get user's token is optional,
+	 * if not exist, return null
 	 * @param {GetProductsPagingRequest} request - Get products paging request
 	 * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
 	 * @author Nhut Tan
@@ -45,8 +52,10 @@ export class ProductController {
 	 * @version 1.0.0
 	 */
 	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get()
 	async getProducts(
+		@UserOptional() user: JwtPayload | null,
 		@Query() request: GetProductsPagingRequest
 	): Promise<
 		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
@@ -62,7 +71,8 @@ export class ProductController {
 			const products: PagingResponseDto<ProductEntityResponseDto> =
 				await this.productService.getProductsPaging(
 					request.page,
-					request.limit
+					request.limit,
+					user?.id
 				);
 			this.logger.debug(
 				`Get products paging: ${JSON.stringify(products, null, 2)}`
@@ -125,6 +135,62 @@ export class ProductController {
 		} catch (e) {
 			this.logger.error(
 				`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Get products paging
+	 * @param {JwtPayload | null} user - Get user's token is optional,
+	 * if not exist, return null
+	 * @param {GetProductsPagingRequest} request - Get products paging request
+	 * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
+	 * @author Nhut Tan
+	 * @since 2025-09-16
+	 * @version 1.0.0
+	 */
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
+	@Get('productName')
+	async getProductsByName(
+		@UserOptional() user: JwtPayload | null,
+		@Query() request: GetProductsPagingByNameRequestDto
+	): Promise<
+		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
+	> {
+		try {
+			this.logger.debug(
+				`Get products paging: ${JSON.stringify(request, null, 2)}`
+			);
+
+			/**
+			 * Calling `getProductsPaging` from `ProductService`
+			 */
+			const products: PagingResponseDto<ProductEntityResponseDto> =
+				await this.productService.getProductsPagingByProductName(
+					request.productName,
+					request.page,
+					request.limit,
+					user?.id
+				);
+			this.logger.debug(
+				`Get products paging: ${JSON.stringify(products, null, 2)}`
+			);
+
+			return {
+				data: products,
+				message:
+					ProductStatusCode.GET_PRODUCTS_PAGING_BY_NAME_SUCCESS
+						.message,
+				statusCode:
+					ProductStatusCode.GET_PRODUCTS_PAGING_BY_NAME_SUCCESS
+						.customCode,
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getProductsByName\`: ${(e as Error).message}`,
 				(e as Error).stack
 			);
 			throw e;

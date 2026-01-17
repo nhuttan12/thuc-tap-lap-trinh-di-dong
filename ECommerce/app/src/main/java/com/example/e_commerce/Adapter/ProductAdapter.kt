@@ -1,26 +1,28 @@
 package com.example.e_commerce.Adapter
 
-import android.content.Intent
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.example.e_commerce.Activity.DetailActivity
+import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Model.Enum.ProductListType
 import com.example.e_commerce.Model.ProductModel
-import com.example.e_commerce.R
-import com.example.e_commerce.databinding.ViewholderRecommendedBinding
+import com.example.e_commerce.databinding.ViewholderProductCardBinding
 import java.text.DecimalFormat
 
-class PopularAdapter(
+class ProductAdapter(
+    private val activity: Activity,
     private val items: MutableList<ProductModel>,
     private val listType: ProductListType,
+    private val checkToken: CheckToken,
     private val onItemClick: (ProductModel) -> Unit,
     private val onWishlistClick: ((ProductModel) -> Unit)? = null
-) : RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     private val priceFormat: DecimalFormat = DecimalFormat("#,###.##")
+    private val TAG = "PopularAdapter"
 
     fun updateDate(newData: List<ProductModel>) {
         items.clear()
@@ -30,7 +32,7 @@ class PopularAdapter(
 
     fun currentItems(): List<ProductModel> = items
 
-    inner class ViewHolder(val binding: ViewholderRecommendedBinding) :
+    inner class ViewHolder(val binding: ViewholderProductCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
     }
@@ -38,15 +40,15 @@ class PopularAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PopularAdapter.ViewHolder {
-        val binding = ViewholderRecommendedBinding.inflate(
+    ): ProductAdapter.ViewHolder {
+        val binding = ViewholderProductCardBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
 
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: PopularAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductAdapter.ViewHolder, position: Int) {
         val item = items[position]
 
         print("Item: $item")
@@ -65,25 +67,18 @@ class PopularAdapter(
                     )
                 ).into(pic)
 
-            when (listType) {
-                ProductListType.WISHLIST -> {
-                    addToWishlist.setColorFilter(
-                        root.context.getColor(R.color.red)
-                    )
-                    addToWishlist.isEnabled = false
-                }
+            val isInWishlist = item.isInWishlist
 
-                else -> {
-                    addToWishlist.setColorFilter(
-                        root.context.getColor(
-                            if (item.isInWishlist) R.color.red else R.color.grey
-                        )
-                    )
+            addToWishlist.isEnabled = true
+            addToWishlist.isSelected = false
+            addToWishlist.isActivated = isInWishlist
 
-                    addToWishlist.setOnClickListener {
-                        onWishlistClick?.invoke(item)
-                    }
-                }
+            addToWishlist.setOnClickListener {
+                onWishlistClick?.invoke(item)
+            }
+
+            root.setOnClickListener {
+                onItemClick(item)
             }
 
             root.setOnClickListener {
@@ -93,4 +88,13 @@ class PopularAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun removeItemById(productId: Int) {
+        val index = items.indexOfFirst { it.id == productId }
+        if (index != -1) {
+            items.removeAt(index)
+            notifyItemRemoved(index)
+            notifyItemRangeChanged(index, items.size - index)
+        }
+    }
 }
