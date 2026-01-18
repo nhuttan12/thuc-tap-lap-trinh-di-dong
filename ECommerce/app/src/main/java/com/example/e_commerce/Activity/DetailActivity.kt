@@ -9,6 +9,7 @@ package com.example.e_commerce.Activity
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,12 +23,16 @@ import com.example.e_commerce.Adapter.SizeAdapter
 import com.example.e_commerce.Helper.CheckToken
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.ProductDetailModel
+import com.example.e_commerce.ViewModel.CartViewModel
+import com.example.e_commerce.ViewModel.CartViewModelFactory
 import com.example.e_commerce.ViewModel.ProductViewModel
 import com.example.e_commerce.ViewModel.ProductViewModelFactory
 import com.example.e_commerce.databinding.ActivityDetailBinding
 import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
+    private val TAG: String = "DetailActivity"
+
     companion object {
         const val EXTRA_PRODUCT_ID = "PRODUCT_ID"
     }
@@ -41,6 +46,13 @@ class DetailActivity : AppCompatActivity() {
         ViewModelProvider(this, factory)[ProductViewModel::class.java]
     }
 
+    private val cartViewModel: CartViewModel by lazy {
+        val factory = CartViewModelFactory(tinyDB)
+        ViewModelProvider(this, factory)[CartViewModel::class.java]
+    }
+
+    private var productID: Int = -1
+
     private lateinit var tinyDB: TinyDB
     private lateinit var checkToken: CheckToken
 
@@ -53,13 +65,14 @@ class DetailActivity : AppCompatActivity() {
         tinyDB = TinyDB(applicationContext)
         checkToken = CheckToken(tinyDB)
 
-        val productID = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
+        productID = intent.getIntExtra(EXTRA_PRODUCT_ID, -1)
         if (productID == -1) {
             finish()
             return
         }
 
         observeProductDetail()
+        observeAddToCartResult()
         productViewModel.loadProductDetail(productID = productID)
     }
 
@@ -125,6 +138,10 @@ class DetailActivity : AppCompatActivity() {
 
         addToCartBtn.setOnClickListener {
             checkToken.checkTokenOrRedirect(this@DetailActivity) {
+                cartViewModel.addProductToCart(
+                    productID = productID,
+                    quantity = item.numberInCart
+                )
             }
         }
     }
@@ -153,4 +170,19 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeAddToCartResult() {
+        cartViewModel.addProductToCartMsg.observe(this) { message ->
+            message?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                Log.d(TAG, it)
+            }
+        }
+
+        cartViewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
 }

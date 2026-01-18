@@ -98,7 +98,7 @@ class CartRepository(
      * @modifies 2026-01-12
      * @version 1.0.1
      */
-    suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<String> {
+    suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<Boolean> {
         return try {
             /**
              * Get token
@@ -109,7 +109,7 @@ class CartRepository(
              * Call api to load brands
              * Handle result
              */
-            val response: Response<ApiSucess<String>> =
+            val response: Response<ApiSucess<Boolean>> =
                 ApiClient.cartService.addProductToCart(
                     token = "Bearer $token",
                     AddProductToCartRequestDto(productID = productID, quantity = quantity)

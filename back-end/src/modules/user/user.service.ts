@@ -8,7 +8,7 @@
  */
 
 import {
-    BadRequestException,
+	BadRequestException,
 	ForbiddenException,
 	Injectable,
 	Logger,
@@ -407,9 +407,11 @@ export class UserService {
 			imageID
 		);
 	}
+
 	async updateUserEntity(entity: UserEntity): Promise<UserEntity> {
 		return await this.userRepository.save(entity);
 	}
+
 	async getUserEntityById(userId: number): Promise<UserEntity | null> {
 		return await this.userRepository.getUserByUerID(userId);
 	}
@@ -482,6 +484,7 @@ export class UserService {
 			avatarUrl: user.userImages?.[0]?.image?.url ?? null,
 		};
 	}
+
 	async changePassword(userId: number, dto: ChangePasswordDto) {
 		const { oldPassword, newPassword, confirmPassword } = dto;
 		// kiểm tra confirmPAssword
