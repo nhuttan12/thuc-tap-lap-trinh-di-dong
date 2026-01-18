@@ -89,7 +89,11 @@ class CartViewModel(
             when (val result =
                 repository.addProductToCart(productID = productID, quantity = quantity)) {
                 is NetworkResult.Success -> {
-                    _addProductToCartMsg.value = result.data
+                    if (result.data) {
+                        _addProductToCartMsg.value = "Thêm sản phẩm vào giỏ hàng thành công"
+                    } else {
+                        _addProductToCartMsg.value = "Thêm sản phẩm vào giỏ hàng thất bại"
+                    }
                 }
 
                 is NetworkResult.Error -> {

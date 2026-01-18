@@ -26,7 +26,7 @@ interface CartApiService {
     suspend fun addProductToCart(
         @Header("Authorization") token: String,
         @Body() request: AddProductToCartRequestDto
-    ): Response<ApiSucess<String>>
+    ): Response<ApiSucess<Boolean>>
 
     @DELETE("carts/remove")
     suspend fun removeProductFromCart(
