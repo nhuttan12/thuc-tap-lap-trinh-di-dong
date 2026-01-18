@@ -21,7 +21,7 @@ import compression from 'compression';
 
 async function bootstrap() {
 	/**
-	 * Create Nest application
+	 * Create Nest application\
 	 */
 	const app: INestApplication = await NestFactory.create(AppModule, {
 		logger: new ConsoleLogger('Nest', {
