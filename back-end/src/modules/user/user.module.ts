@@ -32,6 +32,6 @@ import { UserAuthenticationEntity } from './entities/user-authentication.entity'
 	],
 	providers: [UserRepository, UserService, UserMapper],
 	controllers: [UserController],
-	exports: [UserService],
+	exports: [UserRepository,UserService],
 })
 export class UserModule {}

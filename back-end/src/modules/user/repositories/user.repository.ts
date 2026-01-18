@@ -209,6 +209,14 @@ export class UserRepository {
 				where: {
 					username: username,
 				},
+				/*Tài 212 -217 */
+				relations: {
+					role : true,
+					userDetail: true,
+					userImages: {
+						image: true,
+					},
+				},
 			});
             this.logger.debug(
                 `Get user from database ${JSON.stringify(users, null, 2)}`
@@ -336,4 +344,11 @@ export class UserRepository {
             throw e;
         }
     }
+
+	async findEmailForgotPassword(email: string):Promise<UserEntity | null>{
+		const user = await this.userRepository.findOne({
+			where: { email : email.trim().toLowerCase() },
+		});
+		return user;
+	}
 }
