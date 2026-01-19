@@ -17,7 +17,6 @@ data class ProductDTO(
     }
 }
 
-// ProductDetailsDTO.kt
 data class ProductDetailsDTO(
         val id: Int = 0,
         val size: String = "",
@@ -27,41 +26,23 @@ data class ProductDetailsDTO(
         val categoryEntity: CategoryDTO? = null,
         val brandEntity: BrandDTO? = null
 ) {
-    //Helper method để chuyển string thành list (xử lý cả ";" và ",")
+    // Helper để chuyển size string thành list
     fun getSizeList(): List<String> {
-        return if (size.isBlank()) emptyList()
-        else {
-            // Xử lý cả 2 loại delimiter
-            if (size.contains(";")) {
-                size.split(";").map { it.trim() }.filter { it.isNotBlank() }
-            } else {
-                size.split(",").map { it.trim() }.filter { it.isNotBlank() }
-            }
+        if (size.isBlank()) return emptyList()
+        return if (size.contains(";")) {
+            size.split(";").map { it.trim() }.filter { it.isNotBlank() }
+        } else {
+            listOf(size.trim())
         }
     }
 
-    //Helper method để chuyển color string thành list
+    // Helper để chuyển color string thành list
     fun getColorList(): List<String> {
-        return if (color.isBlank()) listOf("Đen")
-        else {
-            // Xử lý cả 2 loại delimiter
-            if (color.contains(";")) {
-                color.split(";").map { it.trim() }.filter { it.isNotBlank() }
-            } else {
-                // Nếu không có delimiter, coi như một màu
-                listOf(color.trim())
-            }
-        }
-    }
-
-    // ✅ Helper method để chuyển list thành string với delimiter "; "
-    companion object {
-        fun fromSizeList(sizeList: List<String>): String {
-            return sizeList.joinToString("; ")
-        }
-
-        fun fromColorList(colorList: List<String>): String {
-            return colorList.joinToString("; ")
+        if (color.isBlank()) return listOf("Đen")
+        return if (color.contains(";")) {
+            color.split(";").map { it.trim() }.filter { it.isNotBlank() }
+        } else {
+            listOf(color.trim())
         }
     }
 }

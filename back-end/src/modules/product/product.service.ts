@@ -24,14 +24,16 @@ import {CategoryStatusEnum} from "../category/enums/category-status.enum";
 import { ProductStatusCode } from './status-code/product.status-code';
 import {BrandEntity} from "../brand/entities/brand.entiy";
 import {UpdateProductAdminDto} from "./dtos/update-product-admin";
+import {InjectDataSource} from "@nestjs/typeorm";
 
 @Injectable()
 export class ProductService {
 	private readonly logger: Logger = new Logger(ProductService.name);
 
 	constructor(
-		private dataSource: DataSource,
-		private readonly productRepository: ProductRepository,
+        @InjectDataSource()
+        private readonly dataSource: DataSource,
+        private readonly productRepository: ProductRepository,
 		private readonly productMapper: ProductMapper,
 		private readonly buildPagingMetaService: BuildPagingMetaService,
 		private readonly productDetailRepository: ProductDetailRepository,
@@ -57,7 +59,7 @@ export class ProductService {
                 }
             }
 
-            // 2. VALIDATE BRAND (THÊM VÀO)
+            // 2. VALIDATE BRAND
             const brandId = body.brand_id;
             let validBrandId = null;
             if (brandId) {
@@ -84,28 +86,32 @@ export class ProductService {
                 .execute();
 
             const productId = productResult.identifiers[0].id;
+            let sizeValue = this.formatSizeForDB(body.size);
+            let colorValue = this.formatColorForDB(body.color);
 
-            // 🔥 4. INSERT DETAILS - THÊM brand_id ✅
+            // 4. INSERT DETAILS - ĐÚNG FORMAT
             await qr.manager.query(`
-            INSERT INTO product_details (id, size, color, description, rating, category_id, brand_id, created_at, updated_at)
+            INSERT INTO product_details 
+            (id, size, color, description, rating, category_id, brand_id, created_at, updated_at)
             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
         `, [
                 productId,
-                Array.isArray(body.size) ? body.size.join(',') : (body.size ?? '37').toString(),
-                body.color ?? 'Đen',
+                sizeValue,          // Đã format đúng
+                colorValue,         // Đã format đúng
                 body.description ?? '',
                 body.rating ?? 0,
                 categoryId || null,
-                validBrandId || null  // THÊM brand_id
+                validBrandId || null
             ]);
 
             await qr.commitTransaction();
 
-            return await this.dataSource.manager.findOneOrFail(ProductEntity, {
+            const result = await qr.manager.findOneOrFail(ProductEntity, {
                 where: { id: productId },
                 relations: ['productDetailsEntity', 'productDetailsEntity.categoryEntity', 'productDetailsEntity.brandEntity']
             });
 
+            return result as ProductEntity;  // <-- THÊM TYPE CASTING
         } catch (e) {
             await qr.rollbackTransaction();
             throw e;
@@ -114,12 +120,11 @@ export class ProductService {
         }
     }
 
-
 	/**
 	 * UPDATE PRODUCT (ADMIN)
 	 */
     // Trong product.service.ts - updateProductAdmin
-    async updateProductAdmin(id: number, body: UpdateProductAdminDto): Promise<{ id: number }> {
+    async updateProductAdmin(id: number, body: UpdateProductAdminDto): Promise<ProductEntity> {
         const qr = this.dataSource.createQueryRunner();
         await qr.connect();
         await qr.startTransaction();
@@ -136,49 +141,49 @@ export class ProductService {
                 await qr.manager.update(ProductEntity, id, productUpdate);
             }
 
-            // 2. UPDATE DETAILS
-            const sizeVal = body.size ?? '';
-            const colorVal = body.color ?? '';
+            let sizeVal = body.size !== undefined ? this.formatSizeForDB(body.size) : '';
+            let colorVal = body.color !== undefined ? this.formatColorForDB(body.color) : '';
+
             const descVal = body.description ?? '';
             const ratingVal = Number(body.rating ?? 0);
             const catId = body.category_id;
-            const brandId = body.brand_id;  // THÊM brand_id
+            const brandId = body.brand_id;
 
             await qr.manager.query(`
             UPDATE product_details 
             SET 
-                size = COALESCE($1, size),
-                color = COALESCE($2, color), 
-                description = COALESCE($3, description),
-                rating = COALESCE($4, rating),
+                size = COALESCE(NULLIF($1, ''), size),
+                color = COALESCE(NULLIF($2, ''), color), 
+                description = COALESCE(NULLIF($3, ''), description),
+                rating = COALESCE(NULLIF($4, 0), rating),
                 category_id = COALESCE($5, category_id),
                 brand_id = COALESCE($6, brand_id),
                 updated_at = NOW()
             WHERE id = $7
         `, [
-                Array.isArray(sizeVal) ? sizeVal.join(',') : String(sizeVal),
-                colorVal,
+                sizeVal,        // Đã format đúng
+                colorVal,       // Đã format đúng
                 descVal,
                 ratingVal,
                 catId || null,
-                brandId || null,  // THÊM
+                brandId || null,
                 id
             ]);
 
             await qr.commitTransaction();
 
-            // 3. RETURN FRESH DATA
-            return await this.dataSource.manager.findOneOrFail(ProductEntity, {
+            const result = await qr.manager.findOneOrFail(ProductEntity, {
                 where: { id },
                 relations: [
                     'productDetailsEntity',
                     'productDetailsEntity.categoryEntity',
-                    'productDetailsEntity.brandEntity',  // THÊM
+                    'productDetailsEntity.brandEntity',
                     'productImages',
                     'productImages.image'
                 ]
             });
 
+            return result as ProductEntity;  // <-- THÊM TYPE CASTING
         } catch (e) {
             await qr.rollbackTransaction();
             this.logger.error(`Update product ${id} failed:`, e);
@@ -186,6 +191,21 @@ export class ProductService {
         } finally {
             await qr.release();
         }
+    }
+
+    async getProductForAdmin(id: number): Promise<ProductEntity> {
+        const product = await this.dataSource.manager.findOneOrFail(ProductEntity, {
+            where: { id },
+            relations: [
+                'productDetailsEntity',
+                'productDetailsEntity.categoryEntity',
+                'productDetailsEntity.brandEntity',
+                'productImages',
+                'productImages.image'
+            ]
+        });
+
+        return product as ProductEntity;
     }
 
 	/**
@@ -225,44 +245,44 @@ export class ProductService {
 	/**
 	 * UPDATE PRODUCT STATUS (ADMIN)
 	 */
-	async updateProductStatus(id: number, status: string): Promise<{ id: number }> {
-		const qr = this.dataSource.createQueryRunner();
-		await qr.connect();
-		await qr.startTransaction();
+    async updateProductStatus(id: number, status: string): Promise<ProductEntity> {
+        const qr = this.dataSource.createQueryRunner();
+        await qr.connect();
+        await qr.startTransaction();
 
-		try {
-			if (!Object.values(ProductStatusEnum).includes(status as ProductStatusEnum)) {
-				throw new BadRequestException('Invalid status');
-			}
+        try {
+            if (!Object.values(ProductStatusEnum).includes(status as ProductStatusEnum)) {
+                throw new BadRequestException('Invalid status');
+            }
 
-			const product = await qr.manager.findOneOrFail(ProductEntity, {
-				where: { id },
-				relations: ['productDetailsEntity'],
-			});
+            // Cập nhật status
+            await qr.manager.update(
+                ProductEntity,
+                id,
+                { status: status as ProductStatusEnum }
+            );
 
-			// product.status = status as ProductStatusEnum;
-			await qr.manager.save(product);
+            // Lấy dữ liệu mới
+            const result = await qr.manager.findOneOrFail(ProductEntity, {
+                where: { id },
+                relations: [
+                    'productDetailsEntity',
+                    'productDetailsEntity.categoryEntity',
+                    'productImages',
+                    'productImages.image',
+                ],
+            });
 
-			await qr.commitTransaction();
+            await qr.commitTransaction();
+            return result as ProductEntity;  // <-- THÊM TYPE CASTING
 
-			return await this.dataSource.manager.findOneOrFail(ProductEntity, {
-				where: { id },
-				relations: [
-					'productDetailsEntity',
-					'productDetailsEntity.categoryEntity',
-					'productImages',
-					'productImages.image',
-				],
-			});
-		} catch (e) {
-			await qr.rollbackTransaction();
-			throw e;
-		} finally {
-			await qr.release();
-		}
-	}
-
-
+        } catch (e) {
+            await qr.rollbackTransaction();
+            throw e;
+        } finally {
+            await qr.release();
+        }
+    }
 
 
 	/**
@@ -294,6 +314,7 @@ export class ProductService {
 			const [products, total]: [ProductEntity[], number] =
 				await this.productRepository.getProductsPaging(limit, skip);
 
+
 			/*
              * Convert `ProductEntity` to `ProductEntityResponseDto`
              */
@@ -318,6 +339,41 @@ export class ProductService {
 		}
 	}
 
+    // Thêm vào service hoặc tạo file helper
+    private formatSizeForDB(size: any): string {
+        if (!size) return '37';
+
+        if (Array.isArray(size)) {
+            return size.join('; ');
+        }
+
+        if (typeof size === 'string') {
+            // Loại bỏ khoảng trắng thừa và format
+            const items = size.split(/[,;]/)
+                .map(item => item.trim())
+                .filter(item => item !== '');
+            return items.join('; ');
+        }
+
+        return String(size);
+    }
+
+    private formatColorForDB(color: any): string {
+        if (!color) return 'Đen';
+
+        if (Array.isArray(color)) {
+            return color.join('; ');
+        }
+
+        if (typeof color === 'string') {
+            const items = color.split(/[,;]/)
+                .map(item => item.trim())
+                .filter(item => item !== '');
+            return items.join('; ');
+        }
+
+        return String(color);
+    }
 	/**
 	 * @description Get product by ID
 	 * @param {number} productID - ID of product

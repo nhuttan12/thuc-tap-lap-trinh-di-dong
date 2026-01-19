@@ -1,7 +1,8 @@
-// ProductAdapter_ViewBinding.kt (phiên bản thay thế)
+
 package com.example.admin.adapter
 
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,17 +73,33 @@ class ProductAdapter(
         }
 
         fun bind(product: Product) {
+            // Debug
+            Log.d("ProductAdapter",
+                    "Displaying: ${product.name} | " +
+                            "Size: '${product.size}' | Color: '${product.color}'")
+
             // 1. Tên sản phẩm
             tvProductName.text = product.name
 
-            // 2. Brand và Category - SỬA: Kiểm tra null/empty
-            val brandText = product.brand.ifBlank { "Chưa có thương hiệu" }
+            // 2. Brand và Category
+            val brandText = if (product.brand.isNotBlank()) product.brand else "Chưa có thương hiệu"
             tvBrand.text = brandText
-            tvProductCategory.text = product.category.ifBlank { "Chưa có danh mục" }
 
-            // 3. Size & Color - SỬA LẠI: Parse đúng format từ database
-            val sizeList = parseSizeList(product.size)
-            val colorList = parseColorList(product.color)
+            val categoryText = if (product.category.isNotBlank()) product.category else "Chưa có danh mục"
+            tvProductCategory.text = categoryText
+
+            // 3. Size & Color - parse từ string với delimiter ";"
+            val sizeList = if (product.size.isNotBlank()) {
+                product.size.split(";").map { it.trim() }.filter { it.isNotBlank() }
+            } else {
+                emptyList()
+            }
+
+            val colorList = if (product.color.isNotBlank()) {
+                product.color.split(";").map { it.trim() }.filter { it.isNotBlank() }
+            } else {
+                emptyList()
+            }
 
             val sizeColorText = buildString {
                 if (sizeList.isNotEmpty()) {
@@ -93,7 +110,7 @@ class ProductAdapter(
                     append("Màu: ${colorList.joinToString(", ")}")
                 }
                 if (isEmpty()) {
-                    append("Chưa cập nhật size/color")
+                    append("Chưa cập nhật")
                 }
             }
             tvSizeColor.text = sizeColorText

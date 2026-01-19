@@ -15,7 +15,7 @@ import {
     HttpCode,
     HttpStatus,
     Logger, Param, Patch, Post, Put,
-    Query,
+    Query, Res, UploadedFile, UseInterceptors,
 } from '@nestjs/common';
 import {SuccessResponseDto} from '../../common/dtos/response/success-response.dto';
 import {PagingResponseDto} from '../../common/helper/dtos/paging-response.dto';
@@ -31,6 +31,8 @@ import {ProductDetailStatusCode} from './status-code/product-detail.status-code'
 import {ProductStatusCode} from './status-code/product.status-code';
 import {CreateProductAdminDto} from "./dtos/create-product-admin.dto";
 import {validate} from "@nestjs/class-validator";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {ProductStatusEnum} from "./enums/product-status.enum";
 
 @Controller('products')
 export class ProductController {
@@ -92,30 +94,30 @@ export class ProductController {
     /**
      * ADMIN endpoint: Lấy danh sách sản phẩm cho admin
      */
-    @Get('admin')
-    async getProductsForAdmin(
-        @Query('page') page = 1,
-        @Query('limit') limit = 10,
-    ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
-        try {
-            const currentPage = Number(page) > 0 ? Number(page) : 1;
-            const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
-
-            this.logger.debug(`[ADMIN] Get products: page=${currentPage}, limit=${currentLimit}`);
-
-            const products: PagingResponseDto<ProductEntityResponseDto> = await this.productService.getProductsPaging(currentPage, currentLimit);
-
-            return {
-                data: products,
-                message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
-                statusCode:
-                ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
-            };
-        } catch (e) {
-            this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
-            throw e;
-        }
-    }
+    // @Get('admin')
+    // async getProductsForAdmin(
+    //     @Query('page') page = 1,
+    //     @Query('limit') limit = 10,
+    // ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
+    //     try {
+    //         const currentPage = Number(page) > 0 ? Number(page) : 1;
+    //         const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
+    //
+    //         this.logger.debug(`[ADMIN] Get products: page=${currentPage}, limit=${currentLimit}`);
+    //
+    //         const products: PagingResponseDto<ProductEntityResponseDto> = await this.productService.getProductsPaging(currentPage, currentLimit);
+    //
+    //         return {
+    //             data: products,
+    //             message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
+    //             statusCode:
+    //             ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
+    //         };
+    //     } catch (e) {
+    //         this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
+    //         throw e;
+    //     }
+    // }
 
     /**
      * @description Get product detail by product ID
@@ -226,16 +228,16 @@ export class ProductController {
     @Put('admin/:id')
     @HttpCode(HttpStatus.OK)
     async updateProductForAdmin(
-            @Param('id') id: number,
+        @Param('id') id: number,
         @Body() body: UpdateProductAdminDto
-    ): Promise<SuccessResponseDto<any>> {
-            const updatedProduct = await this.productService.updateProductAdmin(id, body);
-            return {
-                data: updatedProduct,
-                message: 'Cập nhật sản phẩm thành công',
-                statusCode: 'PRD_ADMIN_004',
-            };
-        }
+    ): Promise<SuccessResponseDto<ProductEntity>> {  // <-- Sửa type
+        const updatedProduct = await this.productService.updateProductAdmin(id, body);
+        return {
+            data: updatedProduct,  // updatedProduct là ProductEntity
+            message: 'Cập nhật sản phẩm thành công',
+            statusCode: 'PRD_ADMIN_004',
+        };
+    }
 
     /**
      * ADMIN: Xóa sản phẩm (soft delete)
@@ -258,25 +260,97 @@ export class ProductController {
         }
     }
 
+
+    /**
+     * ADMIN: Get product detail for admin
+     */
+    @Get('admin/:id')
+    async getProductDetailForAdmin(
+        @Param('id') id: number
+    ): Promise<SuccessResponseDto<ProductEntity>> {
+        try {
+            const product = await this.productService.getProductForAdmin(id);
+            return {
+                data: product,  // product là ProductEntity
+                message: 'Lấy chi tiết sản phẩm thành công',
+                statusCode: 'PRD_ADMIN_007',
+            };
+        } catch(e) {
+            throw e;
+        }
+    }
+
+
+    /**
+     * ADMIN: Get products with filter
+     */
+    @Get('admin')
+    async getProductsForAdmin(
+        @Query('page') page = 1,
+        @Query('limit') limit = 10,
+        @Query('search') search?: string,
+        @Query('category') categoryId?: number,
+        @Query('status') status?: string,
+    ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
+        try {
+            const currentPage = Number(page) > 0 ? Number(page) : 1;
+            const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
+
+            this.logger.debug(`[ADMIN] Get products with filter: page=${currentPage}, limit=${currentLimit}, search=${search}, category=${categoryId}, status=${status}`);
+
+            // TODO: Implement filter logic
+            // Tạm thời chỉ dùng getProductsPaging
+            const products: PagingResponseDto<ProductEntityResponseDto> =
+                await this.productService.getProductsPaging(currentPage, currentLimit);
+
+            return {
+                data: products,
+                message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
+                statusCode: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
+            };
+        } catch (e) {
+            this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
+            throw e;
+        }
+    }
+
+    @Post('admin/:id/images')
+    async addProductImage(
+        @Param('id') id: number,
+        @Body() body: { imageUrls: string[], type: string }
+    ): Promise<SuccessResponseDto<any>> {
+        // Thêm ảnh cho sản phẩm
+    }
+
+    @Get('admin/export')
+    async exportProducts(
+        @Res() res: Response
+    ): Promise<void> {
+        // Export sản phẩm ra Excel/CSV
+    }
+
+    /**
+     * ADMIN: Cập nhật status
+     */
     /**
      * ADMIN: Cập nhật status
      */
     @Patch('admin/:id/status')
     @HttpCode(HttpStatus.OK)
-    @Patch('admin/:id/status')
-    @HttpCode(HttpStatus.OK)
     async updateProductStatus(
         @Param('id') id: number,
         @Body('status') status: string
-    ): Promise<SuccessResponseDto<any>> {
+    ): Promise<SuccessResponseDto<ProductEntity>> {
         try {
             const updatedProduct = await this.productService.updateProductStatus(id, status);
+
             return {
-                data: updatedProduct,
+                data: updatedProduct as ProductEntity,
                 message: 'Cập nhật trạng thái thành công',
                 statusCode: 'PRD_ADMIN_006',
             };
         } catch(e) {
+            this.logger.error(`Error updating product status: ${e.message}`, e.stack);
             throw e;
         }
     }

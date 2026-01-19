@@ -21,6 +21,11 @@ interface ProductApiService {
             @Path("id") id: Int
     ): Response<ApiSuccess<ProductDetailDTO>>
 
+    @GET("products/admin/{id}")
+    suspend fun getProductDetailForAdmin(
+            @Path("id") id: Int
+    ): Response<ApiSuccess<ProductDTO>>
+
     @POST("products/admin")
     suspend fun createProduct(
             @Body body: CreateProductRequest
@@ -38,10 +43,6 @@ interface ProductApiService {
     ): Response<ApiSuccess<Void>>
 }
 
-// Các data class ĐẶT NGOÀI interface (giống UserApiService)
-
-// CreateProductRequest.kt - THÊM rating
-// UpdateProductRequest.kt
 data class UpdateProductRequest(
         val name: String? = null,
         val price: Double? = null,

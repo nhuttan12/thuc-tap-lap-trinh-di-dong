@@ -247,66 +247,37 @@ class ProductFormFragment : Fragment() {
         )
     }
 
-    // ProductFormFragment.kt
-    // Cần thêm logic để load brand từ API response
-    // Trong bindProductToUI()
-    // Trong ProductFormFragment.kt
-    // Trong ProductFormFragment.kt
-    // Trong ProductFormFragment.kt - phiên bản đơn giản
-    private fun bindProductToUI(product: Any) {
-        // CHỈ XỬ LÝ Product, không xử lý ProductDetailDTO
-        if (product is Product) {
-            println("🔄 Loading Product to form: id=${product.id}")
-            println("🔄 Size: ${product.size}, Color: ${product.color}")
-            println("🔄 Brand: ${product.brand}, BrandId: ${product.brandId}")
-            println("🔄 Rating: ${product.rating}")
+    // ProductFormFragment.kt - trong bindProductToUI
+    private fun bindProductToUI(product: Product) {
+        Log.d(TAG, "Loading Product to form: id=${product.id}")
+        Log.d(TAG, "Size: '${product.size}', Color: '${product.color}'")
 
-            binding.edtName.setText(product.name)
-            binding.edtPrice.setText(product.price.toString())
-            binding.edtDiscount.setText(product.discount.toString())
+        binding.edtName.setText(product.name)
+        binding.edtPrice.setText(product.price.toString())
+        binding.edtDiscount.setText(product.discount.toString())
+        binding.autoCompleteStatus.setText(product.status, false)
 
-            val displaySize = if (product.size.isBlank()) "" else {
-                parseSizeForDisplay(product.size)
-            }
-            binding.edtSize.setText(displaySize)
+        // Hiển thị size và color từ product (đã là string với delimiter ";")
+        binding.edtSize.setText(product.size)
+        binding.edtColor.setText(product.color)
+        binding.edtDescription.setText(product.description)
+        binding.edtRating.setText(product.rating.toString())
 
-            val displayColor = if (product.color.isBlank()) "" else {
-                parseColorForDisplay(product.color)
-            }
-            binding.edtColor.setText(displayColor)
+        // Category và Brand
+        binding.edtCategoryId.setText(product.categoryId.toString())
 
-            binding.edtDescription.setText(product.description)
-            binding.autoCompleteStatus.setText(product.status, false)
-
-            // RATING
-            binding.edtRating.setText(product.rating.toString())
-
-            // CATEGORY ID
-            val categoryId = if (product.categoryId > 0) product.categoryId else 1
-            binding.edtCategoryId.setText(categoryId.toString())
-
-            // BRAND
-            if (product.brand.isNotBlank() && product.brandId > 0) {
-                val brands = getDefaultBrands()
-                val brand = brands.find { it.first == product.brandId }
-                if (brand != null) {
-                    binding.autoCompleteBrand.setText(brand.second, false)
-                    binding.edtBrandId.setText(brand.first.toString())
-                } else {
-                    binding.autoCompleteBrand.setText("Adidas", false)
-                    binding.edtBrandId.setText("2")
-                }
-            } else {
-                binding.autoCompleteBrand.setText("Adidas", false)
-                binding.edtBrandId.setText("2")
-            }
-
-            println("✅ Form loaded successfully")
-            println("✅ Display Size: $displaySize, Display Color: $displayColor")
+        val brands = getDefaultBrands()
+        val brand = brands.find { it.first == product.brandId }
+        if (brand != null) {
+            binding.autoCompleteBrand.setText(brand.second, false)
+            binding.edtBrandId.setText(brand.first.toString())
         } else {
-            println("⚠️ Unexpected product type: ${product.javaClass.name}")
-            Toast.makeText(requireContext(), "Lỗi: Kiểu dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show()
+            // Mặc định
+            binding.autoCompleteBrand.setText("Adidas", false)
+            binding.edtBrandId.setText("2")
         }
+
+        Log.d(TAG, "✅ Form loaded successfully")
     }
 
     // Helper để parse color string cho display

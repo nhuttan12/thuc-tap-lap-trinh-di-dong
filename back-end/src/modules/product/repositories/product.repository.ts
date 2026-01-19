@@ -21,6 +21,37 @@ export class ProductRepository {
 		private readonly dataSource: DataSource
 	) {}
 
+    async getProductsPagingWithDetails(
+        take: number,
+        skip: number
+    ): Promise<[ProductEntity[], number]> {
+        try {
+            const [products, total] = await this.productRepository.findAndCount({
+                where: {
+                    status: ProductStatusEnum.ACTIVE,
+                },
+                relations: {
+                    productDetailsEntity: {
+                        categoryEntity: true,
+                        brandEntity: true,
+                    },
+                    productImages: {
+                        image: true,
+                    },
+                },
+                take,
+                skip,
+                order: {
+                    createdAt: 'DESC',
+                },
+            });
+
+            return [products, total];
+        } catch (e) {
+            this.logger.error(`Error in getProductsPagingWithDetails: ${e.message}`, e.stack);
+            throw e;
+        }
+    }
 	/**
 	 * @description Get products paging
 	 * @param {number} take - Number of items to take
@@ -85,4 +116,5 @@ export class ProductRepository {
 			where: { id: productID },
 		});
 	}
+
 }

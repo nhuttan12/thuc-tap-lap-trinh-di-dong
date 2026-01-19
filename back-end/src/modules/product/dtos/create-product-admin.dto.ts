@@ -1,5 +1,5 @@
-import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
-import { IsArray } from 'class-validator';
+import {IsNumber, IsOptional, IsString, Max, Min} from "class-validator";
+import {Transform} from "class-transformer";
 
 export class CreateProductAdminDto {
     @IsString()
@@ -24,12 +24,21 @@ export class CreateProductAdminDto {
     brand_id?: number;
 
     @IsOptional()
-    @IsString()
-    size?: string;
+    // Hỗ trợ cả array và string
+    @Transform(({ value }) => {
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') return value.split(',').map(item => item.trim());
+        return value;
+    })
+    size?: string[] | string;
 
     @IsOptional()
-    @IsString()
-    color?: string;
+    @Transform(({ value }) => {
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') return value.split(',').map(item => item.trim());
+        return value;
+    })
+    color?: string[] | string;
 
     @IsOptional()
     @IsString()

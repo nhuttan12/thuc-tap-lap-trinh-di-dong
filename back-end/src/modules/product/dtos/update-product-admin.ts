@@ -1,4 +1,5 @@
 import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
+import {Transform} from "class-transformer";
 
 // ĐẢM BẢO có brand_id trong UpdateProductAdminDto
 export class UpdateProductAdminDto {
@@ -26,12 +27,20 @@ export class UpdateProductAdminDto {
     brand_id?: number;
 
     @IsOptional()
-    @IsString()
-    size?: string;
+    @Transform(({ value }) => {
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') return value;
+        return value;
+    })
+    size?: string[] | string;  // <-- ĐỒNG BỘ
 
     @IsOptional()
-    @IsString()
-    color?: string;
+    @Transform(({ value }) => {
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') return value;
+        return value;
+    })
+    color?: string[] | string;
 
     @IsOptional()
     @IsString()

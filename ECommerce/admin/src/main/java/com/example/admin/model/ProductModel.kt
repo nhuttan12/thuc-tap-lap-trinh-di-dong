@@ -6,14 +6,14 @@ data class Product(
         val price: Double = 0.0,
         val discount: Double = 0.0,
         val status: String = "ACTIVE",
-        val size: String = "",      // KHÔNG set mặc định "37"
-        val color: String = "",     // KHÔNG set mặc định "Đen"
-        val description: String = "",
-        val rating: Float = 0f,
-        val category: String = "",   // KHÔNG set mặc định
-        val categoryId: Int = 0,     // 0 thay vì 1
-        val brand: String = "",      // KHÔNG set mặc định
-        val brandId: Int = 0,        // 0 thay vì 2
+        val size: String = "39; 40; 41",      // Có default value
+        val color: String = "Đen; Trắng",     // Có default value
+        val description: String = "Sản phẩm chất lượng cao",
+        val rating: Float = 4.5f,
+        val category: String = "Thể thao",
+        val categoryId: Int = 1,
+        val brand: String = "Adidas",
+        val brandId: Int = 2,
         val imageUrl: String = ""
 ) {
     fun hasDiscount(): Boolean = discount > 0

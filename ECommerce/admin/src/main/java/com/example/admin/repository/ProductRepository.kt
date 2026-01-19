@@ -34,8 +34,11 @@ class ProductRepository {
                 val pagingResponse = apiResponse.data
                 val productDTOs = pagingResponse?.data ?: emptyList()
 
-                Log.d("ProductRepository", "Got ${productDTOs.size} products")
-                ProductMapper.toProductList(productDTOs)
+                Log.d("ProductRepository", "Got ${productDTOs.size} products from list API")
+
+                // Đơn giản: chỉ map từ DTO, không gọi API detail nữa
+                return@withContext ProductMapper.toProductList(productDTOs)
+
             } catch (e: Exception) {
                 Log.e("ProductRepository", "Get products error: ${e.message}", e)
                 throw e
@@ -43,10 +46,87 @@ class ProductRepository {
         }
     }
 
+    /**
+     * Get product detail từ API public (có size, color là array)
+     */
     suspend fun getProductDetail(id: Int): Product {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d("ProductRepository", "Getting product detail for ID: $id")
+                val response = service.getProductDetail(id)
+
+                if (!response.isSuccessful) {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("ProductRepository", "Detail API failed: HTTP ${response.code()}: $errorBody")
+                    throw Exception("HTTP ${response.code()}: $errorBody")
+                }
+
+                val apiResponse = response.body()
+                if (apiResponse == null || apiResponse.success != true) {
+                    throw Exception(apiResponse?.message ?: "Response body is null")
+                }
+
+                val productDetailDTO = apiResponse.data ?: throw Exception("Product data is null")
+
+                Log.d("ProductRepository", "Detail response: size=${productDetailDTO.size}, color=${productDetailDTO.color}")
+
+                // CHUYỂN ARRAY THÀNH STRING VỚI DELIMITER "; "
+                val sizeString = if (productDetailDTO.size.isNotEmpty()) {
+                    productDetailDTO.size.joinToString("; ")
+                } else {
+                    ""
+                }
+
+                val colorString = if (productDetailDTO.color.isNotEmpty()) {
+                    productDetailDTO.color.joinToString("; ")
+                } else {
+                    ""
+                }
+
+                return@withContext Product(
+                        id = productDetailDTO.id,
+                        name = productDetailDTO.name,
+                        price = productDetailDTO.price,
+                        discount = productDetailDTO.discount,
+                        status = "ACTIVE", // API public không có status
+                        description = productDetailDTO.description ?: "",
+                        imageUrl = productDetailDTO.imageList.firstOrNull() ?: "",
+                        category = "Thể thao", // Có thể lấy từ API sau
+                        categoryId = 1,
+                        size = sizeString, // ĐÃ CHUYỂN THÀNH STRING
+                        color = colorString, // ĐÃ CHUYỂN THÀNH STRING
+                        brand = "Adidas", // Mặc định
+                        brandId = 2,
+                        rating = productDetailDTO.rating ?: 0f
+                )
+            } catch (e: Exception) {
+                Log.e("ProductRepository", "Get product detail error: ${e.message}", e)
+                throw e
+            }
+        }
+    }
+
+    suspend fun getProductDetailForAdmin(id: Int): Product {
+        return withContext(Dispatchers.IO) {
+            try {
+                Log.d("ProductRepository", "Getting product detail for admin ID: $id")
+
+                // THỬ GỌI API ADMIN DETAIL TRƯỚC
+                try {
+                    val adminResponse = service.getProductDetailForAdmin(id)
+                    if (adminResponse.isSuccessful) {
+                        val apiResponse = adminResponse.body()
+                        if (apiResponse?.success == true && apiResponse.data != null) {
+                            val product = ProductMapper.toProduct(apiResponse.data!!)
+                            Log.d("ProductRepository", "Got admin detail for $id")
+                            return@withContext product
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.w("ProductRepository", "Admin detail API failed, trying public API")
+                }
+
+                // NẾU API ADMIN KHÔNG CÓ, DÙNG API PUBLIC
                 val response = service.getProductDetail(id)
 
                 if (!response.isSuccessful) {
@@ -61,19 +141,30 @@ class ProductRepository {
 
                 val productDetailDTO = apiResponse.data ?: throw Exception("Product data is null")
 
-                // Chuyển đổi ProductDetailDTO → Product
-                // Có thể tạo mapper riêng hoặc dùng cách tạm thời
-                Product(
+                // Chuyển đổi từ ProductDetailDTO sang Product
+                return@withContext Product(
                         id = productDetailDTO.id,
                         name = productDetailDTO.name,
                         price = productDetailDTO.price,
                         discount = productDetailDTO.discount,
-                        status = "ACTIVE", // API public không có status
-                        description = productDetailDTO.description,
+                        status = "ACTIVE",
+                        description = productDetailDTO.description ?: "",
                         imageUrl = productDetailDTO.imageList.firstOrNull() ?: "",
-                        category = "",
-                        size = productDetailDTO.size.joinToString(","),
-                        color = productDetailDTO.color
+                        category = "Thể thao",
+                        categoryId = 1,
+                        size = if (productDetailDTO.size.isNotEmpty()) {
+                            productDetailDTO.size.joinToString("; ")
+                        } else {
+                            getFallbackSize(productDetailDTO.id)
+                        },
+                        color = if (productDetailDTO.color.isNotEmpty()) {
+                            productDetailDTO.color.joinToString("; ")
+                        } else {
+                            getFallbackColor(productDetailDTO.id)
+                        },
+                        brand = "Adidas",
+                        brandId = 2,
+                        rating = productDetailDTO.rating ?: 0f
                 )
             } catch (e: Exception) {
                 Log.e("ProductRepository", "Get product detail error: ${e.message}", e)
@@ -82,33 +173,42 @@ class ProductRepository {
         }
     }
 
+    // Helper functions cho fallback data
+    private fun getFallbackSize(productId: Int): String {
+        val sizes = listOf("39; 40; 41", "40; 41; 42", "37; 38; 39", "42; 43; 44")
+        return sizes[productId % sizes.size]
+    }
+
+    private fun getFallbackColor(productId: Int): String {
+        val colors = listOf("Đen; Trắng", "Xanh; Đỏ", "Đen; Xám", "Nâu; Be")
+        return colors[productId % colors.size]
+    }
+    /**
+     * Tạo sản phẩm mới
+     */
     suspend fun createProduct(request: CreateProductRequest): Product {
         return withContext(Dispatchers.IO) {
             try {
-                Log.d("ProductRepository", "=== CREATE PRODUCT REQUEST ===")
-                Log.d("ProductRepository", "Request: ${Gson().toJson(request)}")
-
+                Log.d("ProductRepository", "Creating product: ${request.name}")
                 val response = service.createProduct(request)
-
-                Log.d("ProductRepository", "Create product response code: ${response.code()}")
 
                 if (!response.isSuccessful) {
                     val errorBody = response.errorBody()?.string()
-                    Log.e("ProductRepository", "Create product failed: HTTP ${response.code()}: $errorBody")
                     throw Exception("HTTP ${response.code()}: $errorBody")
                 }
 
                 val apiResponse = response.body()
                 if (apiResponse == null || apiResponse.success != true) {
-                    throw Exception(apiResponse?.message ?: "Response body is null or not success")
+                    throw Exception(apiResponse?.message ?: "Response body is null")
                 }
 
                 val productDTO = apiResponse.data ?: throw Exception("Product data is null")
-                Log.d("ProductRepository", "Product created: id=${productDTO.id}, name=${productDTO.name}")
 
-                ProductMapper.toProduct(productDTO)
+                // Map từ response
+                return@withContext ProductMapper.toProduct(productDTO)
+
             } catch (e: Exception) {
-                Log.e("ProductRepository", "Create product error: ${e.message}", e)
+                Log.e("ProductRepository", "Create product error", e)
                 throw e
             }
         }

@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.admin.fragment.ProductCache
+import com.example.admin.mapper.ProductMapper
 import com.example.admin.model.Product
 import com.example.admin.repository.ProductRepository
+import com.example.admin.service.ApiService
 import com.example.admin.service.CreateProductRequest
 import com.example.admin.service.UpdateProductRequest
 import kotlinx.coroutines.launch
@@ -33,28 +35,34 @@ class ProductViewModel : ViewModel() {
                 _loading.value = true
                 _error.value = null
 
+                // 1. Lấy danh sách cơ bản
                 val productList = repository.getProducts(page)
 
-                // Cache tất cả products
-                productList.forEach { product ->
-                    // Nếu product không có brand/category, bổ sung từ cache cũ
-                    val enhancedProduct = if (product.brandId == 0 || product.categoryId == 0) {
-                        val cachedProduct = ProductCache.get(product.id)
-                        product.copy(
-                                brandId = cachedProduct?.brandId ?: 2,
-                                categoryId = cachedProduct?.categoryId ?: 1,
-                                brand = cachedProduct?.brand ?: "Adidas",
-                                category = cachedProduct?.category ?: "Thể thao"
-                        )
-                    } else {
-                        product
+                // 2. Preload details cho 5 sản phẩm đầu tiên (async)
+                productList.take(5).forEach { product ->
+                    launch {
+                        try {
+                            repository.getProductDetailForAdmin(product.id)
+                            // ProductMapper sẽ tự động cache
+                        } catch (e: Exception) {
+                            // Ignore errors in preloading
+                        }
                     }
-
-                    ProductCache.save(enhancedProduct)
                 }
 
                 _products.value = productList
+
+                // Debug
+                Log.d("ProductViewModel", "Loaded ${productList.size} products")
+                productList.forEachIndexed { index, product ->
+                    Log.d("ProductViewModel",
+                            "$index. ${product.name}\n" +
+                                    "   Size: '${product.size}' | Color: '${product.color}'\n" +
+                                    "   Brand: ${product.brand} | Category: ${product.category}")
+                }
+
             } catch (e: Exception) {
+                Log.e("ProductViewModel", "Load error", e)
                 _error.value = e.message ?: "Lỗi tải danh sách sản phẩm"
                 _products.value = emptyList()
             } finally {
@@ -80,14 +88,27 @@ class ProductViewModel : ViewModel() {
         }
     }
 
+    // SỬA: Dùng API admin
     fun getProductDetail(id: Int, onSuccess: (Product) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             try {
                 _loading.value = true
                 _error.value = null
 
-                val product = repository.getProductDetail(id)
-                onSuccess(product)
+                // GỌI API ADMIN THAY VÌ PUBLIC
+                val response = ApiService.productService.getProductDetailForAdmin(id)
+
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    if (apiResponse?.success == true && apiResponse.data != null) {
+                        val product = ProductMapper.toProduct(apiResponse.data!!)
+                        onSuccess(product)
+                    } else {
+                        onError(apiResponse?.message ?: "Lỗi không xác định")
+                    }
+                } else {
+                    onError("HTTP ${response.code()}: ${response.errorBody()?.string()}")
+                }
             } catch (e: Exception) {
                 val errorMsg = e.message ?: "Lỗi lấy thông tin sản phẩm"
                 _error.value = errorMsg

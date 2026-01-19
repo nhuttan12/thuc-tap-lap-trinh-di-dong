@@ -13,15 +13,13 @@ data class ProductDetailDTO(
         val discount: Double = 0.0,
         val rating: Float = 0f,
 
-        @SerializedName("size")
-        val size: List<String> = emptyList(),
+        // SỬA: Nhận array từ BE, chuyển thành string
+        @SerializedName("size") val size: List<String> = emptyList(),
 
-        @SerializedName("color")
-        val color: String = "",
+        // SỬA: Nhận array từ BE, chuyển thành string
+        @SerializedName("color") val color: List<String> = emptyList(),
 
-        @SerializedName("description")
-        val description: String = "",
+        @SerializedName("description") val description: String = "",
 
-        @SerializedName("imageList")
-        val imageList: List<String> = emptyList()
+        @SerializedName("imageList") val imageList: List<String> = emptyList()
 )
