@@ -13,8 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.admin.databinding.FragmentProductFormBinding
-import com.example.admin.dto.ProductDetailDTO
 import com.example.admin.model.Product
+import com.example.admin.repository.BrandRepository
 import com.example.admin.service.ApiService
 import com.example.admin.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
@@ -81,17 +81,98 @@ class ProductFormFragment : Fragment() {
         preloadedData?.let { data ->
             Log.d(TAG, "Loading preloaded data: $data")
 
+            // Basic fields
             binding.edtName.setText(data["name"] ?: "")
             binding.edtPrice.setText(data["price"] ?: "0")
             binding.edtDiscount.setText(data["discount"] ?: "0")
-            binding.edtSize.setText(data["size"] ?: "")
-            binding.edtColor.setText(data["color"] ?: "")
+            binding.autoCompleteStatus.setText(data["status"] ?: "ACTIVE", false)
+
+            // FIX: SIZE - Xử lý empty string và null
+            val dbSize = data["size"] ?: ""
+            val displaySize = if (dbSize.isNotBlank()) {
+                // Convert từ DB format sang form format
+                parseSizeForForm(dbSize)
+            } else {
+                // Nếu empty, để trống (không set default)
+                ""
+            }
+            binding.edtSize.setText(displaySize)
+
+            // FIX: COLOR - Tương tự
+            val dbColor = data["color"] ?: ""
+            val displayColor = if (dbColor.isNotBlank()) {
+                parseColorForForm(dbColor)
+            } else {
+                ""
+            }
+            binding.edtColor.setText(displayColor)
+
+            // Description
             binding.edtDescription.setText(data["description"] ?: "")
 
-            val status = data["status"] ?: "ACTIVE"
-            binding.autoCompleteStatus.setText(status, false)
+            // Rating
+            binding.edtRating.setText(data["rating"] ?: "0")
 
-            // Không cần show loading vì data đã có sẵn
+            // Category ID
+            val categoryId = data["category_id"]?.toIntOrNull() ?: 1
+            binding.edtCategoryId.setText(categoryId.toString())
+
+            // Brand
+            val brandId = data["brand_id"]?.toIntOrNull() ?: 2
+            val brandName = data["brand_name"] ?: "Adidas"
+
+            // Set brand dropdown
+            if (brandId > 0 && brandName.isNotBlank()) {
+                binding.autoCompleteBrand.setText(brandName, false)
+                binding.edtBrandId.setText(brandId.toString())
+            } else {
+                binding.autoCompleteBrand.setText("Adidas", false)
+                binding.edtBrandId.setText("2")
+            }
+
+            Log.d(TAG, "✅ Loaded: brand=$brandName (id=$brandId), size='$displaySize', color='$displayColor'")
+        }
+    }
+
+    // THÊM các hàm parse mới
+    private fun parseSizeForForm(sizeString: String): String {
+        if (sizeString.isBlank()) return ""
+
+        // Xử lý tất cả các trường hợp
+        return when {
+            // Nếu đã là format form (dấu chấm phẩy)
+            sizeString.contains(";") -> sizeString
+
+            // Format DB (dấu phẩy) -> convert sang dấu chấm phẩy
+            sizeString.contains(",") -> {
+                sizeString.split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                        .joinToString("; ")
+            }
+
+            // Chỉ một giá trị (thêm delimiter phù hợp)
+            else -> sizeString.trim() + ";"
+        }
+    }
+
+    private fun parseColorForForm(colorString: String): String {
+        if (colorString.isBlank()) return ""
+
+        return when {
+            // Nếu đã là format form (dấu chấm phẩy)
+            colorString.contains(";") -> colorString
+
+            // Format DB (dấu phẩy) -> convert sang dấu chấm phẩy
+            colorString.contains(",") -> {
+                colorString.split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                        .joinToString("; ")
+            }
+
+            // Chỉ một giá trị (thêm delimiter phù hợp)
+            else -> colorString.trim() + ";"
         }
     }
     // ---------------- UI ----------------
@@ -106,7 +187,7 @@ class ProductFormFragment : Fragment() {
             text = "ID: $productId"
             visibility = if (isEditMode) View.VISIBLE else View.GONE
         }
-
+        binding.edtCategoryId.setText("1")
         // KIỂM TRA XEM ID CÓ TỒN TẠI TRƯỚC KHI SỬ DỤNG
 //        try {
 //
@@ -121,9 +202,10 @@ class ProductFormFragment : Fragment() {
 //            Log.w(TAG, "textInputCategory not found in layout, skipping hide")
 //        }
     }
+    // Thêm vào setupDropdowns()
     private fun setupDropdowns() {
-        // Setup Status dropdown
-        val statuses = listOf("ACTIVE", "INACTIVE", "DRAFT")
+        // Status dropdown
+        val statuses = listOf("ACTIVE", "INACTIVE", "DRAFT", "DELETED")
         val statusAdapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
@@ -131,21 +213,18 @@ class ProductFormFragment : Fragment() {
         )
         binding.autoCompleteStatus.setAdapter(statusAdapter)
 
-        // Set default value cho create mode
-        if (!isEditMode) {
-            binding.autoCompleteStatus.setText("ACTIVE", false)
-        }
-
-        // TODO: Setup Brand dropdown khi có API brands
-        // Tạm thời dùng hardcoded brands
-        val brands = listOf("Nike", "Adidas", "Puma", "Converse", "Vans")
-        val brandAdapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                brands
+        // Brands dropdown
+        val brands = listOf(
+                Pair(1, "Nike"),
+                Pair(2, "Adidas"),
+                Pair(3, "Puma"),
+                Pair(4, "Converse"),
+                Pair(5, "Vans")
         )
-        binding.autoCompleteBrand.setAdapter(brandAdapter)
+
+        setupBrandDropdown(brands)
     }
+
 
     private fun setupListeners() {
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
@@ -154,9 +233,6 @@ class ProductFormFragment : Fragment() {
     }
 
     // ---------------- LOAD PRODUCT ----------------
-    // ProductFormFragment.kt
-    // ProductFormFragment.kt
-    // ProductFormFragment.kt - phần loadProduct
     private fun loadProduct(id: Int) {
         val viewModel: ProductViewModel by viewModels()
 
@@ -172,63 +248,121 @@ class ProductFormFragment : Fragment() {
     }
 
     // ProductFormFragment.kt
+    // Cần thêm logic để load brand từ API response
+    // Trong bindProductToUI()
+    // Trong ProductFormFragment.kt
+    // Trong ProductFormFragment.kt
+    // Trong ProductFormFragment.kt - phiên bản đơn giản
     private fun bindProductToUI(product: Any) {
-        when (product) {
-            is Product -> {
-                // Nếu là Product từ list
-                binding.edtName.setText(product.name)
-                binding.edtPrice.setText(product.price.toString())
-                binding.edtDiscount.setText(product.discount.toString())
-                binding.edtSize.setText(product.size)
-                binding.edtColor.setText(product.color)
-                binding.edtDescription.setText(product.description)
-                binding.autoCompleteStatus.setText(product.status, false)
-            }
-            is ProductDetailDTO -> {
-                // Nếu là ProductDetailDTO từ API detail
-                binding.edtName.setText(product.name)
-                binding.edtPrice.setText(product.price.toString())
-                binding.edtDiscount.setText(product.discount.toString())
-                val sizeText = product.size.filter { it.isNotBlank() }.joinToString(",")
-                binding.edtSize.setText(sizeText)
-                binding.edtColor.setText(product.color)
-                binding.edtDescription.setText(product.description)
-                binding.autoCompleteStatus.setText("ACTIVE", false) // Default
-            }
-        }
+        // CHỈ XỬ LÝ Product, không xử lý ProductDetailDTO
+        if (product is Product) {
+            println("🔄 Loading Product to form: id=${product.id}")
+            println("🔄 Size: ${product.size}, Color: ${product.color}")
+            println("🔄 Brand: ${product.brand}, BrandId: ${product.brandId}")
+            println("🔄 Rating: ${product.rating}")
 
-        // Debug log
-        Log.d(TAG, "Product loaded: ${product::class.java.simpleName}")
+            binding.edtName.setText(product.name)
+            binding.edtPrice.setText(product.price.toString())
+            binding.edtDiscount.setText(product.discount.toString())
+
+            val displaySize = if (product.size.isBlank()) "" else {
+                parseSizeForDisplay(product.size)
+            }
+            binding.edtSize.setText(displaySize)
+
+            val displayColor = if (product.color.isBlank()) "" else {
+                parseColorForDisplay(product.color)
+            }
+            binding.edtColor.setText(displayColor)
+
+            binding.edtDescription.setText(product.description)
+            binding.autoCompleteStatus.setText(product.status, false)
+
+            // RATING
+            binding.edtRating.setText(product.rating.toString())
+
+            // CATEGORY ID
+            val categoryId = if (product.categoryId > 0) product.categoryId else 1
+            binding.edtCategoryId.setText(categoryId.toString())
+
+            // BRAND
+            if (product.brand.isNotBlank() && product.brandId > 0) {
+                val brands = getDefaultBrands()
+                val brand = brands.find { it.first == product.brandId }
+                if (brand != null) {
+                    binding.autoCompleteBrand.setText(brand.second, false)
+                    binding.edtBrandId.setText(brand.first.toString())
+                } else {
+                    binding.autoCompleteBrand.setText("Adidas", false)
+                    binding.edtBrandId.setText("2")
+                }
+            } else {
+                binding.autoCompleteBrand.setText("Adidas", false)
+                binding.edtBrandId.setText("2")
+            }
+
+            println("✅ Form loaded successfully")
+            println("✅ Display Size: $displaySize, Display Color: $displayColor")
+        } else {
+            println("⚠️ Unexpected product type: ${product.javaClass.name}")
+            Toast.makeText(requireContext(), "Lỗi: Kiểu dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Helper để parse color string cho display
+    private fun parseColorStringForDisplay(colorString: String): String {
+        if (colorString.isBlank()) return "Đen"
+
+        // Nếu là string chứa delimiter
+        return if (colorString.contains(";")) {
+            colorString.split(";").map { it.trim() }.filter { it.isNotBlank() }.joinToString(",")
+        } else {
+            colorString // Giữ nguyên nếu không có delimiter
+        }
     }
 
     // ---------------- SAVE ----------------
     // Trong saveProduct() của ProductFormFragment
+    // Trong ProductFormFragment.kt - saveProduct()
     private fun saveProduct() {
         if (!validateForm()) return
-
         showLoading(true)
 
         lifecycleScope.launch {
             try {
+                // Lấy các giá trị từ form
                 val name = binding.edtName.text.toString().trim()
-
-                // FIX: Format price đúng cách
-                val priceText = binding.edtPrice.text.toString().trim()
-                val price = priceText.toDoubleOrNull() ?: 0.0
-                // Hoặc nếu backend yêu cầu số nguyên:
-                // val price = priceText.toDoubleOrNull()?.toInt() ?: 0
-
+                val price = binding.edtPrice.text.toString().toDoubleOrNull() ?: 0.0
                 val discount = binding.edtDiscount.text.toString().toDoubleOrNull() ?: 0.0
+                val rating = binding.edtRating.text.toString().toFloatOrNull() ?: 0f
                 val status = binding.autoCompleteStatus.text.toString().trim()
-                val sizeString = binding.edtSize.text.toString().trim()
-                val color = binding.edtColor.text.toString().trim()
+                val brandId = binding.edtBrandId.text.toString().toIntOrNull() ?: 2  // Mặc định Adidas
+                val categoryId = binding.edtCategoryId.text.toString().toIntOrNull() ?: 1  // Mặc định 1
+
+                // Convert từ display format (39; 40; 41) sang BE format (39; 40; 41)
+                // Giữ nguyên dấu chấm phẩy cho BE
+                val sizeInput = binding.edtSize.text.toString().trim()
+                val sizeForBE = if (sizeInput.isBlank()) {
+                    ""  // Gửi empty string thay vì "37"
+                } else {
+                    sizeInput.split(";").map { it.trim() }.joinToString("; ")
+                }
+
+                val colorInput = binding.edtColor.text.toString().trim()
+                val colorForBE = if (colorInput.isBlank()) {
+                    ""  // Gửi empty string thay vì "Đen"
+                } else {
+                    colorInput.split(";").map { it.trim() }.joinToString("; ")
+                }
+
                 val description = binding.edtDescription.text.toString().trim()
 
-                val safeSize = if (sizeString.isBlank()) "37" else sizeString
-                val safeColor = if (color.isBlank()) "Đen" else color
-                val safeDescription = if (description.isBlank()) "" else description
-
-                Log.d(TAG, "Saving product: name=$name, price=$price, size=$safeSize, color=$safeColor")
+                println("💾 Saving product:")
+                println("💾 Name: $name, Price: $price, Discount: $discount, Rating: $rating")
+                println("💾 Status: $status, CategoryId: $categoryId, BrandId: $brandId")
+                println("💾 Size (BE format): $sizeForBE")
+                println("💾 Color (BE format): $colorForBE")
+                println("💾 Description length: ${description.length}")
 
                 val response = if (isEditMode) {
                     // UPDATE
@@ -236,12 +370,15 @@ class ProductFormFragment : Fragment() {
                             name = name,
                             price = price,
                             discount = discount,
+                            rating = rating,
                             status = status,
-                            size = safeSize,
-                            color = safeColor,
-                            description = safeDescription
-
+                            category_id = categoryId,
+                            brand_id = brandId,
+                            size = if (sizeForBE.isNotBlank()) sizeForBE else null,  // Gửi null nếu empty
+                            color = if (colorForBE.isNotBlank()) colorForBE else null, // Gửi null nếu empty
+                            description = if (description.isNotBlank()) description else null
                     )
+                    println("📤 Update request: $updateRequest")
                     ApiService.productService.updateProduct(productId, updateRequest)
                 } else {
                     // CREATE
@@ -249,34 +386,62 @@ class ProductFormFragment : Fragment() {
                             name = name,
                             price = price,
                             discount = discount,
+                            rating = rating,
                             status = status,
-                            category_id = DEFAULT_CATEGORY_ID,  // <-- THÊM category_id
-                            size = if (sizeString.isBlank()) DEFAULT_SIZE else sizeString,
-                            color = if (color.isBlank()) DEFAULT_COLOR else color,
-                            description = description
+                            category_id = categoryId,
+                            brand_id = brandId,
+                            size = if (sizeForBE.isNotBlank()) sizeForBE else null,
+                            color = if (colorForBE.isNotBlank()) colorForBE else null,
+                            description = if (description.isNotBlank()) description else null
                     )
-                    Log.d(TAG, "Create request: $createRequest")
+                    println("📤 Create request: $createRequest")
                     ApiService.productService.createProduct(createRequest)
                 }
 
                 if (response.isSuccessful) {
-                    val message = if (isEditMode) "Cập nhật thành công" else "Thêm sản phẩm thành công"
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    // 1. Tạo Product object với đầy đủ thông tin
+                    val savedProduct = Product(
+                            id = if (isEditMode) productId else (response.body()?.data?.id ?: 0),
+                            name = name,
+                            price = price,
+                            discount = discount,
+                            status = status,
+                            size = sizeForBE,
+                            color = colorForBE,
+                            description = description,
+                            rating = rating,
+                            categoryId = categoryId,
+                            brandId = brandId,
+                            category = getCategoryName(categoryId),  // Lấy tên từ mapping
+                            brand = getBrandName(brandId),           // Lấy tên từ mapping
+                            imageUrl = "" // TODO: Lấy từ response nếu có
+                    )
 
-                    findNavController().navigateUp()
+                    // 2. Cache lại product (quan trọng!)
+                    ProductCache.save(savedProduct)
 
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    Log.e(TAG, "Server error: $errorBody")
-                    Toast.makeText(
-                            requireContext(),
-                            "Lỗi: ${response.message()} - ${errorBody?.take(100)}",
-                            Toast.LENGTH_LONG
+                    // 3. Gửi fragment result để refresh
+                    parentFragmentManager.setFragmentResult(
+                            "product_updated",
+                            Bundle().apply {
+                                putBoolean("refresh", true)
+                                putString("action", if (isEditMode) "update" else "create")
+                                // Gửi cả product data
+                                putInt("productId", savedProduct.id)
+                            }
+                    )
+
+                    Toast.makeText(requireContext(),
+                            if (isEditMode) "Cập nhật thành công" else "Thêm sản phẩm thành công",
+                            Toast.LENGTH_SHORT
                     ).show()
+
+                    findNavController().popBackStack()
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "Save product error", e)
+                println("❌ Save product error: ${e.message}")
+                e.printStackTrace()
                 Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
                 showLoading(false)
@@ -310,8 +475,18 @@ class ProductFormFragment : Fragment() {
             isValid = false
         }
 
+        val rating = binding.edtRating.text.toString().toFloatOrNull()
+        if (rating != null && (rating < 0 || rating > 5)) {
+            binding.textInputRating.error = "Đánh giá phải từ 0-5"
+            isValid = false
+        }
         // TODO: Validate brand khi cần
 
+        val categoryId = binding.edtCategoryId.text.toString().toIntOrNull()
+        if (categoryId == null || categoryId <= 0) {
+            binding.textInputCategoryId.error = "ID danh mục phải > 0"
+            isValid = false
+        }
         return isValid
     }
 
@@ -329,10 +504,20 @@ class ProductFormFragment : Fragment() {
     private fun setupInputFilters() {
         binding.edtSize.filters = arrayOf(
                 InputFilter { source, _, _, _, _, _ ->
-                    source.filter { it.isDigit() || it == ',' || it == ' ' }
+                    source.filter {
+                        it.isDigit() || it == ',' || it == ';' || it == ' ' || it == '.'
+                    }
                 }
         )
 
+        binding.edtColor.filters = arrayOf(
+                InputFilter { source, _, _, _, _, _ ->
+                    // Cho phép chữ, dấu phẩy, chấm phẩy, space
+                    source.filter {
+                        it.isLetter() || it == ',' || it == ';' || it == ' '
+                    }
+                }
+        )
         // Thêm cho price để tránh số khoa học
         binding.edtPrice.filters = arrayOf(
                 InputFilter { source, start, end, dest, dstart, dend ->
@@ -349,5 +534,124 @@ class ProductFormFragment : Fragment() {
                     }
                 }
         )
+    }
+
+    private suspend fun loadBrandsFromAPI(): List<Pair<Int, String>> {
+        return try {
+            val brands = BrandRepository().getBrands(limit = 50)  // THÊM limit
+            if (brands.isNotEmpty()) {
+                brands.map { Pair(it.id, it.name) }
+            } else {
+                getDefaultBrands()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to load brands from API", e)
+            getDefaultBrands()
+        }
+    }
+
+    private fun getDefaultBrands(): List<Pair<Int, String>> {
+        return listOf(
+                Pair(1, "Nike"),
+                Pair(2, "Adidas"),
+                Pair(3, "Puma"),
+                Pair(4, "Converse"),
+                Pair(5, "Vans")
+        )
+    }
+
+    private fun setupBrandDropdown(brands: List<Pair<Int, String>>) {
+        if (brands.isEmpty()) return
+
+        val brandNames = brands.map { it.second }
+        val brandAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                brandNames
+        )
+        binding.autoCompleteBrand.setAdapter(brandAdapter)
+        binding.autoCompleteBrand.setOnItemClickListener { _, _, position, _ ->
+            val selectedBrand = brands[position]
+            binding.autoCompleteBrand.setText(selectedBrand.second, false)
+            binding.edtBrandId.setText(selectedBrand.first.toString())
+            Log.d(TAG, "Selected brand: ${selectedBrand.second} (id=${selectedBrand.first})")
+        }
+
+        // Set default brand (dựa trên preloaded data nếu có)
+        if (isEditMode) {
+            // Trong edit mode, brand sẽ được set trong loadPreloadedData()
+        } else {
+            // Create mode: default là Adidas
+            val defaultBrand = brands.find { it.first == 2 } ?: brands.first()
+            binding.autoCompleteBrand.setText(defaultBrand.second, false)
+            binding.edtBrandId.setText(defaultBrand.first.toString())
+        }
+    }
+
+
+    // Helper để parse size cho form display
+    private fun parseSizeForDisplay(sizeString: String): String {
+        if (sizeString.isBlank()) return ""
+
+        return when {
+            // Nếu đã là format database (dấu chấm phẩy)
+            sizeString.contains(";") -> {
+                // Giữ nguyên format: "39; 40; 41"
+                sizeString
+            }
+            // Nếu là format cũ (dấu phẩy)
+            sizeString.contains(",") -> {
+                // Convert: "39,40,41" -> "39; 40; 41"
+                sizeString.split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                        .joinToString("; ")
+            }
+            // Chỉ một giá trị
+            else -> sizeString.trim()
+        }
+    }
+
+    // Helper để parse color cho form display
+    private fun parseColorForDisplay(colorString: String): String {
+        if (colorString.isBlank()) return ""
+
+        return when {
+            // Nếu đã là format database (dấu chấm phẩy)
+            colorString.contains(";") -> {
+                // Giữ nguyên format: "Đỏ; Xanh; Đen"
+                colorString
+            }
+            // Nếu là format cũ (dấu phẩy)
+            colorString.contains(",") -> {
+                // Convert: "Đỏ,Xanh,Đen" -> "Đỏ; Xanh; Đen"
+                colorString.split(",")
+                        .map { it.trim() }
+                        .filter { it.isNotBlank() }
+                        .joinToString("; ")
+            }
+            // Chỉ một giá trị
+            else -> colorString.trim()
+        }
+    }
+
+    private fun getBrandName(brandId: Int): String {
+        return when (brandId) {
+            1 -> "Nike"
+            2 -> "Adidas"
+            3 -> "Puma"
+            4 -> "Converse"
+            5 -> "Vans"
+            else -> "Thương hiệu $brandId"
+        }
+    }
+
+    private fun getCategoryName(categoryId: Int): String {
+        return when (categoryId) {
+            1 -> "Thể thao"
+            2 -> "Thời trang"
+            3 -> "Giày dép"
+            else -> "Danh mục $categoryId"
+        }
     }
 }

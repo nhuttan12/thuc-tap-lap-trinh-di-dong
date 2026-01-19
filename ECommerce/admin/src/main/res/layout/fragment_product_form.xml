@@ -11,10 +11,12 @@
     <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/surface"
             app:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,33 +69,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
-    <!-- Form Content -->
-    <ScrollView
+    <!-- ScrollView cho form -->
+    <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
             android:scrollbars="vertical"
-            app:layout_constraintTop_toBottomOf="@id/tvProductId"
             app:layout_constraintBottom_toTopOf="@id/btnContainer"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/tvProductId">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:padding="16dp">
 
             <!-- Tên sản phẩm -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:hint="Tên sản phẩm *"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtName"
@@ -103,37 +107,85 @@
                         android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Giá -->
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputPrice"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+            <!-- Row cho Price và Discount -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/rowPriceDiscount"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Giá (VNĐ) *"
-                    app:errorEnabled="true"
-                    app:prefixText="₫ ">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputName">
 
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtPrice"
-                        android:layout_width="match_parent"
+                <!-- Giá -->
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputPrice"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:hint="Giá (VNĐ) *"
+                        app:errorEnabled="true"
+                        app:prefixText="₫ "
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/guidelinePriceDiscount"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Giảm giá -->
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Giảm giá -->
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputDiscount"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Giảm giá (%)"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/guidelinePriceDiscount"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:suffixText="%">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:text="0" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guidelinePriceDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Rating -->
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputDiscount"
+                    android:id="@+id/textInputRating"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Giảm giá (%)"
-                    app:suffixText="%">
+                    android:hint="Đánh giá (0-5)"
+                    app:helperText="Ví dụ: 4.5"
+                    app:helperTextEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rowPriceDiscount">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtDiscount"
+                        android:id="@+id/edtRating"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
@@ -141,22 +193,30 @@
                         android:text="0" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- THÊM: Thương hiệu (Brand) -->
+            <!-- Thương hiệu Label -->
             <TextView
+                    android:id="@+id/tvBrandLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="Thương hiệu *"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputRating" />
 
+            <!-- Brand Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputBrand"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Chọn thương hiệu">
+                    android:hint="Chọn thương hiệu"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvBrandLabel">
 
                 <AutoCompleteTextView
                         android:id="@+id/autoCompleteBrand"
@@ -166,22 +226,70 @@
                         tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Trạng thái -->
+            <!-- Hidden brand_id field -->
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputBrandId"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputBrand">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtBrandId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Category ID -->
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputCategoryId"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:hint="ID Danh mục"
+                    app:helperText="Ví dụ: 1 cho Thể thao"
+                    app:helperTextEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputBrandId">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtCategoryId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:text="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Status Label -->
             <TextView
+                    android:id="@+id/tvStatusLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="Trạng thái *"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputCategoryId" />
 
+            <!-- Status Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputStatus"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Chọn trạng thái">
+                    android:hint="Chọn trạng thái"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvStatusLabel">
 
                 <AutoCompleteTextView
                         android:id="@+id/autoCompleteStatus"
@@ -191,16 +299,33 @@
                         tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Kích thước -->
+            <!-- Size Label -->
+            <TextView
+                    android:id="@+id/tvSizeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Kích thước"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputStatus" />
+
+            <!-- Size Input -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputSize"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Kích thước (phân cách bằng dấu phẩy)"
-                    app:helperText="Ví dụ: 35,36,37,38"
-                    app:helperTextEnabled="true">
+                    android:hint="Nhập các size (phân cách bằng dấu chấm phẩy)"
+                    app:helperText="Ví dụ: 39; 40; 40.5; 41; 42"
+                    app:helperTextEnabled="true"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSizeLabel">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtSize"
@@ -210,16 +335,33 @@
                         android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Màu sắc -->
+            <!-- Color Label -->
+            <TextView
+                    android:id="@+id/tvColorLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Màu sắc"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputSize" />
+
+            <!-- Color Input -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputColor"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Màu sắc"
-                    app:helperText="Ví dụ: Đen, Trắng, Xanh"
-                    app:helperTextEnabled="true">
+                    android:hint="Nhập các màu (phân cách bằng dấu chấm phẩy)"
+                    app:helperText="Ví dụ: Đỏ; Xám; Nâu; Vàng; Xanh navy"
+                    app:helperTextEnabled="true"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvColorLabel">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtColor"
@@ -229,41 +371,59 @@
                         android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Mô tả -->
+            <!-- Description Label -->
+            <TextView
+                    android:id="@+id/tvDescriptionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Mô tả chi tiết"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputColor" />
+
+            <!-- Description Input -->
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputDescription"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="Mô tả sản phẩm">
+                    android:layout_marginBottom="24dp"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvDescriptionLabel">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtDescription"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="200dp"
                         android:gravity="top|start"
-                        android:inputType="textMultiLine"
-                        android:lines="6"
-                        android:maxLines="10"
-                        android:minLines="4"
+                        android:hint="Nhập mô tả chi tiết về sản phẩm..."
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:lines="8"
+                        android:maxLines="15"
+                        android:minLines="6"
                         android:scrollbars="vertical" />
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
-    </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Buttons Container -->
     <LinearLayout
             android:id="@+id/btnContainer"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
+            android:background="@color/surface"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
         <!-- Nút Hủy -->
         <com.google.android.material.button.MaterialButton
@@ -312,14 +472,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Error/Success Snackbar Anchor -->
-    <View
-            android:id="@+id/snackbarAnchor"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/btnContainer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

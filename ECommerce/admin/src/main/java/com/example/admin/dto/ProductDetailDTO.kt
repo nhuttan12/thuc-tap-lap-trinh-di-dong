@@ -14,7 +14,7 @@ data class ProductDetailDTO(
         val rating: Float = 0f,
 
         @SerializedName("size")
-        val size: List<String> = emptyList(),  // Array từ API public
+        val size: List<String> = emptyList(),
 
         @SerializedName("color")
         val color: String = "",

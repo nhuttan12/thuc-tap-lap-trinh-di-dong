@@ -40,28 +40,33 @@ interface ProductApiService {
 
 // Các data class ĐẶT NGOÀI interface (giống UserApiService)
 
-data class CreateProductRequest(
-        val name: String,
-        val price: Double,
-        val discount: Double,
-        val status: String,
-        val category_id: Int? = null,
-        val size: String? = null,
-        val color: String? = null,
-        val description: String? = null
-)
-
+// CreateProductRequest.kt - THÊM rating
+// UpdateProductRequest.kt
 data class UpdateProductRequest(
         val name: String? = null,
         val price: Double? = null,
         val discount: Double? = null,
-        val status: String? = null,
-        val size: String? = null,
-        val color: String? = null,
-        val description: String? = null,
         val rating: Float? = null,
+        val status: String? = null,
+        val brand_id: Int? = null,
+        val size: String? = null,        // Cho phép null
+        val color: String? = null,       // Cho phép null
+        val description: String? = null,
+        val category_id: Int? = null
+)
+
+// CreateProductRequest.kt
+data class CreateProductRequest(
+        val name: String,
+        val price: Double,
+        val discount: Double,
+        val rating: Float? = null,
+        val status: String,
         val category_id: Int? = null,
-        val productDetailsEntity: ProductDetailsRequest? = null
+        val brand_id: Int? = null,
+        val size: String? = null,        // Cho phép null
+        val color: String? = null,       // Cho phép null
+        val description: String? = null
 )
 
 data class ProductDetailsRequest(
@@ -79,4 +84,10 @@ data class ProductImageRequest(
 
 data class ImageRequest(
         val url: String
+)
+
+// Thêm data class Brand
+data class Brand(
+        val id: Int,
+        val name: String
 )

@@ -15,7 +15,6 @@ import { ProductDetailRepository } from './repositories/product-detail.repositor
 import { ProductDetailsEntity } from "./entities/product-details.entity";
 import { ProductImageEntity } from "../image/entities/product-image.entity";
 import { ProductStatusEnum } from './enums/product-status.enum';
-import { ProductImageTypeEnum } from "./enums/product-image.type.enum";
 import { CategoryEntity } from '../category/entities/category.entity';
 import { ImageStatusEnum } from '../image/enums/image-status.enum';
 import { ImageEntity } from "../image/entities/image.entity";
@@ -23,6 +22,8 @@ import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto'
 import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
 import {CategoryStatusEnum} from "../category/enums/category-status.enum";
 import { ProductStatusCode } from './status-code/product.status-code';
+import {BrandEntity} from "../brand/entities/brand.entiy";
+import {UpdateProductAdminDto} from "./dtos/update-product-admin";
 
 @Injectable()
 export class ProductService {
@@ -39,135 +40,153 @@ export class ProductService {
 	/**
 	 * CREATE PRODUCT (ADMIN)
 	 */
-	async createProductAdmin(body: any): Promise<ProductEntity> {
-		const qr = this.dataSource.createQueryRunner();
-		await qr.connect();
-		await qr.startTransaction();
+    async createProductAdmin(body: any): Promise<ProductEntity> {
+        const qr = this.dataSource.createQueryRunner();
+        await qr.connect();
+        await qr.startTransaction();
 
-		try {
-			// 1. VALIDATE CATEGORY
-			const categoryId = body.category_id;
-			if (categoryId) {
-				// Validate category nếu có
-				const category = await qr.manager.findOne(CategoryEntity, {
-					where: { id: categoryId, status: CategoryStatusEnum.ACTIVE }
-				});
-				if (!category) {
-					throw new BadRequestException(`Category id=${categoryId} not found or inactive`);
-				}
-			}
+        try {
+            // 1. VALIDATE CATEGORY
+            const categoryId = body.category_id;
+            if (categoryId) {
+                const category = await qr.manager.findOne(CategoryEntity, {
+                    where: { id: categoryId, status: CategoryStatusEnum.ACTIVE }
+                });
+                if (!category) {
+                    throw new BadRequestException(`Category id=${categoryId} not found or inactive`);
+                }
+            }
 
-			// 2. INSERT PRODUCT
-			const productResult = await qr.manager
-				.createQueryBuilder()
-				.insert()
-				.into(ProductEntity)
-				.values({
-					name: body.name,
-					price: Number(body.price),
-					discount: body.discount ?? 0,
-					status: body.status ?? ProductStatusEnum.ACTIVE
-				})
-				.execute();
+            // 2. VALIDATE BRAND (THÊM VÀO)
+            const brandId = body.brand_id;
+            let validBrandId = null;
+            if (brandId) {
+                const brand = await qr.manager.findOne(BrandEntity, {
+                    where: { id: brandId }
+                });
+                if (!brand) {
+                    throw new BadRequestException(`Brand id=${brandId} not found`);
+                }
+                validBrandId = brandId;
+            }
 
-			const productId = productResult.identifiers[0].id;
+            // 3. INSERT PRODUCT
+            const productResult = await qr.manager
+                .createQueryBuilder()
+                .insert()
+                .into(ProductEntity)
+                .values({
+                    name: body.name,
+                    price: Number(body.price),
+                    discount: body.discount ?? 0,
+                    status: body.status ?? ProductStatusEnum.ACTIVE
+                })
+                .execute();
 
-			// 🔥 3. INSERT DETAILS - RAW SQL ✅
-			await qr.manager.query(`
-         INSERT INTO product_details (id, size, color, description, rating, category_id, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-      `, [
-				productId,
-				Array.isArray(body.size) ? body.size.join(',') : (body.size ?? '37').toString(),
-				body.color ?? 'Đen',
-				body.description ?? '',
-				body.rating ?? 0,
-				categoryId
-			]);
+            const productId = productResult.identifiers[0].id;
 
-			await qr.commitTransaction();
+            // 🔥 4. INSERT DETAILS - THÊM brand_id ✅
+            await qr.manager.query(`
+            INSERT INTO product_details (id, size, color, description, rating, category_id, brand_id, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+        `, [
+                productId,
+                Array.isArray(body.size) ? body.size.join(',') : (body.size ?? '37').toString(),
+                body.color ?? 'Đen',
+                body.description ?? '',
+                body.rating ?? 0,
+                categoryId || null,
+                validBrandId || null  // THÊM brand_id
+            ]);
 
-			return await this.dataSource.manager.findOneOrFail(ProductEntity, {
-				where: { id: productId },
-				relations: ['productDetailsEntity', 'productDetailsEntity.categoryEntity']
-			});
+            await qr.commitTransaction();
 
-		} catch (e) {
-			await qr.rollbackTransaction();
-			throw e;
-		} finally {
-			await qr.release();
-		}
-	}
+            return await this.dataSource.manager.findOneOrFail(ProductEntity, {
+                where: { id: productId },
+                relations: ['productDetailsEntity', 'productDetailsEntity.categoryEntity', 'productDetailsEntity.brandEntity']
+            });
+
+        } catch (e) {
+            await qr.rollbackTransaction();
+            throw e;
+        } finally {
+            await qr.release();
+        }
+    }
 
 
 	/**
 	 * UPDATE PRODUCT (ADMIN)
 	 */
-	async updateProductAdmin(id: number, body: any): Promise<{ id: number }> {
-		const qr = this.dataSource.createQueryRunner();
-		await qr.connect();
-		await qr.startTransaction();
+    // Trong product.service.ts - updateProductAdmin
+    async updateProductAdmin(id: number, body: UpdateProductAdminDto): Promise<{ id: number }> {
+        const qr = this.dataSource.createQueryRunner();
+        await qr.connect();
+        await qr.startTransaction();
 
-		try {
-			// 1. UPDATE PRODUCT (basic info)
-			const productUpdate: any = {};
-			if (body.name !== undefined) productUpdate.name = body.name;
-			if (body.price !== undefined) productUpdate.price = Number(body.price);
-			if (body.discount !== undefined) productUpdate.discount = Number(body.discount);
-			if (body.status !== undefined) productUpdate.status = body.status;
+        try {
+            // 1. UPDATE PRODUCT (basic info)
+            const productUpdate: any = {};
+            if (body.name !== undefined) productUpdate.name = body.name;
+            if (body.price !== undefined) productUpdate.price = Number(body.price);
+            if (body.discount !== undefined) productUpdate.discount = Number(body.discount);
+            if (body.status !== undefined) productUpdate.status = body.status;
 
-			if (Object.keys(productUpdate).length > 0) {
-				await qr.manager.update(ProductEntity, id, productUpdate);
-			}
+            if (Object.keys(productUpdate).length > 0) {
+                await qr.manager.update(ProductEntity, id, productUpdate);
+            }
 
-			// 🔥 2. UPDATE DETAILS - SINGLE Raw SQL (FORCE ALL FIELDS!)
-			const sizeVal = body.productDetailsEntity?.size ?? body.size ?? '';
-			const colorVal = body.productDetailsEntity?.color ?? body.color ?? '';
-			const descVal = body.productDetailsEntity?.description ?? body.description ?? '';
-			const ratingVal = Number(body.productDetailsEntity?.rating ?? body.rating ?? 0);
-			const catId = body.productDetailsEntity?.category_id ?? body.category_id;
+            // 2. UPDATE DETAILS
+            const sizeVal = body.size ?? '';
+            const colorVal = body.color ?? '';
+            const descVal = body.description ?? '';
+            const ratingVal = Number(body.rating ?? 0);
+            const catId = body.category_id;
+            const brandId = body.brand_id;  // THÊM brand_id
 
-			await qr.manager.query(`
-				UPDATE product_details 
-				SET 
-					size = $1,
-					color = $2, 
-					description = $3,
-					rating = $4,
-					category_id = COALESCE($5, category_id),
-					updated_at = NOW()
-				WHERE id = $6
-		  `, [
-				Array.isArray(sizeVal) ? sizeVal.join(',') : String(sizeVal),
-				colorVal,
-				descVal,
-				ratingVal,
-				catId || null,
-				id
-			]);
+            await qr.manager.query(`
+            UPDATE product_details 
+            SET 
+                size = COALESCE($1, size),
+                color = COALESCE($2, color), 
+                description = COALESCE($3, description),
+                rating = COALESCE($4, rating),
+                category_id = COALESCE($5, category_id),
+                brand_id = COALESCE($6, brand_id),
+                updated_at = NOW()
+            WHERE id = $7
+        `, [
+                Array.isArray(sizeVal) ? sizeVal.join(',') : String(sizeVal),
+                colorVal,
+                descVal,
+                ratingVal,
+                catId || null,
+                brandId || null,  // THÊM
+                id
+            ]);
 
-			await qr.commitTransaction();
+            await qr.commitTransaction();
 
-			// 3. RETURN FRESH DATA với relations
-			return await this.dataSource.manager.findOneOrFail(ProductEntity, {
-				where: { id },
-				relations: [
-					'productDetailsEntity',
-					'productDetailsEntity.categoryEntity',
-					'productImages',
-					'productImages.image'
-				]
-			});
+            // 3. RETURN FRESH DATA
+            return await this.dataSource.manager.findOneOrFail(ProductEntity, {
+                where: { id },
+                relations: [
+                    'productDetailsEntity',
+                    'productDetailsEntity.categoryEntity',
+                    'productDetailsEntity.brandEntity',  // THÊM
+                    'productImages',
+                    'productImages.image'
+                ]
+            });
 
-		} catch (e) {
-			await qr.rollbackTransaction();
-			this.logger.error(`Update product ${id} failed:`, e);
-			throw e;
-		} finally {
-			await qr.release();
-		}
-	}
+        } catch (e) {
+            await qr.rollbackTransaction();
+            this.logger.error(`Update product ${id} failed:`, e);
+            throw e;
+        } finally {
+            await qr.release();
+        }
+    }
 
 	/**
 	 * DELETE PRODUCT (ADMIN - Soft delete)

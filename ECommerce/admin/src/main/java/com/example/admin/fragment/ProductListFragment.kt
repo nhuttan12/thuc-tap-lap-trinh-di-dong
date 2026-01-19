@@ -16,8 +16,8 @@ import com.example.admin.adapter.ProductAdapter
 import com.example.admin.databinding.FragmentProductListBinding
 import com.example.admin.model.Product
 import com.example.admin.viewmodel.ProductViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
-import java.io.Serializable
 
 class ProductListFragment : Fragment() {
 
@@ -76,6 +76,29 @@ class ProductListFragment : Fragment() {
 
         // Setup empty state
         setupEmptyState()
+
+        // THÊM Fragment Result Listener
+        parentFragmentManager.setFragmentResultListener(
+                "product_updated",
+                viewLifecycleOwner
+        ) { _, bundle ->
+            val shouldRefresh = bundle.getBoolean("refresh", false)
+            if (shouldRefresh) {
+                Log.d("ProductList", "Received refresh request")
+
+                // Force reload từ đầu
+                viewModel.loadProducts(1)
+
+                // Hoặc hiển thị snackbar
+                val action = bundle.getString("action", "update")
+                val message = if (action == "update")
+                    "Đã cập nhật sản phẩm"
+                else
+                    "Đã thêm sản phẩm mới"
+
+                Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupViewModelObservers() {
@@ -110,35 +133,57 @@ class ProductListFragment : Fragment() {
         }
     }
 
+    // Trong ProductListFragment.kt - navigateToProductForm
+    // Trong ProductListFragment.kt
     private fun navigateToProductForm(isEditMode: Boolean, productId: Int, product: Product?) {
         try {
             val bundle = Bundle().apply {
                 putBoolean("isEditMode", isEditMode)
                 putInt("productId", productId)
 
-                // Truyền preloaded data nếu có product
                 if (product != null) {
-                    val preloadedData = mapOf(
-                            "name" to product.name,
-                            "price" to product.price.toString(),
-                            "discount" to product.discount.toString(),
-                            "status" to product.status,
-                            "size" to product.size,  // THÊM size
-                            "color" to product.color,  // THÊM color
-                            "description" to product.description  // THÊM description
-                    )
-                    putSerializable("preloadedData", preloadedData as Serializable)
+                    // GỬI ĐẦY ĐỦ TẤT CẢ DỮ LIỆU
+                    val preloadedData = hashMapOf<String, String>()
+
+                    // Thông tin cơ bản
+                    preloadedData["name"] = product.name
+                    preloadedData["price"] = product.price.toString()
+                    preloadedData["discount"] = product.discount.toString()
+                    preloadedData["status"] = product.status
+
+                    // Size và Color - ĐÃ được parse đúng trong ProductMapper
+                    preloadedData["size"] = product.size
+                    preloadedData["color"] = product.color
+                    preloadedData["description"] = product.description
+
+                    // Brand info - QUAN TRỌNG!
+                    preloadedData["brand_id"] = product.brandId.toString()
+                    preloadedData["brand_name"] = product.brand
+
+                    // Category info - QUAN TRỌNG!
+                    // Nếu product không có category, mặc định là 1
+                    val categoryId = if (product.category.isNotBlank()) {
+                        // Có thể parse từ category name hoặc có thêm categoryId field
+                        1 // Tạm thời mặc định
+                    } else {
+                        1
+                    }
+                    preloadedData["category_id"] = categoryId.toString()
+                    preloadedData["category"] = product.category
+
+                    // Rating - THÊM
+                    preloadedData["rating"] = "0" // Tạm thời
+
+                    Log.d("ProductListFragment", "Preloaded data for product ${product.id}: $preloadedData")
+
+                    putSerializable("preloadedData", preloadedData)
                 }
             }
 
             findNavController().navigate(R.id.action_productList_to_productForm, bundle)
         } catch (e: Exception) {
-            Log.e("ProductListFragment", "Navigation error: ${e.message}", e)
-            Toast.makeText(
-                    requireContext(),
-                    "Lỗi mở form sản phẩm: ${e.message}",
-                    Toast.LENGTH_SHORT
-            ).show()
+            Log.e("ProductListFragment", "Navigation error", e)
+            Toast.makeText(requireContext(), "Lỗi mở form: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

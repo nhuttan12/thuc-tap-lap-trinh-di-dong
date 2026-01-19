@@ -86,7 +86,9 @@ object ApiService {
     val authService: AuthApiService by lazy { retrofit.create(AuthApiService::class.java) }
     val roleService: RoleApiService by lazy { retrofit.create(RoleApiService::class.java) }
     val productService: ProductApiService by lazy { retrofit.create(ProductApiService::class.java) }
-
+    val brandService: BrandApiService by lazy {
+        retrofit.create(BrandApiService::class.java)
+    }
     // Hàm update token
     fun updateToken(token: String) {
         TokenManager.save(AdminApplication.context, token)

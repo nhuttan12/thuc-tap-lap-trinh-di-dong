@@ -1,7 +1,5 @@
 package com.example.admin.dto
 
-import com.google.gson.annotations.SerializedName
-
 data class ProductDTO(
         val id: Int = 0,
         val name: String = "",
@@ -12,46 +10,61 @@ data class ProductDTO(
         val productImages: List<ProductImageDTO>? = null,
         val createdAt: String? = null,
         val updatedAt: String? = null
-) {
+){
     init {
         // Debug constructor
-        println("🔄 ProductDTO created: id=$id, name=$name")
+        println("ProductDTO created: id=$id, name=$name")
     }
 }
 
+// ProductDetailsDTO.kt
 data class ProductDetailsDTO(
         val id: Int = 0,
-
-        // SỬA: Chuyển từ List<String> sang String
-        @SerializedName("size")
         val size: String = "",
-
-        @SerializedName("color")
-        val color: String = "Đen",
-
-        @SerializedName("rating")
+        val color: String = "",
         val rating: Float = 0f,
-
-        @SerializedName("description")
         val description: String = "",
-
-        @SerializedName("categoryEntity")
-        val categoryEntity: CategoryDTO? = null
+        val categoryEntity: CategoryDTO? = null,
+        val brandEntity: BrandDTO? = null
 ) {
-    // ✅ Helper method để chuyển string thành list
+    //Helper method để chuyển string thành list (xử lý cả ";" và ",")
     fun getSizeList(): List<String> {
         return if (size.isBlank()) emptyList()
-        else size.split(",").map { it.trim() }.filter { it.isNotBlank() }
+        else {
+            // Xử lý cả 2 loại delimiter
+            if (size.contains(";")) {
+                size.split(";").map { it.trim() }.filter { it.isNotBlank() }
+            } else {
+                size.split(",").map { it.trim() }.filter { it.isNotBlank() }
+            }
+        }
     }
 
-    // ✅ Helper method để chuyển list thành string
+    //Helper method để chuyển color string thành list
+    fun getColorList(): List<String> {
+        return if (color.isBlank()) listOf("Đen")
+        else {
+            // Xử lý cả 2 loại delimiter
+            if (color.contains(";")) {
+                color.split(";").map { it.trim() }.filter { it.isNotBlank() }
+            } else {
+                // Nếu không có delimiter, coi như một màu
+                listOf(color.trim())
+            }
+        }
+    }
+
+    // ✅ Helper method để chuyển list thành string với delimiter "; "
     companion object {
         fun fromSizeList(sizeList: List<String>): String {
-            return sizeList.joinToString(",")
+            return sizeList.joinToString("; ")
+        }
+
+        fun fromColorList(colorList: List<String>): String {
+            return colorList.joinToString("; ")
         }
     }
 }
-
 data class ProductImageDTO(
         val id: Int = 0,
         val type: String = "THUMBNAIL",
@@ -65,6 +78,11 @@ data class ImageDTO(
 )
 
 data class CategoryDTO(
+        val id: Int = 0,
+        val name: String = ""
+)
+
+data class BrandDTO(
         val id: Int = 0,
         val name: String = ""
 )

@@ -1,5 +1,6 @@
 import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
 
+// ĐẢM BẢO có brand_id trong UpdateProductAdminDto
 export class UpdateProductAdminDto {
     @IsOptional()
     @IsString()
@@ -18,11 +19,15 @@ export class UpdateProductAdminDto {
 
     @IsOptional()
     @IsNumber()
-    category_id?: number;  // Optional vì có thể không thay đổi category
+    category_id?: number;
+
+    @IsOptional()
+    @IsNumber()
+    brand_id?: number;
 
     @IsOptional()
     @IsString()
-    size?: string;  // CHUYỂN từ string[] thành string (để phù hợp với frontend)
+    size?: string;
 
     @IsOptional()
     @IsString()
@@ -40,5 +45,5 @@ export class UpdateProductAdminDto {
 
     @IsOptional()
     @IsString()
-    status?: string;  // THÊM status cho update
+    status?: string;
 }

@@ -16,9 +16,9 @@ import { ProductDetailsEntity } from '../entities/product-details.entity';
 
 @Injectable()
 export class ProductMapper {
-	toProductEntityListResponseDto(products: ProductEntity[]): ProductEntityResponseDto[] {
-		return products.map(product => this.toProductEntityResponseDto(product));
-	}
+	// toProductEntityListResponseDto(products: ProductEntity[]): ProductEntityResponseDto[] {
+	// 	return products.map(product => this.toProductEntityResponseDto(product));
+	// }
 
 	/**
 	 * @description Map from Product entity to Product entity response object
@@ -42,12 +42,17 @@ export class ProductMapper {
 	): ProductEntityResponseDto {
 		const details: ProductDetailsEntity = product.productDetailsEntity;
 
+        // FIX: Xử lý NaN và undefined cho discount
+        let discountValue = product.discount;
+        if (discountValue == null || discountValue == undefined || isNaN(discountValue)) {
+            discountValue = 0;
+        }
 		return {
 			id: product.id,
 			name: product.name,
 			price: product.price,
 
-			discount: product.discount ?? 0,
+			discount: discountValue,
 			description: details?.description ?? '',
 			rating: details?.rating ?? 0,
 
@@ -62,36 +67,38 @@ export class ProductMapper {
 			status: product.status,
 			createdAt: product.createdAt,
 			updatedAt: product.updatedAt,
+
+
 		};
 	}
 
-	toProductEntityResponseDto(product: ProductEntity): ProductEntityResponseDto {
-		// Xử lý ảnh với null check
-		let imageUrl = '';
-
-		// Kiểm tra
-		if (product.productImages &&
-			Array.isArray(product.productImages) &&
-			product.productImages.length > 0) {
-
-			const firstProductImage = product.productImages[0];
-
-			if (firstProductImage &&
-				firstProductImage.image &&
-				firstProductImage.image.url) {
-				imageUrl = firstProductImage.image.url;
-			}
-		}
-
-		return {
-			id: product.id,
-			name: product.name,
-			price: product.price,
-			discount: product.discount,
-			imageUrl: imageUrl,
-			status: product.status,
-			createdAt: product.createdAt,
-			updatedAt: product.updatedAt,
-		};
-	}
+	// toProductEntityResponseDto(product: ProductEntity): ProductEntityResponseDto {
+	// 	// Xử lý ảnh với null check
+	// 	let imageUrl = '';
+    //
+	// 	// Kiểm tra
+	// 	if (product.productImages &&
+	// 		Array.isArray(product.productImages) &&
+	// 		product.productImages.length > 0) {
+    //
+	// 		const firstProductImage = product.productImages[0];
+    //
+	// 		if (firstProductImage &&
+	// 			firstProductImage.image &&
+	// 			firstProductImage.image.url) {
+	// 			imageUrl = firstProductImage.image.url;
+	// 		}
+	// 	}
+    //
+	// 	return {
+	// 		id: product.id,
+	// 		name: product.name,
+	// 		price: product.price,
+	// 		discount: product.discount,
+	// 		imageUrl: imageUrl,
+	// 		status: product.status,
+	// 		createdAt: product.createdAt,
+	// 		updatedAt: product.updatedAt,
+	// 	};
+	// }
 }

@@ -1,8 +1,6 @@
 import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
 import { IsArray } from 'class-validator';
 
-
-// create-product-admin.dto.ts
 export class CreateProductAdminDto {
     @IsString()
     name: string;
@@ -17,12 +15,16 @@ export class CreateProductAdminDto {
     @Max(100)
     discount?: number;
 
-    @IsOptional()  // THAY ĐỔI: không bắt buộc
+    @IsOptional()
     @IsNumber()
     category_id?: number;
 
-    @IsOptional()  // THAY ĐỔI: không bắt buộc
-    @IsString()    // CHUYỂN từ string[] thành string
+    @IsOptional()
+    @IsNumber()
+    brand_id?: number;
+
+    @IsOptional()
+    @IsString()
     size?: string;
 
     @IsOptional()
@@ -41,5 +43,5 @@ export class CreateProductAdminDto {
 
     @IsOptional()
     @IsString()
-    status?: string = 'ACTIVE';  // Default value
+    status?: string = 'ACTIVE';
 }

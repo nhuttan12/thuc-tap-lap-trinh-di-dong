@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.admin.fragment.ProductCache
 import com.example.admin.model.Product
 import com.example.admin.repository.ProductRepository
 import com.example.admin.service.CreateProductRequest
@@ -25,6 +26,7 @@ class ProductViewModel : ViewModel() {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    // ProductViewModel.kt - Sửa loadProducts
     fun loadProducts(page: Int = 1) {
         viewModelScope.launch {
             try {
@@ -32,6 +34,25 @@ class ProductViewModel : ViewModel() {
                 _error.value = null
 
                 val productList = repository.getProducts(page)
+
+                // Cache tất cả products
+                productList.forEach { product ->
+                    // Nếu product không có brand/category, bổ sung từ cache cũ
+                    val enhancedProduct = if (product.brandId == 0 || product.categoryId == 0) {
+                        val cachedProduct = ProductCache.get(product.id)
+                        product.copy(
+                                brandId = cachedProduct?.brandId ?: 2,
+                                categoryId = cachedProduct?.categoryId ?: 1,
+                                brand = cachedProduct?.brand ?: "Adidas",
+                                category = cachedProduct?.category ?: "Thể thao"
+                        )
+                    } else {
+                        product
+                    }
+
+                    ProductCache.save(enhancedProduct)
+                }
+
                 _products.value = productList
             } catch (e: Exception) {
                 _error.value = e.message ?: "Lỗi tải danh sách sản phẩm"
@@ -39,6 +60,23 @@ class ProductViewModel : ViewModel() {
             } finally {
                 _loading.value = false
             }
+        }
+    }
+
+    // Thêm hàm để update cache khi có thay đổi
+    fun updateProductInCache(product: Product) {
+        ProductCache.update(product)
+
+        // Cập nhật ngay trong list hiện tại
+        val currentList = _products.value?.toMutableList() ?: mutableListOf()
+        val index = currentList.indexOfFirst { it.id == product.id }
+        if (index != -1) {
+            currentList[index] = product
+            _products.value = currentList
+        } else {
+            // Thêm vào đầu nếu là sản phẩm mới
+            currentList.add(0, product)
+            _products.value = currentList
         }
     }
 
