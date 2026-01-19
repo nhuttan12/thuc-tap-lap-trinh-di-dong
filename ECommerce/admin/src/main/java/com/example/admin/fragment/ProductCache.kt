@@ -1,5 +1,6 @@
 package com.example.admin.fragment
 
+import android.util.Log
 import com.example.admin.model.Product
 
 // ProductCache.kt
@@ -8,16 +9,15 @@ object ProductCache {
 
     fun save(product: Product) {
         cache[product.id] = product
-        println("💾 Cached product ${product.id}: ${product.name}")
+        Log.d("ProductCache", "Saved product ${product.id}: ${product.name}")
     }
 
-    fun get(id: Int): Product? {
-        return cache[id]
+    fun get(productId: Int): Product? {
+        return cache[productId]
     }
 
     fun update(product: Product) {
-        cache[product.id] = product
-        println("🔄 Updated cache for product ${product.id}")
+        save(product)
     }
 
     fun remove(id: Int) {

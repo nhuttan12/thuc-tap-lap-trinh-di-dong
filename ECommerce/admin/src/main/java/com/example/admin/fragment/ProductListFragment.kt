@@ -17,6 +17,7 @@ import com.example.admin.databinding.FragmentProductListBinding
 import com.example.admin.model.Product
 import com.example.admin.viewmodel.ProductViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ProductListFragment : Fragment() {
@@ -137,26 +138,42 @@ class ProductListFragment : Fragment() {
         showEmptyState(currentList.isEmpty(), "Danh sách sản phẩm trống")
     }
     private fun setupViewModelObservers() {
-        // SỬA: Dùng loading thay vì isLoading
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             showLoading(isLoading)
+
+            // NẾU KHÔNG LOADING VÀ CHƯA CÓ DỮ LIỆU, LOAD LẠI
+            if (!isLoading && (adapter.itemCount == 0)) {
+                viewModel.loadProducts(1)
+            }
         }
 
-        // Quan sát error state
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
+                // Nếu có lỗi, thử load lại sau 2 giây
+                lifecycleScope.launch {
+                    delay(2000)
+                    if (adapter.itemCount == 0) {
+                        viewModel.loadProducts(1)
+                    }
+                }
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                 viewModel.clearError()
             }
         }
 
-        // Quan sát products list
         viewModel.products.observe(viewLifecycleOwner) { products ->
             if (products.isEmpty()) {
                 showEmptyState(true, "Danh sách sản phẩm trống")
             } else {
                 showEmptyState(false)
-                adapter.submitList(products)
+
+                // KIỂM TRA VÀ CẬP NHẬT TỪ CACHE NẾU CẦN
+                val updatedList = products.map { product ->
+                    val cachedProduct = ProductCache.get(product.id)
+                    cachedProduct ?: product
+                }
+
+                adapter.submitList(updatedList)
             }
         }
     }
