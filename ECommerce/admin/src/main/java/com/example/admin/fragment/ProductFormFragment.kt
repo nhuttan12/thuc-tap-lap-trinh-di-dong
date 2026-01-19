@@ -26,7 +26,7 @@ class ProductFormFragment : Fragment() {
 
     private var isEditMode = false
     private var productId = 0
-
+    private var isDataSaved = false
 
     companion object {
         private const val TAG = "ProductFormFragment"
@@ -296,6 +296,7 @@ class ProductFormFragment : Fragment() {
     // Trong saveProduct() của ProductFormFragment
     // Trong ProductFormFragment.kt - saveProduct()
     private fun saveProduct() {
+
         if (!validateForm()) return
         showLoading(true)
 
@@ -390,7 +391,7 @@ class ProductFormFragment : Fragment() {
 
                     // 2. Cache lại product (quan trọng!)
                     ProductCache.save(savedProduct)
-
+                    isDataSaved = true
                     // 3. Gửi fragment result để refresh
                     parentFragmentManager.setFragmentResult(
                             "product_updated",
@@ -401,7 +402,7 @@ class ProductFormFragment : Fragment() {
                                 putInt("productId", savedProduct.id)
                             }
                     )
-
+//                    isDataSaved = true
                     Toast.makeText(requireContext(),
                             if (isEditMode) "Cập nhật thành công" else "Thêm sản phẩm thành công",
                             Toast.LENGTH_SHORT
@@ -411,7 +412,7 @@ class ProductFormFragment : Fragment() {
                 }
 
             } catch (e: Exception) {
-                println("❌ Save product error: ${e.message}")
+                println("Save product error: ${e.message}")
                 e.printStackTrace()
                 Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
@@ -469,9 +470,21 @@ class ProductFormFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
-    }
 
+        // Gửi signal để refresh (dùng đúng key)
+        if (isDataSaved) {
+            parentFragmentManager.setFragmentResult(
+                    "refresh_products",  // DÙNG ĐÚNG KEY NÀY
+                    Bundle().apply {
+                        putBoolean("refresh", true)
+                        putString("action", if (isEditMode) "update" else "create")
+                        if (isEditMode) {
+                            putInt("productId", productId)
+                        }
+                    }
+            )
+        }
+    }
     private fun setupInputFilters() {
         binding.edtSize.filters = arrayOf(
                 InputFilter { source, _, _, _, _, _ ->

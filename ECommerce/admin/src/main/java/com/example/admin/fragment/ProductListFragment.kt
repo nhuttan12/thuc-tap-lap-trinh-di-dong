@@ -79,18 +79,29 @@ class ProductListFragment : Fragment() {
 
         // THÊM Fragment Result Listener
         parentFragmentManager.setFragmentResultListener(
-                "product_updated",
+                "refresh_products",  // KEY PHẢI KHỚP VỚI FORM
                 viewLifecycleOwner
-        ) { _, bundle ->
-            val shouldRefresh = bundle.getBoolean("refresh", false)
-            if (shouldRefresh) {
-                Log.d("ProductList", "Received refresh request")
+        ) { requestKey, bundle ->
+            Log.d("ProductListFragment", "Received fragment result: $requestKey")
 
-                // Force reload từ đầu
+            if (bundle.getBoolean("refresh", false)) {
+                // KIỂM TRA CACHE TRƯỚC KHI LOAD
+                val productId = bundle.getInt("productId", 0)
+                val action = bundle.getString("action", "update")
+
+                // Nếu có productId cụ thể, tìm trong cache để update
+                if (productId > 0) {
+                    val cachedProduct = ProductCache.get(productId)
+                    if (cachedProduct != null) {
+                        Log.d("ProductListFragment", "Updating cached product: ${cachedProduct.name}")
+                        updateProductInList(cachedProduct, action == "create")
+                    }
+                }
+
+                // Force reload từ API
                 viewModel.loadProducts(1)
 
-                // Hoặc hiển thị snackbar
-                val action = bundle.getString("action", "update")
+                // Hiển thị snackbar
                 val message = if (action == "update")
                     "Đã cập nhật sản phẩm"
                 else
@@ -101,6 +112,30 @@ class ProductListFragment : Fragment() {
         }
     }
 
+    // Thêm hàm để cập nhật product trong list
+    private fun updateProductInList(updatedProduct: Product, isNewProduct: Boolean = false) {
+        val currentList = adapter.currentList.toMutableList()
+
+        if (isNewProduct) {
+            // Thêm sản phẩm mới vào đầu list
+            currentList.add(0, updatedProduct)
+        } else {
+            // Tìm và cập nhật sản phẩm đã có
+            val index = currentList.indexOfFirst { it.id == updatedProduct.id }
+            if (index != -1) {
+                currentList[index] = updatedProduct
+            } else {
+                // Nếu không tìm thấy, thêm vào đầu list
+                currentList.add(0, updatedProduct)
+            }
+        }
+
+        // Submit list mới
+        adapter.submitList(currentList)
+
+        // Ẩn empty state nếu có
+        showEmptyState(currentList.isEmpty(), "Danh sách sản phẩm trống")
+    }
     private fun setupViewModelObservers() {
         // SỬA: Dùng loading thay vì isLoading
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
@@ -160,7 +195,7 @@ class ProductListFragment : Fragment() {
                     preloadedData["brand_id"] = product.brandId.toString()
                     preloadedData["brand_name"] = product.brand
 
-                    // Category info - QUAN TRỌNG!
+
                     // Nếu product không có category, mặc định là 1
                     val categoryId = if (product.category.isNotBlank()) {
                         // Có thể parse từ category name hoặc có thêm categoryId field
