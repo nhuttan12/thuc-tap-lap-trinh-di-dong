@@ -11,7 +11,7 @@ export enum OrderStatusEnum {
 	CONFIRMED = 'CONFIRMED',
 	PROCESSING = 'PROCESSING',
 	COMPLETED = 'COMPLETED',
-	CANCELED = 'CANCELED',    // Note: 1 chữ L
+	CANCELED = 'CANCELED',
 	ON_HOLD = 'ON_HOLD',
-	DELETED = 'DELETED'       // Giữ lại cho soft delete
+	DELETED = 'DELETED'
 }

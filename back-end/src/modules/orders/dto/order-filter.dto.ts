@@ -4,7 +4,11 @@ import { Type } from 'class-transformer';
 import { OrderStatusEnum } from '../enums/order-status.enum';
 
 export class OrderFilterDto {
-    @ApiProperty({ description: 'Trạng thái đơn hàng', required: false, enum: OrderStatusEnum })
+    @ApiProperty({
+        description: 'Trạng thái đơn hàng',
+        required: false,
+        enum: OrderStatusEnum
+    })
     @IsOptional()
     @IsEnum(OrderStatusEnum)
     status?: OrderStatusEnum;

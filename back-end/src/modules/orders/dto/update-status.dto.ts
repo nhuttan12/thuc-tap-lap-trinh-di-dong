@@ -6,7 +6,7 @@ export class UpdateStatusDto {
     @ApiProperty({
         description: 'Trạng thái mới của đơn hàng',
         enum: OrderStatusEnum,
-        example: OrderStatusEnum.ACTIVE
+        example: OrderStatusEnum.PENDING
     })
     @IsEnum(OrderStatusEnum)
     status: OrderStatusEnum;

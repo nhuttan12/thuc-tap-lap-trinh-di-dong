@@ -31,9 +31,14 @@ export class CreateOrderDto {
     @IsPositive()
     price: number;
 
-    @ApiProperty({ description: 'Trạng thái đơn hàng', enum: OrderStatusEnum })
+    @ApiProperty({
+        description: 'Trạng thái đơn hàng',
+        enum: OrderStatusEnum,
+        default: OrderStatusEnum.PENDING, // THÊM default
+        example: OrderStatusEnum.PENDING
+    })
     @IsEnum(OrderStatusEnum)
-    status: OrderStatusEnum;
+    status: OrderStatusEnum = OrderStatusEnum.PENDING; // THÊM default value
 
     @ApiProperty({ type: [CreateOrderItemDto], description: 'Danh sách sản phẩm' })
     @IsArray()

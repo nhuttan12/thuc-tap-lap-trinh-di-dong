@@ -17,7 +17,11 @@ export class UpdateOrderDto extends PartialType(CreateOrderDto) {
     @IsPositive()
     price?: number;
 
-    @ApiProperty({ description: 'Trạng thái đơn hàng', enum: OrderStatusEnum, required: false })
+    @ApiProperty({
+        description: 'Trạng thái đơn hàng',
+        enum: OrderStatusEnum,
+        required: false
+    })
     @IsOptional()
     @IsEnum(OrderStatusEnum)
     status?: OrderStatusEnum;

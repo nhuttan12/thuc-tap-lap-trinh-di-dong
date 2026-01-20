@@ -464,8 +464,13 @@ class OrderFormFragment : Fragment() {
                 // Khi không còn loading, check xem có lỗi không
                 if (orderViewModel.error.value == null) {
                     Toast.makeText(requireContext(), "Lưu đơn hàng thành công", Toast.LENGTH_SHORT).show()
+
+                    // ĐỢI 1 GIÂY RỒI TỰ ĐỘNG QUAY LẠI
                     Handler(Looper.getMainLooper()).postDelayed({
-                        findNavController().navigateUp()
+                        // KIỂM TRA fragment còn sống không
+                        if (isAdded && view != null && findNavController().currentDestination?.id == R.id.orderFormFragment) {
+                            findNavController().navigateUp()
+                        }
                     }, 1000)
                 }
             }

@@ -118,7 +118,7 @@ export class OrderController {
                 status: {
                     type: 'string',
                     enum: Object.values(OrderStatusEnum),
-                    example: OrderStatusEnum.ACTIVE
+                    example: OrderStatusEnum.PENDING // SỬA example
                 }
             }
         }

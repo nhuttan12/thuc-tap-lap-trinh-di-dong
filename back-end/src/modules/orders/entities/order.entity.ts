@@ -32,7 +32,7 @@ export class OrderEntity extends TimestampField {
 	@Column({
 		type: 'enum',
 		enum: OrderStatusEnum,
-		default: OrderStatusEnum.ACTIVE,
+		default: OrderStatusEnum.PENDING, // SỬA: Default là PENDING
 	})
 	status: OrderStatusEnum;
 
