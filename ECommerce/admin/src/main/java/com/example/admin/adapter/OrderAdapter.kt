@@ -2,11 +2,11 @@ package com.example.admin.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.admin.databinding.ItemOrderBinding
-import com.example.admin.helper.FormatHelper
 import com.example.admin.model.OrderModel
 
 class OrderAdapter(
@@ -58,31 +58,31 @@ class OrderAdapter(
 
         fun bind(order: OrderModel) {
             binding.apply {
-                tvOrderId.text = "Mã đơn: #${order.id}"
+                tvOrderId.text = "Đơn hàng #${order.id}"
                 tvCustomerName.text = order.fullName ?: order.username ?: "Khách hàng"
                 tvCustomerEmail.text = order.email ?: ""
                 tvOrderDate.text = order.formattedDate
                 tvOrderTotal.text = order.formattedPrice
                 tvItemCount.text = "${order.itemCount} sản phẩm"
 
-                // Status
+                // Status display
                 tvStatus.text = order.statusText
-                tvStatus.setBackgroundColor(order.statusColor)
 
-                // Status badge color
-                val context = root.context
-                tvStatus.setBackgroundColor(
-                        context.resources.getColor(order.statusColor, context.theme)
-                )
+                // Set status background
+                tvStatus.setBackgroundResource(order.statusBackground)
 
-                // Set text color based on status
-                val textColor = when (order.status.uppercase()) {
-                    "DELETED" -> android.R.color.white
-                    else -> android.R.color.black
-                }
-                tvStatus.setTextColor(
-                        context.resources.getColor(textColor, context.theme)
-                )
+                // Set status text color (luôn là màu trắng cho dễ đọc)
+                tvStatus.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.white))
+
+                // Enable/disable buttons based on order status
+                btnEdit.isEnabled = order.isEditable
+                btnEdit.alpha = if (order.isEditable) 1.0f else 0.5f
+
+                btnDelete.isEnabled = order.isCancelable
+                btnDelete.alpha = if (order.isCancelable) 1.0f else 0.5f
+
+                // Set delete button text based on status
+                btnDelete.text = if (order.status.uppercase() == "DELETED") "Đã xóa" else "Xóa"
             }
         }
     }

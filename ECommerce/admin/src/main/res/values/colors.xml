@@ -58,4 +58,12 @@
     <color name="gradient_start">#2563EB</color>
     <color name="gradient_end">#3B82F6</color>
 
+
+    <color name="status_pending">#FFA726</color>     <!-- Orange -->
+    <color name="status_confirmed">#42A5F5</color>   <!-- Blue -->
+    <color name="status_processing">#FF7043</color>  <!-- Deep Orange -->
+    <color name="status_completed">#66BB6A</color>   <!-- Green -->
+    <color name="status_canceled">#EF5350</color>    <!-- Red - 1 chữ L -->
+    <color name="status_on_hold">#BDBDBD</color>     <!-- Grey -->
+    <color name="status_default">#9E9E9E</color>    <!-- Default Grey -->
 </resources>

@@ -5,8 +5,13 @@
  * @version 1.0.1
  */
 
+// enums/order-status.enum.ts
 export enum OrderStatusEnum {
-	ACTIVE = 'ACTIVE',
-	INACTIVE = 'INACTIVE',
-	DELETED = 'DELETED',
+	PENDING = 'PENDING',
+	CONFIRMED = 'CONFIRMED',
+	PROCESSING = 'PROCESSING',
+	COMPLETED = 'COMPLETED',
+	CANCELED = 'CANCELED',    // Note: 1 chữ L
+	ON_HOLD = 'ON_HOLD',
+	DELETED = 'DELETED'       // Giữ lại cho soft delete
 }

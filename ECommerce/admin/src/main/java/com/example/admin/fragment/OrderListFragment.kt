@@ -88,13 +88,15 @@ class OrderListFragment : Fragment() {
     }
 
     private fun setupFilterDropdown() {
+        // DÙNG ĐÚNG CÁC STATUS TỪ DATABASE
         val statuses = listOf(
                 "Tất cả",
-                "Đang xử lý (ACTIVE)",
-                "Hoàn thành (COMPLETED)",
-                "Đang giao (SHIPPING)",
-                "Đã hủy (INACTIVE)",
-                "Đã xóa (DELETED)"
+                "Chờ xử lý (PENDING)",
+                "Đã xác nhận (CONFIRMED)",
+                "Đang xử lý (PROCESSING)",
+                "Đã hoàn thành (COMPLETED)",
+                "Đã hủy (CANCELED)",
+                "Tạm hoãn (ON_HOLD)"
         )
 
         val adapter = ArrayAdapter(
@@ -109,11 +111,12 @@ class OrderListFragment : Fragment() {
         binding.autoCompleteStatus.setOnItemClickListener { _, _, position, _ ->
             val selectedStatus = when (position) {
                 0 -> null
-                1 -> "ACTIVE"
-                2 -> "COMPLETED"
-                3 -> "SHIPPING"
-                4 -> "INACTIVE"
-                5 -> "DELETED"
+                1 -> "PENDING"
+                2 -> "CONFIRMED"
+                3 -> "PROCESSING"
+                4 -> "COMPLETED"
+                5 -> "CANCELED"
+                6 -> "ON_HOLD"
                 else -> null
             }
             viewModel.loadOrders(status = selectedStatus)
