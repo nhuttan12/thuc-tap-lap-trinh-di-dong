@@ -10,4 +10,5 @@ export enum PaymentMethodEnum {
 	PAYPAL = 'PAYPAL',
 	BANK_TRANSFER = 'BANK_TRANSFER',
 	OTHER = 'OTHER',
+	COD = 'COD',
 }
