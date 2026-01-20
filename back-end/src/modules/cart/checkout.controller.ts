@@ -5,12 +5,7 @@
  * @version 1.0.0
  */
 
-import {
-    Controller,
-    Get,
-    Logger,
-    UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../role/decorators/role.decorator';
 import { RoleName } from '../role/enums/role-name.enum';
@@ -24,32 +19,29 @@ import { SuccessResponseDto } from '../../common/dtos/response/success-response.
 @UseGuards(JwtAuthGuard)
 @Roles([RoleName.CUSTOMER])
 export class CheckoutController {
-    private readonly logger = new Logger(CheckoutController.name);
+	private readonly logger = new Logger(CheckoutController.name);
 
-    constructor(
-        private readonly checkoutService: CheckoutService,
-    ) {}
+	constructor(private readonly checkoutService: CheckoutService) {}
 
-    /**
-     * @description Get checkout items from cart
-     */
-    @Get()
-    async getCheckoutItems(
-        @User() payload: JwtPayload,
-    ): Promise<SuccessResponseDto<CheckoutItemResponseDto[]>> {
-        const userId = payload.id;
+	/**
+	 * @description Get checkout items from cart
+	 */
+	@Get()
+	async getCheckoutItems(
+		@User() payload: JwtPayload
+	): Promise<SuccessResponseDto<CheckoutItemResponseDto[]>> {
+		const userId = payload.id;
 
-        const items =
-            await this.checkoutService.getCheckoutItems(userId);
+		const items = await this.checkoutService.getCheckoutItems(userId);
 
-        this.logger.debug(
-            `Checkout items for user ${userId}: ${JSON.stringify(items, null, 2)}`,
-        );
+		this.logger.debug(
+			`Checkout items for user ${userId}: ${JSON.stringify(items, null, 2)}`
+		);
 
-        return {
-            data: items,
-            message: 'Get checkout items successfully',
-            statusCode: '200_000',
-        };
-    }
+		return {
+			data: items,
+			message: 'Get checkout items successfully',
+			statusCode: '200_000',
+		};
+	}
 }

@@ -1,5 +1,6 @@
 package com.example.e_commerce.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -59,6 +60,22 @@ class CartActivity : AppCompatActivity() {
         cartViewModel.loadUserCart(limit = 20, page = 1)
     }
 
+    override fun onResume() {
+        super.onResume()
+        cartViewModel.loadUserCart(limit = 20, page = 1)
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
+            cartViewModel.loadUserCart(20, 1)
+        }
+    }
+
     private fun initView() {
         binding.backBtn.setOnClickListener {
             finish()
@@ -69,8 +86,17 @@ class CartActivity : AppCompatActivity() {
 
         // Bắt nút thanh toán
         binding.checkoutButton.setOnClickListener {
+//            val intent = Intent(this, CheckoutActivity::class.java)
+//            startActivity(intent)
+
+            if (cartAdapter.itemCount == 0) {
+                Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, CheckoutActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, 1001)
+
         }
     }
 

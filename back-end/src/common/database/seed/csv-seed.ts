@@ -39,7 +39,7 @@ config({ path: '.env.local' });
 /**
  * Csv file path
  */
-const csvPath: string = 'D:/thuc-tap-lap-trinh-di-dong/crawl/giay_adidas_pre_processed_v1.csv';
+const csvPath: string = 'D:/TT_Mobile/crawl/giay_adidas_pre_processed_v1.csv';
 
 /**
  * Check exist file path

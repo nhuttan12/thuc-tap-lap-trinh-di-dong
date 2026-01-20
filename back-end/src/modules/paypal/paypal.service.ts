@@ -1,61 +1,58 @@
-import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
-import axios from "axios";
-import {InjectRepository} from "@nestjs/typeorm";
-import {OrderDetailEntity} from "../orders/entities/order-detail.entity";
-import {OrderEntity} from "../orders/entities/order.entity";
-import {PaymentEntity} from "../payment/entites/payment.entity";
-import {UserEntity} from "../user/entities/user.entity";
-import {CartEntity} from "../cart/entities/cart.entity";
-import {DataSource, Repository} from 'typeorm';
-import {PaymentMethodEnum} from "../payment/enums/payment-method.enum";
-import {PaymentStatusEnum} from "../payment/enums/payment-status.enum";
-import {OrderStatusEnum} from "../orders/enums/order-status.enum";
-
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common';
+import axios from 'axios';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderDetailEntity } from '../orders/entities/order-detail.entity';
+import { OrderEntity } from '../orders/entities/order.entity';
+import { PaymentEntity } from '../payment/entites/payment.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { CartEntity } from '../cart/entities/cart.entity';
+import { DataSource, Repository } from 'typeorm';
+import { PaymentMethodEnum } from '../payment/enums/payment-method.enum';
+import { PaymentStatusEnum } from '../payment/enums/payment-status.enum';
+import { OrderStatusEnum } from '../orders/enums/order-status.enum';
 
 @Injectable()
 export class PaypalService {
+	constructor(
+		private readonly dataSource: DataSource,
+		@InjectRepository(OrderEntity)
+		private readonly orderRepo: Repository<OrderEntity>,
+		@InjectRepository(OrderDetailEntity)
+		private readonly orderDetailRepo: Repository<OrderDetailEntity>,
+		@InjectRepository(PaymentEntity)
+		private readonly paymentRepo: Repository<PaymentEntity>,
+		@InjectRepository(UserEntity)
+		private readonly userRepo: Repository<UserEntity>,
+		@InjectRepository(CartEntity)
+		private readonly cartRepo: Repository<CartEntity>
+	) {}
 
-    constructor(
-        private readonly dataSource: DataSource,
+	private baseUrl = process.env.PAYPAL_BASE_URL;
+	private clientId = process.env.PAYPAL_CLIENT_ID;
+	private secret = process.env.PAYPAL_SECRET;
 
-        @InjectRepository(OrderEntity)
-        private readonly orderRepo: Repository<OrderEntity>,
+	private async getAccessToken(): Promise<string> {
+		const res = await axios.post(
+			`${this.baseUrl}/v1/oauth2/token`,
+			'grant_type=client_credentials',
+			{
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization':
+						'Basic ' +
+						Buffer.from(`${this.clientId}:${this.secret}`).toString(
+							'base64'
+						),
+				},
+			}
+		);
 
-        @InjectRepository(OrderDetailEntity)
-        private readonly orderDetailRepo: Repository<OrderDetailEntity>,
-
-        @InjectRepository(PaymentEntity)
-        private readonly paymentRepo: Repository<PaymentEntity>,
-
-        @InjectRepository(UserEntity)
-        private readonly userRepo: Repository<UserEntity>,
-
-        @InjectRepository(CartEntity)
-        private readonly cartRepo: Repository<CartEntity>,
-    ) {}
-
-    private baseUrl = process.env.PAYPAL_BASE_URL;
-    private clientId = process.env.PAYPAL_CLIENT_ID;
-    private secret = process.env.PAYPAL_SECRET;
-
-    private async getAccessToken(): Promise<string> {
-            const res = await axios.post(
-                `${this.baseUrl}/v1/oauth2/token`,
-                'grant_type=client_credentials',
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        Authorization:
-                            'Basic ' +
-                            Buffer.from(
-                                `${this.clientId}:${this.secret}`,
-                            ).toString('base64'),
-                    },
-                },
-            );
-
-            return res.data.access_token;
-    }
+		return res.data.access_token;
+	}
 
 	async createOrder(userId: number) {
 		// 1️ Lấy cart từ DB
@@ -70,7 +67,7 @@ export class PaypalService {
 
 		// 2️ Tính total VND
 		let totalVnd = 0;
-		cart.cartDetails.forEach(item => {
+		cart.cartDetails.forEach((item) => {
 			totalVnd += item.quantity * Number(item.product.price);
 		});
 
@@ -110,161 +107,206 @@ export class PaypalService {
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${token}`,
+					'Authorization': `Bearer ${token}`,
 					'Content-Type': 'application/json',
 				},
-			},
+			}
 		);
 
 		return res.data;
 	}
 
+	async captureOrder(orderId: string) {
+		const token = await this.getAccessToken();
 
-    async captureOrder(orderId: string) {
-        const token = await this.getAccessToken();
+		// 1️ Check order status
+		const orderRes = await axios.get(
+			`${this.baseUrl}/v2/checkout/orders/${orderId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
 
-        // 1️ Check order status
-        const orderRes = await axios.get(
-            `${this.baseUrl}/v2/checkout/orders/${orderId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
-        );
+		if (orderRes.data.status === 'COMPLETED') {
+			const capture =
+				orderRes.data.purchase_units[0].payments.captures[0];
 
-        if (orderRes.data.status !== 'APPROVED') {
-            throw new BadRequestException(
-                `Order not approved. Status: ${orderRes.data.status}`,
-            );
-        }
+			return {
+				paypalOrderId: orderId,
+				transactionId: capture.id,
+				amount: Number(capture.amount.value),
+				currency: capture.amount.currency_code,
+				status: 'COMPLETED',
+			};
+		}
 
-        // 2️ Capture
-        const res = await axios.post(
-            `${this.baseUrl}/v2/checkout/orders/${orderId}/capture`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        );
+		if (orderRes.data.status !== 'APPROVED') {
+			throw new BadRequestException(
+				`Order not approved. Status: ${orderRes.data.status}`
+			);
+		}
 
-        const capture =
-            res.data.purchase_units[0].payments.captures[0];
+		// 2️ Capture
+		const res = await axios.post(
+			`${this.baseUrl}/v2/checkout/orders/${orderId}/capture`,
+			{},
+			{
+				headers: {
+					'Authorization': `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+			}
+		);
 
-        return {
-            paypalOrderId: orderId,
-            transactionId: capture.id,
-            amount: Number(capture.amount.value),
-            currency: capture.amount.currency_code,
-            status: res.data.status,
-        };
-    }
+		const capture = res.data.purchase_units[0].payments.captures[0];
 
+		return {
+			paypalOrderId: orderId,
+			transactionId: capture.id,
+			amount: Number(capture.amount.value),
+			currency: capture.amount.currency_code,
+			status: res.data.status,
+		};
+	}
 
+	async handlePaypalSuccess(
+		paypalOrderId: string,
+		userId: number
+	): Promise<void> {
+		// 1️ VERIFY PAYPAL
+		// const token = await this.getAccessToken();
+		// const paypalRes = await axios.get(
+		// 	`${this.baseUrl}/v2/checkout/orders/${paypalOrderId}`,
+		// 	{
+		// 		headers: { Authorization: `Bearer ${token}` },
+		// 	}
+		// );
+		//
+		// if (paypalRes.data.status !== 'COMPLETED') {
+		// 	throw new BadRequestException('Paypal order not completed');
+		// }
+		//
+		// const capture = paypalRes.data.purchase_units[0].payments.captures[0];
+		//
+		// const paidUsd = Number(capture.amount.value);
+		// const currency = capture.amount.currency_code;
+		// const transactionId = capture.id;
 
+		const { transactionId, paidUsd, currency } =
+			await this.verifyPaypalOrder(paypalOrderId);
 
-    async handlePaypalSuccess(
-        paypalOrderId: string,
-        userId: number,
-    ): Promise<void> {
-        await this.dataSource.transaction(async (manager) => {
+		await this.dataSource.transaction(async (manager) => {
+			const existedPayment = await manager.findOne(PaymentEntity, {
+				where: { transactionID: transactionId },
+			});
+			if (existedPayment) {
+				return;
+			}
 
-            // 1️ VERIFY PAYPAL
-            const token = await this.getAccessToken();
-            const paypalRes = await axios.get(
-                `${this.baseUrl}/v2/checkout/orders/${paypalOrderId}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                },
-            );
+			// 2️ USER
+			const user = await manager.findOne(UserEntity, {
+				where: { id: userId },
+			});
+			if (!user) {
+				return;
+			}
 
-            if (paypalRes.data.status !== 'COMPLETED') {
-                throw new BadRequestException('Paypal order not completed');
-            }
+			// 3️ CART
+			const cart = await manager.findOne(CartEntity, {
+				where: { user: { id: userId } },
+				relations: ['cartDetails', 'cartDetails.product'],
+			});
 
-            const capture =
-                paypalRes.data.purchase_units[0].payments.captures[0];
+			if (!cart || cart.cartDetails.length === 0) {
+				return;
+			}
 
-            const paidUsd = Number(capture.amount.value);
-            const currency = capture.amount.currency_code;
-            const transactionId = capture.id;
+			// 4️ TOTAL VND
+			let totalVnd = 0;
+			cart.cartDetails.forEach((item) => {
+				totalVnd += item.quantity * item.product.price;
+			});
 
-            // 2️ USER
-            const user = await manager.findOne(UserEntity, {
-                where: { id: userId },
-            });
-            if (!user) throw new BadRequestException('User not found');
+			const shippingFee = 20000;
+			totalVnd += shippingFee;
 
-            // 3️ CART
-            const cart = await manager.findOne(CartEntity, {
-                where: { user: { id: userId } },
-                relations: ['cartDetails', 'cartDetails.product'],
-            });
+			// 5️ CHECK USD
+			const USD_RATE = 25000;
+			const expectedUsd = Number((totalVnd / USD_RATE).toFixed(2));
 
-            if (!cart || cart.cartDetails.length === 0) {
-                throw new BadRequestException('Cart empty');
-            }
+			const diff = Math.abs(expectedUsd - paidUsd);
+			if (diff > 0.05 || currency !== 'USD') {
+				return;
+			}
 
-            // 4️ TOTAL VND
-            let totalVnd = 0;
-            cart.cartDetails.forEach(item => {
-                totalVnd += item.quantity * item.product.price;
-            });
+			// 6️ ORDER
+			const order = manager.create(OrderEntity, {
+				user,
+				price: totalVnd,
+				status: OrderStatusEnum.COMPLETED,
+			});
+			await manager.save(order);
 
-            const shippingFee = 20000;
-            totalVnd += shippingFee;
+			// 7️ ORDER DETAILS
+			for (const item of cart.cartDetails) {
+				await manager.save(
+					manager.create(OrderDetailEntity, {
+						order,
+						product: item.product,
+						quantity: item.quantity,
+						price: item.product.price,
+					})
+				);
+			}
 
-            // 5️ CHECK USD
-            const USD_RATE = 25000;
-            const expectedUsd = Number((totalVnd / USD_RATE).toFixed(2));
+			// 8️ PAYMENT
+			await manager.save(
+				manager.create(PaymentEntity, {
+					user,
+					order,
+					amount: paidUsd,
+					currency: 'USD',
+					paymentMethod: PaymentMethodEnum.PAYPAL,
+					status: PaymentStatusEnum.COMPLETED,
+					transactionID: transactionId,
+				})
+			);
 
-            if (expectedUsd !== paidUsd || currency !== 'USD') {
-                throw new BadRequestException('Invalid payment amount');
-            }
+			// 9️ CLEAR CART
+			await manager.remove(cart.cartDetails);
+		});
+	}
 
-            // 6️ ORDER
-            const order = manager.create(OrderEntity, {
-                user,
-                price: totalVnd,
-                status: OrderStatusEnum.COMPLETED,
-            });
-            await manager.save(order);
+	async verifyPaypalOrder(paypalOrderId: string) {
+		const token = await this.getAccessToken();
 
-            // 7️ ORDER DETAILS
-            for (const item of cart.cartDetails) {
-                await manager.save(
-                    manager.create(OrderDetailEntity, {
-                        order,
-                        product: item.product,
-                        quantity: item.quantity,
-                        price: item.product.price,
-                    }),
-                );
-            }
+		const { data } = await axios.get(
+			`${this.baseUrl}/v2/checkout/orders/${paypalOrderId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
 
-            // 8️ PAYMENT
-            await manager.save(
-                manager.create(PaymentEntity, {
-                    user,
-                    order,
-                    amount: paidUsd,
-                    currency: 'USD',
-                    paymentMethod: PaymentMethodEnum.PAYPAL,
-                    status: PaymentStatusEnum.COMPLETED,
-                    transactionID: transactionId,
-                }),
-            );
+		if (data.status !== 'COMPLETED') {
+			throw new BadRequestException(
+				`Paypal order not completed, status=${data.status}`
+			);
+		}
 
-            // 9️ CLEAR CART
-            await manager.remove(cart.cartDetails);
-        });
-    }
+		const capture = data.purchase_units?.[0]?.payments?.captures?.[0];
+		if (!capture) {
+			throw new BadRequestException('Paypal capture not found');
+		}
 
-
-
-
-
+		return {
+			transactionId: capture.id,
+			paidUsd: Number(capture.amount.value),
+			currency: capture.amount.currency_code,
+			raw: data, // optional, để debug
+		};
+	}
 }

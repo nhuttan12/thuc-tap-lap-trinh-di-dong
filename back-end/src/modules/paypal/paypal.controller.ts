@@ -46,15 +46,24 @@ export class PaypalController {
 		}
 
 		// 1️ Capture PayPal
-		const capture = await this.paypalService.captureOrder(orderId);
-		this.logger.debug(`Capture: ${JSON.stringify(capture, null, 2)}`);
+		let capture;
+		try {
+			capture = await this.paypalService.captureOrder(orderId);
+		} catch (e) {
+			this.logger.error('PayPal capture failed', e?.response?.data || e);
+			return { success: false };
+		}
 
 		if (capture.status !== 'COMPLETED') {
 			return { success: false };
 		}
 
 		//  CHỈ SAVE DB SAU KHI COMPLETED
-		await this.paypalService.handlePaypalSuccess(orderId, user.id);
+		try {
+			await this.paypalService.handlePaypalSuccess(orderId, user.id);
+		} catch (e) {
+			this.logger.error(e);
+		}
 
 		//  TRẢ JSON OK
 		return {
@@ -62,6 +71,4 @@ export class PaypalController {
 			transactionId: capture.transactionId,
 		};
 	}
-
-
 }

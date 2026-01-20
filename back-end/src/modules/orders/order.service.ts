@@ -4,7 +4,7 @@ import {
 	Logger,
 	NotFoundException,
 } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { OrderEntity } from './entities/order.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { OrderStatusEnum } from './enums/order-status.enum';
@@ -14,35 +14,65 @@ import { PaymentMethodEnum } from '../payment/enums/payment-method.enum';
 import { PaymentStatusEnum } from '../payment/enums/payment-status.enum';
 import * as nodemailer from 'nodemailer';
 import { CartEntity } from '../cart/entities/cart.entity';
+import { CartStatusEnum } from '../cart/enums/cart.status.enum';
+import { CartDetailsStatusEnum } from '../cart/enums/cart-details-status.enum';
 
 @Injectable()
 export class OrderService {
 	private readonly logger = new Logger(OrderService.name);
 
-	constructor(
-		private readonly dataSource: DataSource,
-	) {}
+	constructor(private readonly dataSource: DataSource) {}
 
 	async createOrderCOD(userId: number) {
-		const order = await this.dataSource.transaction(async manager => {
+		this.logger.debug('USER_ID', userId);
+		let savedCart: CartEntity;
 
+		const order = await this.dataSource.transaction(async (manager) => {
 			// 1️ USER
 			const user = await manager.findOne(UserEntity, {
 				where: { id: userId },
 			});
+			this.logger.debug('USER', user);
+
 			if (!user) {
 				throw new NotFoundException('User not found');
 			}
 
+			// const existingPendingOrder = await manager.findOne(OrderEntity, {
+			// 	where: {
+			// 		user: { id: userId },
+			// 		status: OrderStatusEnum.PENDING,
+			// 	},
+			// });
+			//
+			// if (existingPendingOrder) {
+			// 	throw new BadRequestException(
+			// 		'You already have a pending order'
+			// 	);
+			// }
+
 			// 2️ CART
 			const cart = await manager.findOne(CartEntity, {
-				where: { user: { id: userId } },
-				relations: ['cartDetails', 'cartDetails.product'],
+				where: { user: { id: userId }, status: CartStatusEnum.ACTIVE },
+				relations: {
+					cartDetails: {
+						product: true,
+					},
+				},
 			});
+			this.logger.debug('CART', cart);
+			this.logger.debug('CART DETAILS', cart?.cartDetails);
 
 			if (!cart || cart.cartDetails.length === 0) {
-				throw new BadRequestException('Cart is empty');
+				this.logger.warn(
+					'Cart is empty. Order may already be completed.'
+				);
+				throw new BadRequestException(
+					'Cart is empty. Order may already be completed.'
+				);
 			}
+
+			savedCart = cart;
 
 			// 3️ TOTAL VND
 			let totalVnd = 0;
@@ -69,11 +99,11 @@ export class OrderService {
 						product: item.product,
 						quantity: item.quantity,
 						price: item.product.price,
-					}),
+					})
 				);
 			}
 
-			// 6️⃣ PAYMENT
+			// 6️ PAYMENT
 			await manager.save(
 				manager.create(PaymentEntity, {
 					user,
@@ -82,11 +112,8 @@ export class OrderService {
 					currency: 'VND',
 					paymentMethod: PaymentMethodEnum.COD,
 					status: PaymentStatusEnum.PENDING,
-				}),
+				})
 			);
-
-			// 7️⃣ CLEAR CART
-			await manager.remove(cart.cartDetails);
 
 			return order;
 		});
@@ -114,10 +141,27 @@ export class OrderService {
 					<p>Thanh toán: <b>COD</b></p>
 				`,
 			});
+
+			await this.dataSource.transaction(async (manager) => {
+				await this.clearCartAfterOrder(manager, savedCart);
+			});
 		} catch (err) {
 			this.logger.error('Send COD mail failed', err);
 		}
 
+		this.logger.debug('Order', order);
 		return order;
+	}
+
+	async clearCartAfterOrder(manager: EntityManager, cart: CartEntity) {
+		// 1. Inactive cart details
+		for (const item of cart.cartDetails) {
+			item.status = CartDetailsStatusEnum.INACTIVE;
+			await manager.save(item);
+		}
+
+		// 2. Close cart
+		cart.status = CartStatusEnum.DELETED;
+		await manager.save(cart);
 	}
 }

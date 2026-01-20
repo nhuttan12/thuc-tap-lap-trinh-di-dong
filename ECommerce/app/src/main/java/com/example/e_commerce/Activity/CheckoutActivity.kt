@@ -1,5 +1,6 @@
 package com.example.e_commerce.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -284,6 +285,8 @@ class CheckoutActivity : AppCompatActivity() {
             { response ->
                 Log.d(TAG, "Capture SUCCESS: $response")
                 if (response.getBoolean("success")) {
+                    clearCheckoutState()
+
                     Toast.makeText(this, "Thanh toán thành công", Toast.LENGTH_LONG).show()
                     Log.d(TAG, "Paypal SUCCESS - orderId: $orderId")
                     goHome()
@@ -341,6 +344,15 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun createOrderCOD() {
+        if (cartAdapter.getItems().isEmpty()) {
+            Toast.makeText(
+                this,
+                "Giỏ hàng trống, không thể đặt hàng",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
         val token = tinyDB.getValidToken() ?: return
 
         val url = "http://10.0.2.2:8080/orders/cod"
@@ -359,12 +371,22 @@ class CheckoutActivity : AppCompatActivity() {
             },
             { error ->
                 error.printStackTrace()
-                val msg = error.networkResponse?.data?.let { String(it) }
-                Toast.makeText(
-                    this,
-                    msg ?: "Đặt hàng COD thất bại",
-                    Toast.LENGTH_LONG
-                ).show()
+
+                val errorMsg = try {
+                    val body = String(error.networkResponse?.data ?: ByteArray(0))
+                    val json = JSONObject(body)
+                    val msg = json.get("message")
+                    when (msg) {
+                        is String -> msg
+                        is org.json.JSONArray -> msg.optString(0)
+                        else -> "Đặt hàng COD thất bại"
+                    }
+
+                } catch (e: Exception) {
+                    "Đặt hàng COD thất bại"
+                }
+
+                Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
             }
         ) {
             override fun getHeaders() = hashMapOf(
@@ -375,5 +397,9 @@ class CheckoutActivity : AppCompatActivity() {
         Volley.newRequestQueue(this).add(request)
     }
 
-
+    private fun clearCheckoutState() {
+        cartAdapter.updateData(arrayListOf())
+        cartAdapter.notifyDataSetChanged()
+        binding.tvTotal.text = formatMoney(0.0)
+    }
 }
