@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:layout_marginHorizontal="8dp"
+                                   android:layout_marginVertical="4dp"
+                                   app:cardCornerRadius="8dp"
+                                   app:cardElevation="2dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+        <!-- Product Image -->
+        <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:background="@color/purple_500"
+                android:contentDescription="Hình sản phẩm" />
+
+        <!-- Product Info -->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            <!-- Product Name -->
+            <TextView
+                    android:id="@+id/tvProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+
+            <!-- Brand -->
+            <TextView
+                    android:id="@+id/tvBrand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary" />
+
+            <!-- Size & Color -->
+            <TextView
+                    android:id="@+id/tvSizeColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            <!-- Rating -->
+            <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="11sp"
+                    android:textColor="@color/accent_orange_light" />
+
+            <!-- Price Info -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                <!-- Final Price (when discount) -->
+                <TextView
+                        android:id="@+id/tvFinalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_blue"
+                        android:visibility="gone" />
+
+                <!-- Original Price (strikethrough) -->
+                <TextView
+                        android:id="@+id/tvOriginalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:visibility="gone" />
+
+                <!-- Regular Price (no discount) -->
+                <TextView
+                        android:id="@+id/tvProductPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_blue" />
+
+                <!-- Discount Badge -->
+                <TextView
+                        android:id="@+id/tvProductDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_status_banned"
+                        android:paddingHorizontal="4dp"
+                        android:paddingVertical="1dp"
+                        android:textSize="10sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Status & Category -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                <!-- Status Badge -->
+                <TextView
+                        android:id="@+id/tvProductStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="2dp"
+                        android:textSize="10sp"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                <!-- Category -->
+                <TextView
+                        android:id="@+id/tvProductCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+            <ImageButton
+                    android:id="@+id/btnEdit"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_edit"
+                    android:contentDescription="Sửa"
+                    app:tint="@color/primary_blue" />
+
+            <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_delete"
+                    android:contentDescription="Xoá"
+                    app:tint="@color/error_red" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

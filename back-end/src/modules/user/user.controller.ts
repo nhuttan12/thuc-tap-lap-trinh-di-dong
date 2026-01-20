@@ -1,7 +1,6 @@
 /**
  *
  */
-
 import {
 	BadRequestException,
 	Body,
@@ -40,7 +39,6 @@ export class UserController {
 	async seeding(): Promise<void> {
 		await seed();
 	}
-
 	@Get('csv')
 	async csvSeeding(): Promise<void> {
 		await csvSeed();

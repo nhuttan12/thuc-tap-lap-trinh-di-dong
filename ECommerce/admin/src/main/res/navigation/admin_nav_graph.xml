@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/admin_nav_graph"
+            app:startDestination="@id/loginFragment">
+
+    <!-- Login -->
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.example.admin.fragment.LoginFragment"
+            android:label="Login"
+            tools:layout="@layout/fragment_login">
+
+        <action
+                android:id="@+id/action_login_to_dashboardFragment"
+                app:destination="@id/dashboardFragment"
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <!-- Dashboard -->
+    <fragment
+            android:id="@+id/dashboardFragment"
+            android:name="com.example.admin.fragment.DashboardFragment"
+            android:label="Tổng quan"
+            tools:layout="@layout/fragment_admin_dashboard">
+
+        <action
+                android:id="@+id/action_dashboard_to_analytics"
+                app:destination="@id/analyticsFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/action_dashboard_to_products"
+                app:destination="@id/productListFragment" />
+
+        <action
+                android:id="@+id/action_dashboard_to_orders"
+                app:destination="@id/orderListFragment" />
+
+        <action
+                android:id="@+id/action_dashboard_to_users"
+                app:destination="@id/userListFragment" />
+
+    </fragment>
+
+    <!-- Analytics -->
+    <fragment
+            android:id="@+id/analyticsFragment"
+            android:name="com.example.admin.fragment.AnalyticsFragment"
+            android:label="Thống kê chi tiết"
+            tools:layout="@layout/fragment_analytics">
+
+        <action
+                android:id="@+id/action_analytics_to_dashboard"
+                app:destination="@id/dashboardFragment"
+                app:popUpTo="@id/dashboardFragment"
+                app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Product List -->
+    <fragment
+            android:id="@+id/productListFragment"
+            android:name="com.example.admin.fragment.ProductListFragment"
+            android:label="Sản phẩm"
+            tools:layout="@layout/fragment_product_list">
+
+        <action
+                android:id="@+id/action_productList_to_productForm"
+                app:destination="@id/productFormFragment" />
+    </fragment>
+
+    <!-- Product Form -->
+    <fragment
+            android:id="@+id/productFormFragment"
+            android:name="com.example.admin.fragment.ProductFormFragment"
+            android:label="Thêm/Sửa sản phẩm"
+            tools:layout="@layout/fragment_product_form">
+
+
+    </fragment>
+
+    <!-- Trong orderListFragment -->
+    <fragment
+            android:id="@+id/orderListFragment"
+            android:name="com.example.admin.fragment.OrderListFragment"
+            android:label="Đơn hàng"
+            tools:layout="@layout/fragment_order_list">
+
+        <!-- Thêm action đến orderDetailFragment -->
+        <action
+                android:id="@+id/action_orderList_to_orderDetail"
+                app:destination="@id/orderDetailFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <!-- Thêm action đến orderFormFragment -->
+        <action
+                android:id="@+id/action_orderList_to_orderForm"
+                app:destination="@id/orderFormFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <!-- Trong orderDetailFragment -->
+    <fragment
+            android:id="@+id/orderDetailFragment"
+            android:name="com.example.admin.fragment.OrderDetailFragment"
+            android:label="Chi tiết đơn hàng"
+            tools:layout="@layout/fragment_order_detail">
+
+        <!-- Thêm action đến orderFormFragment -->
+        <action
+                android:id="@+id/action_orderDetail_to_orderForm"
+                app:destination="@id/orderFormFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <!-- Order Form -->
+    <fragment
+            android:id="@+id/orderFormFragment"
+            android:name="com.example.admin.fragment.OrderFormFragment"
+            android:label="Thêm/Sửa đơn hàng"
+            tools:layout="@layout/fragment_order_form">
+
+    </fragment>
+
+    <!-- User List -->
+    <fragment
+            android:id="@+id/userListFragment"
+            android:name="com.example.admin.fragment.UserListFragment"
+            android:label="Người dùng"
+            tools:layout="@layout/fragment_user_list">
+
+        <action
+                android:id="@+id/action_userList_to_userForm"
+                app:destination="@id/userFormFragment" />
+    </fragment>
+
+    <!-- User Form -->
+    <fragment
+            android:id="@+id/userFormFragment"
+            android:name="com.example.admin.fragment.UserFormFragment"
+            android:label="Thêm/Sửa người dùng"
+            tools:layout="@layout/fragment_user_form">
+
+
+    </fragment>
+
+</navigation>
