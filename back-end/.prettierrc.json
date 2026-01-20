@@ -11,7 +11,7 @@
     "objectWrap": "preserve",
     "bracketSameLine": false,
     "arrowParens": "always",
-    "endOfLine": "lf",
+    "endOfLine": "auto",
     "requirePragma": false,
     "insertPragma": false,
     "checkIgnorePragma": true,
