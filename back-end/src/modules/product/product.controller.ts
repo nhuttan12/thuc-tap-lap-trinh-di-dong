@@ -92,34 +92,6 @@ export class ProductController {
     }
 
     /**
-     * ADMIN endpoint: Lấy danh sách sản phẩm cho admin
-     */
-    // @Get('admin')
-    // async getProductsForAdmin(
-    //     @Query('page') page = 1,
-    //     @Query('limit') limit = 10,
-    // ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
-    //     try {
-    //         const currentPage = Number(page) > 0 ? Number(page) : 1;
-    //         const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
-    //
-    //         this.logger.debug(`[ADMIN] Get products: page=${currentPage}, limit=${currentLimit}`);
-    //
-    //         const products: PagingResponseDto<ProductEntityResponseDto> = await this.productService.getProductsPaging(currentPage, currentLimit);
-    //
-    //         return {
-    //             data: products,
-    //             message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
-    //             statusCode:
-    //             ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
-    //         };
-    //     } catch (e) {
-    //         this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
-    //         throw e;
-    //     }
-    // }
-
-    /**
      * @description Get product detail by product ID
      * @param {number} request - Request to get the product detail by product ID
      * @returns {Promise<SuccessResponseDto<ProductDetailResponseDto>>} - Success response

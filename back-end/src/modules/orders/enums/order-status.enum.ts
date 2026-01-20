@@ -13,5 +13,5 @@ export enum OrderStatusEnum {
 	COMPLETED = 'COMPLETED',
 	CANCELED = 'CANCELED',
 	ON_HOLD = 'ON_HOLD',
-	DELETED = 'DELETED'
+	// DELETED = 'DELETED'
 }
