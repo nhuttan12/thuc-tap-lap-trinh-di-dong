@@ -85,12 +85,58 @@
 
     </fragment>
 
-    <!-- Order List -->
+    <!-- Trong orderListFragment -->
     <fragment
             android:id="@+id/orderListFragment"
             android:name="com.example.admin.fragment.OrderListFragment"
             android:label="Đơn hàng"
-            tools:layout="@layout/fragment_order_list" />
+            tools:layout="@layout/fragment_order_list">
+
+        <!-- Thêm action đến orderDetailFragment -->
+        <action
+                android:id="@+id/action_orderList_to_orderDetail"
+                app:destination="@id/orderDetailFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <!-- Thêm action đến orderFormFragment -->
+        <action
+                android:id="@+id/action_orderList_to_orderForm"
+                app:destination="@id/orderFormFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <!-- Trong orderDetailFragment -->
+    <fragment
+            android:id="@+id/orderDetailFragment"
+            android:name="com.example.admin.fragment.OrderDetailFragment"
+            android:label="Chi tiết đơn hàng"
+            tools:layout="@layout/fragment_order_detail">
+
+        <!-- Thêm action đến orderFormFragment -->
+        <action
+                android:id="@+id/action_orderDetail_to_orderForm"
+                app:destination="@id/orderFormFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <!-- Order Form -->
+    <fragment
+            android:id="@+id/orderFormFragment"
+            android:name="com.example.admin.fragment.OrderFormFragment"
+            android:label="Thêm/Sửa đơn hàng"
+            tools:layout="@layout/fragment_order_form">
+
+    </fragment>
 
     <!-- User List -->
     <fragment

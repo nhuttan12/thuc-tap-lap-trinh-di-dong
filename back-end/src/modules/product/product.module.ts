@@ -34,7 +34,7 @@ import {ProductImageEntity} from "../image/entities/product-image.entity";
 		]),
 		CategoryModule,
 		forwardRef(() => CartModule),
-		OrderModule,
+		forwardRef(() => OrderModule),
 		HelperModule,
 	],
 	providers: [

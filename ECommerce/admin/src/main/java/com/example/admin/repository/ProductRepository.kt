@@ -246,6 +246,7 @@ class ProductRepository {
         }
     }
 
+
     suspend fun deleteProduct(id: Int): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -266,6 +267,51 @@ class ProductRepository {
                 true
             } catch (e: Exception) {
                 Log.e("ProductRepository", "Delete product error: ${e.message}", e)
+                throw e
+            }
+        }
+    }
+
+    suspend fun searchProducts(keyword: String, page: Int = 1): List<Product> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Log.d("ProductRepository", "Searching products for keyword: $keyword, page: $page")
+
+                // TH1: Gọi API search nếu có
+                // val response = service.searchProducts(keyword = keyword, page = page, limit = 20)
+
+                // TH2: Tạm thời lấy tất cả và filter trên client (nếu chưa có API search)
+                val response = service.getProductsForAdmin(page = page, limit = 50) // Lấy nhiều hơn để search
+
+                if (!response.isSuccessful) {
+                    val errorBody = response.errorBody()?.string()
+                    throw Exception("HTTP ${response.code()}: $errorBody")
+                }
+
+                val apiResponse = response.body()
+                if (apiResponse == null || apiResponse.success != true) {
+                    throw Exception(apiResponse?.message ?: "Lỗi không xác định")
+                }
+
+                val pagingResponse = apiResponse.data
+                val productDTOs = pagingResponse?.data ?: emptyList()
+
+                // Filter trên client nếu chưa có API search
+                val filteredDTOs = if (keyword.isNotEmpty()) {
+                    productDTOs.filter { productDTO ->
+                        productDTO.name?.contains(keyword, ignoreCase = true) == true
+                    }
+                } else {
+                    productDTOs
+                }
+
+                Log.d("ProductRepository", "Found ${filteredDTOs.size} products for keyword '$keyword'")
+
+                // Map từ DTO sang Product
+                return@withContext ProductMapper.toProductList(filteredDTOs)
+
+            } catch (e: Exception) {
+                Log.e("ProductRepository", "Search products error: ${e.message}", e)
                 throw e
             }
         }

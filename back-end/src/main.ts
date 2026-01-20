@@ -37,10 +37,10 @@ async function bootstrap() {
 	app.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
-			forbidNonWhitelisted: false,  // QUAN TRỌNG: false
-			transform: true,  // QUAN TRỌNG
+			forbidNonWhitelisted: false,
+			transform: true,
 			transformOptions: {
-				enableImplicitConversion: true,  // QUAN TRỌNG
+				enableImplicitConversion: true,
 			},
 		})
 	);

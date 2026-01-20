@@ -21,12 +21,12 @@ import {
     ApiBody,
     ApiBearerAuth,
 } from '@nestjs/swagger';
-import { OrderService } from '../service/order.service';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { UpdateOrderDto } from '../dto/update-order.dto';
-import { OrderFilterDto } from '../dto/order-filter.dto';
-import { OrderResponseDto } from '../dto/order-response.dto';
-import { OrderStatusEnum } from '../enums/order-status.enum';
+import { OrderService } from './service/order.service';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderFilterDto } from './dto/order-filter.dto';
+import { OrderResponseDto } from './dto/order-response.dto';
+import { OrderStatusEnum } from './enums/order-status.enum';
 
 @ApiTags('Admin - Orders')
 @ApiBearerAuth()

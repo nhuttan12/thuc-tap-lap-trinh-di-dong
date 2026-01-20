@@ -28,7 +28,36 @@ class ProductViewModel : ViewModel() {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    // ProductViewModel.kt - Sửa loadProducts
+    // THÊM HÀM SEARCH:
+    fun searchProducts(keyword: String) {
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+                _error.value = null
+
+                Log.d("ProductViewModel", "Searching products with keyword: '$keyword'")
+
+                if (keyword.isEmpty()) {
+                    // Nếu keyword rỗng, set danh sách rỗng
+                    _products.value = emptyList()
+                    Log.d("ProductViewModel", "Empty keyword, clearing search results")
+                    return@launch
+                }
+
+                val result = repository.searchProducts(keyword)
+                _products.value = result
+
+                Log.d("ProductViewModel", "Search results: ${result.size} products")
+
+            } catch (e: Exception) {
+                Log.e("ProductViewModel", "Error searching products", e)
+                _error.value = "Lỗi tìm kiếm sản phẩm: ${e.message}"
+                _products.value = emptyList()
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
     fun loadProducts(page: Int = 1) {
         viewModelScope.launch {
             try {
