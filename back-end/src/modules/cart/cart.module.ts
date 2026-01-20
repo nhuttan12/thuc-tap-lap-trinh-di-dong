@@ -19,6 +19,8 @@ import { CartMapper } from './mappers/cart.mapper';
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { CartController } from './cart.controller';
+import { CheckoutService } from './checkout.service';
+import { CheckoutController } from './checkout.controller';
 
 @Module({
 	imports: [
@@ -34,8 +36,9 @@ import { CartController } from './cart.controller';
 		CartDetailRepository,
 		CartMapper,
 		CartDetailMapper,
+		CheckoutService,
 	],
 	exports: [],
-	controllers: [CartController],
+	controllers: [CartController, CheckoutController],
 })
 export class CartModule {}

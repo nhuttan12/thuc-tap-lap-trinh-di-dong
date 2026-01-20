@@ -27,6 +27,7 @@ import { AppThrottlerModule } from './common/infrastructure/app-throttler.module
 import { BrandModule } from './modules/brand/brand.module';
 import { HelperModule } from './common/helper/helper.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { PaypalModule } from './modules/paypal/paypal.module';
 
 @Module({
 	imports: [
@@ -49,6 +50,9 @@ import { PaymentModule } from './modules/payment/payment.module';
 		PaymentModule,
 		BrandModule,
 		HelperModule,
+		PaymentModule,
+		PaypalModule,
+		OrderModule,
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],
