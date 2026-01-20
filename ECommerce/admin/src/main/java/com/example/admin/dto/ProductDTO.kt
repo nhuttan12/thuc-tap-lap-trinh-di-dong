@@ -1,15 +1,15 @@
 package com.example.admin.dto
 
 data class ProductDTO(
-        val id: Int = 0,
-        val name: String = "",
-        val price: Double = 0.0,
-        val discount: Double = 0.0,
-        val status: String = "ACTIVE",
-        val productDetailsEntity: ProductDetailsDTO? = null,
-        val productImages: List<ProductImageDTO>? = null,
-        val createdAt: String? = null,
-        val updatedAt: String? = null
+    val id: Int = 0,
+    val name: String = "",
+    val price: Double = 0.0,
+    val discount: Double = 0.0,
+    val status: String = "ACTIVE",
+    val productDetailsEntity: ProductDetailsDTO? = null,
+    val imageUrl: String = "",
+    val createdAt: String? = null,
+    val updatedAt: String? = null
 ){
     init {
         // Debug constructor

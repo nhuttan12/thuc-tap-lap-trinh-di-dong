@@ -1,4 +1,3 @@
-
 package com.example.admin.mapper
 
 import com.example.admin.dto.ProductDTO
@@ -19,20 +18,16 @@ object ProductDetailMapper {
         }
 
         return Product(
-                id = dto.id,
-                name = dto.name,
-                price = dto.price,
-                discount = discount, // Đã xử lý NaN
-                status = dto.status,
-                description = details?.description.orEmpty(),
-                imageUrl = when {
-                    !dto.productImages.isNullOrEmpty() ->
-                        dto.productImages.firstOrNull()?.image?.url ?: ""
-                    else -> ""
-                },
-                category = details?.categoryEntity?.name.orEmpty(),
-                size = details?.size ?: "",
-                color = details?.color ?: ""
+            id = dto.id,
+            name = dto.name,
+            price = dto.price,
+            discount = discount, // Đã xử lý NaN
+            status = dto.status,
+            description = details?.description.orEmpty(),
+            imageUrl = dto.imageUrl,
+            category = details?.categoryEntity?.name.orEmpty(),
+            size = details?.size ?: "",
+            color = details?.color ?: ""
         )
     }
 }

@@ -4,8 +4,6 @@ import android.util.Log
 import com.example.admin.dto.ProductDTO
 import com.example.admin.model.Product
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.firstOrNull
-import java.util.*
 
 object ProductMapper {
 
@@ -58,9 +56,7 @@ object ProductMapper {
                 category = details.categoryEntity?.name ?: getFallbackCategory(dto.id),
                 brandId = details.brandEntity?.id ?: getFallbackBrandId(dto.id),
                 brand = details.brandEntity?.name ?: getFallbackBrand(dto.id),
-                imageUrl = dto.productImages
-                        ?.firstOrNull { it.image != null }
-                        ?.image?.url ?: ""
+                imageUrl = dto.imageUrl
         ).also { product ->
             Log.d("ProductMapper", "✅ Mapped from details: ${product.name}")
             Log.d("ProductMapper", "  Size: '${product.size}', Color: '${product.color}'")
@@ -86,9 +82,7 @@ object ProductMapper {
                 category = getFallbackCategory(productId),
                 brandId = getFallbackBrandId(productId),
                 brand = getFallbackBrand(productId),
-                imageUrl = dto.productImages
-                        ?.firstOrNull { it.image != null }
-                        ?.image?.url ?: ""
+                imageUrl = dto.imageUrl
         ).also { product ->
             Log.d("ProductMapper", "⚠️ Using mock data for: ${product.name}")
             Log.d("ProductMapper", "  Mock Size: '${product.size}', Mock Color: '${product.color}'")

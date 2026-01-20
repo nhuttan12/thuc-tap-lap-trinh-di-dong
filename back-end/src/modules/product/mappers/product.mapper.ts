@@ -13,7 +13,7 @@ import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 import { ProductEntity } from '../entities/product.entity';
 import { ProductImageTypeEnum } from '../enums/product-image-type.enum';
 import { ProductDetailsEntity } from '../entities/product-details.entity';
-import {ProductAdminEntityResponseDto} from "../dtos/product-admin-entity-response.dto";
+import { ProductAdminEntityResponseDto } from '../dtos/product-admin-entity-response.dto';
 
 @Injectable()
 export class ProductMapper {
@@ -62,12 +62,16 @@ export class ProductMapper {
 		};
 	}
 
-	toProductAdminEntityResponseDto(product: ProductEntity): ProductAdminEntityResponseDto {
-		const details: ProductDetailsEntity = product.productDetailsEntity;
-
+	toProductAdminEntityResponseDto(
+		product: ProductEntity
+	): ProductAdminEntityResponseDto {
 		// FIX: Xử lý NaN và undefined cho discount
 		let discountValue = product.discount;
-		if (discountValue == null || discountValue == undefined || isNaN(discountValue)) {
+		if (
+			discountValue == null ||
+			discountValue == undefined ||
+			isNaN(discountValue)
+		) {
 			discountValue = 0;
 		}
 		return {
@@ -75,8 +79,6 @@ export class ProductMapper {
 			name: product.name,
 			price: product.price,
 			discount: discountValue,
-			description: details?.description ?? '',
-			rating: details?.rating ?? 0,
 			imageUrl:
 				product.productImages?.find((img: ProductImageEntity) => {
 					return (
@@ -85,8 +87,18 @@ export class ProductMapper {
 					);
 				})?.image.url ?? '',
 			status: product.status,
-			createdAt: product.createdAt,
-			updatedAt: product.updatedAt,
-	};
+			createdAt: product.createdAt.toString(),
+			updatedAt: product.updatedAt.toString(),
+		};
+	}
+
+	toProductAdminEntityListResponseDto(
+		products: ProductEntity[]
+	): ProductAdminEntityResponseDto[] {
+		return products.map(
+			(product: ProductEntity): ProductAdminEntityResponseDto => {
+				return this.toProductAdminEntityResponseDto(product);
+			}
+		);
 	}
 }

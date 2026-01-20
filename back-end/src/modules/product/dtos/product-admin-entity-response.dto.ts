@@ -1,9 +1,10 @@
 export class ProductAdminEntityResponseDto {
-    productID: number;
-    name: string;
-    price: number;
-    rating: number;
-    imageUrl: string;
-    status: string;
-    isInWishlist: boolean;
+	id: number;
+	name: string;
+	price: number;
+	discount: number;
+	imageUrl: string;
+	status: string;
+	createdAt: string;
+	updatedAt: string;
 }
