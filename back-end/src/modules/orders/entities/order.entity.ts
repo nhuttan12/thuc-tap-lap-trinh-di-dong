@@ -10,7 +10,7 @@ import {
 	Column,
 	Entity,
 	JoinColumn,
-	ManyToOne,
+	ManyToOne, OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimestampField } from '../../../common/database/timestamp.field';
@@ -39,7 +39,7 @@ export class OrderEntity extends TimestampField {
 	@Column()
 	status: OrderStatusEnum;
 
-	@ManyToOne(
+	@OneToMany(
 		(): typeof OrderDetailEntity => OrderDetailEntity,
 		(orderDetailEntity: OrderDetailEntity): OrderEntity =>
 			orderDetailEntity.order,

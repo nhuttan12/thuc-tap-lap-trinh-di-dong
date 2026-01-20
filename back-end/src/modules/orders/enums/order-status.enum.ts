@@ -8,7 +8,7 @@
  */
 
 export enum OrderStatusEnum {
-	PENDING = 'PENDING',
+	PENDING = 'PENDING',  //Tạo đơn
 	CONFIRMED = 'CONFIRMED',
 	PROCESSING = 'PROCESSING',
 	COMPLETED = 'COMPLETED',

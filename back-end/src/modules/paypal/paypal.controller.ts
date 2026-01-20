@@ -6,54 +6,60 @@ import {
 	Query,
 	Res,
 	UseGuards,
+	BadRequestException,
+	Logger,
 } from '@nestjs/common';
 import { PaypalService } from './paypal.service';
 import { Response } from 'express';
-import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
-import {User} from "../user/decorators/user.decorator";
-import {JwtPayload} from "../auth/interface/jwt-payload.interface";
-
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../user/decorators/user.decorator';
+import { JwtPayload } from '../auth/interface/jwt-payload.interface';
 
 @Controller('paypal')
 export class PaypalController {
-    constructor(private readonly paypalService: PaypalService) {}
+	private readonly logger: Logger = new Logger(PaypalController.name);
 
-    // ================= CREATE PAYMENT =================
-    @UseGuards(JwtAuthGuard)
-    @Post('create-order')
-    async createPayment(
-        @User() user: JwtPayload,
-        @Body('totalVnd') totalVnd: number,
-    ) {
-        // return this.paypalService.createPaypalPayment(
-        //     user.id,
-        //     totalVnd,
-        // );
-    }
+	constructor(private readonly paypalService: PaypalService) {}
 
-    // ================= PAYPAL SUCCESS =================
-    @Get('success')
-    async success(
-        @Query('token') paypalOrderId: string,
-        @Res() res: Response,
-    ) {
-        // 1️⃣ Capture PayPal
-        // const capture = await this.paypalService.captureOrder(paypalOrderId);
+	// ================= CREATE PAYMENT =================
+	@UseGuards(JwtAuthGuard)
+	@Post('create-order')
+	async createOrder(@User() user: JwtPayload) {
+		const order = await this.paypalService.createOrder(user.id);
 
-        // if (capture.status !== 'COMPLETED') {
-        //     return res.redirect('myapp://paypal-failed');
-        // }
+		const approveLink = order.links.find((l) => l.rel === 'approve');
 
-        // 2️⃣ Update DB + clear cart
-        // await this.paypalService.handlePaypalSuccess(paypalOrderId);
+		return {
+			approvalUrl: approveLink.href,
+		};
+	}
 
-        // 3️⃣ Redirect app
-        return res.redirect('myapp://paypal-success');
-    }
+	@UseGuards(JwtAuthGuard)
+	@Post('capture-order')
+	async captureOrder(
+		@Body('orderId') orderId: string,
+		@User() user: JwtPayload
+	) {
+		if (!orderId) {
+			this.logger.debug(`orderId: ${orderId}`);
+			throw new BadRequestException('Missing PayPal orderId');
+		}
 
-    // ================= PAYPAL CANCEL =================
-    @Get('cancel')
-    cancel(@Res() res: Response) {
-        return res.redirect('myapp://paypal-cancel');
-    }
+		// 1️ Capture PayPal
+		const capture = await this.paypalService.captureOrder(orderId);
+		this.logger.debug(`Capture: ${JSON.stringify(capture, null, 2)}`);
+
+		if (capture.status !== 'COMPLETED') {
+			return { success: false };
+		}
+
+		//  CHỈ SAVE DB SAU KHI COMPLETED
+		await this.paypalService.handlePaypalSuccess(orderId, user.id);
+
+		//  TRẢ JSON OK
+		return {
+			success: true,
+			transactionId: capture.transactionId,
+		};
+	}
 }

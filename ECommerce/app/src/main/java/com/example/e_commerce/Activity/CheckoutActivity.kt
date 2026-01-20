@@ -1,74 +1,88 @@
 package com.example.e_commerce.Activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
+import androidx.browser.customtabs.CustomTabsIntent
 import com.android.volley.toolbox.Volley
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.databinding.ActivityCheckoutBinding
 import com.example.e_commerce.Adapter.CartAdapter
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.Adapter.Action.OnCartItemActionListener
+import org.json.JSONObject
 
 class CheckoutActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCheckoutBinding
     private lateinit var tinyDB: TinyDB
+    private var isPaypalHandled = false
 
     private lateinit var cartAdapter : CartAdapter
+    private val TAG = "PAYPAL_FLOW"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            binding = ActivityCheckoutBinding.inflate(layoutInflater)
-            setContentView(binding.root)
+        binding = ActivityCheckoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-            tinyDB = TinyDB(this)
-            cartAdapter = CartAdapter(
-                arrayListOf(),
-                this,
-                object : OnCartItemActionListener {
+        tinyDB = TinyDB(this)
 
-                    override fun onIncrease(item: CartItemModel) {
-                        val newQty = item.numberInCart + 1
-                        item.numberInCart = newQty
+        initRecyclerView()
+        initActions()
 
-                        cartAdapter.notifyDataSetChanged()
-                        calculateTotal()
+        loadCartData()
+        loadUserProfile()
 
-                        updateQuantity(item.id, newQty)
-                    }
-
-                    override fun onDecrease(item: CartItemModel) {
-                        if (item.numberInCart <= 1) return
-
-                        val newQty = item.numberInCart - 1
-                        item.numberInCart = newQty
-
-                        cartAdapter.notifyDataSetChanged()
-                        calculateTotal()
-
-                        updateQuantity(item.id, newQty)
-                    }
-                }
-            )
-
-            setupRecyclerView()
-            loadCartData()
-            loadUserProfile()
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        handlePaypalCallback(intent)
 
     }
-    private fun setupRecyclerView() {
+    private fun initRecyclerView() {
+        cartAdapter = CartAdapter(
+            arrayListOf(),
+            this,
+            object : OnCartItemActionListener {
+                override fun onIncrease(item: CartItemModel) {
+                    val newQty = item.numberInCart + 1
+                    item.numberInCart = newQty
+                    cartAdapter.notifyDataSetChanged()
+                    calculateTotal()
+                    updateQuantity(item.id, newQty)
+                }
+
+                override fun onDecrease(item: CartItemModel) {
+                    if (item.numberInCart <= 1) return
+                    val newQty = item.numberInCart - 1
+                    item.numberInCart = newQty
+                    cartAdapter.notifyDataSetChanged()
+                    calculateTotal()
+                    updateQuantity(item.id, newQty)
+                }
+            }
+        )
+
         binding.rvProducts.layoutManager = LinearLayoutManager(this)
         binding.rvProducts.adapter = cartAdapter
+    }
+
+    private fun initActions() {
+        binding.btnPlaceOrder.setOnClickListener {
+            when {
+                binding.rbPaypal.isChecked -> createPaypalOrder()
+                binding.rbCOD.isChecked -> {
+                    Toast.makeText(this, "COD chưa implement", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun loadCartData() {
@@ -104,6 +118,7 @@ class CheckoutActivity : AppCompatActivity() {
             },
             { error ->
                 error.printStackTrace()
+                Toast.makeText(this, "Không tải được giỏ hàng", Toast.LENGTH_SHORT).show()
             }
         ) {
             override fun getHeaders(): MutableMap<String, String> {
@@ -160,6 +175,7 @@ class CheckoutActivity : AppCompatActivity() {
         Volley.newRequestQueue(this).add(request)
     }
 
+    //CART
     private fun updateQuantity(cartDetailId: Int, quantity: Int) {
         val token = tinyDB.getValidToken() ?: return
 
@@ -205,6 +221,125 @@ class CheckoutActivity : AppCompatActivity() {
             java.util.Locale("vi", "VN")
         )
         return formatter.format(value) + "đ"
+    }
+
+
+    //PAYPAL
+    private fun createPaypalOrder() {
+        val token = tinyDB.getValidToken() ?: return
+
+        val url = "http://10.0.2.2:8080/paypal/create-order"
+
+        val body = org.json.JSONObject()
+
+        val request = object : JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            body,
+            { response ->
+                Log.d(TAG, "Create order SUCCESS: $response")
+                val approvalUrl = response.getString("approvalUrl")
+                Log.d(TAG, "Approval URL: $approvalUrl")
+                openPaypal(approvalUrl)
+            },
+            { error ->
+                error.printStackTrace()
+                Log.e(TAG, "Create order FAILED", error)
+                val msg = error.networkResponse?.data?.let {
+                    String(it)
+                }
+                Log.e(TAG, "Error body: $msg")
+                Toast.makeText(this, msg ?: "Lỗi PayPal", Toast.LENGTH_LONG).show()
+            }
+        ) {
+            override fun getHeaders() = hashMapOf(
+                "Authorization" to "Bearer $token"
+            )
+        }
+
+        Volley.newRequestQueue(this).add(request)
+    }
+    private fun openPaypal(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
+        startActivity(intent)
+    }
+
+    // ================= PAYPAL CALLBACK =================
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handlePaypalCallback(intent)
+    }
+
+    private fun capturePaypalOrder(orderId: String) {
+        val token = tinyDB.getValidToken() ?: return
+        val url = "http://10.0.2.2:8080/paypal/capture-order"
+
+        val body = JSONObject().apply {
+            put("orderId", orderId)
+        }
+
+        val request = object : JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            body,
+            { response ->
+                Log.d(TAG, "Capture SUCCESS: $response")
+                if (response.getBoolean("success")) {
+                    Toast.makeText(this, "Thanh toán thành công", Toast.LENGTH_LONG).show()
+                    Log.d(TAG, "Paypal SUCCESS - orderId: $orderId")
+                    goHome()
+                }
+            },
+            { error ->
+                Log.e(TAG, "Capture FAILED", error)
+                Toast.makeText(this, "Thanh toán thất bại", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            override fun getHeaders() = hashMapOf(
+                "Authorization" to "Bearer $token",
+                "Content-Type" to "application/json"
+            )
+        }
+
+        Volley.newRequestQueue(this).add(request)
+    }
+
+    private fun goHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun handlePaypalCallback(intent: Intent?) {
+        if (isPaypalHandled) return
+
+        val uri = intent?.data ?: return
+
+        if (uri.scheme != "myapp" || uri.host != "paypal") return
+
+        val path = uri.path ?: uri.encodedPath ?: ""
+
+        when {
+            path.startsWith("/cancel") -> {
+                isPaypalHandled = true
+                Toast.makeText(this, "Bạn đã hủy thanh toán PayPal", Toast.LENGTH_SHORT).show()
+            }
+
+            path.startsWith("/success") -> {
+                val orderId = uri.getQueryParameter("token")
+
+                if (orderId.isNullOrEmpty()) {
+                    isPaypalHandled = true
+                    Toast.makeText(this, "Không lấy được mã đơn PayPal", Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                isPaypalHandled = true
+                capturePaypalOrder(orderId)
+            }
+        }
     }
 
 
