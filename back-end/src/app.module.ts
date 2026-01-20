@@ -49,6 +49,7 @@ import { PaymentModule } from './modules/payment/payment.module';
 		PaymentModule,
 		BrandModule,
 		HelperModule,
+		PaymentModule,
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],
