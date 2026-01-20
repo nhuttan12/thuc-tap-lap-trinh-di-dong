@@ -297,12 +297,6 @@ export class ProductController {
         }
     }
 
-
-
-
-
-
-
     @Post('admin/:id/images')
     @HttpCode(HttpStatus.CREATED) // THÊM decorator này
     async addProductImage(
