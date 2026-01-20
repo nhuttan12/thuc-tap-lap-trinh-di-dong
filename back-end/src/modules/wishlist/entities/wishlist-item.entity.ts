@@ -2,7 +2,8 @@
  * @description Wishlist item entity
  * @author Nhut Tan
  * @since 2025-09-23
- * @version 1.0.0
+ * @modifies 2026-01-14
+ * @version 1.0.1
  */
 import {
 	Column,
@@ -22,9 +23,9 @@ export class WishlistItemEntity extends TimestampField {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@OneToOne(
+	@ManyToOne(
 		(): typeof ProductEntity => ProductEntity,
-		(product: ProductEntity): WishlistItemEntity => product.wishlistItem,
+		(product: ProductEntity): WishlistItemEntity[] => product.wishlistItems,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}

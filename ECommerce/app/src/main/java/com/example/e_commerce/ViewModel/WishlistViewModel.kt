@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.ProductModel
-import com.example.e_commerce.Repository.PagingResponse
+import com.example.e_commerce.DTOs.Response.PagingResponse
 import com.example.e_commerce.Repository.WishlistRepository
 import com.example.e_commerce.Result.NetworkResult
 import kotlinx.coroutines.launch
@@ -24,6 +24,8 @@ class WishlistViewModel(
     private val repository = WishlistRepository(
         tinyDB
     )
+
+    private val KEY_WISHLIST_IDS = "WISHLIST_IDS"
 
     private var _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
@@ -39,6 +41,8 @@ class WishlistViewModel(
     private val _removeProductFromWishlist: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     val removeProductFromWishlistMsg: LiveData<Boolean> get() = _removeProductFromWishlist
 
+    private val _wishlistIds = MutableLiveData<Set<Int>>()
+    val wishlistIds: LiveData<Set<Int>> = _wishlistIds
 
     fun loadWishlist(limit: Int, page: Int) {
         viewModelScope.launch {
@@ -86,6 +90,12 @@ class WishlistViewModel(
             when (val result: NetworkResult<Boolean> =
                 repository.addProductToWishlist(productID = productID)) {
                 is NetworkResult.Success -> {
+                    val current = _wishlistIds.value ?: emptySet()
+                    val updated = current + productID
+
+                    tinyDB.putListInt("WISHLIST_IDS", updated.toList())
+                    _wishlistIds.value = updated
+
                     _addProductToWishlist.value = result.data
                 }
 
@@ -118,6 +128,12 @@ class WishlistViewModel(
             when (val result: NetworkResult<Boolean> =
                 repository.removeWishlistItem(productID = productID)) {
                 is NetworkResult.Success -> {
+                    val current = _wishlistIds.value ?: emptySet()
+                    val updated = current - productID
+
+                    tinyDB.putListInt("WISHLIST_IDS", updated.toList())
+                    _wishlistIds.value = updated
+
                     _removeProductFromWishlist.value = result.data
                 }
 
@@ -134,5 +150,10 @@ class WishlistViewModel(
              */
             _loading.value = false
         }
+    }
+
+    fun loadWishlistIds() {
+        val ids = tinyDB.getListInt(KEY_WISHLIST_IDS)?.toSet() ?: emptySet()
+        _wishlistIds.postValue(ids)
     }
 }

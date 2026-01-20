@@ -8,7 +8,6 @@
  * @version 1.0.5
  */
 
-import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,6 +16,12 @@ import { RoleName } from '../../role/enums/role-name.enum';
 import { ImageEntity } from '../../image/entities/image.entity';
 import {UserStatus} from "../enums/user-status.enum";
 import { UserEntity } from '../entities/user.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { ImageEntity } from '../../image/entities/image.entity';
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
@@ -154,9 +159,8 @@ export class UserRepository {
 
 	/**
 	 * @description Create user with Google information
-	 * @param name - User name
+	 * @param fullName - User full name
 	 * @param email - User email
-	 * @param photos - User photos by url
 	 * @return {UserEntity}
 	 * @author Nhut Tan
 	 * @since 2025-09-10
@@ -211,6 +215,9 @@ export class UserRepository {
 				where: {
 					username: username,
 				},
+				relations: {
+					role: true,
+				},
 			});
 			this.logger.debug(
 				`Get user from database ${JSON.stringify(users, null, 2)}`
@@ -234,6 +241,8 @@ export class UserRepository {
 	 * @param username - User username
 	 * @param email - User email
 	 * @param password - User password
+	 * @param roleID - ID of role to insert for user
+	 * @param imageID - ID for image created before, or can use new image
 	 * @return {UserEntity}
 	 * @author Nhut Tan
 	 * @since 2025-09-17
@@ -364,6 +373,41 @@ export class UserRepository {
 		} catch (e) {
 			this.logger.error(
 				`Error in \`save\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	async getProfileByUserId(userId: number): Promise<UserEntity | null> {
+		return await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoinAndSelect('user.userDetail', 'userDetail')
+			.leftJoinAndSelect('user.userImages', 'userImages')
+			.leftJoinAndSelect('userImages.image', 'image')
+			.where('user.id = :userId', { userId })
+			.orderBy('userImages.createdAt', 'DESC')
+			.getOne();
+	}
+
+	/**
+	 * @description Update password by user id
+	 */
+	async updatePassword(
+		userId: number,
+		hashedPassword: string
+	): Promise<void> {
+		try {
+			await this.userRepository.update(
+				{ id: userId },
+				{
+					password: hashedPassword,
+					updatedAt: new Date(),
+				}
+			);
+		} catch (e) {
+			this.logger.error(
+				`Error in updatePassword: ${(e as Error).message}`,
 				(e as Error).stack
 			);
 			throw e;

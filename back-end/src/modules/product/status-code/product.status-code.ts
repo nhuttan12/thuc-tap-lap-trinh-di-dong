@@ -33,4 +33,16 @@ export class ProductStatusCode extends BaseStatusCode {
 			'PRD_004',
 			'Product not found'
 		);
+	static readonly PRODUCT_NAME_MUST_BE_STRING: ProductStatusCode =
+		new ProductStatusCode(
+			HttpStatus.CONFLICT,
+			'PRD_005',
+			"Product's name must be string"
+		);
+	static readonly GET_PRODUCTS_PAGING_BY_NAME_SUCCESS: ProductStatusCode =
+		new ProductStatusCode(
+			HttpStatus.OK,
+			'PRD_006',
+			"Get products paging by product's name successfully"
+		);
 }

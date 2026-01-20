@@ -289,6 +289,7 @@ export class ProductService {
 	 * Get products with pagination
 	 * @param {number} page - The page number (1-based)
 	 * @param {number} limit - Number of items per page
+	 * @param {number} userID - ID of user, its optional
 	 * @returns {Promise<PagingResponseDto<ProductEntityResponseDto>>} Paginated list of products
 	 * @author Nhut Tan
 	 * @since 2025-09-15
@@ -297,7 +298,8 @@ export class ProductService {
 	 */
 	async getProductsPaging(
 		page: number,
-		limit: number
+		limit: number,
+		userID?: number
 	): Promise<PagingResponseDto<ProductEntityResponseDto>> {
 		try {
 			/**
@@ -312,7 +314,11 @@ export class ProductService {
              * Calling `getProductsPaging` from `ProductRepository`
              */
 			const [products, total]: [ProductEntity[], number] =
-				await this.productRepository.getProductsPaging(limit, skip);
+				await this.productRepository.getProductsPaging(
+					limit,
+					skip,
+					userID
+				);
 
 
 			/*
@@ -400,5 +406,63 @@ export class ProductService {
 		}
 
 		return this.productMapper.toProductEntityResponseDto(product);
+	}
+
+	/**
+	 * @description Get product paging by name
+	 * @param productName - Name of product
+	 * @param page - Page for pagination
+	 * @param limit - Limitation product per page
+	 * @param {number} userID - ID of user, its optional
+	 * @return {Promise<PagingResponseDto<ProductEntityResponseDto>>}
+	 */
+	async getProductsPagingByProductName(
+		productName: string,
+		page: number,
+		limit: number,
+		userID?: number
+	): Promise<PagingResponseDto<ProductEntityResponseDto>> {
+		try {
+			/**
+			 * Calculate skip and take
+			 */
+			const skip: number = this.buildPagingMetaService.calculateSkip(
+				page,
+				limit
+			);
+
+			/*
+			 * Calling `getProductsPaging` from `ProductRepository`
+			 */
+			const [products, total]: [ProductEntity[], number] =
+				await this.productRepository.getProductsPagingByProductName(
+					productName,
+					limit,
+					skip,
+					userID
+				);
+
+			/*
+			 * Convert `ProductEntity` to `ProductEntityResponseDto`
+			 */
+			const productResponse: ProductEntityResponseDto[] =
+				this.productMapper.toProductEntityListResponseDto(products);
+
+			/**
+			 * Build pagination response
+			 */
+			return this.buildPagingMetaService.buildPagingResponse(
+				productResponse,
+				page,
+				limit,
+				total
+			);
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getProductByProductName\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
 	}
 }

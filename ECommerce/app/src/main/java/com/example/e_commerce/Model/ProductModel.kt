@@ -9,15 +9,11 @@
 
 package com.example.e_commerce.Model
 
-import com.squareup.moshi.JsonClass
-import java.io.Serializable
-
-@JsonClass(generateAdapter = true)
 data class ProductModel(
     var id: Int = 0,
     var title: String = "",
     var picUrl: String = "",
     var price: Double = 0.0,
     var rating: Double = 0.0,
-    val isInWishlist: Boolean = false
-) : Serializable
+    var isInWishlist: Boolean = false
+)

@@ -7,6 +7,9 @@
 
 package com.example.e_commerce.DTOs.Request
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class AddProductToWishlistRequestDto(
     val productID: Int
 )

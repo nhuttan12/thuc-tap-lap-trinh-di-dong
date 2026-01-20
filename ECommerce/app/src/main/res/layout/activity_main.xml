@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activity.DashboardActivity">
+    tools:context=".Activity.HomeActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -65,6 +65,8 @@
                 android:drawableEnd="@drawable/search_icon"
                 android:drawablePadding="12dp"
                 android:ems="10"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
                 android:hint="@string/searchHintText"
                 android:inputType="text"
                 android:padding="12sp"

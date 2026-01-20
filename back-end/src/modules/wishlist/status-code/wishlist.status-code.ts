@@ -56,4 +56,10 @@ export class WishlistStatusCode extends BaseStatusCode {
 			'WLI_009',
 			'Product id is not empty'
 		);
+	static readonly REMOVE_WISHLIST_ITEM_FAILED: WishlistStatusCode =
+		new WishlistStatusCode(
+			HttpStatus.OK,
+			'WLI_010',
+			'Remove wishlist item failed'
+		);
 }

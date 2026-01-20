@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.e_commerce.DTOs.Request.AddProductToCartRequestDto
 import com.example.e_commerce.DTOs.Request.UpdateQuantityCartDetailRequestDto
 import com.example.e_commerce.DTOs.Response.CartDetailResponseDto
+import com.example.e_commerce.DTOs.Response.PagingResponse
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Mappers.CartMapper
 import com.example.e_commerce.Model.ApiSucess
@@ -97,7 +98,7 @@ class CartRepository(
      * @modifies 2026-01-12
      * @version 1.0.1
      */
-    suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<String> {
+    suspend fun addProductToCart(productID: Int, quantity: Int): NetworkResult<Boolean> {
         return try {
             /**
              * Get token
@@ -108,7 +109,7 @@ class CartRepository(
              * Call api to load brands
              * Handle result
              */
-            val response: Response<ApiSucess<String>> =
+            val response: Response<ApiSucess<Boolean>> =
                 ApiClient.cartService.addProductToCart(
                     token = "Bearer $token",
                     AddProductToCartRequestDto(productID = productID, quantity = quantity)

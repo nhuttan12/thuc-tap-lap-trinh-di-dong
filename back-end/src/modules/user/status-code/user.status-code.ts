@@ -20,4 +20,9 @@ export class UserStatusCode extends BaseStatusCode {
 		'USR_002',
 		'User banned'
 	);
+	static readonly INVALID_CREDENTIALS: UserStatusCode = new UserStatusCode(
+		HttpStatus.NOT_FOUND,
+		'USR_003',
+		'Password is wrong'
+	);
 }

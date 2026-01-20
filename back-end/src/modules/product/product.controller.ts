@@ -4,35 +4,38 @@
  * @since 2025-09-16
  * @modifies 2025-09-17
  * @modifies 2025-12-26
- * @version 1.0.2
+ * @modifies 2026-01-14
+ * @version 1.0.3
  */
 
 import {
-    BadRequestException,
-    Body,
+    BadRequestException, Body,
     Controller, Delete,
     Get,
     HttpCode,
     HttpStatus,
     Logger, Param, Patch, Post, Put,
-    Query, Res, UploadedFile, UseInterceptors,
+    Query, Res,
+    UseGuards,
 } from '@nestjs/common';
-import {SuccessResponseDto} from '../../common/dtos/response/success-response.dto';
-import {PagingResponseDto} from '../../common/helper/dtos/paging-response.dto';
-import {GetProductDetailByProductIdRequestDto} from './dtos/get-product-detail-by-product-id-request.dto';
+import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
+import { PagingResponseDto } from '../../common/helper/dtos/paging-response.dto';
+import { GetProductDetailByProductIdRequestDto } from './dtos/get-product-detail-by-product-id-request.dto';
+import { GetProductsPagingRequest } from './dtos/get-products-paging-request';
+import { ProductDetailResponseDto } from './dtos/product-detail-response.dto';
+import { ProductEntityResponseDto } from './dtos/product-entity-response.dto';
+import { ProductDetailService } from './product-detail.service';
+import { ProductService } from './product.service';
+import { ProductDetailStatusCode } from './status-code/product-detail.status-code';
+import { ProductStatusCode } from './status-code/product.status-code';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
+import { UserOptional } from '../user/decorators/user-optional.decorator';
+import { JwtPayload } from '../auth/interface/jwt-payload.interface';
+import { GetProductsPagingByNameRequestDto } from './dtos/get-products-paging-by-name-request.dto';
 import {ProductEntity} from "./entities/product.entity";
-import {UpdateProductAdminDto} from "./dtos/update-product-admin";
-import {GetProductsPagingRequest} from './dtos/get-products-paging-request';
-import {ProductDetailResponseDto} from './dtos/product-detail-response.dto';
-import {ProductEntityResponseDto} from './dtos/product-entity-response.dto';
-import {ProductDetailService} from './product-detail.service';
-import {ProductService} from './product.service';
-import {ProductDetailStatusCode} from './status-code/product-detail.status-code';
-import {ProductStatusCode} from './status-code/product.status-code';
 import {CreateProductAdminDto} from "./dtos/create-product-admin.dto";
+import {UpdateProductAdminDto} from "./dtos/update-product-admin";
 import {validate} from "@nestjs/class-validator";
-import {FileInterceptor} from "@nestjs/platform-express";
-import {ProductStatusEnum} from "./enums/product-status.enum";
 
 @Controller('products')
 export class ProductController {
@@ -44,37 +47,42 @@ export class ProductController {
     ) {
     }
 
-    /**
-     * @description Get products paging
-     * @param {GetProductsPagingRequest} request - Get products paging request
-     * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
-     * @author Nhut Tan
-     * @since 2025-09-16
-     * @version 1.0.0
-     */
-    @HttpCode(HttpStatus.OK)
-    @Get()
-    async getProducts(
-        @Query() request: GetProductsPagingRequest
-    ): Promise<
-        SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
-    > {
-        try {
-            this.logger.debug(
-                `Get products paging: ${JSON.stringify(request, null, 2)}`
-            );
+	/**
+	 * @description Get products paging
+	 * @param {JwtPayload | null} user - Get user's token is optional,
+	 * if not exist, return null
+	 * @param {GetProductsPagingRequest} request - Get products paging request
+	 * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
+	 * @author Nhut Tan
+	 * @since 2025-09-16
+	 * @version 1.0.0
+	 */
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
+	@Get()
+	async getProducts(
+		@UserOptional() user: JwtPayload | null,
+		@Query() request: GetProductsPagingRequest
+	): Promise<
+		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
+	> {
+		try {
+			this.logger.debug(
+				`Get products paging: ${JSON.stringify(request, null, 2)}`
+			);
 
-            /**
-             * Calling `getProductsPaging` from `ProductService`
-             */
-            const products: PagingResponseDto<ProductEntityResponseDto> =
-                await this.productService.getProductsPaging(
-                    request.page,
-                    request.limit
-                );
-            this.logger.debug(
-                `Get products paging: ${JSON.stringify(products, null, 2)}`
-            );
+			/**
+			 * Calling `getProductsPaging` from `ProductService`
+			 */
+			const products: PagingResponseDto<ProductEntityResponseDto> =
+				await this.productService.getProductsPaging(
+					request.page,
+					request.limit,
+					user?.id
+				);
+			this.logger.debug(
+				`Get products paging: ${JSON.stringify(products, null, 2)}`
+			);
 
             return {
                 data: products,
@@ -364,4 +372,77 @@ export class ProductController {
         }
     }
 
+	// 		return {
+	// 			data: productDetail,
+	// 			message:
+	// 				ProductDetailStatusCode
+	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.message,
+	// 			statusCode:
+	// 				ProductDetailStatusCode
+	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.customCode,
+	// 		};
+	// 	} catch (e) {
+	// 		this.logger.error(
+	// 			`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
+	// 			(e as Error).stack
+	// 		);
+	// 		throw e;
+	// 	}
+	// }
+
+	/**
+	 * @description Get products paging
+	 * @param {JwtPayload | null} user - Get user's token is optional,
+	 * if not exist, return null
+	 * @param {GetProductsPagingRequest} request - Get products paging request
+	 * @returns {Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>>} - Success response
+	 * @author Nhut Tan
+	 * @since 2025-09-16
+	 * @version 1.0.0
+	 */
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
+	@Get('productName')
+	async getProductsByName(
+		@UserOptional() user: JwtPayload | null,
+		@Query() request: GetProductsPagingByNameRequestDto
+	): Promise<
+		SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>
+	> {
+		try {
+			this.logger.debug(
+				`Get products paging: ${JSON.stringify(request, null, 2)}`
+			);
+
+			/**
+			 * Calling `getProductsPaging` from `ProductService`
+			 */
+			const products: PagingResponseDto<ProductEntityResponseDto> =
+				await this.productService.getProductsPagingByProductName(
+					request.productName,
+					request.page,
+					request.limit,
+					user?.id
+				);
+			this.logger.debug(
+				`Get products paging: ${JSON.stringify(products, null, 2)}`
+			);
+
+			return {
+				data: products,
+				message:
+					ProductStatusCode.GET_PRODUCTS_PAGING_BY_NAME_SUCCESS
+						.message,
+				statusCode:
+					ProductStatusCode.GET_PRODUCTS_PAGING_BY_NAME_SUCCESS
+						.customCode,
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error in \`getProductsByName\`: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
 }

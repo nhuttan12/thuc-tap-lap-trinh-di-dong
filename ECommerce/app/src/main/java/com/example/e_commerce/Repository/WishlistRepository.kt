@@ -10,6 +10,7 @@ package com.example.e_commerce.Repository
 import android.util.Log
 import com.example.e_commerce.DTOs.Request.AddProductToWishlistRequestDto
 import com.example.e_commerce.DTOs.Request.RemoveProductFromWishlistDto
+import com.example.e_commerce.DTOs.Response.PagingResponse
 import com.example.e_commerce.DTOs.Response.ProductInWishlistResponseDto
 import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Mappers.ProductMapper
@@ -167,7 +168,7 @@ class WishlistRepository(
             val response: Response<ApiSucess<Boolean>> =
                 ApiClient.wishlistService.removeWishlistItem(
                     token = "Bearer $token",
-                    request = RemoveProductFromWishlistDto(productID)
+                    request = RemoveProductFromWishlistDto(productID = productID)
                 );
             Log.d(TAG, "Remove product from wishlist response: ${response.body()?.data}")
 

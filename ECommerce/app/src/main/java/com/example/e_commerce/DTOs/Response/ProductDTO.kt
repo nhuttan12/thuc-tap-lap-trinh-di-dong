@@ -13,13 +13,11 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ProductDTO(
-    val id: Int,
+    val productID: Int,
     val name: String,
     val price: Int,
-    val description: String,
     val rating: Double,
+    val isInWishlist: Boolean,
     val imageUrl: String,
     val status: String,
-    val createdAt: String,
-    val updatedAt: String,
 )

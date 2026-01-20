@@ -83,24 +83,24 @@ describe('WishlistItemMapper', (): void => {
 		const mockProductInWishlistResponseDto: ProductInWishlistResponseDto[] =
 			[
 				{
-					id: 1,
+					productID: 1,
 					name: 'test 1',
 					price: 100000,
 					discount: 0,
 					imageUrl: imageUrl1,
 					rating: 5,
-					createdAt: mockCurrentDate,
-					updatedAt: mockCurrentDate,
+					createdAt: mockCurrentDate.toString(),
+					updatedAt: mockCurrentDate.toString(),
 				},
 				{
-					id: 2,
+					productID: 2,
 					name: 'test 2',
 					price: 200000,
 					discount: 10,
 					imageUrl: imageUrl2,
 					rating: 4,
-					createdAt: mockCurrentDate,
-					updatedAt: mockCurrentDate,
+					createdAt: mockCurrentDate.toString(),
+					updatedAt: mockCurrentDate.toString(),
 				},
 			];
 

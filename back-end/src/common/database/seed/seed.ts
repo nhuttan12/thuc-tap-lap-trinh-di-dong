@@ -5,28 +5,28 @@
  * @version 1.0.0
  */
 
-import { DataSource, EntityManager } from 'typeorm';
-import { env } from 'node:process';
-import { config } from 'dotenv';
-import { RoleEntity } from '../../../modules/role/entities/role.entity';
 import { Logger } from '@nestjs/common';
-import { RoleName } from '../../../modules/role/enums/role-name.enum';
-import { RoleStatus } from '../../../modules/role/enums/role-status.enum';
+import { config } from 'dotenv';
+import { env } from 'node:process';
+import { DataSource, EntityManager } from 'typeorm';
+import { BrandEntity } from '../../../modules/brand/entities/brand.entiy';
+import { CartDetailEntity } from '../../../modules/cart/entities/cart-detail.entity';
+import { CartEntity } from '../../../modules/cart/entities/cart.entity';
+import { CategoryEntity } from '../../../modules/category/entities/category.entity';
 import { ImageEntity } from '../../../modules/image/entities/image.entity';
-import { ImageStatusEnum } from '../../../modules/image/enums/image-status.enum';
-import { UserEntity } from '../../../modules/user/entities/user.entity';
 import { ProductImageEntity } from '../../../modules/image/entities/product-image.entity';
 import { UserImageEntity } from '../../../modules/image/entities/user-image.entity';
-import { ProductEntity } from '../../../modules/product/entities/product.entity';
-import { OrderEntity } from '../../../modules/orders/entities/order.entity';
+import { ImageStatusEnum } from '../../../modules/image/enums/image-status.enum';
 import { OrderDetailEntity } from '../../../modules/orders/entities/order-detail.entity';
+import { OrderEntity } from '../../../modules/orders/entities/order.entity';
 import { ProductDetailsEntity } from '../../../modules/product/entities/product-details.entity';
-import { CategoryEntity } from '../../../modules/category/entities/category.entity';
-import { CartEntity } from '../../../modules/cart/entities/cart.entity';
-import { CartDetailEntity } from '../../../modules/cart/entities/cart-detail.entity';
+import { ProductEntity } from '../../../modules/product/entities/product.entity';
+import { RoleEntity } from '../../../modules/role/entities/role.entity';
+import { RoleName } from '../../../modules/role/enums/role-name.enum';
+import { RoleStatus } from '../../../modules/role/enums/role-status.enum';
 import { UserDetailEntity } from '../../../modules/user/entities/user-detail.entity';
-import {BrandEntity} from "../../../modules/brand/entities/brand.entiy";
-import {WishlistItemEntity} from "../../../modules/wishlist/entities/wishlist-item.entity";
+import { UserEntity } from '../../../modules/user/entities/user.entity';
+import { WishlistItemEntity } from '../../../modules/wishlist/entities/wishlist-item.entity';
 
 /**
  * Load environment file before readding env
