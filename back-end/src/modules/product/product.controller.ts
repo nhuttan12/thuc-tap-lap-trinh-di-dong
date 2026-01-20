@@ -129,13 +129,22 @@ export class ProductController {
      */
     @Get('detail')
     async getProductDetailByProductID(
-        @Query() request: GetProductDetailByProductIdRequestDto
+        @Query('productID') productIDParam: any  // Lấy raw value
     ): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
         try {
-            /**
-             * Get productID from the request
-             */
-            const { productID } = request;
+            // VALIDATE MANUAL
+            console.log('=== DEBUG RAW ===');
+            console.log('productIDParam:', productIDParam);
+            console.log('productIDParam type:', typeof productIDParam);
+
+            const productID = parseInt(String(productIDParam), 10);
+            console.log('Parsed productID:', productID);
+            console.log('Is NaN?', isNaN(productID));
+
+            if (isNaN(productID) || productID <= 0) {
+                throw new BadRequestException('Invalid product ID');
+            }
+
             this.logger.debug(`Get product detail by product ID: ${productID}`);
 
             /**
@@ -168,25 +177,53 @@ export class ProductController {
     }
 
     /**
-     * Get product detail by ID (public)
+     * ADMIN: Get products with filter
      */
-    @Get(':id')
-    async getProductDetailByProductIDWithParam(
-            @Param('id') productID: number
-    ): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
+    @Get('admin')
+    async getProductsForAdmin(
+        @Query('page') page = 1,
+        @Query('limit') limit = 10,
+        @Query('search') search?: string,
+        @Query('category') categoryId?: number,
+        @Query('status') status?: string,
+    ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
         try {
-            this.logger.debug(`Get product detail by product ID: ${productID}`);
+            const currentPage = Number(page) > 0 ? Number(page) : 1;
+            const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
 
-            const productDetail: ProductDetailResponseDto =
-            await this.productDetailService.getProductDetailByProductID(productID);
+            this.logger.debug(`[ADMIN] Get products with filter: page=${currentPage}, limit=${currentLimit}, search=${search}, category=${categoryId}, status=${status}`);
+
+            // TODO: Implement filter logic
+            // Tạm thời chỉ dùng getProductsPaging
+            const products: PagingResponseDto<ProductEntityResponseDto> =
+                await this.productService.getProductsPaging(currentPage, currentLimit);
 
             return {
-                data: productDetail,
-                message: 'Lấy chi tiết sản phẩm thành công',
-                statusCode: 'PRD_002',
+                data: products,
+                message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
+                statusCode: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
             };
         } catch (e) {
-            this.logger.error(`Error in getProductDetailByProductID: ${(e as Error).message}`, (e as Error).stack);
+            this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
+            throw e;
+        }
+    }
+
+    /**
+     * ADMIN: Get product detail for admin
+     */
+    @Get('admin/:id')
+    async getProductDetailForAdmin(
+        @Param('id') id: number
+    ): Promise<SuccessResponseDto<ProductEntity>> {
+        try {
+            const product = await this.productService.getProductForAdmin(id);
+            return {
+                data: product,  // product là ProductEntity
+                message: 'Lấy chi tiết sản phẩm thành công',
+                statusCode: 'PRD_ADMIN_007',
+            };
+        } catch(e) {
             throw e;
         }
     }
@@ -261,65 +298,47 @@ export class ProductController {
     }
 
 
-    /**
-     * ADMIN: Get product detail for admin
-     */
-    @Get('admin/:id')
-    async getProductDetailForAdmin(
-        @Param('id') id: number
-    ): Promise<SuccessResponseDto<ProductEntity>> {
-        try {
-            const product = await this.productService.getProductForAdmin(id);
-            return {
-                data: product,  // product là ProductEntity
-                message: 'Lấy chi tiết sản phẩm thành công',
-                statusCode: 'PRD_ADMIN_007',
-            };
-        } catch(e) {
-            throw e;
-        }
-    }
 
 
-    /**
-     * ADMIN: Get products with filter
-     */
-    @Get('admin')
-    async getProductsForAdmin(
-        @Query('page') page = 1,
-        @Query('limit') limit = 10,
-        @Query('search') search?: string,
-        @Query('category') categoryId?: number,
-        @Query('status') status?: string,
-    ): Promise<SuccessResponseDto<PagingResponseDto<ProductEntityResponseDto>>> {
-        try {
-            const currentPage = Number(page) > 0 ? Number(page) : 1;
-            const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
 
-            this.logger.debug(`[ADMIN] Get products with filter: page=${currentPage}, limit=${currentLimit}, search=${search}, category=${categoryId}, status=${status}`);
 
-            // TODO: Implement filter logic
-            // Tạm thời chỉ dùng getProductsPaging
-            const products: PagingResponseDto<ProductEntityResponseDto> =
-                await this.productService.getProductsPaging(currentPage, currentLimit);
-
-            return {
-                data: products,
-                message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
-                statusCode: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
-            };
-        } catch (e) {
-            this.logger.error(`Error in getProductsForAdmin: ${(e as Error).message}`, (e as Error).stack);
-            throw e;
-        }
-    }
 
     @Post('admin/:id/images')
+    @HttpCode(HttpStatus.CREATED) // THÊM decorator này
     async addProductImage(
         @Param('id') id: number,
         @Body() body: { imageUrls: string[], type: string }
     ): Promise<SuccessResponseDto<any>> {
-        // Thêm ảnh cho sản phẩm
+        try {
+            this.logger.debug(`Add images to product ${id}: ${JSON.stringify(body)}`);
+
+            // Validate
+            if (!body.imageUrls || !Array.isArray(body.imageUrls) || body.imageUrls.length === 0) {
+                throw new BadRequestException('imageUrls must be a non-empty array');
+            }
+
+            if (!body.type || !['MAIN', 'THUMBNAIL', 'GALLERY'].includes(body.type.toUpperCase())) {
+                throw new BadRequestException('type must be one of: MAIN, THUMBNAIL, GALLERY');
+            }
+
+            // TODO: Implement service method
+            // const result = await this.productService.addProductImages(id, body.imageUrls, body.type);
+
+            // Tạm thời return success
+            return {
+                data: {
+                    productId: id,
+                    imageUrls: body.imageUrls,
+                    type: body.type,
+                    message: 'Images added successfully (demo)'
+                },
+                message: 'Thêm ảnh thành công',
+                statusCode: 'PRD_ADMIN_008',
+            };
+        } catch (e) {
+            this.logger.error(`Error adding product images: ${(e as Error).message}`, (e as Error).stack);
+            throw e;
+        }
     }
 
     @Get('admin/export')
@@ -354,4 +373,29 @@ export class ProductController {
             throw e;
         }
     }
+
+    /**
+     * Get product detail by ID (public)
+     */
+    @Get(':id')
+    async getProductDetailByProductIDWithParam(
+        @Param('id') productID: any
+    ): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
+        try {
+            this.logger.debug(`Get product detail by product ID: ${productID}`);
+
+            const productDetail: ProductDetailResponseDto =
+                await this.productDetailService.getProductDetailByProductID(productID);
+
+            return {
+                data: productDetail,
+                message: 'Lấy chi tiết sản phẩm thành công',
+                statusCode: 'PRD_002',
+            };
+        } catch (e) {
+            this.logger.error(`Error in getProductDetailByProductID: ${(e as Error).message}`, (e as Error).stack);
+            throw e;
+        }
+    }
+
 }

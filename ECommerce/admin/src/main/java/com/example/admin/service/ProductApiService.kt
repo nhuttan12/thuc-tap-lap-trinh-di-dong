@@ -8,10 +8,11 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ProductApiService {
-
+    @GET("products")
+    suspend fun getProducts(@Query("page") page: Int): Response<ApiSuccess<PagingResponse<ProductDTO>>>
     @GET("products/admin")
-    suspend fun getProducts(
-            @Query("page") page: Int = 1,
+    suspend fun getProductsForAdmin(
+            @Query("page") page: Int,
             @Query("limit") limit: Int = 20
     ): Response<ApiSuccess<PagingResponse<ProductDTO>>>
 

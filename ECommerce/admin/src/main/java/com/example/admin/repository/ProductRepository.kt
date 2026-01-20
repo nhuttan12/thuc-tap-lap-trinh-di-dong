@@ -19,7 +19,7 @@ class ProductRepository {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d("ProductRepository", "Getting products page: $page")
-                val response = service.getProducts(page = page)
+                val response = service.getProductsForAdmin(page = page, limit = 20)
 
                 if (!response.isSuccessful) {
                     val errorBody = response.errorBody()?.string()

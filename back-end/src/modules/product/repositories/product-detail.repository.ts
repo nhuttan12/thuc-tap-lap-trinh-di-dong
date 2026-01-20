@@ -34,6 +34,10 @@ export class ProductDetailRepository {
 			/**
 			 * Get product detail by product ID from the database
 			 */
+			if (isNaN(productID) || productID <= 0) {
+				this.logger.error(`Invalid productID in repository: ${productID} (type: ${typeof productID})`);
+				return null;
+			}
 			const productDetailEntity: ProductDetailsEntity | null =
 				await this.productDetailRepository.findOne({
 					where: {
