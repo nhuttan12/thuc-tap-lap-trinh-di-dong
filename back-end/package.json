@@ -24,6 +24,7 @@
         "migration:create": "typeorm migration:create"
     },
     "dependencies": {
+        "@nestjs-modules/mailer": "^2.0.2",
         "@nestjs/class-transformer": "0.4.0",
         "@nestjs/class-validator": "0.13.4",
         "@nestjs/common": "11.0.1",

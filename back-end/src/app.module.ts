@@ -52,6 +52,7 @@ import { PaypalModule } from './modules/paypal/paypal.module';
 		HelperModule,
 		PaymentModule,
 		PaypalModule,
+		OrderModule,
 	],
 	providers: [Logger, ConfigService],
 	exports: [Logger, ConfigService],

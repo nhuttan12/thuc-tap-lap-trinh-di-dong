@@ -75,9 +75,7 @@ class CheckoutActivity : AppCompatActivity() {
         binding.btnPlaceOrder.setOnClickListener {
             when {
                 binding.rbPaypal.isChecked -> createPaypalOrder()
-                binding.rbCOD.isChecked -> {
-                    Toast.makeText(this, "COD chưa implement", Toast.LENGTH_SHORT).show()
-                }
+                binding.rbCOD.isChecked -> createOrderCOD()
                 else -> {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show()
                 }
@@ -340,6 +338,41 @@ class CheckoutActivity : AppCompatActivity() {
                 capturePaypalOrder(orderId)
             }
         }
+    }
+
+    private fun createOrderCOD() {
+        val token = tinyDB.getValidToken() ?: return
+
+        val url = "http://10.0.2.2:8080/orders/cod"
+
+        val request = object : JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            null,
+            { _ ->
+                Toast.makeText(
+                    this,
+                    "Đặt hàng COD thành công",
+                    Toast.LENGTH_LONG
+                ).show()
+                goHome()
+            },
+            { error ->
+                error.printStackTrace()
+                val msg = error.networkResponse?.data?.let { String(it) }
+                Toast.makeText(
+                    this,
+                    msg ?: "Đặt hàng COD thất bại",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        ) {
+            override fun getHeaders() = hashMapOf(
+                "Authorization" to "Bearer $token"
+            )
+        }
+
+        Volley.newRequestQueue(this).add(request)
     }
 
 
