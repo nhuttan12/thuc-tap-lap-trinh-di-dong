@@ -12,7 +12,7 @@ import {UserModule} from "./../user/user.module";
 import { ProductModule } from "../product/product.module";
 import {OrderController} from "./order.controller";
 import {OrderRepository} from "./repository/order.repository";
-import {OrderService} from "./service/order.service";
+import {OrderService} from "./order.service";
 
 
 @Module({

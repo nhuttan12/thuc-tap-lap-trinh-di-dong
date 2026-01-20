@@ -63,7 +63,7 @@ export class OrderRepository extends Repository<OrderEntity> {
         const totalOrders = await this.count();
         const totalRevenue = await this.createQueryBuilder('order')
             .select('SUM(order.price)', 'total')
-            .where('order.status != :deleted', { deleted: OrderStatusEnum.DELETED })
+            // .where('order.status != :deleted', { deleted: OrderStatusEnum.DELETED })
             .getRawOne();
 
         const monthlyStats = await this.createQueryBuilder('order')
@@ -73,7 +73,7 @@ export class OrderRepository extends Repository<OrderEntity> {
                 "DATE_FORMAT(order.createdAt, '%Y-%m') as month"
             ])
             .where('order.createdAt >= :startOfYear', { startOfYear })
-            .andWhere('order.status != :deleted', { deleted: OrderStatusEnum.DELETED })
+            // .andWhere('order.status != :deleted', { deleted: OrderStatusEnum.DELETED })
             .groupBy("DATE_FORMAT(order.createdAt, '%Y-%m')")
             .orderBy('month', 'DESC')
             .getRawMany();

@@ -21,7 +21,7 @@ import {
     ApiBody,
     ApiBearerAuth,
 } from '@nestjs/swagger';
-import { OrderService } from './service/order.service';
+import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderFilterDto } from './dto/order-filter.dto';

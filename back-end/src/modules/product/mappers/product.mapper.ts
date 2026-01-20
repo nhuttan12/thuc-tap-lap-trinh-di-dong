@@ -70,28 +70,22 @@ export class ProductMapper {
 		if (discountValue == null || discountValue == undefined || isNaN(discountValue)) {
 			discountValue = 0;
 		}
-
 		return {
-				productID: product.id,
-				name: product.name,
-				price: product.price,
-
-				discount: discountValue,
+			id: product.id,
+			name: product.name,
+			price: product.price,
+			discount: discountValue,
 			description: details?.description ?? '',
 			rating: details?.rating ?? 0,
-
-		imageUrl:
-			product.productImages?.find((img: ProductImageEntity) => {
-				return (
-					img.image?.url &&
-					img.type === ProductImageTypeEnum.THUMBNAIL
-				);
-			})?.image.url ?? '',
-
-				isInWishlist: !!product.wishlistItems?.length,
-
+			imageUrl:
+				product.productImages?.find((img: ProductImageEntity) => {
+					return (
+						img.image?.url &&
+						img.type === ProductImageTypeEnum.THUMBNAIL
+					);
+				})?.image.url ?? '',
 			status: product.status,
-				createdAt: product.createdAt,
+			createdAt: product.createdAt,
 			updatedAt: product.updatedAt,
 	};
 	}

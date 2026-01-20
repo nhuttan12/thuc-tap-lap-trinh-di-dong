@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In } from 'typeorm';
-import { OrderRepository } from '../repository/order.repository';
-import { OrderEntity } from '../entities/order.entity';
-import { OrderDetailEntity } from '../entities/order-detail.entity';
-import { UserEntity } from '../../user/entities/user.entity';
-import { ProductEntity } from '../../product/entities/product.entity';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { UpdateOrderDto } from '../dto/update-order.dto';
-import { OrderFilterDto } from '../dto/order-filter.dto';
-import { OrderResponseDto, OrderItemResponseDto } from '../dto/order-response.dto';
-import { OrderStatusEnum } from '../enums/order-status.enum';
+import { OrderRepository } from './repository/order.repository';
+import { OrderEntity } from './entities/order.entity';
+import { OrderDetailEntity } from './entities/order-detail.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { ProductEntity } from '../product/entities/product.entity';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderFilterDto } from './dto/order-filter.dto';
+import { OrderResponseDto, OrderItemResponseDto } from './dto/order-response.dto';
+import { OrderStatusEnum } from './enums/order-status.enum';
 
 @Injectable()
 export class OrderService {
@@ -212,7 +212,7 @@ export class OrderService {
     async remove(id: number): Promise<void> {
         const result = await this.orderRepository.update(
             { id },
-            { status: OrderStatusEnum.DELETED }
+            { status: OrderStatusEnum.CANCELED }
         );
 
         if (result.affected === 0) {

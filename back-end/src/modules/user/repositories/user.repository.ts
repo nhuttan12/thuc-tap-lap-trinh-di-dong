@@ -8,20 +8,12 @@
  * @version 1.0.5
  */
 
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, EntityManager, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { RoleName } from '../../role/enums/role-name.enum';
-import { ImageEntity } from '../../image/entities/image.entity';
+import {InjectRepository} from '@nestjs/typeorm';
+import {DataSource, EntityManager, Repository} from 'typeorm';
+import {v4 as uuidv4} from 'uuid';
 import {UserStatus} from "../enums/user-status.enum";
-import { UserEntity } from '../entities/user.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
-import { Logger } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { RoleName } from '../../role/enums/role-name.enum';
-import { ImageEntity } from '../../image/entities/image.entity';
+import {UserEntity} from '../entities/user.entity';
+import {Logger} from '@nestjs/common';
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
