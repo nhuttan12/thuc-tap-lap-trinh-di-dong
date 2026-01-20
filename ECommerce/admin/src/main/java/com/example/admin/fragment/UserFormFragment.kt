@@ -21,11 +21,11 @@ class UserFormFragment : Fragment() {
     private lateinit var viewModel: UserViewModel
 
     // Role mapping: name -> id
-    private val roleNames = listOf("admin", "staff", "customer")
+    private val roleNames = listOf("Admin", "Nhân viên", "Khách hàng")
     private val roleNameToId = mapOf(
-            "admin" to 1,
-            "staff" to 2,
-            "customer" to 3
+            "Admin" to 1,
+            "Nhân viên" to 2,
+            "Khách hàng" to 3
     )
 
     private val statusOptions = listOf("ACTIVE", "INACTIVE", "BANNED")

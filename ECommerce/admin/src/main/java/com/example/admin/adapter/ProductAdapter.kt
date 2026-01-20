@@ -168,6 +168,7 @@ class ProductAdapter(
 
             // 8. HÌNH ẢNH
             if (product.imageUrl.isNotBlank() && product.imageUrl != "null") {
+                Log.d("IMG_DEBUG", "id=${product.id}, url=${product.imageUrl}")
                 Glide.with(itemView.context)
                         .load(product.imageUrl)
                         .placeholder(R.drawable.ic_product)
