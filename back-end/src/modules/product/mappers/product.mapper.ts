@@ -13,9 +13,14 @@ import { ProductEntityResponseDto } from '../dtos/product-entity-response.dto';
 import { ProductEntity } from '../entities/product.entity';
 import { ProductImageTypeEnum } from '../enums/product-image-type.enum';
 import { ProductDetailsEntity } from '../entities/product-details.entity';
+import { ProductAdminEntityResponseDto } from '../dtos/product-admin-entity-response.dto';
 
 @Injectable()
 export class ProductMapper {
+	// toProductEntityListResponseDto(products: ProductEntity[]): ProductEntityResponseDto[] {
+	// 	return products.map(product => this.toProductEntityResponseDto(product));
+	// }
+
 	/**
 	 * @description Map from Product entity to Product entity response object
 	 * @author Nhut tan
@@ -55,5 +60,45 @@ export class ProductMapper {
 
 			status: product.status,
 		};
+	}
+
+	toProductAdminEntityResponseDto(
+		product: ProductEntity
+	): ProductAdminEntityResponseDto {
+		// FIX: Xử lý NaN và undefined cho discount
+		let discountValue = product.discount;
+		if (
+			discountValue == null ||
+			discountValue == undefined ||
+			isNaN(discountValue)
+		) {
+			discountValue = 0;
+		}
+		return {
+			id: product.id,
+			name: product.name,
+			price: product.price,
+			discount: discountValue,
+			imageUrl:
+				product.productImages?.find((img: ProductImageEntity) => {
+					return (
+						img.image?.url &&
+						img.type === ProductImageTypeEnum.THUMBNAIL
+					);
+				})?.image.url ?? '',
+			status: product.status,
+			createdAt: product.createdAt.toString(),
+			updatedAt: product.updatedAt.toString(),
+		};
+	}
+
+	toProductAdminEntityListResponseDto(
+		products: ProductEntity[]
+	): ProductAdminEntityResponseDto[] {
+		return products.map(
+			(product: ProductEntity): ProductAdminEntityResponseDto => {
+				return this.toProductAdminEntityResponseDto(product);
+			}
+		);
 	}
 }

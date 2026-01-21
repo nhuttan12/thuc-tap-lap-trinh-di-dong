@@ -134,6 +134,9 @@ class WishlistViewModel(
                     tinyDB.putListInt("WISHLIST_IDS", updated.toList())
                     _wishlistIds.value = updated
 
+                    _wishlistItem.value = _wishlistItem.value
+                        ?.filter { it.id != productID }
+
                     _removeProductFromWishlist.value = result.data
                 }
 

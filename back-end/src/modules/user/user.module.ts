@@ -17,6 +17,7 @@ import { UserDetailEntity } from './entities/user-detail.entity';
 import { UserController } from './user.controller';
 import { RoleModule } from '../role/role.module';
 import { ConfigModule } from '../../common/config/config.module';
+import { UserAdminController } from './user-admin.controller';
 import { UserAuthenticationEntity } from './entities/user-authentication.entity';
 
 @Module({
@@ -31,7 +32,7 @@ import { UserAuthenticationEntity } from './entities/user-authentication.entity'
 		ConfigModule,
 	],
 	providers: [UserRepository, UserService, UserMapper],
-	controllers: [UserController],
-	exports: [UserRepository,UserService],
+	controllers: [UserController, UserAdminController],
+	exports: [UserRepository, UserService],
 })
 export class UserModule {}

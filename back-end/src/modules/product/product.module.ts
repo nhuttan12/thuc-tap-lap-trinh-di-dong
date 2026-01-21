@@ -21,13 +21,20 @@ import { HelperModule } from '../../common/helper/helper.module';
 import { ProductDetailRepository } from './repositories/product-detail.repository';
 import { ProductDetailMapper } from './mappers/product-detail.mapper';
 import { ProductDetailService } from './product-detail.service';
+import {CategoryEntity} from "../category/entities/category.entity";
+import {ImageEntity} from "../image/entities/image.entity";
+import {ProductImageEntity} from "../image/entities/product-image.entity";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([ProductEntity, ProductDetailsEntity]),
+		TypeOrmModule.forFeature([ProductEntity, ProductDetailsEntity,
+			CategoryEntity,
+			ImageEntity,
+			ProductImageEntity,
+		]),
 		CategoryModule,
 		forwardRef(() => CartModule),
-		OrderModule,
+		forwardRef(() => OrderModule),
 		HelperModule,
 	],
 	providers: [

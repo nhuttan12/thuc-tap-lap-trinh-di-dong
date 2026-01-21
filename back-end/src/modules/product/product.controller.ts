@@ -9,12 +9,20 @@
  */
 
 import {
+	BadRequestException,
+	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpCode,
 	HttpStatus,
 	Logger,
+	Param,
+	Patch,
+	Post,
+	Put,
 	Query,
+	Res,
 	UseGuards,
 } from '@nestjs/common';
 import { SuccessResponseDto } from '../../common/dtos/response/success-response.dto';
@@ -31,6 +39,11 @@ import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { UserOptional } from '../user/decorators/user-optional.decorator';
 import { JwtPayload } from '../auth/interface/jwt-payload.interface';
 import { GetProductsPagingByNameRequestDto } from './dtos/get-products-paging-by-name-request.dto';
+import { ProductEntity } from './entities/product.entity';
+import { CreateProductAdminDto } from './dtos/create-product-admin.dto';
+import { UpdateProductAdminDto } from './dtos/update-product-admin';
+import { validate } from '@nestjs/class-validator';
+import { ProductAdminEntityResponseDto } from './dtos/product-admin-entity-response.dto';
 
 @Controller('products')
 export class ProductController {
@@ -107,17 +120,11 @@ export class ProductController {
 	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
 		try {
 			/**
-			 * Get productID from the request
-			 */
-			const { productID } = request;
-			this.logger.debug(`Get product detail by product ID: ${productID}`);
-
-			/**
 			 * Calling `getProductDetailByProductID` from `ProductDetailService`
 			 */
 			const productDetail: ProductDetailResponseDto =
 				await this.productDetailService.getProductDetailByProductID(
-					productID
+					request.productID
 				);
 			this.logger.debug(
 				`Get product detail by product ID: ${JSON.stringify(productDetail, null, 2)}`
@@ -136,6 +143,241 @@ export class ProductController {
 			this.logger.error(
 				`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
 				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * ADMIN: Get products with filter
+	 */
+	@Get('admin')
+	async getProductsForAdmin(
+		@Query('page') page = 1,
+		@Query('limit') limit = 10,
+		@Query('search') search?: string,
+		@Query('category') categoryId?: number,
+		@Query('status') status?: string
+	): Promise<
+		SuccessResponseDto<PagingResponseDto<ProductAdminEntityResponseDto>>
+	> {
+		try {
+			const currentPage = Number(page) > 0 ? Number(page) : 1;
+			const currentLimit = Number(limit) > 0 ? Number(limit) : 10;
+
+			this.logger.debug(
+				`[ADMIN] Get products with filter: page=${currentPage}, limit=${currentLimit}, search=${search}, category=${categoryId}, status=${status}`
+			);
+
+			// TODO: Implement filter logic
+			// Tạm thời chỉ dùng getProductsPaging
+			const products: PagingResponseDto<ProductAdminEntityResponseDto> =
+				await this.productService.getProductsPagingAdmin(
+					currentPage,
+					currentLimit
+				);
+
+			return {
+				data: products,
+				message: ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.message,
+				statusCode:
+					ProductStatusCode.GET_PRODUCTS_PAGING_SUCCESS.customCode,
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error in getProductsForAdmin: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * ADMIN: Get product detail for admin
+	 */
+	@Get('admin/:id')
+	async getProductDetailForAdmin(
+		@Param('id') id: number
+	): Promise<SuccessResponseDto<ProductEntity>> {
+		try {
+			const product = await this.productService.getProductForAdmin(id);
+			return {
+				data: product, // product là ProductEntity
+				message: 'Lấy chi tiết sản phẩm thành công',
+				statusCode: 'PRD_ADMIN_007',
+			};
+		} catch (e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * ADMIN: Tạo sản phẩm mới
+	 */
+
+	@Post('admin')
+	@HttpCode(HttpStatus.CREATED)
+	async createProductForAdmin(
+		@Body() body: CreateProductAdminDto // SỬA: Dùng DTO, không phải 'any'
+	): Promise<SuccessResponseDto<any>> {
+		try {
+			this.logger.debug(
+				`Create product request: ${JSON.stringify(body)}`
+			);
+
+			// Validate
+			const errors = await validate(body);
+			if (errors.length > 0) {
+				this.logger.error(
+					`Validation errors: ${JSON.stringify(errors)}`
+				);
+				throw new BadRequestException(errors);
+			}
+
+			const createdProduct =
+				await this.productService.createProductAdmin(body);
+			return {
+				data: createdProduct,
+				message: 'Tạo sản phẩm thành công',
+				statusCode: 'PRD_ADMIN_003',
+			};
+		} catch (e) {
+			this.logger.error(
+				`Create product error: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * ADMIN: Cập nhật sản phẩm
+	 */
+	@Put('admin/:id')
+	@HttpCode(HttpStatus.OK)
+	async updateProductForAdmin(
+		@Param('id') id: number,
+		@Body() body: UpdateProductAdminDto
+	): Promise<SuccessResponseDto<ProductEntity>> {
+		// <-- Sửa type
+		const updatedProduct = await this.productService.updateProductAdmin(
+			id,
+			body
+		);
+		return {
+			data: updatedProduct, // updatedProduct là ProductEntity
+			message: 'Cập nhật sản phẩm thành công',
+			statusCode: 'PRD_ADMIN_004',
+		};
+	}
+
+	/**
+	 * ADMIN: Xóa sản phẩm (soft delete)
+	 */
+	@Delete('admin/:id')
+	@HttpCode(HttpStatus.OK)
+	async deleteProductForAdmin(
+		@Param('id') id: number
+	): Promise<SuccessResponseDto<any>> {
+		try {
+			await this.productService.deleteProductAdmin(id);
+			return {
+				data: { id },
+				message: 'Xóa sản phẩm thành công',
+				statusCode: 'PRD_ADMIN_005',
+			};
+		} catch (e) {
+			this.logger.error(`Error deleting product: ${e.message}`, e.stack);
+			throw e;
+		}
+	}
+
+	@Post('admin/:id/images')
+	@HttpCode(HttpStatus.CREATED) // THÊM decorator này
+	addProductImage(
+		@Param('id') id: number,
+		@Body() body: { imageUrls: string[]; type: string }
+	): SuccessResponseDto<any> {
+		try {
+			this.logger.debug(
+				`Add images to product ${id}: ${JSON.stringify(body)}`
+			);
+
+			// Validate
+			if (
+				!body.imageUrls ||
+				!Array.isArray(body.imageUrls) ||
+				body.imageUrls.length === 0
+			) {
+				throw new BadRequestException(
+					'imageUrls must be a non-empty array'
+				);
+			}
+
+			if (
+				!body.type ||
+				!['MAIN', 'THUMBNAIL', 'GALLERY'].includes(
+					body.type.toUpperCase()
+				)
+			) {
+				throw new BadRequestException(
+					'type must be one of: MAIN, THUMBNAIL, GALLERY'
+				);
+			}
+
+			// TODO: Implement service method
+			// const result = await this.productService.addProductImages(id, body.imageUrls, body.type);
+
+			// Tạm thời return success
+			return {
+				data: {
+					productId: id,
+					imageUrls: body.imageUrls,
+					type: body.type,
+					message: 'Images added successfully (demo)',
+				},
+				message: 'Thêm ảnh thành công',
+				statusCode: 'PRD_ADMIN_008',
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error adding product images: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	@Get('admin/export')
+	async exportProducts(@Res() res: Response): Promise<void> {
+		// Export sản phẩm ra Excel/CSV
+	}
+
+	/**
+	 * ADMIN: Cập nhật status
+	 */
+	/**
+	 * ADMIN: Cập nhật status
+	 */
+	@Patch('admin/:id/status')
+	@HttpCode(HttpStatus.OK)
+	async updateProductStatus(
+		@Param('id') id: number,
+		@Body('status') status: string
+	): Promise<SuccessResponseDto<ProductEntity>> {
+		try {
+			const updatedProduct =
+				await this.productService.updateProductStatus(id, status);
+
+			return {
+				data: updatedProduct as ProductEntity,
+				message: 'Cập nhật trạng thái thành công',
+				statusCode: 'PRD_ADMIN_006',
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error updating product status: ${e.message}`,
+				e.stack
 			);
 			throw e;
 		}
@@ -196,4 +438,51 @@ export class ProductController {
 			throw e;
 		}
 	}
+
+	/**
+	 * Get product detail by ID (public)
+	 */
+	@Get(':id')
+	async getProductDetailByProductIDWithParam(
+		@Param('id') productID: any
+	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
+		try {
+			this.logger.debug(`Get product detail by product ID: ${productID}`);
+
+			const productDetail: ProductDetailResponseDto =
+				await this.productDetailService.getProductDetailByProductID(
+					productID
+				);
+
+			return {
+				data: productDetail,
+				message: 'Lấy chi tiết sản phẩm thành công',
+				statusCode: 'PRD_002',
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error in getProductDetailByProductID: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	// 		return {
+	// 			data: productDetail,
+	// 			message:
+	// 				ProductDetailStatusCode
+	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.message,
+	// 			statusCode:
+	// 				ProductDetailStatusCode
+	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.customCode,
+	// 		};
+	// 	} catch (e) {
+	// 		this.logger.error(
+	// 			`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
+	// 			(e as Error).stack
+	// 		);
+	// 		throw e;
+	// 	}
+	// }
 }

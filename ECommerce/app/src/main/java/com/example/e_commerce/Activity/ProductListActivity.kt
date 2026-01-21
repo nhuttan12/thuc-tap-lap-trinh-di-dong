@@ -204,6 +204,13 @@ class ProductListActivity : AppCompatActivity() {
         if (product.isInWishlist) {
             wishlistViewModel.removeProductFromWishlist(productID = product.id)
             Log.d(TAG, "Remove product from wishlist with productID: $product.id")
+
+            if (type == ProductListType.WISHLIST) {
+                wishlistViewModel.loadWishlist(
+                    page = productViewModel.pagingMeta.value?.page ?: 1,
+                    limit = 10
+                )
+            }
         } else {
             wishlistViewModel.addProductToWishlist(productID = product.id)
             Log.d(TAG, "Add product to wishlist with productID: $product.id")
@@ -260,8 +267,10 @@ class ProductListActivity : AppCompatActivity() {
 
         wishlistViewModel.wishlistItem.observe(this) {
             if (type == ProductListType.WISHLIST) {
-                productList = it
-                productAdapter.updateDate(it)
+                val fixedList = it.map { product ->
+                    product.copy(isInWishlist = true)
+                }
+                productAdapter.updateDate(fixedList)
                 binding.progressBarProductList.visibility = View.GONE
             }
         }

@@ -22,6 +22,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var imgAvatar: ImageView
     private lateinit var tvEditAvatar: TextView
+    private lateinit var ivBack: ImageView
 
     private val PICK_IMAGE_REQUEST = 1001
 
@@ -60,6 +61,8 @@ class ProfileActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainer, InfoFragment())
                 .commit()
         }
+
+        ivBack.setOnClickListener { finish() }
 
         btnChangePass.setOnClickListener {
             supportFragmentManager.beginTransaction()
