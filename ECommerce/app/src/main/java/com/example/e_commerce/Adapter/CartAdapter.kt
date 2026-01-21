@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.e_commerce.Adapter.Action.OnCartItemActionListener
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.databinding.ViewholderCartBinding
+import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class CartAdapter(
@@ -20,6 +21,8 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ViewholderCartBinding) : RecyclerView.ViewHolder(binding.root)
+
+    val formatter = DecimalFormat("#,###")
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,8 +41,9 @@ class CartAdapter(
         holder.binding.minusCartBtn.isEnabled = !item.isUpdating
 
         holder.binding.titleTxt.text = item.title
-        holder.binding.feeEachItemTxt.text = "${item.price}"
-        holder.binding.totalEachItem.text = "${(item.numberInCart * item.price).roundToInt()}"
+        holder.binding.feeEachItemTxt.text = formatter.format(item.price)
+        holder.binding.totalEachItem.text =
+            formatter.format((item.numberInCart * item.price).roundToInt())
         holder.binding.numberItemTxt.text = item.numberInCart.toString()
 
         Glide.with(holder.itemView.context)

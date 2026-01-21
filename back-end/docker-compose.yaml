@@ -6,16 +6,16 @@ services:
     restart: no
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234         # đổi thành pass cho khớp .env
-      POSTGRES_DB: tt_mobile          # đổi thành db giống .env
+      POSTGRES_PASSWORD: 123123
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/db:/var/lib/postgresql/data
     networks:
       - tt_mobile
 volumes:
   data:
 networks:
-  app-network:
-    driver: bridge
+  tt_mobile:
+    name: tt_mobile

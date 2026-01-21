@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CartDetailEntity } from '../entities/cart-detail.entity';
 import { DataSource, EntityManager, Repository, UpdateResult } from 'typeorm';
 import { CartDetailsStatusEnum } from '../enums/cart-details-status.enum';
+import { CartStatusEnum } from '../enums/cart.status.enum';
 
 export class CartDetailRepository {
 	private readonly logger: Logger = new Logger(CartDetailRepository.name);
@@ -160,10 +161,17 @@ export class CartDetailRepository {
 					.andWhere(
 						`
 						cart_id = (
-							SELECT c.id FROM carts c WHERE c.user_id = :userID
+							SELECT c.id 
+							FROM carts c 
+							WHERE c.user_id = :userID 
+							AND c.status = :cartStatus
+							LIMIT 1
 							)`
 					)
-					.setParameters({ userID })
+					.setParameters({
+						userID,
+						cartStatus: CartStatusEnum.ACTIVE,
+					})
 					.execute();
 			}
 		);
