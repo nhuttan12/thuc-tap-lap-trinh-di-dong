@@ -8,12 +8,15 @@
  * @version 1.0.5
  */
 
-import {InjectRepository} from '@nestjs/typeorm';
-import {DataSource, EntityManager, Repository} from 'typeorm';
-import {v4 as uuidv4} from 'uuid';
-import {UserStatus} from "../enums/user-status.enum";
-import {UserEntity} from '../entities/user.entity';
-import {Logger} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from '../entities/user.entity';
+import { DataSource, EntityManager, Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleName } from '../../role/enums/role-name.enum';
+import { ImageEntity } from '../../image/entities/image.entity';
+import { UserStatus } from '../enums/user-status.enum';
 
 export class UserRepository {
 	private readonly logger: Logger = new Logger(UserRepository.name);
@@ -207,8 +210,13 @@ export class UserRepository {
 				where: {
 					username: username,
 				},
+				/*Tài 212 -217 */
 				relations: {
 					role: true,
+					userDetail: true,
+					userImages: {
+						image: true,
+					},
 				},
 			});
 			this.logger.debug(
@@ -247,7 +255,7 @@ export class UserRepository {
 		email: string,
 		password: string,
 		roleID: number,
-		imageID?: number
+		imageID: number
 	): Promise<UserEntity> {
 		try {
 			/**
@@ -271,13 +279,13 @@ export class UserRepository {
 						role: {
 							id: roleID,
 						},
-						userImages: imageID ? [
+						userImages: [
 							{
 								image: {
 									id: imageID,
 								},
 							},
-						] : [],
+						],
 					});
 
 					/**
@@ -294,70 +302,6 @@ export class UserRepository {
 			throw e;
 		}
 	}
-
-	/////////ADmin
-	async getUsersPagingForAdmin(
-		page: number,
-		limit: number,
-		keyword?: string
-	) {
-		const qb = this.userRepository.createQueryBuilder('user')
-			.leftJoinAndSelect('user.role', 'role')
-			.where('user.status != :deleted', { deleted: UserStatus.DELETED }) // THÊM FILTER
-			.skip((page - 1) * limit)
-			.take(limit)
-			.orderBy('user.createdAt', 'DESC');
-
-		if (keyword) {
-			qb.andWhere(
-				'user.username LIKE :kw OR user.email LIKE :kw',
-				{ kw: `%${keyword}%` }
-			);
-		}
-
-		const [items, total] = await qb.getManyAndCount();
-
-		return {
-			items,
-			total,
-			page,
-			limit,
-		};
-	}
-
-	async findUserDetailForAdmin(userId: number): Promise<UserEntity | null> {
-		return this.userRepository.findOne({
-			where: { id: userId },
-			relations: {
-				role: true,
-				// userDetail: true,
-			},
-		});
-	}
-
-	async createUserByAdmin(
-		username: string,
-		email: string,
-		password: string,
-		fullName: string,
-		roleId: number
-	): Promise<UserEntity> {
-		return this.userRepository.save(
-			this.userRepository.create({
-				username,
-				email,
-				password,
-				fullName,
-				role: { id: roleId },
-				status: UserStatus.ACTIVE,
-
-			})
-		);
-	}
-    //
-	// async save(user: UserEntity): Promise<UserEntity> {
-	// 	return this.userRepository.save(user);
-	// }
 
 	async save(user: UserEntity): Promise<UserEntity> {
 		try {
@@ -404,5 +348,70 @@ export class UserRepository {
 			);
 			throw e;
 		}
+	}
+
+	async findEmailForgotPassword(email: string): Promise<UserEntity | null> {
+		const user = await this.userRepository.findOne({
+			where: { email: email.trim().toLowerCase() },
+		});
+		return user;
+	}
+
+	async getUsersPagingForAdmin(
+		page: number,
+		limit: number,
+		keyword?: string
+	) {
+		const qb = this.userRepository
+			.createQueryBuilder('user')
+			.leftJoinAndSelect('user.role', 'role')
+			.where('user.status != :deleted', { deleted: UserStatus.DELETED }) // THÊM FILTER
+			.skip((page - 1) * limit)
+			.take(limit)
+			.orderBy('user.createdAt', 'DESC');
+
+		if (keyword) {
+			qb.andWhere('user.username LIKE :kw OR user.email LIKE :kw', {
+				kw: `%${keyword}%`,
+			});
+		}
+
+		const [items, total] = await qb.getManyAndCount();
+
+		return {
+			items,
+			total,
+			page,
+			limit,
+		};
+	}
+
+	async findUserDetailForAdmin(userId: number): Promise<UserEntity | null> {
+		return this.userRepository.findOne({
+			where: { id: userId },
+			relations: {
+				role: true,
+				// userDetail: true,
+			},
+		});
+	}
+
+	async createUserByAdmin(
+		username: string,
+		email: string,
+		password: string,
+		fullName: string,
+		roleId: number
+	): Promise<UserEntity> {
+		return this.userRepository.save(
+			this.userRepository.create({
+				username,
+				email,
+				password,
+				fullName,
+				role: { id: roleId },
+				status: UserStatus.ACTIVE,
+			})
+		);
 	}
 }

@@ -33,14 +33,13 @@ import { UpdateUserProfileDto } from './dtos/update-user-profile.dto';
 import { UserDetailEntity } from './entities/user-detail.entity';
 import { UserProfileResponseDto } from './dtos/user-profile-response.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
-import {CreateUserAdminDto} from "./dtos/create-user-admin.dto";
-import {UpdateUserAdminDto} from "./dtos/update-user-admin.dto";
+import { CreateUserAdminDto } from './dtos/create-user-admin.dto';
+import { UpdateUserAdminDto } from './dtos/update-user-admin.dto';
 
 @Injectable()
 export class UserService {
 	private readonly logger: Logger = new Logger(UserService.name);
 	private readonly salt: number;
-
 
 	constructor(
 		private readonly userRepository: UserRepository,
@@ -48,8 +47,6 @@ export class UserService {
 		private readonly imageService: ImageService,
 		private readonly roleService: RoleService,
 		private readonly configService: ConfigService
-
-
 	) {
 		this.salt = this.configService.httpConfig.saltRounds;
 	}
@@ -400,16 +397,8 @@ export class UserService {
 
 	//////////ADMIN
 
-	async getUsersForAdmin(
-		page: number,
-		limit: number,
-		keyword?: string
-	) {
-		return this.userRepository.getUsersPagingForAdmin(
-			page,
-			limit,
-			keyword
-		);
+	async getUsersForAdmin(page: number, limit: number, keyword?: string) {
+		return this.userRepository.getUsersPagingForAdmin(page, limit, keyword);
 	}
 
 	async getUserDetailForAdmin(userId: number) {
@@ -429,7 +418,6 @@ export class UserService {
 	async createUserByAdmin(
 		dto: CreateUserAdminDto
 	): Promise<UserEntityResponseDto> {
-
 		// 1. Check email
 		if (await this.getUserByEmail(dto.email)) {
 			throw new ConflictException('Email already exists');
@@ -458,15 +446,14 @@ export class UserService {
 			role.id
 		);
 
-		this.logger.debug(`User created successfully without image. ID: ${user.id}`);
+		this.logger.debug(
+			`User created successfully without image. ID: ${user.id}`
+		);
 
 		return this.getUserByUserID(user.id);
 	}
 
-	async updateUserForAdmin(
-		userId: number,
-		body: UpdateUserAdminDto
-	) {
+	async updateUserForAdmin(userId: number, body: UpdateUserAdminDto) {
 		const user = await this.userRepository.getUserByUerID(userId);
 
 		if (!user) {
@@ -521,26 +508,29 @@ export class UserService {
 		await this.userRepository.save(user);
 	}
 
-	async updateUserStatus(userId: number, status: string): Promise<UserEntityResponseDto> {
-        const user = await this.userRepository.getUserByUerID(userId);
+	async updateUserStatus(
+		userId: number,
+		status: string
+	): Promise<UserEntityResponseDto> {
+		const user = await this.userRepository.getUserByUerID(userId);
 
-        if (!user) {
-            throw new NotFoundException({
-                statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
-                customCode: UserStatusCode.USER_NOT_FOUND.customCode,
-                message: UserStatusCode.USER_NOT_FOUND.message,
-            });
-        }
+		if (!user) {
+			throw new NotFoundException({
+				statusCode: UserStatusCode.USER_NOT_FOUND.statusCode,
+				customCode: UserStatusCode.USER_NOT_FOUND.customCode,
+				message: UserStatusCode.USER_NOT_FOUND.message,
+			});
+		}
 
-        if (!Object.values(UserStatus).includes(status as UserStatus)) {
-            throw new BadRequestException('Invalid status');
-        }
+		if (!Object.values(UserStatus).includes(status as UserStatus)) {
+			throw new BadRequestException('Invalid status');
+		}
 
-        user.status = status as UserStatus;
-        await this.userRepository.save(user);
+		user.status = status as UserStatus;
+		await this.userRepository.save(user);
 
-        return this.userMapper.toUserResponseDto(user);
-    }
+		return this.userMapper.toUserResponseDto(user);
+	}
 
 	async createUserWithUsernameEmailPasswordWithDefaultRoleAndImage(
 		username: string,

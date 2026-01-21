@@ -77,7 +77,9 @@ describe('LocalStrategy', (): void => {
 
 		mockAuthService.userLogin.mockResolvedValue(mockUser);
 
-		const result: JwtPayload = await localStrategy.validate(loginDto);
+		const result: JwtPayload = await localStrategy.validate(
+            loginDto.username,
+            loginDto.password);
 
 		expect(authService.userLogin).toHaveBeenCalledTimes(1);
 		expect(authService.userLogin).toHaveBeenCalledWith(
@@ -109,7 +111,9 @@ describe('LocalStrategy', (): void => {
 			.spyOn(Logger.prototype, 'debug')
 			.mockImplementation((): void => {});
 
-		await localStrategy.validate(loginDto);
+		await localStrategy.validate(
+            loginDto.username,
+            loginDto.password);
 
 		expect(loggerSpy).toHaveBeenCalledTimes(1);
 		expect(loggerSpy).toHaveBeenCalledWith(

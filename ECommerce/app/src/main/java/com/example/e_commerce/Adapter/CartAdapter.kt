@@ -3,6 +3,7 @@ package com.example.e_commerce.Adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -50,9 +51,26 @@ class CartAdapter(
             ).into(holder.binding.pic)
 
         holder.binding.plusCartBtn.setOnClickListener {
+
+//            holder.binding.plusCartBtn.setOnClickListener {
+//                val pos = holder.bindingAdapterPosition
+//                if (pos == RecyclerView.NO_POSITION)
+//                return@setOnClickListener
+//                listener.onIncrease(listItemSelected[pos]) }
             val pos = holder.bindingAdapterPosition
             if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-            listener.onIncrease(listItemSelected[pos])
+
+            val item = listItemSelected[pos]
+            if (item.price == 0.0) {
+                Toast.makeText(
+                    holder.itemView.context,
+                    "Sản phẩm này chỉ được chọn 1",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            listener.onIncrease(item)
         }
 
         holder.binding.minusCartBtn.setOnClickListener {
@@ -70,4 +88,7 @@ class CartAdapter(
         notifyDataSetChanged()
     }
 
+    fun getItems(): List<CartItemModel> {
+        return listItemSelected
+    }
 }

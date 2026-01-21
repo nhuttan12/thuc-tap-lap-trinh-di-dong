@@ -56,6 +56,37 @@
             android:exported="false"/>
         <activity android:name=".Activity.ProfileActivity"
             android:exported="false"/>
+        <activity
+            android:name=".Activity.CheckoutActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="myapp"
+                    android:host="paypal"
+                    android:pathPrefix="/success" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="myapp"
+                    android:host="paypal"
+                    android:pathPrefix="/cancel" />
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>

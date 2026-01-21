@@ -138,6 +138,16 @@ class HomeActivity : AppCompatActivity() {
             })
         }
 
+        profileBtn.setOnClickListener {
+            profileBtn.isEnabled = false
+            checkToken.checkTokenOrRedirect(this@HomeActivity) {
+                val intent = Intent(this@HomeActivity, ProfileActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                profileBtn.isEnabled = true
+            }
+        }
+
         wishlistBtn.setOnClickListener {
             wishlistBtn.isEnabled = false
             checkToken.checkTokenOrRedirect(this@HomeActivity, onTokenValid = {

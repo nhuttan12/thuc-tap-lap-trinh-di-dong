@@ -1,3 +1,11 @@
+/*
+ * @description Order entity
+ * @author Nhut Tan
+ * @since 2025-09-05
+ * @modifies 2025-09-14
+ * @version 1.0.2
+ */
+
 import {
 	Column,
 	Entity,
@@ -17,8 +25,8 @@ export class OrderEntity extends TimestampField {
 	id: number;
 
 	@ManyToOne(
-		() => UserEntity,
-		(user) => user.order,
+		(): typeof UserEntity => UserEntity,
+		(userEntity: UserEntity): OrderEntity[] => userEntity.order,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}
@@ -29,16 +37,13 @@ export class OrderEntity extends TimestampField {
 	@Column()
 	price: number;
 
-	@Column({
-		type: 'enum',
-		enum: OrderStatusEnum,
-		default: OrderStatusEnum.PENDING, // SỬA: Default là PENDING
-	})
+	@Column()
 	status: OrderStatusEnum;
 
 	@OneToMany(
-		() => OrderDetailEntity,
-		(orderDetail) => orderDetail.order,
+		(): typeof OrderDetailEntity => OrderDetailEntity,
+		(orderDetailEntity: OrderDetailEntity): OrderEntity =>
+			orderDetailEntity.order,
 		{
 			cascade: ['insert', 'update', 'soft-remove'],
 		}

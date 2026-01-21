@@ -27,6 +27,7 @@ import { ForgotPasswordResponseDto } from './dtos/forgot-password-response.dto';
 import { UserAuthenticationRepository } from '../user/repositories/user-authentication.repository';
 import { VerifyOtpResponseDto } from './dtos/user-verify-otp-response.dto';
 import { ResetPasswordResponseDto } from './dtos/reset-password-response.dto';
+import {UserRepository} from "../user/repositories/user.repository";
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,8 @@ export class AuthService {
 		private readonly userService: UserService,
 		private readonly jwtService: JwtService,
 		private readonly authMapper: AuthMapper,
-		private readonly userAuthRepo: UserAuthenticationRepository
+		private readonly userAuthRepo: UserAuthenticationRepository,
+        private readonly userRepo : UserRepository
 	) {}
 
 	/*
@@ -281,7 +283,7 @@ export class AuthService {
 	 */
 	async forgotPassword(email: string): Promise<ForgotPasswordResponseDto> {
 		// 1. Kiểm tra user tồn tại
-		const user = await this.userService.getUserByEmail(email);
+		const user = await this.userRepo.findEmailForgotPassword(email);
 		if (!user) {
 			throw new BadRequestException('User không tồn tại');
 		}
@@ -309,7 +311,7 @@ export class AuthService {
 			secure: false,
 			auth: {
 				user: 'taitanvo16@gmail.com',
-				pass: 'yulu zcuc hnhm yeql',
+				pass: 'bkzf ffqo zsfn tijo',
 			},
 		});
 
@@ -321,7 +323,9 @@ export class AuthService {
                    <p>OTP có hiệu lực trong 3 phút.</p>`,
 		});
 
-		return { message: 'OTP đã được gửi về email' };
+        this.logger.debug(`Đã gửi OTP đến ${user.email}`);
+
+        return { message: 'OTP đã được gửi về email' };
 	}
 
 	/**

@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
+    implementation("androidx.browser:browser:1.8.0")
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.viewpager2)

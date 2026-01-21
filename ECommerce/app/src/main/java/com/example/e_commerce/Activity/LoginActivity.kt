@@ -2,10 +2,13 @@ package com.example.e_commerce.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.e_commerce.Helper.CheckToken
@@ -43,65 +46,105 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendLoginRequest(username: String, password: String) {
+//    private fun sendLoginRequest(username: String, password: String) {
+//
+//        val url = "http://10.0.2.2:8080/auth/login"
+//
+//        val params = HashMap<String, String>()
+//        params["username"] = username
+//        params["password"] = password
+//
+//        val request = object : StringRequest(
+//            Method.POST,
+//            url,
+//            Response.Listener { response ->
+//
+//                val json = JSONObject(response)
+//                val accessToken = json.optString("accessToken")
+//
+//                val expireAt = checkToken.decodeJwtExpireAt(accessToken)
+//
+//                if (accessToken.isNotEmpty()) {
+////                    saveToken(accessToken)
+//                    tinyDB.setToken(accessToken, expireAt)
+//
+//                    Toast.makeText(
+//                        this,
+//                        "Đăng nhập thành công",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//
+////                    startActivity(
+////                        Intent(this, SplashActivity::class.java)
+////                    )
+//                    startActivity(
+//                        Intent(this, HomeActivity::class.java)
+//                    )
+//                    finish()
+//                } else {
+//                    Toast.makeText(
+//                        this,
+//                        "Login thất bại",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            },
+//            Response.ErrorListener { error ->
+//
+//                val errorMsg = error.networkResponse?.data?.let {
+//                    JSONObject(String(it)).optString(
+//                        "message",
+//                        "Sai username hoặc mật khẩu"
+//                    )
+//                } ?: "Không thể kết nối server"
+//
+//                Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
+//            }
+//        ) {
+//            override fun getParams(): MutableMap<String, String> {
+//                return params
+//            }
+//        }
+//
+//        Volley.newRequestQueue(this).add(request)
+//    }
 
+    private fun sendLoginRequest(username: String, password: String) {
         val url = "http://10.0.2.2:8080/auth/login"
 
-        val params = HashMap<String, String>()
-        params["username"] = username
-        params["password"] = password
+        val body = JSONObject()
+        body.put("username", username)
+        body.put("password", password)
 
-        val request = object : StringRequest(
-            Method.POST,
+        val request = JsonObjectRequest(
+            Request.Method.POST,
             url,
-            Response.Listener { response ->
+            body,
+            { response ->
+                val accessToken = response.optString("accessToken")
 
-                val json = JSONObject(response)
-                val accessToken = json.optString("accessToken")
-
-                val expireAt = checkToken.decodeJwtExpireAt(accessToken)
+                Log.d("LOGIN", "accessToken = $accessToken")
 
                 if (accessToken.isNotEmpty()) {
-//                    saveToken(accessToken)
+                    val expireAt = checkToken.decodeJwtExpireAt(accessToken)
                     tinyDB.setToken(accessToken, expireAt)
 
-                    Toast.makeText(
-                        this,
-                        "Đăng nhập thành công",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show()
 
-//                    startActivity(
-//                        Intent(this, SplashActivity::class.java)
-//                    )
-                    startActivity(
-                        Intent(this, HomeActivity::class.java)
-                    )
+                    startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Login thất bại",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Login thất bại", Toast.LENGTH_SHORT).show()
                 }
             },
-            Response.ErrorListener { error ->
-
+            { error ->
                 val errorMsg = error.networkResponse?.data?.let {
-                    JSONObject(String(it)).optString(
-                        "message",
-                        "Sai username hoặc mật khẩu"
-                    )
+                    JSONObject(String(it)).optString("message", "Sai username hoặc mật khẩu")
                 } ?: "Không thể kết nối server"
 
                 Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
             }
-        ) {
-            override fun getParams(): MutableMap<String, String> {
-                return params
-            }
-        }
+        )
 
         Volley.newRequestQueue(this).add(request)
     }
