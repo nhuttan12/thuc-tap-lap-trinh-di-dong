@@ -116,30 +116,15 @@ export class ProductController {
 	 */
 	@Get('detail')
 	async getProductDetailByProductID(
-		@Query('productID') productIDParam: any // Lấy raw value
+		@Query() request: GetProductDetailByProductIdRequestDto
 	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
 		try {
-			// VALIDATE MANUAL
-			console.log('=== DEBUG RAW ===');
-			console.log('productIDParam:', productIDParam);
-			console.log('productIDParam type:', typeof productIDParam);
-
-			const productID = parseInt(String(productIDParam), 10);
-			console.log('Parsed productID:', productID);
-			console.log('Is NaN?', isNaN(productID));
-
-			if (isNaN(productID) || productID <= 0) {
-				throw new BadRequestException('Invalid product ID');
-			}
-
-			this.logger.debug(`Get product detail by product ID: ${productID}`);
-
 			/**
 			 * Calling `getProductDetailByProductID` from `ProductDetailService`
 			 */
 			const productDetail: ProductDetailResponseDto =
 				await this.productDetailService.getProductDetailByProductID(
-					productID
+					request.productID
 				);
 			this.logger.debug(
 				`Get product detail by product ID: ${JSON.stringify(productDetail, null, 2)}`
@@ -399,53 +384,6 @@ export class ProductController {
 	}
 
 	/**
-	 * Get product detail by ID (public)
-	 */
-	@Get(':id')
-	async getProductDetailByProductIDWithParam(
-		@Param('id') productID: any
-	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
-		try {
-			this.logger.debug(`Get product detail by product ID: ${productID}`);
-
-			const productDetail: ProductDetailResponseDto =
-				await this.productDetailService.getProductDetailByProductID(
-					productID
-				);
-
-			return {
-				data: productDetail,
-				message: 'Lấy chi tiết sản phẩm thành công',
-				statusCode: 'PRD_002',
-			};
-		} catch (e) {
-			this.logger.error(
-				`Error in getProductDetailByProductID: ${(e as Error).message}`,
-				(e as Error).stack
-			);
-			throw e;
-		}
-	}
-
-	// 		return {
-	// 			data: productDetail,
-	// 			message:
-	// 				ProductDetailStatusCode
-	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.message,
-	// 			statusCode:
-	// 				ProductDetailStatusCode
-	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.customCode,
-	// 		};
-	// 	} catch (e) {
-	// 		this.logger.error(
-	// 			`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
-	// 			(e as Error).stack
-	// 		);
-	// 		throw e;
-	// 	}
-	// }
-
-	/**
 	 * @description Get products paging
 	 * @param {JwtPayload | null} user - Get user's token is optional,
 	 * if not exist, return null
@@ -500,4 +438,51 @@ export class ProductController {
 			throw e;
 		}
 	}
+
+	/**
+	 * Get product detail by ID (public)
+	 */
+	@Get(':id')
+	async getProductDetailByProductIDWithParam(
+		@Param('id') productID: any
+	): Promise<SuccessResponseDto<ProductDetailResponseDto>> {
+		try {
+			this.logger.debug(`Get product detail by product ID: ${productID}`);
+
+			const productDetail: ProductDetailResponseDto =
+				await this.productDetailService.getProductDetailByProductID(
+					productID
+				);
+
+			return {
+				data: productDetail,
+				message: 'Lấy chi tiết sản phẩm thành công',
+				statusCode: 'PRD_002',
+			};
+		} catch (e) {
+			this.logger.error(
+				`Error in getProductDetailByProductID: ${(e as Error).message}`,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	// 		return {
+	// 			data: productDetail,
+	// 			message:
+	// 				ProductDetailStatusCode
+	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.message,
+	// 			statusCode:
+	// 				ProductDetailStatusCode
+	// 					.GET_PRODUCT_DETAIL_BY_PRODUCT_ID_SUCCESS.customCode,
+	// 		};
+	// 	} catch (e) {
+	// 		this.logger.error(
+	// 			`Error in \`getProductDetailByProductID\`: ${(e as Error).message}`,
+	// 			(e as Error).stack
+	// 		);
+	// 		throw e;
+	// 	}
+	// }
 }

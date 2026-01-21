@@ -32,7 +32,7 @@ import { UserAuthenticationEntity } from './entities/user-authentication.entity'
 		ConfigModule,
 	],
 	providers: [UserRepository, UserService, UserMapper],
-	controllers: [UserController],
+	controllers: [UserController, UserAdminController],
 	exports: [UserRepository, UserService],
 })
 export class UserModule {}
