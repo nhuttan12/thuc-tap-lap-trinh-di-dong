@@ -1,8 +1,4 @@
-import {
-	BadRequestException,
-	Injectable,
-	InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDetailEntity } from '../orders/entities/order-detail.entity';
@@ -14,9 +10,12 @@ import { DataSource, Repository } from 'typeorm';
 import { PaymentMethodEnum } from '../payment/enums/payment-method.enum';
 import { PaymentStatusEnum } from '../payment/enums/payment-status.enum';
 import { OrderStatusEnum } from '../orders/enums/order-status.enum';
+import { CartStatusEnum } from '../cart/enums/cart.status.enum';
 
 @Injectable()
 export class PaypalService {
+	private readonly logger: Logger = new Logger(PaypalService.name);
+
 	constructor(
 		private readonly dataSource: DataSource,
 		@InjectRepository(OrderEntity)
@@ -57,11 +56,21 @@ export class PaypalService {
 	async createOrder(userId: number) {
 		// 1️ Lấy cart từ DB
 		const cart = await this.cartRepo.findOne({
-			where: { user: { id: userId } },
-			relations: ['cartDetails', 'cartDetails.product'],
+			where: { user: { id: userId }, status: CartStatusEnum.ACTIVE },
+			relations: {
+				cartDetails: {
+					product: true,
+				},
+			},
+			order: {
+				createdAt: 'DESC',
+				updatedAt: 'DESC',
+			},
 		});
+		this.logger.debug(`Cart: ${JSON.stringify(cart, null, 2)}`);
 
 		if (!cart || cart.cartDetails.length === 0) {
+			this.logger.warn('Cart is empty');
 			throw new BadRequestException('Cart is empty');
 		}
 
@@ -69,24 +78,29 @@ export class PaypalService {
 		let totalVnd = 0;
 		cart.cartDetails.forEach((item) => {
 			totalVnd += item.quantity * Number(item.product.price);
+			this.logger.debug(`Total vnd: ${totalVnd}`);
 		});
 
 		// + ship (nếu có)
 		const shippingFee = 20000;
 		totalVnd += shippingFee;
+		this.logger.debug(`Total vnd: ${totalVnd}`);
 
 		// 3️ Đổi sang USD (sandbox)
 		const USD_RATE = 25000;
 		const totalUsdString = (totalVnd / USD_RATE).toFixed(2);
+		this.logger.debug(`Total usd: ${totalUsdString}`);
 
 		if (Number(totalUsdString) < 0.01) {
+			this.logger.warn('Invalid total amount');
 			throw new BadRequestException('Invalid total amount');
 		}
 
-		console.log('PAYPAL SEND USD:', totalUsdString);
+		this.logger.debug('PAYPAL SEND USD:', totalUsdString);
 
 		// 4️ Gọi PayPal
 		const token = await this.getAccessToken();
+		this.logger.debug(`Token: ${token}`);
 
 		const res = await axios.post(
 			`${this.baseUrl}/v2/checkout/orders`,
@@ -118,6 +132,7 @@ export class PaypalService {
 
 	async captureOrder(orderId: string) {
 		const token = await this.getAccessToken();
+		this.logger.debug(`Token: ${token}`);
 
 		// 1️ Check order status
 		const orderRes = await axios.get(
@@ -175,25 +190,6 @@ export class PaypalService {
 		paypalOrderId: string,
 		userId: number
 	): Promise<void> {
-		// 1️ VERIFY PAYPAL
-		// const token = await this.getAccessToken();
-		// const paypalRes = await axios.get(
-		// 	`${this.baseUrl}/v2/checkout/orders/${paypalOrderId}`,
-		// 	{
-		// 		headers: { Authorization: `Bearer ${token}` },
-		// 	}
-		// );
-		//
-		// if (paypalRes.data.status !== 'COMPLETED') {
-		// 	throw new BadRequestException('Paypal order not completed');
-		// }
-		//
-		// const capture = paypalRes.data.purchase_units[0].payments.captures[0];
-		//
-		// const paidUsd = Number(capture.amount.value);
-		// const currency = capture.amount.currency_code;
-		// const transactionId = capture.id;
-
 		const { transactionId, paidUsd, currency } =
 			await this.verifyPaypalOrder(paypalOrderId);
 
