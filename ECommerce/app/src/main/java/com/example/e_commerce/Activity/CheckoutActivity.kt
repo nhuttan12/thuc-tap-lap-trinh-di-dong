@@ -17,6 +17,7 @@ import com.example.e_commerce.Adapter.CartAdapter
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.Adapter.Action.OnCartItemActionListener
 import org.json.JSONObject
+import java.math.BigDecimal
 
 class CheckoutActivity : AppCompatActivity() {
 
@@ -106,7 +107,7 @@ class CheckoutActivity : AppCompatActivity() {
                             id = item.getInt("cartDetailId"),
                             title = item.getString("name"),
                             picUrl = item.getString("imageUrl"),
-                            price = item.getDouble("price"),
+                            price = BigDecimal(item.optString("price", "0")),
                             numberInCart = item.getInt("quantity")
                         )
                     )
@@ -205,17 +206,18 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun calculateTotal() {
-        val shippingFee = 20000.0
-        var subtotal = 0.0
+        val shippingFee = BigDecimal("20000")
+        var subtotal = BigDecimal.ZERO
 
         val items = cartAdapter.getItems()
         items.forEach {
-            subtotal += it.price * it.numberInCart
+            val itemTotal = it.price.multiply(BigDecimal(it.numberInCart))
+            subtotal = subtotal.add(itemTotal)
         }
-        binding.tvTotal.text = formatMoney(subtotal + shippingFee)
+        binding.tvTotal.text = formatMoney(subtotal.add(shippingFee))
     }
 
-    private fun formatMoney(value: Double): String {
+    private fun formatMoney(value: BigDecimal): String {
         val formatter = java.text.NumberFormat.getInstance(
             java.util.Locale("vi", "VN")
         )
@@ -400,6 +402,6 @@ class CheckoutActivity : AppCompatActivity() {
     private fun clearCheckoutState() {
         cartAdapter.updateData(arrayListOf())
         cartAdapter.notifyDataSetChanged()
-        binding.tvTotal.text = formatMoney(0.0)
+        binding.tvTotal.text = formatMoney(BigDecimal.ZERO)
     }
 }

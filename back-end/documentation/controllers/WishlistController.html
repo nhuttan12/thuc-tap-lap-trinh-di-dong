@@ -1,0 +1,780 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>back-end documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">back-end documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content controller">
+                   <div class="content-data">
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Controllers</li>
+  <li class="breadcrumb-item" >WishlistController</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/wishlist/wishlist.controller.ts</code>
+        </p>
+
+            <p class="comment">
+                <h3>Prefix</h3>
+            </p>
+            <p class="comment">
+                <code>wishlist</code>
+            </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#addProductToWishlist" >addProductToWishlist</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAllProductInWishlist" >getAllProductInWishlist</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeWishlistItem" >removeWishlistItem</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addProductToWishlist"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>addProductToWishlist</b></span>
+                        <a href="#addProductToWishlist"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addProductToWishlist(payload: <a href="../interfaces/JwtPayload.html" target="_self">JwtPayload</a>, request: <a href="../classes/AddProductToWishlistRequestDto.html" target="_self">AddProductToWishlistRequestDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;add&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="89"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.controller.ts:89</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>wishlist item, it&#39;s contain product ID</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                            <code><a href="../interfaces/JwtPayload.html" target="_self" >JwtPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Get user from token</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/AddProductToWishlistRequestDto.html" target="_self" >AddProductToWishlistRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>request to remove
+wishlist item, it&#39;s contain product ID</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;SuccessResponseDto&lt;boolean&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllProductInWishlist"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getAllProductInWishlist</b></span>
+                        <a href="#getAllProductInWishlist"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllProductInWishlist(user: <a href="../interfaces/JwtPayload.html" target="_self">JwtPayload</a>, request: <a href="../classes/GetWishlistItemRequestDto.html" target="_self">GetWishlistItemRequestDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get()<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.controller.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/JwtPayload.html" target="_self" >JwtPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Get user from token</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/GetWishlistItemRequestDto.html" target="_self" >GetWishlistItemRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Page and limit</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;SuccessResponseDto&lt;PagingResponseDto&lt;ProductInWishlistResponseDto&gt;&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeWishlistItem"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>removeWishlistItem</b></span>
+                        <a href="#removeWishlistItem"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeWishlistItem(payload: <a href="../interfaces/JwtPayload.html" target="_self">JwtPayload</a>, request: <a href="../classes/RemoveProductFromWishlistDto.html" target="_self">RemoveProductFromWishlistDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Put(&#x27;remove&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.controller.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>wishlist item, it&#39;s contain product ID</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                            <code><a href="../interfaces/JwtPayload.html" target="_self" >JwtPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Payload from token</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/RemoveProductFromWishlistDto.html" target="_self" >RemoveProductFromWishlistDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>request to remove
+wishlist item, it&#39;s contain product ID</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;SuccessResponseDto&lt;boolean&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">/**
+ * @description Wishlist controller
+ * @author Nhut Tan
+ * @since 2025-09-23
+ * @version 1.0.0
+ */
+
+import {
+	Body,
+	Controller,
+	Get,
+	Logger,
+	Post,
+	Put,
+	Query,
+	UseGuards,
+} from &#x27;@nestjs/common&#x27;;
+import { WishlistService } from &#x27;./wishlist.service&#x27;;
+import { ProductInWishlistResponseDto } from &#x27;./dtos/product-in-wishlist-response.dto&#x27;;
+import { GetWishlistItemRequestDto } from &#x27;./dtos/get-wishlist-item-request.dto&#x27;;
+import { PagingResponseDto } from &#x27;../../common/helper/dtos/paging-response.dto&#x27;;
+import { User } from &#x27;../user/decorators/user.decorator&#x27;;
+import { JwtPayload } from &#x27;../auth/interface/jwt-payload.interface&#x27;;
+import { SuccessResponseDto } from &#x27;../../common/dtos/response/success-response.dto&#x27;;
+import { WishlistStatusCode } from &#x27;./status-code/wishlist.status-code&#x27;;
+import { JwtAuthGuard } from &#x27;../auth/guards/jwt-auth.guard&#x27;;
+import { Roles } from &#x27;../role/decorators/role.decorator&#x27;;
+import { RoleName } from &#x27;../role/enums/role-name.enum&#x27;;
+import { AddProductToWishlistRequestDto } from &#x27;./dtos/add-product-to-wishlist-request.dto&#x27;;
+import { RemoveProductFromWishlistDto } from &#x27;./dtos/remove-product-from-wishlist.dto&#x27;;
+
+@Controller(&#x27;wishlist&#x27;)
+@UseGuards(JwtAuthGuard)
+@Roles([RoleName.CUSTOMER])
+export class WishlistController {
+	private readonly logger: Logger &#x3D; new Logger(WishlistController.name);
+
+	constructor(private readonly wishlistService: WishlistService) {}
+
+	/**
+	 * @description Get all products in wishlist
+	 * @param {JwtPayload} user - Get user from token
+	 * @param {GetWishlistItemRequestDto} request - Page and limit
+	 * @author Nhut Tan
+	 * @since 2025-09-24
+	 * @version 1.0.0
+	 */
+	@Get()
+	async getAllProductInWishlist(
+		@User() user: JwtPayload,
+		@Query() request: GetWishlistItemRequestDto
+	): Promise&lt;
+		SuccessResponseDto&lt;PagingResponseDto&lt;ProductInWishlistResponseDto&gt;&gt;
+	&gt; {
+		/**
+		 * Get page and limit from request
+		 */
+		this.logger.debug(&#x60;Request: ${JSON.stringify(request, null, 2)}&#x60;);
+		const { page, limit } &#x3D; request;
+
+		const response: PagingResponseDto&lt;ProductInWishlistResponseDto&gt; &#x3D;
+			await this.wishlistService.getProductsInWishlistPaging(
+				user.id,
+				page,
+				limit
+			);
+
+		return {
+			data: response,
+			message:
+				WishlistStatusCode.GET_PRODUCTS_IN_WISHLIST_SUCCESS.message,
+			statusCode:
+				WishlistStatusCode.GET_PRODUCTS_IN_WISHLIST_SUCCESS.customCode,
+		};
+	}
+
+	/**
+	 * @description Add product to wishlist
+	 * @param {JwtPayload} payload - Get user from token
+	 * @param {AddProductToWishlistRequestDto} request - request to remove
+	 * wishlist item, it&#x27;s contain product ID
+	 * @return {boolean}
+	 * @author Nhut Tan
+	 * @since 2025-09-24
+	 * @modifies 2026-01-11
+	 * @version 1.0.1
+	 */
+	@Post(&#x27;add&#x27;)
+	async addProductToWishlist(
+		@User() payload: JwtPayload,
+		@Body() request: AddProductToWishlistRequestDto
+	): Promise&lt;SuccessResponseDto&lt;boolean&gt;&gt; {
+		this.logger.verbose(&#x27;Enter add wishlist controller&#x27;);
+		this.logger.debug(&#x60;Request: ${JSON.stringify(request, null, 2)}&#x60;);
+
+		/**
+		 * Call &#x60;addToWishlist&#x60; in &#x60;WishlistService&#x60;
+		 */
+		const addToWishlistResult: boolean &#x3D;
+			await this.wishlistService.addToWishlist(
+				request.productID,
+				payload.id
+			);
+		this.logger.debug(
+			&#x60;Call \&#x60;addToWishlist\&#x60; in \&#x60;WishlistService\&#x60;: ${JSON.stringify(addToWishlistResult, null, 2)}&#x60;
+		);
+
+		/**
+		 * Build status code and message response base on add product to wishlist result
+		 */
+		const messageResponse: string &#x3D; addToWishlistResult
+			? WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_SUCCESS.message
+			: WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED.message;
+		this.logger.debug(
+			&#x60;Build message response: ${JSON.stringify(messageResponse, null, 2)}&#x60;
+		);
+
+		const statusCodeResponse: string &#x3D; addToWishlistResult
+			? WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_SUCCESS.customCode
+			: WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED.customCode;
+		this.logger.debug(
+			&#x60;Build status code response: ${JSON.stringify(statusCodeResponse, null, 2)}&#x60;
+		);
+
+		/**
+		 * Create response for api
+		 */
+		const response: SuccessResponseDto&lt;boolean&gt; &#x3D; {
+			data: addToWishlistResult,
+			message: messageResponse,
+			statusCode: statusCodeResponse,
+		};
+		this.logger.debug(
+			&#x60;Create response for api: ${JSON.stringify(response, null, 2)}&#x60;
+		);
+
+		return response;
+	}
+
+	/**
+	 * @description Remove product from wishlist
+	 * @param {JwtPayload} payload - Payload from token
+	 * @param {RemoveProductFromWishlistDto} request - request to remove
+	 * wishlist item, it&#x27;s contain product ID
+	 * @return {boolean}
+	 * @modifies 2026-01-11
+	 * @version 1.0.1
+	 */
+	@Put(&#x27;remove&#x27;)
+	async removeWishlistItem(
+		@User() payload: JwtPayload,
+		@Body() request: RemoveProductFromWishlistDto
+	): Promise&lt;SuccessResponseDto&lt;boolean&gt;&gt; {
+		this.logger.verbose(&#x27;Enter remove wishlist controller&#x27;);
+		this.logger.debug(&#x60;Request: ${JSON.stringify(request, null, 2)}&#x60;);
+
+		/**
+		 * Call &#x60;removeWishlistItem&#x60; in &#x60;WishlistService&#x60;
+		 */
+		const removeResult: boolean &#x3D;
+			await this.wishlistService.removeProductFromWishlist(
+				request.productID,
+				payload.id
+			);
+		this.logger.debug(
+			&#x60;Call \&#x60;removeWishlistItem\&#x60; in \&#x60;WishlistService\&#x60;: ${JSON.stringify(removeResult, null, 2)}&#x60;
+		);
+
+		/**
+		 * Build status code and message response base on remove result
+		 */
+		const messageResponse: string &#x3D; removeResult
+			? WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.message
+			: WishlistStatusCode.REMOVE_WISHLIST_ITEM_FAILED.message;
+		this.logger.debug(
+			&#x60;Build message response: ${JSON.stringify(messageResponse, null, 2)}&#x60;
+		);
+
+		const statusCodeResponse: string &#x3D; removeResult
+			? WishlistStatusCode.REMOVE_WISHLIST_ITEM_SUCCESS.customCode
+			: WishlistStatusCode.REMOVE_WISHLIST_ITEM_FAILED.customCode;
+		this.logger.debug(
+			&#x60;Build status code response: ${JSON.stringify(statusCodeResponse, null, 2)}&#x60;
+		);
+
+		/**
+		 * Create response
+		 */
+		const response: SuccessResponseDto&lt;boolean&gt; &#x3D; {
+			message: messageResponse,
+			statusCode: statusCodeResponse,
+			data: removeResult,
+		};
+		this.logger.debug(
+			&#x60;Create response: ${JSON.stringify(response, null, 2)}&#x60;
+		);
+
+		return response;
+	}
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
+            var COMPODOC_CURRENT_PAGE_URL = 'WishlistController.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

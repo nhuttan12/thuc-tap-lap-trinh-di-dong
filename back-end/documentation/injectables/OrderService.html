@@ -1,0 +1,1546 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>back-end documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">back-end documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >OrderService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/orders/order.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#clearCartAfterOrder" >clearCartAfterOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#create" >create</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createOrderCOD" >createOrderCOD</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAll" >findAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOne" >findOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getStatistics" >getStatistics</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#mapToResponseDto" >mapToResponseDto</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#update" >update</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateStatus" >updateStatus</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(orderRepository: <a href="../injectables/OrderRepository.html" target="_self">OrderRepository</a>, dataSource: DataSource)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/modules/orders/order.service.ts:32</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>orderRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/OrderRepository.html" target="_self" >OrderRepository</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dataSource</td>
+                                                  
+                                                        <td>
+                                                                    <code>DataSource</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearCartAfterOrder"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>clearCartAfterOrder</b></span>
+                        <a href="#clearCartAfterOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>clearCartAfterOrder(manager: EntityManager, cart: <a href="../entitys/CartEntity.html" target="_self">CartEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="441"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:441</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>manager</td>
+                                            <td>
+                                                        <code>EntityManager</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>cart</td>
+                                            <td>
+                                                            <code><a href="../entitys/CartEntity.html" target="_self" >CartEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="create"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>create</b></span>
+                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(createOrderDto: <a href="../classes/CreateOrderDto.html" target="_self">CreateOrderDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>createOrderDto</td>
+                                            <td>
+                                                            <code><a href="../classes/CreateOrderDto.html" target="_self" >CreateOrderDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;OrderResponseDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createOrderCOD"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createOrderCOD</b></span>
+                        <a href="#createOrderCOD"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createOrderCOD(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="311"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:311</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAll"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findAll</b></span>
+                        <a href="#findAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAll(filter: <a href="../classes/OrderFilterDto.html" target="_self">OrderFilterDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filter</td>
+                                            <td>
+                                                            <code><a href="../classes/OrderFilterDto.html" target="_self" >OrderFilterDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOne"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findOne</b></span>
+                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;OrderResponseDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatistics"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getStatistics</b></span>
+                        <a href="#getStatistics"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStatistics()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="279"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:279</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mapToResponseDto"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>mapToResponseDto</b></span>
+                        <a href="#mapToResponseDto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mapToResponseDto(order: <a href="../entitys/OrderEntity.html" target="_self">OrderEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="283"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:283</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>order</td>
+                                            <td>
+                                                            <code><a href="../entitys/OrderEntity.html" target="_self" >OrderEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/OrderResponseDto.html" target="_self" >OrderResponseDto</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="remove"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>remove</b></span>
+                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>remove(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="268"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:268</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>update</b></span>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, updateOrderDto: <a href="../classes/UpdateOrderDto.html" target="_self">UpdateOrderDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>updateOrderDto</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateOrderDto.html" target="_self" >UpdateOrderDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;OrderResponseDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateStatus</b></span>
+                        <a href="#updateStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateStatus(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, status: <a href="../undefineds/OrderStatusEnum.html" target="_self">OrderStatusEnum</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="260"
+                                    class="link-to-prism">src/modules/orders/order.service.ts:260</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#OrderStatusEnum" target="_self" >OrderStatusEnum</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(OrderService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/modules/orders/order.service.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+	Injectable,
+	NotFoundException,
+	BadRequestException,
+	Logger,
+} from &#x27;@nestjs/common&#x27;;
+import { InjectRepository } from &#x27;@nestjs/typeorm&#x27;;
+import { DataSource, EntityManager, In } from &#x27;typeorm&#x27;;
+import { OrderRepository } from &#x27;./repository/order.repository&#x27;;
+import { OrderEntity } from &#x27;./entities/order.entity&#x27;;
+import { OrderDetailEntity } from &#x27;./entities/order-detail.entity&#x27;;
+import { UserEntity } from &#x27;../user/entities/user.entity&#x27;;
+import { ProductEntity } from &#x27;../product/entities/product.entity&#x27;;
+import { CreateOrderDto } from &#x27;./dto/create-order.dto&#x27;;
+import { UpdateOrderDto } from &#x27;./dto/update-order.dto&#x27;;
+import { OrderFilterDto } from &#x27;./dto/order-filter.dto&#x27;;
+import {
+	OrderResponseDto,
+	OrderItemResponseDto,
+} from &#x27;./dto/order-response.dto&#x27;;
+import { OrderStatusEnum } from &#x27;./enums/order-status.enum&#x27;;
+import * as nodemailer from &#x27;nodemailer&#x27;;
+import { CartEntity } from &#x27;../cart/entities/cart.entity&#x27;;
+import { CartDetailsStatusEnum } from &#x27;../cart/enums/cart-details-status.enum&#x27;;
+import { CartStatusEnum } from &#x27;../cart/enums/cart.status.enum&#x27;;
+import { PaymentEntity } from &#x27;../payment/entites/payment.entity&#x27;;
+import { PaymentMethodEnum } from &#x27;../payment/enums/payment-method.enum&#x27;;
+import { PaymentStatusEnum } from &#x27;../payment/enums/payment-status.enum&#x27;;
+
+@Injectable()
+export class OrderService {
+	private readonly logger &#x3D; new Logger(OrderService.name);
+
+	constructor(
+		@InjectRepository(OrderRepository)
+		private orderRepository: OrderRepository,
+		private dataSource: DataSource
+	) {}
+
+	async findAll(
+		filter: OrderFilterDto
+	): Promise&lt;{ orders: OrderResponseDto[]; total: number }&gt; {
+		const [orders, total] &#x3D;
+			await this.orderRepository.findOrdersWithFilter(filter);
+
+		const orderResponses &#x3D; orders.map((order) &#x3D;&gt;
+			this.mapToResponseDto(order)
+		);
+
+		return { orders: orderResponses, total };
+	}
+
+	async findOne(id: number): Promise&lt;OrderResponseDto&gt; {
+		const order &#x3D; await this.orderRepository.findOrderById(id);
+
+		if (!order) {
+			throw new NotFoundException(&#x60;Order with ID ${id} not found&#x60;);
+		}
+
+		return this.mapToResponseDto(order);
+	}
+
+	async create(createOrderDto: CreateOrderDto): Promise&lt;OrderResponseDto&gt; {
+		const queryRunner &#x3D; this.dataSource.createQueryRunner();
+		await queryRunner.connect();
+		await queryRunner.startTransaction();
+
+		try {
+			// Check user exists
+			const user &#x3D; await queryRunner.manager.findOne(UserEntity, {
+				where: { id: createOrderDto.userId },
+			});
+
+			if (!user) {
+				throw new BadRequestException(
+					&#x60;User with ID ${createOrderDto.userId} not found&#x60;
+				);
+			}
+
+			// Get all product IDs from the order
+			const productIds &#x3D; createOrderDto.items.map(
+				(item) &#x3D;&gt; item.productId
+			);
+
+			// Check all products exist
+			const products &#x3D; await queryRunner.manager.find(ProductEntity, {
+				where: { id: In(productIds) },
+			});
+
+			if (products.length !&#x3D;&#x3D; productIds.length) {
+				const foundIds &#x3D; products.map((p) &#x3D;&gt; p.id);
+				const missingIds &#x3D; productIds.filter(
+					(id) &#x3D;&gt; !foundIds.includes(id)
+				);
+				throw new BadRequestException(
+					&#x60;Products with IDs ${missingIds.join(&#x27;, &#x27;)} not found&#x60;
+				);
+			}
+
+			// Create product map for quick lookup
+			const productMap &#x3D; new Map&lt;number, ProductEntity&gt;();
+			products.forEach((product) &#x3D;&gt; {
+				productMap.set(product.id, product);
+			});
+
+			// Create order
+			const order &#x3D; new OrderEntity();
+			order.user &#x3D; user;
+			order.price &#x3D; createOrderDto.price;
+			order.status &#x3D; createOrderDto.status;
+
+			const savedOrder &#x3D; await queryRunner.manager.save(
+				OrderEntity,
+				order
+			);
+
+			// Create order details
+			const orderDetails: OrderDetailEntity[] &#x3D; [];
+			for (const item of createOrderDto.items) {
+				const product &#x3D; productMap.get(item.productId);
+
+				if (!product) {
+					throw new BadRequestException(
+						&#x60;Product with ID ${item.productId} not found&#x60;
+					);
+				}
+
+				const orderDetail &#x3D; new OrderDetailEntity();
+				orderDetail.order &#x3D; savedOrder;
+				orderDetail.product &#x3D; product;
+				orderDetail.quantity &#x3D; item.quantity;
+				orderDetail.price &#x3D; item.price;
+
+				orderDetails.push(orderDetail);
+			}
+
+			await queryRunner.manager.save(OrderDetailEntity, orderDetails);
+
+			await queryRunner.commitTransaction();
+
+			return this.findOne(savedOrder.id);
+		} catch (error) {
+			await queryRunner.rollbackTransaction();
+			throw error;
+		} finally {
+			await queryRunner.release();
+		}
+	}
+
+	async update(
+		id: number,
+		updateOrderDto: UpdateOrderDto
+	): Promise&lt;OrderResponseDto&gt; {
+		const order &#x3D; await this.orderRepository.findOne({
+			where: { id },
+			relations: [&#x27;user&#x27;],
+		});
+
+		if (!order) {
+			throw new NotFoundException(&#x60;Order with ID ${id} not found&#x60;);
+		}
+
+		const queryRunner &#x3D; this.dataSource.createQueryRunner();
+		await queryRunner.connect();
+		await queryRunner.startTransaction();
+
+		try {
+			if (
+				updateOrderDto.userId &amp;&amp;
+				updateOrderDto.userId !&#x3D;&#x3D; order.user.id
+			) {
+				const user &#x3D; await queryRunner.manager.findOne(UserEntity, {
+					where: { id: updateOrderDto.userId },
+				});
+
+				if (!user) {
+					throw new BadRequestException(
+						&#x60;User with ID ${updateOrderDto.userId} not found&#x60;
+					);
+				}
+
+				order.user &#x3D; user;
+			}
+
+			if (updateOrderDto.price) {
+				order.price &#x3D; updateOrderDto.price;
+			}
+
+			if (updateOrderDto.status) {
+				order.status &#x3D; updateOrderDto.status;
+			}
+
+			const updatedOrder &#x3D; await queryRunner.manager.save(
+				OrderEntity,
+				order
+			);
+
+			// Nếu có items, cập nhật order details
+			if (updateOrderDto.items &amp;&amp; updateOrderDto.items.length &gt; 0) {
+				// Xóa các order details cũ - Sửa cách xóa
+				await queryRunner.manager.delete(OrderDetailEntity, {
+					order: { id: order.id },
+				});
+
+				// Thêm các order details mới
+				const productIds &#x3D; updateOrderDto.items.map(
+					(item) &#x3D;&gt; item.productId
+				);
+				const products &#x3D; await queryRunner.manager.find(ProductEntity, {
+					where: { id: In(productIds) },
+				});
+
+				if (products.length !&#x3D;&#x3D; productIds.length) {
+					const foundIds &#x3D; products.map((p) &#x3D;&gt; p.id);
+					const missingIds &#x3D; productIds.filter(
+						(id) &#x3D;&gt; !foundIds.includes(id)
+					);
+					throw new BadRequestException(
+						&#x60;Products with IDs ${missingIds.join(&#x27;, &#x27;)} not found&#x60;
+					);
+				}
+
+				const productMap &#x3D; new Map&lt;number, ProductEntity&gt;();
+				products.forEach((product) &#x3D;&gt; {
+					productMap.set(product.id, product);
+				});
+
+				const orderDetails: OrderDetailEntity[] &#x3D; [];
+				for (const item of updateOrderDto.items) {
+					const product &#x3D; productMap.get(item.productId);
+
+					if (!product) {
+						throw new BadRequestException(
+							&#x60;Product with ID ${item.productId} not found&#x60;
+						);
+					}
+
+					const orderDetail &#x3D; new OrderDetailEntity();
+					orderDetail.order &#x3D; updatedOrder;
+					orderDetail.product &#x3D; product;
+					orderDetail.quantity &#x3D; item.quantity;
+					orderDetail.price &#x3D; item.price;
+
+					orderDetails.push(orderDetail);
+				}
+
+				await queryRunner.manager.save(OrderDetailEntity, orderDetails);
+			}
+
+			await queryRunner.commitTransaction();
+			return this.findOne(id);
+		} catch (error) {
+			await queryRunner.rollbackTransaction();
+			throw error;
+		} finally {
+			await queryRunner.release();
+		}
+	}
+
+	async updateStatus(id: number, status: OrderStatusEnum): Promise&lt;void&gt; {
+		const result &#x3D; await this.orderRepository.update({ id }, { status });
+
+		if (result.affected &#x3D;&#x3D;&#x3D; 0) {
+			throw new NotFoundException(&#x60;Order with ID ${id} not found&#x60;);
+		}
+	}
+
+	async remove(id: number): Promise&lt;void&gt; {
+		const result &#x3D; await this.orderRepository.update(
+			{ id },
+			{ status: OrderStatusEnum.CANCELED }
+		);
+
+		if (result.affected &#x3D;&#x3D;&#x3D; 0) {
+			throw new NotFoundException(&#x60;Order with ID ${id} not found&#x60;);
+		}
+	}
+
+	async getStatistics(): Promise&lt;any&gt; {
+		return this.orderRepository.getOrderStatistics();
+	}
+
+	private mapToResponseDto(order: OrderEntity): OrderResponseDto {
+		const response &#x3D; new OrderResponseDto();
+
+		response.id &#x3D; order.id;
+		response.userId &#x3D; order.user?.id;
+		response.username &#x3D; order.user?.username;
+		response.fullName &#x3D; order.user?.fullName;
+		response.email &#x3D; order.user?.email;
+		response.price &#x3D; order.price;
+		response.status &#x3D; order.status;
+		response.createdAt &#x3D; order.createdAt;
+		response.updatedAt &#x3D; order.updatedAt;
+
+		response.items &#x3D;
+			order.orderDetails?.map((detail) &#x3D;&gt; {
+				const item &#x3D; new OrderItemResponseDto();
+				item.id &#x3D; detail.id;
+				item.productId &#x3D; detail.product?.id;
+				item.productName &#x3D; detail.product?.name;
+				item.quantity &#x3D; detail.quantity;
+				item.price &#x3D; detail.price;
+				item.total &#x3D; detail.quantity * detail.price;
+				return item;
+			}) || [];
+
+		return response;
+	}
+
+	async createOrderCOD(userId: number) {
+		this.logger.debug(&#x27;USER_ID&#x27;, userId);
+		let savedCart: CartEntity;
+
+		const order &#x3D; await this.dataSource.transaction(async (manager) &#x3D;&gt; {
+			// 1️ USER
+			const user &#x3D; await manager.findOne(UserEntity, {
+				where: { id: userId },
+			});
+			this.logger.debug(&#x27;USER&#x27;, user);
+
+			if (!user) {
+				throw new NotFoundException(&#x27;User not found&#x27;);
+			}
+
+			// const existingPendingOrder &#x3D; await manager.findOne(OrderEntity, {
+			// 	where: {
+			// 		user: { id: userId },
+			// 		status: OrderStatusEnum.PENDING,
+			// 	},
+			// });
+			//
+			// if (existingPendingOrder) {
+			// 	throw new BadRequestException(
+			// 		&#x27;You already have a pending order&#x27;
+			// 	);
+			// }
+
+			// 2️ CART
+			const cart &#x3D; await manager.findOne(CartEntity, {
+				where: { user: { id: userId }, status: CartStatusEnum.ACTIVE },
+				relations: {
+					cartDetails: {
+						product: true,
+					},
+				},
+			});
+			this.logger.debug(&#x27;CART&#x27;, cart);
+			this.logger.debug(&#x27;CART DETAILS&#x27;, cart?.cartDetails);
+
+			if (!cart || cart.cartDetails.length &#x3D;&#x3D;&#x3D; 0) {
+				this.logger.warn(
+					&#x27;Cart is empty. Order may already be completed.&#x27;
+				);
+				throw new BadRequestException(
+					&#x27;Cart is empty. Order may already be completed.&#x27;
+				);
+			}
+
+			savedCart &#x3D; cart;
+
+			// 3️ TOTAL VND
+			let totalVnd &#x3D; 0;
+			for (const item of cart.cartDetails) {
+				totalVnd +&#x3D; item.quantity * item.product.price;
+			}
+
+			const shippingFee &#x3D; 20000;
+			totalVnd +&#x3D; shippingFee;
+
+			// 4️ ORDER
+			const order &#x3D; manager.create(OrderEntity, {
+				user,
+				price: totalVnd,
+				status: OrderStatusEnum.PENDING,
+			});
+			await manager.save(order);
+
+			// 5️ ORDER DETAILS
+			for (const item of cart.cartDetails) {
+				await manager.save(
+					manager.create(OrderDetailEntity, {
+						order,
+						product: item.product,
+						quantity: item.quantity,
+						price: item.product.price,
+					})
+				);
+			}
+
+			// 6️ PAYMENT
+			await manager.save(
+				manager.create(PaymentEntity, {
+					user,
+					order,
+					amount: totalVnd,
+					currency: &#x27;VND&#x27;,
+					paymentMethod: PaymentMethodEnum.COD,
+					status: PaymentStatusEnum.PENDING,
+				})
+			);
+
+			return order;
+		});
+
+		// 8️ SEND MAIL (OUTSIDE TRANSACTION)
+		try {
+			const transporter &#x3D; nodemailer.createTransport({
+				host: &#x27;smtp.gmail.com&#x27;,
+				port: 587,
+				secure: false,
+				auth: {
+					user: &#x27;taitanvo16@gmail.com&#x27;,
+					pass: &#x27;bkzf ffqo zsfn tijo&#x27;,
+				},
+			});
+
+			await transporter.sendMail({
+				from: &#x27;&quot;E-Commerce App&quot; &lt;no-reply@app.com&gt;&#x27;,
+				to: order.user.email,
+				subject: &#x60;Xác nhận đơn COD #${order.id}&#x60;,
+				html: &#x60;
+					&lt;h3&gt;Cảm ơn bạn đã đặt hàng!&lt;/h3&gt;
+					&lt;p&gt;Mã đơn: &lt;b&gt;#${order.id}&lt;/b&gt;&lt;/p&gt;
+					&lt;p&gt;Tổng tiền: &lt;b&gt;${order.price.toLocaleString()}đ&lt;/b&gt;&lt;/p&gt;
+					&lt;p&gt;Thanh toán: &lt;b&gt;COD&lt;/b&gt;&lt;/p&gt;
+				&#x60;,
+			});
+
+			await this.dataSource.transaction(async (manager) &#x3D;&gt; {
+				await this.clearCartAfterOrder(manager, savedCart);
+			});
+		} catch (err) {
+			this.logger.error(&#x27;Send COD mail failed&#x27;, err);
+		}
+
+		this.logger.debug(&#x27;Order&#x27;, order);
+		return order;
+	}
+
+	async clearCartAfterOrder(manager: EntityManager, cart: CartEntity) {
+		// 1. Inactive cart details
+		for (const item of cart.cartDetails) {
+			item.status &#x3D; CartDetailsStatusEnum.INACTIVE;
+			await manager.save(item);
+		}
+
+		// 2. Close cart
+		cart.status &#x3D; CartStatusEnum.DELETED;
+		await manager.save(cart);
+	}
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'OrderService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

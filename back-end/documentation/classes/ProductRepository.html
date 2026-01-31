@@ -1,0 +1,977 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>back-end documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">back-end documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ProductRepository</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/product/repositories/product.repository.ts</code>
+        </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductByProductID" >getProductByProductID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductsPaging" >getProductsPaging</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductsPagingByProductName" >getProductsPagingByProductName</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductsPagingWithDetails" >getProductsPagingWithDetails</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(productRepository: <a href="../entitys/ProductEntity.html" target="_self">Repository&lt;ProductEntity&gt;</a>, dataSource: DataSource)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/modules/product/repositories/product.repository.ts:18</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>productRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/ProductEntity.html" target="_self" >Repository&lt;ProductEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dataSource</td>
+                                                  
+                                                        <td>
+                                                                    <code>DataSource</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Logger</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(ProductRepository.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/modules/product/repositories/product.repository.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductByProductID"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductByProductID</b></span>
+                        <a href="#getProductByProductID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductByProductID(productID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="127"
+                                    class="link-to-prism">src/modules/product/repositories/product.repository.ts:127</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>productID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/ProductEntity.html" target="_self" >Promise&lt;ProductEntity | null&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductsPaging"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductsPaging</b></span>
+                        <a href="#getProductsPaging"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductsPaging(take: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, skip: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">src/modules/product/repositories/product.repository.ts:68</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>take</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Number of items to take</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>skip</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Number of items to skip</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user whether if have token (login)</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductsPagingByProductName"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductsPagingByProductName</b></span>
+                        <a href="#getProductsPagingByProductName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductsPagingByProductName(productName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, take: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, skip: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="143"
+                                    class="link-to-prism">src/modules/product/repositories/product.repository.ts:143</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>productName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Name of product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>take</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Number of items to take</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>skip</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Number of items to skip</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user whether if have token (login)</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductsPagingWithDetails"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductsPagingWithDetails</b></span>
+                        <a href="#getProductsPagingWithDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductsPagingWithDetails(take: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, skip: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="26"
+                                    class="link-to-prism">src/modules/product/repositories/product.repository.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>take</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>skip</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ProductEntity } from &#x27;../entities/product.entity&#x27;;
+import { DataSource, Repository, SelectQueryBuilder } from &#x27;typeorm&#x27;;
+import { InjectRepository } from &#x27;@nestjs/typeorm&#x27;;
+import { Logger } from &#x27;@nestjs/common&#x27;;
+import { ProductStatusEnum } from &#x27;../enums/product-status.enum&#x27;;
+import { WishlistStatusEnum } from &#x27;../../wishlist/enums/wishlist-status.enum&#x27;;
+import { PagingResponseDto } from &#x27;../../../common/helper/dtos/paging-response.dto&#x27;;
+
+export class ProductRepository {
+	private readonly logger: Logger &#x3D; new Logger(ProductRepository.name);
+
+	constructor(
+		@InjectRepository(ProductEntity)
+		private readonly productRepository: Repository&lt;ProductEntity&gt;,
+		private readonly dataSource: DataSource
+	) {}
+
+    async getProductsPagingWithDetails(
+        take: number,
+        skip: number
+    ): Promise&lt;[ProductEntity[], number]&gt; {
+        try {
+            const [products, total] &#x3D; await this.productRepository.findAndCount({
+                where: {
+                    status: ProductStatusEnum.ACTIVE,
+                },
+                relations: {
+                    productDetailsEntity: {
+                        categoryEntity: true,
+                        brandEntity: true,
+                    },
+                    productImages: {
+                        image: true,
+                    },
+                },
+                take,
+                skip,
+                order: {
+                    createdAt: &#x27;DESC&#x27;,
+                },
+            });
+
+            return [products, total];
+        } catch (e) {
+            this.logger.error(&#x60;Error in getProductsPagingWithDetails: ${e.message}&#x60;, e.stack);
+            throw e;
+        }
+    }
+	/**
+	 * @description Get products paging
+	 * @param {number} take - Number of items to take
+	 * @param {number} skip - Number of items to skip
+	 * @param {number} userID - ID of user whether if have token (login)
+	 * @return {Promise&lt;[ProductEntity[], number]&gt;}
+	 * @author Nhut Tan
+	 * @since 2025-09-15
+	 * @modifies 2025-09-24
+	 * @version 1.0.1
+	 */
+	async getProductsPaging(
+		take: number,
+		skip: number,
+		userID?: number
+	): Promise&lt;[ProductEntity[], number]&gt; {
+		try {
+			/**
+			 * No token condition
+			 */
+			const qb: SelectQueryBuilder&lt;ProductEntity&gt; &#x3D; this.productRepository
+				.createQueryBuilder(&#x27;product&#x27;)
+				.leftJoinAndSelect(&#x27;product.productImages&#x27;, &#x27;productImages&#x27;)
+				.leftJoinAndSelect(&#x27;productImages.image&#x27;, &#x27;image&#x27;)
+				.where(&#x27;product.status &#x3D; :productStatus&#x27;, {
+					productStatus: ProductStatusEnum.ACTIVE,
+				})
+				.orderBy(&#x27;product.createdAt&#x27;, &#x27;DESC&#x27;)
+				.take(take)
+				.skip(skip);
+			this.logger.verbose(&#x27;No token condition&#x27;);
+
+			if (userID) {
+				this.logger.verbose(&#x60;Having token condition: ${userID}&#x60;);
+				qb.leftJoinAndSelect(
+					&#x27;product.wishlistItems&#x27;,
+					&#x27;wishlist&#x27;,
+					&#x27;wishlist.status &#x3D; :wishlistStatus&#x27;,
+					{ wishlistStatus: WishlistStatusEnum.ACTIVE }
+				).leftJoinAndSelect(
+					&#x27;wishlist.user&#x27;,
+					&#x27;user&#x27;,
+					&#x27;user.id &#x3D; :userID&#x27;,
+					{ userID: userID }
+				);
+			}
+
+			const [products, total] &#x3D; await qb.getManyAndCount();
+			this.logger.debug(
+				&#x60;Get products paging from database: ${JSON.stringify(products, null, 2)}&#x60;
+			);
+
+			/**
+			 * Return data
+			 */
+			return [products, total];
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;getProductsPaging\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Get product by id
+	 * @param {number} productID - ID of product
+	 * @return {ProductEntity | null}
+	 */
+	async getProductByProductID(
+		productID: number
+	): Promise&lt;ProductEntity | null&gt; {
+		return await this.productRepository.findOne({
+			where: { id: productID },
+		});
+	}
+
+	/**
+	 * @description Get product by product name
+	 * @param productName - Name of product
+	 * @param take - Number of items to take
+	 * @param skip - Number of items to skip
+	 * @param {number} userID - ID of user whether if have token (login)
+	 * @return {Promise&lt;ProductEntity | null&gt;}
+	 */
+	async getProductsPagingByProductName(
+		productName: string,
+		take: number,
+		skip: number,
+		userID?: number
+	): Promise&lt;[ProductEntity[], number]&gt; {
+		try {
+			/**
+			 * No token condition
+			 */
+			const qb: SelectQueryBuilder&lt;ProductEntity&gt; &#x3D; this.productRepository
+				.createQueryBuilder(&#x27;product&#x27;)
+				.leftJoinAndSelect(&#x27;product.productImages&#x27;, &#x27;productImages&#x27;)
+				.leftJoinAndSelect(&#x27;productImages.image&#x27;, &#x27;image&#x27;)
+				.where(
+					&#x27;product.status &#x3D; :productStatus AND product.name ILIKE :productName&#x27;,
+					{
+						productStatus: ProductStatusEnum.ACTIVE,
+						productName: &#x60;%${productName}%&#x60;,
+					}
+				)
+				.orderBy(&#x27;product.createdAt&#x27;, &#x27;DESC&#x27;)
+				.take(take)
+				.skip(skip);
+			this.logger.verbose(&#x27;No token condition&#x27;);
+
+			if (userID) {
+				this.logger.verbose(&#x60;Having token condition: ${userID}&#x60;);
+				qb.leftJoinAndSelect(
+					&#x27;product.wishlistItems&#x27;,
+					&#x27;wishlist&#x27;,
+					&#x27;wishlist.status &#x3D; :wishlistStatus&#x27;,
+					{ wishlistStatus: WishlistStatusEnum.ACTIVE }
+				).leftJoinAndSelect(
+					&#x27;wishlist.user&#x27;,
+					&#x27;user&#x27;,
+					&#x27;user.id &#x3D; :userID&#x27;,
+					{ userID: userID }
+				);
+			}
+
+			const [products, total] &#x3D; await qb.getManyAndCount();
+			this.logger.debug(
+				&#x60;Get products paging from database: ${JSON.stringify(products, null, 2)}&#x60;
+			);
+
+			/**
+			 * Return data
+			 */
+			return [products, total];
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;getProductsPagingByProductName\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProductRepository.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

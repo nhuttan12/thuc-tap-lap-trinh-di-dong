@@ -1,0 +1,1467 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>back-end documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">back-end documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >WishlistService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/wishlist/wishlist.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addToWishlist" >addToWishlist</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductInWishlistByProductIDAndUserIDOrNull" >getProductInWishlistByProductIDAndUserIDOrNull</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductInWishlistByProductIDAndUserIDOrThrow" >getProductInWishlistByProductIDAndUserIDOrThrow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProductsInWishlistPaging" >getProductsInWishlistPaging</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getWishlistItemByWishlistItemIDAndUserIDOrThrow" >getWishlistItemByWishlistItemIDAndUserIDOrThrow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeProductFromWishlist" >removeProductFromWishlist</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeWishlistItemWithWishlistItemIDAndUserID" >removeWishlistItemWithWishlistItemIDAndUserID</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(wishlistItemRepository: <a href="../classes/WishlistItemRepository.html" target="_self">WishlistItemRepository</a>, wishlistItemMapper: <a href="../injectables/WishlistItemMapper.html" target="_self">WishlistItemMapper</a>, buildPagingMetaService: <a href="../injectables/BuildPagingMetaService.html" target="_self">BuildPagingMetaService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/modules/wishlist/wishlist.service.ts:28</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>wishlistItemRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/WishlistItemRepository.html" target="_self" >WishlistItemRepository</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>wishlistItemMapper</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/WishlistItemMapper.html" target="_self" >WishlistItemMapper</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>buildPagingMetaService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/BuildPagingMetaService.html" target="_self" >BuildPagingMetaService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addToWishlist"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addToWishlist</b></span>
+                        <a href="#addToWishlist"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addToWishlist(productID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:109</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>productID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>True if product added to wishlist successfully</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductInWishlistByProductIDAndUserIDOrNull"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductInWishlistByProductIDAndUserIDOrNull</b></span>
+                        <a href="#getProductInWishlistByProductIDAndUserIDOrNull"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductInWishlistByProductIDAndUserIDOrNull(productID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="186"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:186</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>return null if not exist</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>productID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/WishlistItemEntity.html" target="_self" >Promise&lt;WishlistItemEntity | null&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>Wishlist item entity if product in wishlist, null otherwise</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductInWishlistByProductIDAndUserIDOrThrow"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductInWishlistByProductIDAndUserIDOrThrow</b></span>
+                        <a href="#getProductInWishlistByProductIDAndUserIDOrThrow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductInWishlistByProductIDAndUserIDOrThrow(productID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="223"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:223</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>throw error if not exist</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>productID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/WishlistItemEntity.html" target="_self" >Promise&lt;WishlistItemEntity&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>Wishlist item entity if product in wishlist, null otherwise</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductsInWishlistPaging"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProductsInWishlistPaging</b></span>
+                        <a href="#getProductsInWishlistPaging"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProductsInWishlistPaging(userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, page: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, limit: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>page</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Page number</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>limit</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Number of items per page</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;PagingResponseDto&lt;ProductInWishlistResponseDto&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>List of products in wishlist</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getWishlistItemByWishlistItemIDAndUserIDOrThrow"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getWishlistItemByWishlistItemIDAndUserIDOrThrow</b></span>
+                        <a href="#getWishlistItemByWishlistItemIDAndUserIDOrThrow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getWishlistItemByWishlistItemIDAndUserIDOrThrow(wishlistItemID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="335"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:335</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wishlistItemID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of wishlist item reference to product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/WishlistItemEntity.html" target="_self" >Promise&lt;WishlistItemEntity&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>Wishlist item entity</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeProductFromWishlist"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>removeProductFromWishlist</b></span>
+                        <a href="#removeProductFromWishlist"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeProductFromWishlist(productID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="272"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:272</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>productID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>True if product removed from wishlist successfully</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeWishlistItemWithWishlistItemIDAndUserID"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>removeWishlistItemWithWishlistItemIDAndUserID</b></span>
+                        <a href="#removeWishlistItemWithWishlistItemIDAndUserID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeWishlistItemWithWishlistItemIDAndUserID(wishlistItemID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="313"
+                                    class="link-to-prism">src/modules/wishlist/wishlist.service.ts:313</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wishlistItemID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of wishlist item reference to product</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userID</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID of user</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <ul>
+<li>True if wishlist item removed successfully</li>
+</ul>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Logger</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(WishlistService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/modules/wishlist/wishlist.service.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+	BadRequestException,
+	ConflictException,
+	Injectable,
+	Logger,
+	NotFoundException,
+} from &#x27;@nestjs/common&#x27;;
+import { WishlistItemRepository } from &#x27;./repositories/wishlist-item.repository&#x27;;
+import { ProductInWishlistResponseDto } from &#x27;./dtos/product-in-wishlist-response.dto&#x27;;
+import { WishlistItemEntity } from &#x27;./entities/wishlist-item.entity&#x27;;
+import { WishlistItemMapper } from &#x27;./mappers/wishlist-item.mapper&#x27;;
+import { WishlistStatusCode } from &#x27;./status-code/wishlist.status-code&#x27;;
+import { BuildPagingMetaService } from &#x27;../../common/helper/build-paging-meta.service&#x27;;
+import { PagingResponseDto } from &#x27;../../common/helper/dtos/paging-response.dto&#x27;;
+import { AuthStatusCode } from &#x27;../auth/status-code/auth.status-code&#x27;;
+import { UpdateResult } from &#x27;typeorm&#x27;;
+import { ProductStatusCode } from &#x27;../product/status-code/product.status-code&#x27;;
+
+@Injectable()
+export class WishlistService {
+	private readonly logger: Logger &#x3D; new Logger(WishlistService.name);
+
+	constructor(
+		private readonly wishlistItemRepository: WishlistItemRepository,
+		private readonly wishlistItemMapper: WishlistItemMapper,
+		private readonly buildPagingMetaService: BuildPagingMetaService
+	) {}
+
+	/**
+	 * @description Get all product in wishlist
+	 * @param {number} userID - ID of user
+	 * @param {number} page - Page number
+	 * @param {number} limit - Number of items per page
+	 * @return {Promise&lt;PagingResponseDto&lt;ProductInWishlistResponseDto&gt;&gt;} - List of products in wishlist
+	 * @author Nhut Tan
+	 * @since 2025-09-23
+	 * @version 1.0.0
+	 */
+	async getProductsInWishlistPaging(
+		userID: number,
+		page: number,
+		limit: number
+	): Promise&lt;PagingResponseDto&lt;ProductInWishlistResponseDto&gt;&gt; {
+		try {
+			/**
+			 * Calculate skip and take
+			 */
+			const skip: number &#x3D; this.buildPagingMetaService.calculateSkip(
+				page,
+				limit
+			);
+			this.logger.debug(&#x60;Calculate skip in service ${skip}&#x60;);
+
+			/**
+			 * Call &#x60;getAllWishlistItems&#x60; in &#x60;WishlistItemRepository&#x60;
+			 */
+			const [wishlistItems, total]: [WishlistItemEntity[], number] &#x3D;
+				await this.wishlistItemRepository.getAllWishlistItems(
+					userID,
+					skip,
+					limit
+				);
+			this.logger.debug(
+				&#x60;Get all wishlist items ${JSON.stringify(wishlistItems, null, 2)}&#x60;
+			);
+
+			/**
+			 * Convert wishlist items to product in wishlist response dto
+			 */
+			const productsInWishlistResponseDto: ProductInWishlistResponseDto[] &#x3D;
+				this.wishlistItemMapper.toProductInWishlistListResponseDto(
+					wishlistItems
+				);
+			this.logger.debug(
+				&#x60;Convert wishlist items to product in wishlist response dto ${JSON.stringify(productsInWishlistResponseDto, null, 2)}&#x60;
+			);
+
+			return this.buildPagingMetaService.buildPagingResponse(
+				productsInWishlistResponseDto,
+				skip,
+				limit,
+				total
+			);
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;getAllProductInWishlist\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Add product to wishlist
+	 * @param {number} productID - ID of product
+	 * @param {number} userID - ID of user
+	 * @return {Promise&lt;boolean&gt;} - True if product added to wishlist successfully
+	 * @author Nhut Tan
+	 * @date 2025-09-23
+	 * @version 1.0.0
+	 */
+	async addToWishlist(productID: number, userID: number): Promise&lt;boolean&gt; {
+		try {
+			/**
+			 * Get product in wishlist and check product existence in wishlist item
+			 */
+			const wishlistExistence: WishlistItemEntity | null &#x3D;
+				await this.getProductInWishlistByProductIDAndUserIDOrNull(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				&#x60;Get product in wishlist and check product existence in wishlist item: ${JSON.stringify(wishlistExistence, null, 2)}&#x60;
+			);
+
+			/**
+			 * Whether if product not exist in wishlist
+			 */
+			if (!wishlistExistence) {
+				/**
+				 * Call &#x60;createWishlistItem&#x60; in &#x60;WishlistItemRepository&#x60; to
+				 * add product to wishlist
+				 */
+				const wishlistCreated: WishlistItemEntity &#x3D;
+					await this.wishlistItemRepository.createWishlistItem(
+						productID,
+						userID
+					);
+				this.logger.debug(
+					&#x60;Call \&#x60;createWishlistItem\&#x60; in \&#x60;WishlistItemRepository\&#x60; to add product to wishlist: ${JSON.stringify(wishlistCreated, null, 2)}&#x60;
+				);
+
+				/**
+				 * Whether if wishlist after created is null
+				 */
+				if (!wishlistCreated) {
+					this.logger.warn(&#x60;Wishlist after created is null&#x60;);
+					throw new ConflictException({
+						statusCode:
+							WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED
+								.statusCode,
+						customCode:
+							WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED
+								.customCode,
+						message:
+							WishlistStatusCode.ADD_PRODUCT_TO_WISHLIST_FAILED
+								.message,
+					});
+				} else {
+					this.logger.debug(&#x27;Add product to wishlist success&#x27;);
+					return true;
+				}
+			}
+
+			/**
+			 * Default is failed
+			 */
+			this.logger.debug(&#x27;Return default is false&#x27;);
+			return false;
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;getAllProductInWishlist\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Get product in wishlist by product ID and user ID,
+	 * return null if not exist
+	 * @param {number} productID - ID of product
+	 * @param {number} userID - ID of user
+	 * @return {Promise&lt;WishlistItemEntity | null&gt;} - Wishlist item entity if product in wishlist, null otherwise
+	 * @author Nhut Tan
+	 * @date 2025-09-23
+	 * @version 1.0.0
+	 */
+	async getProductInWishlistByProductIDAndUserIDOrNull(
+		productID: number,
+		userID: number
+	): Promise&lt;WishlistItemEntity | null&gt; {
+		try {
+			/**
+			 * Call &#x60;getWishlistItemByProductIDAndUserID&#x60; in &#x60;WishlistItemRepository&#x60;
+			 */
+			const wishlistItemEntity: WishlistItemEntity | null &#x3D;
+				await this.wishlistItemRepository.getWishlistItemByProductIDAndUserID(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				&#x60;Call \&#x60;getWishlistItemByProductIDAndUserID\&#x60; in \&#x60;WishlistItemRepository\&#x60;: ${JSON.stringify(wishlistItemEntity, null, 2)}&#x60;
+			);
+
+			return wishlistItemEntity;
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;getProductInWishlistByProductIDAndUserID\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Get product in wishlist by product ID and user ID,
+	 * throw error if not exist
+	 * @param {number} productID - ID of product
+	 * @param {number} userID - ID of user
+	 * @return {Promise&lt;WishlistItemEntity | null&gt;} - Wishlist item entity if product in wishlist, null otherwise
+	 * @author Nhut Tan
+	 * @date 2025-09-23
+	 * @version 1.0.0
+	 */
+	async getProductInWishlistByProductIDAndUserIDOrThrow(
+		productID: number,
+		userID: number
+	): Promise&lt;WishlistItemEntity&gt; {
+		try {
+			/**
+			 * Call &#x60;getWishlistItemByProductIDAndUserID&#x60; in &#x60;WishlistItemRepository&#x60;
+			 */
+			const wishlistItemEntity: WishlistItemEntity | null &#x3D;
+				await this.wishlistItemRepository.getWishlistItemByProductIDAndUserID(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				&#x60;Call \&#x60;getWishlistItemByProductIDAndUserID\&#x60; in \&#x60;WishlistItemRepository\&#x60;: ${JSON.stringify(wishlistItemEntity, null, 2)}&#x60;
+			);
+
+			/**
+			 * Check wishlist item exist
+			 */
+			if (!wishlistItemEntity) {
+				this.logger.debug(&#x27;Wishlist item not exist&#x27;);
+				throw new NotFoundException({
+					statusCode:
+						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
+					customCode:
+						WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
+					message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
+				});
+			}
+
+			return wishlistItemEntity;
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;getProductInWishlistByProductIDAndUserID\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Remove product from wishlist
+	 * @param {number} productID - ID of product
+	 * @param {number} userID - ID of user
+	 * @return {Promise&lt;boolean&gt;} - True if product removed from wishlist successfully
+	 * @since 2025-09-24
+	 * @version 1.0.0
+	 */
+	async removeProductFromWishlist(
+		productID: number,
+		userID: number
+	): Promise&lt;boolean&gt; {
+		try {
+			/**
+			 * Get wishlist item with wishlist item ID and user ID
+			 */
+			const wishlistItemEntity: WishlistItemEntity &#x3D;
+				await this.getProductInWishlistByProductIDAndUserIDOrThrow(
+					productID,
+					userID
+				);
+			this.logger.debug(
+				&#x60;Get wishlist item with wishlist item ID and user ID: ${JSON.stringify(wishlistItemEntity, null, 2)}&#x60;
+			);
+
+			/**
+			 * Call &#x60;removeWishlistItem&#x60; in &#x60;WishlistItemRepository&#x60;
+			 */
+			return await this.removeWishlistItemWithWishlistItemIDAndUserID(
+				wishlistItemEntity.id,
+				userID
+			);
+		} catch (e) {
+			this.logger.error(
+				&#x60;Error in \&#x60;removeWishlistItem\&#x60;: ${(e as Error).message}&#x60;,
+				(e as Error).stack
+			);
+			throw e;
+		}
+	}
+
+	/**
+	 * @description Remove wishlist item
+	 * @param wishlistItemID - ID of wishlist item reference to product
+	 * @param userID - ID of user
+	 * @return {Promise&lt;boolean&gt;} - True if wishlist item removed successfully
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async removeWishlistItemWithWishlistItemIDAndUserID(
+		wishlistItemID: number,
+		userID: number
+	): Promise&lt;boolean&gt; {
+		const removeWishlistResult: UpdateResult &#x3D;
+			await this.wishlistItemRepository.removeWishlistItemWithWishlistItemIDAndUserID(
+				wishlistItemID,
+				userID
+			);
+
+		return (removeWishlistResult.affected ?? 0) &gt; 0;
+	}
+
+	/**
+	 * @description Get wishlist item by wishlist item ID and user ID
+	 * @param wishlistItemID - ID of wishlist item reference to product
+	 * @param userID - ID of user
+	 * @return {Promise&lt;WishlistItemEntity&gt;} - Wishlist item entity
+	 * @throws {NotFoundException} - If wishlist item not found
+	 * @since 2026-01-13
+	 * @version 1.0.0
+	 */
+	async getWishlistItemByWishlistItemIDAndUserIDOrThrow(
+		wishlistItemID: number,
+		userID: number
+	): Promise&lt;WishlistItemEntity&gt; {
+		/**
+		 * Call &#x60;getWishlistItemByWishlistItemIDAndUserID&#x60; in &#x60;WishlistItemRepository&#x60;
+		 */
+		const wishlistItem: WishlistItemEntity | null &#x3D;
+			await this.wishlistItemRepository.getWishlistItemByWishlistItemIDAndUserID(
+				wishlistItemID,
+				userID
+			);
+		this.logger.debug(
+			&#x60;Call \&#x60;getWishlistItemByWishlistItemIDAndUserID\&#x60; in \&#x60;WishlistItemRepository\&#x60;: ${JSON.stringify(wishlistItem, null, 2)}&#x60;
+		);
+
+		/**
+		 * Check if wishlist item not exists
+		 */
+		if (!wishlistItem) {
+			this.logger.warn(
+				&#x60;Wishlist item with wishlist item id ${wishlistItemID} and user id ${userID} not found&#x60;
+			);
+			throw new NotFoundException({
+				statusCode:
+					WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.statusCode,
+				customCode:
+					WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.customCode,
+				message: WishlistStatusCode.WISHLIST_ITEM_NOT_FOUND.message,
+			});
+		}
+
+		return wishlistItem;
+	}
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'WishlistService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

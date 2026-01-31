@@ -2,6 +2,7 @@ package com.example.e_commerce.Mappers
 
 import com.example.e_commerce.DTOs.Response.CartDetailResponseDto
 import com.example.e_commerce.Model.CartItemModel
+import java.math.BigDecimal
 
 object CartMapper {
     fun fromCartDetailResponseDto(cartDetailResponseDto: CartDetailResponseDto): CartItemModel {
@@ -9,7 +10,7 @@ object CartMapper {
             id = cartDetailResponseDto.id,
             title = cartDetailResponseDto.name,
             picUrl = cartDetailResponseDto.imageUrl,
-            price = cartDetailResponseDto.price,
+            price = BigDecimal.valueOf(cartDetailResponseDto.price),
             numberInCart = cartDetailResponseDto.quantity
         )
     }

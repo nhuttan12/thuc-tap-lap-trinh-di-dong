@@ -14,6 +14,7 @@ import com.example.e_commerce.Helper.TinyDB
 import com.example.e_commerce.Model.CartItemModel
 import com.example.e_commerce.ViewModel.CartViewModel
 import com.example.e_commerce.databinding.ActivityCartBinding
+import java.math.BigDecimal
 import kotlin.math.roundToInt
 
 class CartActivity : AppCompatActivity() {
@@ -119,8 +120,9 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun calculateCart(cartItemModels: List<CartItemModel>) {
-        val itemTotal = cartItemModels.sumOf { it.price * it.numberInCart }
-        val total = ((itemTotal) * 100).roundToInt() / 100
+        val total = cartItemModels.fold(BigDecimal.ZERO) { acc, item ->
+            acc.add(item.price.multiply(BigDecimal(item.numberInCart)))
+        }
 
         val formatter = java.text.DecimalFormat("#,###")
 

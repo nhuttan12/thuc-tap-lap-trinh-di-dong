@@ -1,0 +1,924 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>back-end documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">back-end documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-enumerations">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Enumerations</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#BrandStatusEnum" title="src/modules/brand/enums/brand-status.enum.ts" ><b>BrandStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../brand-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CartDetailsStatusEnum" title="src/modules/cart/enums/cart-details-status.enum.ts" ><b>CartDetailsStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../cart-details-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CartStatusEnum" title="src/modules/cart/enums/cart.status.enum.ts" ><b>CartStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../cart.status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CategoryStatusEnum" title="src/modules/category/enums/category-status.enum.ts" ><b>CategoryStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../category-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ImageStatusEnum" title="src/modules/image/enums/image-status.enum.ts" ><b>ImageStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../image-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ImageTypeEnum" title="src/modules/image/enums/image-type.enum.ts" ><b>ImageTypeEnum</b>&nbsp;&nbsp;&nbsp;(src/.../image-type.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#OrderStatusEnum" title="src/modules/orders/enums/order-status.enum.ts" ><b>OrderStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../order-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PaymentMethodEnum" title="src/modules/payment/enums/payment-method.enum.ts" ><b>PaymentMethodEnum</b>&nbsp;&nbsp;&nbsp;(src/.../payment-method.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PaymentStatusEnum" title="src/modules/payment/enums/payment-status.enum.ts" ><b>PaymentStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../payment-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ProductImageTypeEnum" title="src/modules/product/enums/product-image-type.enum.ts" ><b>ProductImageTypeEnum</b>&nbsp;&nbsp;&nbsp;(src/.../product-image-type.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ProductStatusEnum" title="src/modules/product/enums/product-status.enum.ts" ><b>ProductStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../product-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RoleName" title="src/modules/role/enums/role-name.enum.ts" ><b>RoleName</b>&nbsp;&nbsp;&nbsp;(src/.../role-name.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RoleStatus" title="src/modules/role/enums/role-status.enum.ts" ><b>RoleStatus</b>&nbsp;&nbsp;&nbsp;(src/.../role-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UserStatus" title="src/modules/user/enums/user-status.enum.ts" ><b>UserStatus</b>&nbsp;&nbsp;&nbsp;(src/.../user-status.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#WishlistStatusEnum" title="src/modules/wishlist/enums/wishlist-status.enum.ts" ><b>WishlistStatusEnum</b>&nbsp;&nbsp;&nbsp;(src/.../wishlist-status.enum.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/modules/brand/enums/brand-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="BrandStatusEnum"></a>
+                        <span class="name "><b>BrandStatusEnum</b><a href="#BrandStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/cart/enums/cart-details-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="CartDetailsStatusEnum"></a>
+                        <span class="name "><b>CartDetailsStatusEnum</b><a href="#CartDetailsStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/cart/enums/cart.status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="CartStatusEnum"></a>
+                        <span class="name "><b>CartStatusEnum</b><a href="#CartStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/category/enums/category-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="CategoryStatusEnum"></a>
+                        <span class="name "><b>CategoryStatusEnum</b><a href="#CategoryStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/image/enums/image-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ImageStatusEnum"></a>
+                        <span class="name "><b>ImageStatusEnum</b><a href="#ImageStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/image/enums/image-type.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ImageTypeEnum"></a>
+                        <span class="name "><b>ImageTypeEnum</b><a href="#ImageTypeEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;AVATAR
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>AVATAR</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/orders/enums/order-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="OrderStatusEnum"></a>
+                        <span class="name "><b>OrderStatusEnum</b><a href="#OrderStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;PENDING
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>PENDING</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;CONFIRMED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>CONFIRMED</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;PROCESSING
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>PROCESSING</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;COMPLETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>COMPLETED</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;CANCELED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>CANCELED</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ON_HOLD
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ON HOLD</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/payment/enums/payment-method.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="PaymentMethodEnum"></a>
+                        <span class="name "><b>PaymentMethodEnum</b><a href="#PaymentMethodEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;CREDIT_CARD
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>CREDIT_CARD</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;PAYPAL
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>PAYPAL</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;BANK_TRANSFER
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>BANK_TRANSFER</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;OTHER
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>OTHER</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;COD
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>COD</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/payment/enums/payment-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="PaymentStatusEnum"></a>
+                        <span class="name "><b>PaymentStatusEnum</b><a href="#PaymentStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;PENDING
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>PENDING</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;COMPLETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>COMPLETED</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;FAILED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>FAILED</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;REFUNDED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>REFUNDED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/product/enums/product-image-type.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ProductImageTypeEnum"></a>
+                        <span class="name "><b>ProductImageTypeEnum</b><a href="#ProductImageTypeEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;THUMBNAIL
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>THUMBNAIL</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;PRODUCT
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>PRODUCT</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;BANNER
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>BANNER</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/product/enums/product-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ProductStatusEnum"></a>
+                        <span class="name "><b>ProductStatusEnum</b><a href="#ProductStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/role/enums/role-name.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="RoleName"></a>
+                        <span class="name "><b>RoleName</b><a href="#RoleName"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ADMIN
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ADMIN</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;CUSTOMER
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>CUSTOMER</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;EMPLOYEE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>EMPLOYEE</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/role/enums/role-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="RoleStatus"></a>
+                        <span class="name "><b>RoleStatus</b><a href="#RoleStatus"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/user/enums/user-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="UserStatus"></a>
+                        <span class="name "><b>UserStatus</b><a href="#UserStatus"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>INACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;BANNED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>BANNED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/modules/wishlist/enums/wishlist-status.enum.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="WishlistStatusEnum"></a>
+                        <span class="name "><b>WishlistStatusEnum</b><a href="#WishlistStatusEnum"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;ACTIVE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>ACTIVE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;DELETED
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>DELETED</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-enumerations';
+            var COMPODOC_CURRENT_PAGE_URL = 'enumerations.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

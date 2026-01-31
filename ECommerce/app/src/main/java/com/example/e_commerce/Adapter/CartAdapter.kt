@@ -43,7 +43,11 @@ class CartAdapter(
         holder.binding.titleTxt.text = item.title
         holder.binding.feeEachItemTxt.text = formatter.format(item.price)
         holder.binding.totalEachItem.text =
-            formatter.format((item.numberInCart * item.price).roundToInt())
+            formatter.format(
+                (
+                        item.price.multiply(java.math.BigDecimal(item.numberInCart))
+                        )
+            )
         holder.binding.numberItemTxt.text = item.numberInCart.toString()
 
         Glide.with(holder.itemView.context)
@@ -65,7 +69,7 @@ class CartAdapter(
             if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
 
             val item = listItemSelected[pos]
-            if (item.price == 0.0) {
+            if (item.price.compareTo(java.math.BigDecimal.ZERO) == 0) {
                 Toast.makeText(
                     holder.itemView.context,
                     "Sản phẩm này chỉ được chọn 1",

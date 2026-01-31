@@ -1,0 +1,1159 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>back-end documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">back-end documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >PaypalService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/paypal/paypal.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#baseUrl" >baseUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#clientId" >clientId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#secret" >secret</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#captureOrder" >captureOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createOrder" >createOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAccessToken" >getAccessToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handlePaypalSuccess" >handlePaypalSuccess</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifyPaypalOrder" >verifyPaypalOrder</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(dataSource: DataSource, orderRepo: <a href="../entitys/OrderEntity.html" target="_self">Repository&lt;OrderEntity&gt;</a>, orderDetailRepo: <a href="../entitys/OrderDetailEntity.html" target="_self">Repository&lt;OrderDetailEntity&gt;</a>, paymentRepo: <a href="../entitys/PaymentEntity.html" target="_self">Repository&lt;PaymentEntity&gt;</a>, userRepo: <a href="../entitys/UserEntity.html" target="_self">Repository&lt;UserEntity&gt;</a>, cartRepo: <a href="../entitys/CartEntity.html" target="_self">Repository&lt;CartEntity&gt;</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/modules/paypal/paypal.service.ts:17</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>dataSource</td>
+                                                  
+                                                        <td>
+                                                                    <code>DataSource</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>orderRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/OrderEntity.html" target="_self" >Repository&lt;OrderEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>orderDetailRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/OrderDetailEntity.html" target="_self" >Repository&lt;OrderDetailEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>paymentRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/PaymentEntity.html" target="_self" >Repository&lt;PaymentEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/UserEntity.html" target="_self" >Repository&lt;UserEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>cartRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/CartEntity.html" target="_self" >Repository&lt;CartEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="captureOrder"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>captureOrder</b></span>
+                        <a href="#captureOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>captureOrder(orderId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/modules/paypal/paypal.service.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>orderId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createOrder"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createOrder</b></span>
+                        <a href="#createOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createOrder(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/modules/paypal/paypal.service.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAccessToken"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getAccessToken</b></span>
+                        <a href="#getAccessToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAccessToken()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">src/modules/paypal/paypal.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handlePaypalSuccess"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handlePaypalSuccess</b></span>
+                        <a href="#handlePaypalSuccess"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handlePaypalSuccess(paypalOrderId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="189"
+                                    class="link-to-prism">src/modules/paypal/paypal.service.ts:189</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>paypalOrderId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyPaypalOrder"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>verifyPaypalOrder</b></span>
+                        <a href="#verifyPaypalOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyPaypalOrder(paypalOrderId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="278"
+                                    class="link-to-prism">src/modules/paypal/paypal.service.ts:278</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>paypalOrderId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="baseUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>baseUrl</b></span>
+                        <a href="#baseUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>process.env.PAYPAL_BASE_URL</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/modules/paypal/paypal.service.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clientId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>clientId</b></span>
+                        <a href="#clientId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>process.env.PAYPAL_CLIENT_ID</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/modules/paypal/paypal.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Logger</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(PaypalService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/modules/paypal/paypal.service.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="secret"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>secret</b></span>
+                        <a href="#secret"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>process.env.PAYPAL_SECRET</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/modules/paypal/paypal.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Injectable, Logger } from &#x27;@nestjs/common&#x27;;
+import axios from &#x27;axios&#x27;;
+import { InjectRepository } from &#x27;@nestjs/typeorm&#x27;;
+import { OrderDetailEntity } from &#x27;../orders/entities/order-detail.entity&#x27;;
+import { OrderEntity } from &#x27;../orders/entities/order.entity&#x27;;
+import { PaymentEntity } from &#x27;../payment/entites/payment.entity&#x27;;
+import { UserEntity } from &#x27;../user/entities/user.entity&#x27;;
+import { CartEntity } from &#x27;../cart/entities/cart.entity&#x27;;
+import { DataSource, Repository } from &#x27;typeorm&#x27;;
+import { PaymentMethodEnum } from &#x27;../payment/enums/payment-method.enum&#x27;;
+import { PaymentStatusEnum } from &#x27;../payment/enums/payment-status.enum&#x27;;
+import { OrderStatusEnum } from &#x27;../orders/enums/order-status.enum&#x27;;
+import { CartStatusEnum } from &#x27;../cart/enums/cart.status.enum&#x27;;
+
+@Injectable()
+export class PaypalService {
+	private readonly logger: Logger &#x3D; new Logger(PaypalService.name);
+
+	constructor(
+		private readonly dataSource: DataSource,
+		@InjectRepository(OrderEntity)
+		private readonly orderRepo: Repository&lt;OrderEntity&gt;,
+		@InjectRepository(OrderDetailEntity)
+		private readonly orderDetailRepo: Repository&lt;OrderDetailEntity&gt;,
+		@InjectRepository(PaymentEntity)
+		private readonly paymentRepo: Repository&lt;PaymentEntity&gt;,
+		@InjectRepository(UserEntity)
+		private readonly userRepo: Repository&lt;UserEntity&gt;,
+		@InjectRepository(CartEntity)
+		private readonly cartRepo: Repository&lt;CartEntity&gt;
+	) {}
+
+	private baseUrl &#x3D; process.env.PAYPAL_BASE_URL;
+	private clientId &#x3D; process.env.PAYPAL_CLIENT_ID;
+	private secret &#x3D; process.env.PAYPAL_SECRET;
+
+	private async getAccessToken(): Promise&lt;string&gt; {
+		const res &#x3D; await axios.post(
+			&#x60;${this.baseUrl}/v1/oauth2/token&#x60;,
+			&#x27;grant_type&#x3D;client_credentials&#x27;,
+			{
+				headers: {
+					&#x27;Content-Type&#x27;: &#x27;application/x-www-form-urlencoded&#x27;,
+					&#x27;Authorization&#x27;:
+						&#x27;Basic &#x27; +
+						Buffer.from(&#x60;${this.clientId}:${this.secret}&#x60;).toString(
+							&#x27;base64&#x27;
+						),
+				},
+			}
+		);
+
+		return res.data.access_token;
+	}
+
+	async createOrder(userId: number) {
+		// 1️ Lấy cart từ DB
+		const cart &#x3D; await this.cartRepo.findOne({
+			where: { user: { id: userId }, status: CartStatusEnum.ACTIVE },
+			relations: {
+				cartDetails: {
+					product: true,
+				},
+			},
+			order: {
+				createdAt: &#x27;DESC&#x27;,
+				updatedAt: &#x27;DESC&#x27;,
+			},
+		});
+		this.logger.debug(&#x60;Cart: ${JSON.stringify(cart, null, 2)}&#x60;);
+
+		if (!cart || cart.cartDetails.length &#x3D;&#x3D;&#x3D; 0) {
+			this.logger.warn(&#x27;Cart is empty&#x27;);
+			throw new BadRequestException(&#x27;Cart is empty&#x27;);
+		}
+
+		// 2️ Tính total VND
+		let totalVnd &#x3D; 0;
+		cart.cartDetails.forEach((item) &#x3D;&gt; {
+			totalVnd +&#x3D; item.quantity * Number(item.product.price);
+			this.logger.debug(&#x60;Total vnd: ${totalVnd}&#x60;);
+		});
+
+		// + ship (nếu có)
+		const shippingFee &#x3D; 20000;
+		totalVnd +&#x3D; shippingFee;
+		this.logger.debug(&#x60;Total vnd: ${totalVnd}&#x60;);
+
+		// 3️ Đổi sang USD (sandbox)
+		const USD_RATE &#x3D; 25000;
+		const totalUsdString &#x3D; (totalVnd / USD_RATE).toFixed(2);
+		this.logger.debug(&#x60;Total usd: ${totalUsdString}&#x60;);
+
+		if (Number(totalUsdString) &lt; 0.01) {
+			this.logger.warn(&#x27;Invalid total amount&#x27;);
+			throw new BadRequestException(&#x27;Invalid total amount&#x27;);
+		}
+
+		this.logger.debug(&#x27;PAYPAL SEND USD:&#x27;, totalUsdString);
+
+		// 4️ Gọi PayPal
+		const token &#x3D; await this.getAccessToken();
+		this.logger.debug(&#x60;Token: ${token}&#x60;);
+
+		const res &#x3D; await axios.post(
+			&#x60;${this.baseUrl}/v2/checkout/orders&#x60;,
+			{
+				intent: &#x27;CAPTURE&#x27;,
+				purchase_units: [
+					{
+						amount: {
+							currency_code: &#x27;USD&#x27;,
+							value: totalUsdString,
+						},
+					},
+				],
+				application_context: {
+					return_url: process.env.PAYPAL_RETURN_URL,
+					cancel_url: process.env.PAYPAL_CANCEL_URL,
+				},
+			},
+			{
+				headers: {
+					&#x27;Authorization&#x27;: &#x60;Bearer ${token}&#x60;,
+					&#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+				},
+			}
+		);
+
+		return res.data;
+	}
+
+	async captureOrder(orderId: string) {
+		const token &#x3D; await this.getAccessToken();
+		this.logger.debug(&#x60;Token: ${token}&#x60;);
+
+		// 1️ Check order status
+		const orderRes &#x3D; await axios.get(
+			&#x60;${this.baseUrl}/v2/checkout/orders/${orderId}&#x60;,
+			{
+				headers: {
+					Authorization: &#x60;Bearer ${token}&#x60;,
+				},
+			}
+		);
+
+		if (orderRes.data.status &#x3D;&#x3D;&#x3D; &#x27;COMPLETED&#x27;) {
+			const capture &#x3D;
+				orderRes.data.purchase_units[0].payments.captures[0];
+
+			return {
+				paypalOrderId: orderId,
+				transactionId: capture.id,
+				amount: Number(capture.amount.value),
+				currency: capture.amount.currency_code,
+				status: &#x27;COMPLETED&#x27;,
+			};
+		}
+
+		if (orderRes.data.status !&#x3D;&#x3D; &#x27;APPROVED&#x27;) {
+			throw new BadRequestException(
+				&#x60;Order not approved. Status: ${orderRes.data.status}&#x60;
+			);
+		}
+
+		// 2️ Capture
+		const res &#x3D; await axios.post(
+			&#x60;${this.baseUrl}/v2/checkout/orders/${orderId}/capture&#x60;,
+			{},
+			{
+				headers: {
+					&#x27;Authorization&#x27;: &#x60;Bearer ${token}&#x60;,
+					&#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+				},
+			}
+		);
+
+		const capture &#x3D; res.data.purchase_units[0].payments.captures[0];
+
+		return {
+			paypalOrderId: orderId,
+			transactionId: capture.id,
+			amount: Number(capture.amount.value),
+			currency: capture.amount.currency_code,
+			status: res.data.status,
+		};
+	}
+
+	async handlePaypalSuccess(
+		paypalOrderId: string,
+		userId: number
+	): Promise&lt;void&gt; {
+		const { transactionId, paidUsd, currency } &#x3D;
+			await this.verifyPaypalOrder(paypalOrderId);
+
+		await this.dataSource.transaction(async (manager) &#x3D;&gt; {
+			const existedPayment &#x3D; await manager.findOne(PaymentEntity, {
+				where: { transactionID: transactionId },
+			});
+			if (existedPayment) {
+				return;
+			}
+
+			// 2️ USER
+			const user &#x3D; await manager.findOne(UserEntity, {
+				where: { id: userId },
+			});
+			if (!user) {
+				return;
+			}
+
+			// 3️ CART
+			const cart &#x3D; await manager.findOne(CartEntity, {
+				where: { user: { id: userId } },
+				relations: [&#x27;cartDetails&#x27;, &#x27;cartDetails.product&#x27;],
+			});
+
+			if (!cart || cart.cartDetails.length &#x3D;&#x3D;&#x3D; 0) {
+				return;
+			}
+
+			// 4️ TOTAL VND
+			let totalVnd &#x3D; 0;
+			cart.cartDetails.forEach((item) &#x3D;&gt; {
+				totalVnd +&#x3D; item.quantity * item.product.price;
+			});
+
+			const shippingFee &#x3D; 20000;
+			totalVnd +&#x3D; shippingFee;
+
+			// 5️ CHECK USD
+			const USD_RATE &#x3D; 25000;
+			const expectedUsd &#x3D; Number((totalVnd / USD_RATE).toFixed(2));
+
+			const diff &#x3D; Math.abs(expectedUsd - paidUsd);
+			if (diff &gt; 0.05 || currency !&#x3D;&#x3D; &#x27;USD&#x27;) {
+				return;
+			}
+
+			// 6️ ORDER
+			const order &#x3D; manager.create(OrderEntity, {
+				user,
+				price: totalVnd,
+				status: OrderStatusEnum.COMPLETED,
+			});
+			await manager.save(order);
+
+			// 7️ ORDER DETAILS
+			for (const item of cart.cartDetails) {
+				await manager.save(
+					manager.create(OrderDetailEntity, {
+						order,
+						product: item.product,
+						quantity: item.quantity,
+						price: item.product.price,
+					})
+				);
+			}
+
+			// 8️ PAYMENT
+			await manager.save(
+				manager.create(PaymentEntity, {
+					user,
+					order,
+					amount: paidUsd,
+					currency: &#x27;USD&#x27;,
+					paymentMethod: PaymentMethodEnum.PAYPAL,
+					status: PaymentStatusEnum.COMPLETED,
+					transactionID: transactionId,
+				})
+			);
+
+			// 9️ CLEAR CART
+			await manager.remove(cart.cartDetails);
+		});
+	}
+
+	async verifyPaypalOrder(paypalOrderId: string) {
+		const token &#x3D; await this.getAccessToken();
+
+		const { data } &#x3D; await axios.get(
+			&#x60;${this.baseUrl}/v2/checkout/orders/${paypalOrderId}&#x60;,
+			{
+				headers: {
+					Authorization: &#x60;Bearer ${token}&#x60;,
+				},
+			}
+		);
+
+		if (data.status !&#x3D;&#x3D; &#x27;COMPLETED&#x27;) {
+			throw new BadRequestException(
+				&#x60;Paypal order not completed, status&#x3D;${data.status}&#x60;
+			);
+		}
+
+		const capture &#x3D; data.purchase_units?.[0]?.payments?.captures?.[0];
+		if (!capture) {
+			throw new BadRequestException(&#x27;Paypal capture not found&#x27;);
+		}
+
+		return {
+			transactionId: capture.id,
+			paidUsd: Number(capture.amount.value),
+			currency: capture.amount.currency_code,
+			raw: data, // optional, để debug
+		};
+	}
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'PaypalService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
